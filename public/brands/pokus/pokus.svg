@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" role="img" aria-label="Pokus">
+  <g transform="translate(8 14)">
+    <rect width="152" height="152" rx="42" fill="#7437D1"/>
+    <path d="M48 42h31c32 0 52 16 52 43 0 28-20 44-52 44H70v19H48V42zm22 20v47h10c18 0 28-8 28-24 0-15-10-23-28-23H70z" fill="#fff"/>
+  </g>
+  <text x="188" y="128" font-family="Arial, Helvetica, sans-serif" font-size="108" font-weight="700" letter-spacing="-4" fill="#7437D1">pokus</text>
+</svg>

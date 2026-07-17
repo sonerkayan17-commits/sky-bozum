@@ -1,0 +1,38 @@
+SKY BOZUM V2 - KURULUM
+
+1. Mevcut sky-bozum klasörünüzün yedeğini alın.
+2. Bu ZIP dosyasını masaüstüne çıkarın.
+3. Çıkan sky-bozum-v2 klasörünü VS Code ile açın.
+4. Terminalde sırayla çalıştırın:
+
+npm install
+npm run dev
+
+5. Tarayıcıda açın:
+http://localhost:3000
+
+ÜRETİM KONTROLÜ
+npm run build
+
+EKLENENLER
+- Premium ana sayfa
+- Premium hizmetler sayfası
+- 11 hizmet detay sayfası
+- Paycell, Pokus, Vodafone, Turkcell, Türk Telekom, Razer Gold, Apple, Steam ve kart rehberleri
+- 12 bilgi merkezi makalesi
+- SSS sayfası
+- Referanslar sayfası
+- İletişim sayfası
+- Hakkımızda
+- Gizlilik Politikası
+- Kullanım Şartları
+- 404 sayfası
+- Sitemap ve robots.txt
+- SEO metadata ve Open Graph altyapısı
+- Mobil uyumlu premium kartlar ve animasyonlar
+
+NOTLAR
+- Oranlar bilgi amaçlıdır; işlem öncesinde güncellenmelidir.
+- Referanslar bölümündeki yorumlar taslaktır. Gerçek ve izinli müşteri yorumlarıyla değiştirilmelidir.
+- Gizlilik ve kullanım şartları yayına alınmadan önce hukuk uzmanına kontrol ettirilmelidir.
+- Firebase ve admin paneli bu teslimatta bağlanmamıştır; mevcut mimari sonraki faz için uygundur.

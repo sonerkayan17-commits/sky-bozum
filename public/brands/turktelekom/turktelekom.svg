@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 190" role="img" aria-label="Türk Telekom">
+  <g transform="translate(8 24)">
+    <path d="M0 0h150l-48 70 48 70H0l49-70L0 0z" fill="#005BAA"/>
+    <path d="M49 0h101l-48 70 48 70H49l49-70L49 0z" fill="#00AEEF"/>
+  </g>
+  <text x="205" y="82" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700" letter-spacing="-2" fill="#005BAA">TÜRK</text>
+  <text x="205" y="154" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700" letter-spacing="-2" fill="#00AEEF">TELEKOM</text>
+</svg>

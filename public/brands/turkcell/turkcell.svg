@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 190" role="img" aria-label="Turkcell">
+  <g transform="translate(8 10)">
+    <circle cx="85" cy="85" r="78" fill="#FFC900"/>
+    <path d="M49 54 31 39M121 54l18-15" stroke="#183B75" stroke-width="12" stroke-linecap="round"/>
+    <ellipse cx="60" cy="77" rx="11" ry="15" fill="#183B75"/>
+    <ellipse cx="110" cy="77" rx="11" ry="15" fill="#183B75"/>
+    <path d="M53 112c20 18 44 18 64 0" fill="none" stroke="#183B75" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <text x="190" y="132" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="700" letter-spacing="-5" fill="#183B75">turkcell</text>
+</svg>

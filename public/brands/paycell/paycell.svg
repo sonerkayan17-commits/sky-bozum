@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 180" role="img" aria-label="Paycell">
+  <g transform="translate(8 14)">
+    <rect x="0" y="0" width="152" height="152" rx="38" fill="#00AEEF"/>
+    <path fill="#fff" d="M46 38h39c31 0 50 16 50 42 0 27-19 43-50 43H69v25H46V38zm23 20v45h15c18 0 28-8 28-23 0-14-10-22-28-22H69z"/>
+  </g>
+  <text x="188" y="128" font-family="Arial, Helvetica, sans-serif" font-size="108" font-weight="700" letter-spacing="-5" fill="#173A5E">paycell</text>
+</svg>

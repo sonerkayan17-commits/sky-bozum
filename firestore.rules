@@ -1,0 +1,71 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isValidAuthor() {
+      return request.resource.data.author is string
+        && request.resource.data.author.size() >= 2
+        && request.resource.data.author.size() <= 40;
+    }
+
+    function isValidService() {
+      return request.resource.data.service in [
+        'Vodafone Mobil Ödeme',
+        'Turkcell Mobil Ödeme',
+        'Türk Telekom Mobil Ödeme',
+        'Paycell',
+        'Pokus',
+        'Razer Gold',
+        'Apple Hediye Kartı',
+        'Steam',
+        'Diğer'
+      ];
+    }
+
+    function isValidBaseComment() {
+      return request.resource.data.keys().hasOnly([
+          'parentId',
+          'author',
+          'service',
+          'message',
+          'rating',
+          'status',
+          'createdAt'
+        ])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.createdAt == request.time
+        && isValidAuthor()
+        && isValidService();
+    }
+
+    function isValidReview() {
+      return request.resource.data.parentId == null
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 10
+        && request.resource.data.message.size() <= 800
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+    }
+
+    function isValidReply() {
+      return request.resource.data.parentId is string
+        && request.resource.data.parentId.size() > 0
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 3
+        && request.resource.data.message.size() <= 500
+        && request.resource.data.rating == null;
+    }
+
+    match /comments/{commentId} {
+      allow read: if resource.data.status == 'approved';
+      allow create: if isValidBaseComment()
+        && (isValidReview() || isValidReply());
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
