@@ -1,144 +1,72 @@
-import Link from 'next/link';
-import { siteConfig } from '../lib/site';
-
 const steps = [
-  {
-    number: '01',
-    title: 'Hizmeti seçin',
-    description:
-      'Değerlendirmek istediğiniz dijital kodu veya desteklenen mobil ödeme yöntemini belirleyin.',
-    detail: 'Hizmet sayfasından işlem kapsamını ve güncel bilgileri inceleyin.',
-    icon: (
-      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 7.5h16M7 4v7m10-7v7M6.5 13.5h11a2.5 2.5 0 0 1 2.5 2.5v1.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5V16a2.5 2.5 0 0 1 2.5-2.5Z" />
-      </svg>
-    ),
-  },
-  {
-    number: '02',
-    title: 'Güncel oran alın',
-    description:
-      'WhatsApp üzerinden stok durumuna uygun güncel oranı ve işlem detaylarını net biçimde öğrenin.',
-    detail: 'İşlem başlamadan önce oran, ödeme yöntemi ve gerekli adımlar paylaşılır.',
-    icon: (
-      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.5h9m-9 3.5h6m-8.5 8 2.4-3.2a8 8 0 1 1 3.6 2.1c-1.3 0-2.5-.3-3.6-.8L5 20Z" />
-      </svg>
-    ),
-  },
-  {
-    number: '03',
-    title: 'Ödemenizi alın',
-    description:
-      'Doğrulama tamamlandıktan sonra ödemeniz, önceden belirlenen yöntemle güvenli biçimde gönderilir.',
-    detail: 'Süreç boyunca destek ekibinden kesintisiz bilgi alabilirsiniz.',
-    icon: (
-      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 7.5h16v10H4zM8 12.5h.01M12 12.5h4M7 5h10" />
-      </svg>
-    ),
-  },
+  ['Kod Alındı', 'Kod bize ulaştı.', 'document'],
+  ['Kontrol Edildi', 'Güvenle doğrulandı.', 'search'],
+  ['Onaylandı', 'İşlem onaylandı.', 'shield'],
+  ['Ödeme Gönderildi', 'Hesabınıza iletildi.', 'card'],
 ] as const;
 
-const processHighlights = [
-  ['7/24', 'Kesintisiz destek'],
-  ['Açık', 'Oran ve süreç bilgisi'],
-  ['Güvenli', 'Kontrollü işlem akışı'],
-] as const;
+function Icon({ name, className = 'h-5 w-5' }: { name: string; className?: string }) {
+  const icons: Record<string, React.ReactNode> = {
+    document: <><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6M9 12h4" /></>,
+    search: <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m15.5 15.5 4 4" /></>,
+    shield: <><path d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6l-7-3Z" /><path d="m9 12 2 2 4-4" /></>,
+    card: <><rect x="3" y="6" width="18" height="12" rx="2" /><path d="M3 10h18M7 14h4" /></>,
+    check: <path d="m5 12 4 4L19 6" />,
+  };
+  return <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{icons[name]}</svg>;
+}
 
-export default function HowItWorks() {
+export default function HowItWorks({ embedded = false }: { embedded?: boolean }) {
   return (
-    <section className="relative overflow-hidden bg-white px-5 py-20 dark:bg-[#06100d] lg:px-8 lg:py-28">
-      <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-emerald-200/25 blur-3xl dark:bg-emerald-500/10" />
-      <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-green-200/20 blur-3xl dark:bg-green-500/10" />
+    <section className={embedded ? 'h-full text-white' : 'bg-[#05090f] py-20 text-white'} aria-labelledby="process-experience-title">
+      <div className={embedded ? 'h-full' : 'content-wide'}>
+        <div className="relative flex h-full min-h-[420px] flex-col overflow-hidden rounded-[22px] border border-white/[0.11] bg-[radial-gradient(circle_at_18%_3%,rgba(245,190,54,.07),transparent_25%),radial-gradient(circle_at_82%_65%,rgba(16,185,129,.05),transparent_32%),linear-gradient(180deg,#09131d,#06101a)] p-5 shadow-[0_24px_64px_rgba(0,0,0,.30),inset_0_1px_0_rgba(255,255,255,.045)]">
+          <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.016)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.016)_1px,transparent_1px)] [background-size:44px_44px]" />
 
-      <div className="relative mx-auto max-w-7xl">
-        <div className="grid gap-10 lg:grid-cols-[.82fr_1.18fr] lg:items-end">
-          <div className="max-w-2xl">
-            <p className="text-sm font-black uppercase tracking-[.2em] text-emerald-700 dark:text-emerald-300">
-              Nasıl çalışır?
-            </p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-.045em] text-slate-950 dark:text-white sm:text-5xl">
-              İşleminizi üç net adımda tamamlayın
-            </h2>
-          </div>
+          <header className="relative flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f3bf31]">Bozum İşlem Süreci</p>
+              <h2 id="process-experience-title" className="mt-1 text-[27px] font-black leading-[1.02] tracking-[-.045em]">Koddan Ödemeye <span className="text-[#f4bf33]">Güvenli Yolculuk</span></h2>
+            </div>
+            <div className="hidden shrink-0 items-center gap-2 rounded-[13px] border border-white/[0.10] bg-white/[0.028] px-3 py-2 sm:flex">
+              <span className="text-[#f4bf2d]"><Icon name="shield" className="h-5 w-5" /></span>
+              <div><p className="text-[10px] font-black">Güvenli İşlem</p><p className="text-[9px] text-white/45">7/24 destek</p></div>
+            </div>
+          </header>
 
-          <div className="lg:justify-self-end lg:max-w-2xl">
-            <p className="text-lg leading-8 text-slate-600 dark:text-slate-300">
-              Karmaşık formlar ve belirsiz bekleme süreleri olmadan; hizmet seçimi, güncel oran bilgisi ve ödeme aşamalarını tek bir şeffaf süreçte yönetin.
-            </p>
-          </div>
-        </div>
+          <div className="relative mt-4 grid flex-1 gap-4 md:grid-cols-[0.8fr_1.2fr]">
+            <div className="relative overflow-hidden rounded-[17px] border border-white/[0.08] bg-black/20 p-3.5">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f3bf31]/35 to-transparent" />
+              <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2.5">
+                <div className="grid h-8 w-8 place-items-center rounded-full bg-black text-[8px] font-black text-[#f3bf31]">SKY</div>
+                <div><p className="text-[11px] font-bold">Sky Bozum</p><p className="text-[8px] text-emerald-400">Çevrimiçi</p></div>
+              </div>
+              <div className="mt-3 space-y-2 text-[9px] leading-[1.35]">
+                <div className="mr-7 rounded-[10px] rounded-tl-[3px] bg-[#17212b] px-2.5 py-2 text-white/86">5000 TL Razer Gold kodum var.</div>
+                <div className="ml-7 rounded-[10px] rounded-tr-[3px] bg-[#ccefae] px-2.5 py-2 text-[#122018]">Kodunuzu iletebilirsiniz.</div>
+                <div className="mr-7 rounded-[10px] rounded-tl-[3px] bg-[#17212b] px-2.5 py-2 text-white/86">P9EGH-BKASJ-GTCE</div>
+                <div className="ml-7 rounded-[10px] rounded-tr-[3px] bg-[#ccefae] px-2.5 py-2 text-[#122018]">Kod geçerli. Ödeme hazırlanıyor.</div>
+              </div>
+              <div className="absolute bottom-3 left-3 right-3 flex h-7 items-center rounded-full bg-[#131d27] px-2.5 text-[7px] text-white/34">Mesaj yazın...<span className="ml-auto grid h-5 w-5 place-items-center rounded-full bg-emerald-500 text-white">✓</span></div>
+            </div>
 
-        <div className="relative mt-14">
-          <div className="absolute left-[16%] right-[16%] top-14 hidden h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent lg:block dark:via-emerald-700" />
-
-          <div className="grid gap-5 lg:grid-cols-3">
-            {steps.map((step) => (
-              <article
-                key={step.number}
-                className="group relative overflow-hidden rounded-[30px] border border-slate-200/80 bg-[#f8fbfa] p-7 shadow-[0_12px_35px_rgba(15,23,42,.05)] transition duration-300 hover:-translate-y-1.5 hover:border-emerald-200 hover:shadow-[0_24px_60px_rgba(5,46,35,.1)] motion-reduce:transform-none dark:border-white/10 dark:bg-white/[.035] dark:hover:border-emerald-500/30"
-              >
-                <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-emerald-100/70 to-transparent opacity-80 dark:from-emerald-500/10" />
-
-                <div className="relative flex items-center justify-between gap-4">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/20">
-                    {step.icon}
-                  </span>
-                  <span className="text-5xl font-black tracking-[-.08em] text-emerald-100 dark:text-emerald-950">
-                    {step.number}
-                  </span>
-                </div>
-
-                <div className="relative mt-7">
-                  <h3 className="text-2xl font-black tracking-tight text-slate-950 dark:text-white">
-                    {step.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                    {step.description}
-                  </p>
-                </div>
-
-                <div className="relative mt-6 border-t border-slate-200/80 pt-5 dark:border-white/10">
-                  <p className="text-xs font-bold leading-6 text-slate-500 dark:text-slate-400">
-                    {step.detail}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 grid gap-5 rounded-[30px] border border-emerald-200/80 bg-[#071713] p-6 text-white shadow-[0_24px_60px_rgba(5,46,35,.16)] lg:grid-cols-[1fr_auto] lg:items-center lg:p-8 dark:border-emerald-900">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[.18em] text-emerald-300">
-              İşleme hazır mısınız?
-            </p>
-            <h3 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">
-              Güncel oranı öğrenin, süreci birlikte başlatalım.
-            </h3>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              {processHighlights.map(([value, label]) => (
-                <div key={label} className="flex items-center gap-3">
-                  <span className="grid h-10 min-w-10 place-items-center rounded-xl bg-emerald-400/10 px-2 text-sm font-black text-emerald-300">
-                    {value}
-                  </span>
-                  <span className="text-xs font-bold leading-5 text-slate-300">{label}</span>
-                </div>
-              ))}
+            <div className="relative flex flex-col justify-center">
+              <div className="absolute bottom-6 left-[18px] top-6 w-px bg-gradient-to-b from-[#f2bd2f] via-[#f2bd2f]/75 to-emerald-400" />
+              <div className="space-y-1">
+                {steps.map(([title, text, icon], index) => {
+                  const final = index === steps.length - 1;
+                  return <div key={title} className="relative grid grid-cols-[38px_1fr] items-center gap-3 py-2">
+                    <div className={`relative z-10 grid h-[38px] w-[38px] place-items-center rounded-full border bg-[#08111a] ${final ? 'border-emerald-400 text-emerald-400' : 'border-[#f2bd2f] text-[#f2bd2f]'}`}><Icon name={icon} className="h-[18px] w-[18px]" /></div>
+                    <div><h3 className="text-[12px] font-black">{title}</h3><p className="mt-0.5 text-[9px] text-white/48">{text}</p></div>
+                  </div>;
+                })}
+              </div>
             </div>
           </div>
 
-          <Link
-            href={`${siteConfig.whatsapp}?text=Merhaba%2C%20bir%20işlem%20başlatmak%20istiyorum.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-400 px-7 py-4 font-black text-[#04120f] shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300 motion-reduce:transform-none lg:w-auto"
-          >
-            WhatsApp&apos;tan İşlemi Başlat
-            <span aria-hidden="true">→</span>
-          </Link>
+          <div className="relative mt-3 grid grid-cols-3 divide-x divide-white/[0.07] rounded-[14px] border border-white/[0.09] bg-white/[0.025] px-2 py-2.5">
+            {['7/24 Destek', 'Hızlı İşlem', 'Şeffaf Oran'].map((item) => <div key={item} className="flex items-center justify-center gap-1.5 text-[9px] font-bold text-white/68"><span className="text-emerald-400">✓</span>{item}</div>)}
+          </div>
         </div>
       </div>
     </section>

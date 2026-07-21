@@ -1,0 +1,51 @@
+{
+  "css_original_bytes": 196411,
+  "css_entry_bytes": 220,
+  "css_chunks": [
+    {
+      "file": "app/styles/foundation.css",
+      "bytes": 39340
+    },
+    {
+      "file": "app/styles/homepage-legacy.css",
+      "bytes": 39152
+    },
+    {
+      "file": "app/styles/homepage-polish.css",
+      "bytes": 39037
+    },
+    {
+      "file": "app/styles/content-services.css",
+      "bytes": 39570
+    },
+    {
+      "file": "app/styles/tools-production.css",
+      "bytes": 39289
+    }
+  ],
+  "article_count": 30,
+  "article_parts": [
+    {
+      "file": "app/lib/v21ExtendedArticles.part1.ts",
+      "articles": 8,
+      "bytes": 80856
+    },
+    {
+      "file": "app/lib/v21ExtendedArticles.part2.ts",
+      "articles": 8,
+      "bytes": 79758
+    },
+    {
+      "file": "app/lib/v21ExtendedArticles.part3.ts",
+      "articles": 8,
+      "bytes": 80108
+    },
+    {
+      "file": "app/lib/v21ExtendedArticles.part4.ts",
+      "articles": 6,
+      "bytes": 59976
+    }
+  ],
+  "original_css_body_sha256": "130d90f01267510f89c8294f104ab2034a377240cd228af180865c08f99dca1a",
+  "article_slugs_sha256": "9cdbacc927ce4eb44eb489200fd647bf954ba8e4f84ccc17bedcf8ce7ed4598f"
+}

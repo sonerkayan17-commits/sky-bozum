@@ -1,1 +1,22 @@
-import type { MetadataRoute } from "next";import { articles,services } from "./lib/site";export default function sitemap():MetadataRoute.Sitemap{const base="https://bozumcu.net";const staticRoutes=["","/hizmetler","/oran-hesapla","/bilgi-merkezi","/referanslar","/sss","/iletisim","/hakkimizda","/gizlilik-politikasi","/kullanim-sartlari"];return [...staticRoutes.map(url=>({url:base+url,lastModified:new Date(),changeFrequency:"weekly" as const,priority:url===""?1:.8})),...services.map(s=>({url:`${base}/hizmetler/${s.slug}`,lastModified:new Date(),changeFrequency:"weekly" as const,priority:.9})),...articles.map(a=>({url:`${base}/bilgi-merkezi/${a.slug}`,lastModified:new Date(),changeFrequency:"monthly" as const,priority:.7}))]}
+import type { MetadataRoute } from 'next';
+import { articles, services } from './lib/site';
+import { toolPages } from './lib/tools';
+import { getArticleCategories } from './lib/articleCategories';
+import { SITE_URL, DEFAULT_UPDATED_AT, updatedAt } from './lib/seo';
+import { getTopicHubs } from './lib/topicHubs';
+import { troubleshootingGuides } from './lib/troubleshooting';
+import { STATIC_ROUTES, routePath } from './lib/routes';
+
+const updated = new Date(DEFAULT_UPDATED_AT);
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    ...STATIC_ROUTES.map((route) => ({ url: `${SITE_URL}${route.path}`, lastModified: updated, changeFrequency: route.changeFrequency, priority: route.priority })),
+    ...toolPages.map((tool) => ({ url: `${SITE_URL}${tool.href}`, lastModified: updated, changeFrequency: 'monthly' as const, priority: .72 })),
+    ...services.map((service) => ({ url: `${SITE_URL}${routePath.service(service.slug)}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .85 })),
+    ...troubleshootingGuides.map((guide) => ({ url: `${SITE_URL}${routePath.troubleshooting(guide.slug)}`, lastModified: updated, changeFrequency: 'monthly' as const, priority: .78 })),
+    ...getTopicHubs().map((hub) => ({ url: `${SITE_URL}${routePath.topicHub(hub.slug)}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .8 })),
+    ...getArticleCategories(articles).map((category) => ({ url: `${SITE_URL}${routePath.articleCategory(category.slug)}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .75 })),
+    ...articles.map((article) => ({ url: `${SITE_URL}${routePath.article(article.slug)}`, lastModified: new Date(updatedAt(article)), changeFrequency: 'monthly' as const, priority: .7 })),
+  ];
+}

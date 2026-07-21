@@ -1,0 +1,290 @@
+[
+  {
+    "slug": "mobil-odeme-nasil-acilir",
+    "title": "Mobil Ödeme Nasıl Açılır? Operatörlere Göre Güncel Detaylı Rehber",
+    "excerpt": "",
+    "category": "Mobil Ödeme"
+  },
+  {
+    "slug": "dijital-kod-hediye-karti-rehberi",
+    "title": "Dijital Kod ve Hediye Kartları Kullanım Rehberi",
+    "excerpt": "",
+    "category": "Dijital Kodlar"
+  },
+  {
+    "slug": "hepsipay-nedir-nasil-kullanilir",
+    "title": "Hepsipay Nedir? Nasıl Kullanılır, Nerelerde Geçer ve Limit Türleri Nelerdir?",
+    "excerpt": "Hepsipay cüzdanı, Hepsipara, Hepsiburada Limiti ve Hızlı Kredi arasındaki farkları; kullanım alanlarını ve güvenli işlem adımlarını tek rehberde öğrenin.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsiburada-limiti-nedir",
+    "title": "Hepsiburada Limiti Nedir? Nasıl Çalışır, Kimlere Tanımlanır?",
+    "excerpt": "Hepsiburada Limiti ile alışverişin nasıl çalıştığını, limitin kredi kartından farkını, teklif ve geri ödeme sürecini ayrıntılı öğrenin.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsiburada-limiti-nasil-alinir",
+    "title": "Hepsiburada Limiti Nasıl Alınır? Başvuru, Kimlik Doğrulama ve Teklif Rehberi",
+    "excerpt": "Hepsiburada Limiti başvuru ekranına nasıl ulaşılır, teklif neden çıkmaz ve limit almak için hangi bilgiler gerekir?",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsiburada-limiti-neye-gore-hesaplanir",
+    "title": "Hepsiburada Limiti Neye Göre Hesaplanır ve Kimlere Tanımlanır?",
+    "excerpt": "Hepsiburada Limiti belirlenirken etkili olabilecek finansal, davranışsal ve güvenlik ölçütlerini; limit değişikliklerinin nedenlerini öğrenin.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsiburada-limiti-nasil-kullanilir",
+    "title": "Hepsiburada Limiti Nasıl Kullanılır? Ürün Seçimi, Taksit ve Ödeme Rehberi",
+    "excerpt": "Tanımlanan Hepsiburada Limitini uygun ürünlerde nasıl kullanacağınızı, ödeme planı ve iade sürecinde nelere dikkat edeceğinizi öğrenin.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsiburada-limiti-nerelerde-gecer",
+    "title": "Hepsiburada Limiti Nerelerde Geçer? Hangi Ürünlerde Kullanılır?",
+    "excerpt": "Hepsiburada Limitinin geçerli olduğu mağaza, satıcı ve ürün koşullarını; ödeme seçeneğinin neden görünmediğini öğrenin.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsiburada-limiti-bozdurulur-mu",
+    "title": "Hepsiburada Limiti Bozdurulur mu? Riskler, Yöntemler ve Güvenli Kontrol Listesi",
+    "excerpt": "Hepsiburada Limitini nakde çevirmek isteyenlerin ürün alımı, değer kaybı, iade, borç ve dolandırıcılık riskleri hakkında bilmesi gerekenler.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "hepsipay-hizli-kredi-nedir",
+    "title": "Hepsipay Hızlı Kredi Nedir? Başvuru, Limit ve Kullanım Alanları",
+    "excerpt": "Hepsipay üzerinden sunulan Hızlı Kredi ile Hepsiburada Limitinin farkını, banka değerlendirmesini ve kullanım sürecini öğrenin.",
+    "category": "Hepsipay"
+  },
+  {
+    "slug": "pluxee-sodexo-nedir-nerelerde-gecer",
+    "title": "Pluxee (Sodexo) Nedir? Nerelerde Geçer, Bakiye Nasıl Kullanılır?",
+    "excerpt": "Sodexo adıyla bilinen ve Pluxee markasına dönüşen yemek kartının çalışma biçimi, kullanım noktaları ve bozum durumu.",
+    "category": "Yemek Kartları"
+  },
+  {
+    "slug": "multinet-nedir-nerelerde-gecer",
+    "title": "MultiNet Nedir? Nerelerde Geçer ve Bakiye Nasıl Kullanılır?",
+    "excerpt": "MultiNet yemek kartının kullanım alanları, mobil ödeme seçenekleri, market kullanımı ve nakde çevirme konusu.",
+    "category": "Yemek Kartları"
+  },
+  {
+    "slug": "tokenflex-nedir-nerelerde-gecer",
+    "title": "TokenFlex Nedir? Nerelerde Geçer ve Nasıl Kullanılır?",
+    "excerpt": "TokenFlex dijital yemek kartı, kullanım noktaları, bakiye yapısı ve bozum kısıtları.",
+    "category": "Yemek Kartları"
+  },
+  {
+    "slug": "ticket-restaurant-nedir-nerelerde-gecer",
+    "title": "Ticket Restaurant Nedir? Nerelerde Geçer ve Nasıl Kullanılır?",
+    "excerpt": "Ticket Restaurant kart ve MyEdenred uygulaması üzerinden bakiye kullanımı, üye işyerleri ve bozum durumu.",
+    "category": "Yemek Kartları"
+  },
+  {
+    "slug": "yemek-kartlari-bozdurulur-mu",
+    "title": "Yemek Kartları Bozdurulur mu? Nakit Çevirme Neden Kısıtlıdır?",
+    "excerpt": "Pluxee, MultiNet, TokenFlex, Ticket ve benzeri yemek kartlarının nakde çevrilme şartları ve riskleri.",
+    "category": "Yemek Kartları"
+  },
+  {
+    "slug": "moneypay-nedir-limitleri",
+    "title": "MoneyPay Nedir? Ürünleri, İşlem Limitleri ve Kullanım Alanları",
+    "excerpt": "MoneyPay ürünleri, Money Pro, Money Yemek, transfer ve işlem limitlerinin nasıl okunacağı.",
+    "category": "Dijital Cüzdanlar"
+  },
+  {
+    "slug": "hadi-nedir-nasil-kullanilir",
+    "title": "Hadi Nedir? Hadi Hesabı, Kartı ve Alışveriş Limitleri Nasıl Kullanılır?",
+    "excerpt": "TOM Bank Hadi uygulamasının hesap, kart, Veresiye ve Taksitli alışveriş özellikleri.",
+    "category": "Hadi"
+  },
+  {
+    "slug": "hadi-veresiye-limiti-nedir",
+    "title": "Hadi Veresiye Limiti Nedir? Nasıl Alınır, Nerelerde Geçer?",
+    "excerpt": "Hadi Veresiye limitinin başvuru, değerlendirme, geçerlilik ve ödeme süreci.",
+    "category": "Hadi"
+  },
+  {
+    "slug": "hadi-taksitli-limit-nedir",
+    "title": "Hadi Taksitli Alışveriş Limiti Nedir? Nasıl Kullanılır?",
+    "excerpt": "Hadi Taksitli alışveriş kredisinin limit yapısı, QR ile kullanım ve geri ödeme ayrıntıları.",
+    "category": "Hadi"
+  },
+  {
+    "slug": "hadi-kredi-karti-limiti",
+    "title": "Hadi Kredi Kartı Limiti Nedir? Nerelerde Geçer ve Nasıl Belirlenir?",
+    "excerpt": "Hadi Kredi Kartı başvurusu, limit değerlendirmesi, kullanım alanları ve diğer Hadi limitlerinden farkı.",
+    "category": "Hadi"
+  },
+  {
+    "slug": "cepte-sok-nedir",
+    "title": "Cepte ŞOK Nedir? Bakiye, Ödeme ve Kullanım Özellikleri",
+    "excerpt": "Cepte ŞOK uygulamasının sipariş, ödeme, kampanya ve olası bakiye özellikleri.",
+    "category": "Market Uygulamaları"
+  },
+  {
+    "slug": "a101-hadi-odeme-limitleri",
+    "title": "A101 ve Hadi ile Ödeme: Veresiye, Taksitli Limit ve Kullanım Rehberi",
+    "excerpt": "A101 mağaza ve online kanallarında Hadi ürünleriyle ödeme ve limit kontrolü.",
+    "category": "Market Uygulamaları"
+  },
+  {
+    "slug": "bim-card-nedir",
+    "title": "BİM Card Nedir? Nerelerde Geçer ve Bozdurulur mu?",
+    "excerpt": "BİM Card yapısı, mağaza kullanımı, bakiye kontrolü ve bozum durumu.",
+    "category": "Hediye Kartları"
+  },
+  {
+    "slug": "kredim-nedir-limiti-nasil-alinir",
+    "title": "Kredim Nedir? Limiti Nasıl Alınır ve Nasıl Kullanılır?",
+    "excerpt": "Kredim çoklu/sektörel limit sistemi, skorlama, üyelik ve alışveriş adımları.",
+    "category": "Kredim"
+  },
+  {
+    "slug": "kredim-limiti-nerelerde-gecer",
+    "title": "Kredim Limiti Nerelerde Geçer? Sektörel Limit ve Mağaza Rehberi",
+    "excerpt": "Kredim limitinin sektörlere ve anlaşmalı mağazalara göre kullanım mantığı.",
+    "category": "Kredim"
+  },
+  {
+    "slug": "kredim-limiti-nasil-aktif-edilir",
+    "title": "Kredim Limiti Nasıl Aktif Edilir? Başvuru ve Doğrulama Rehberi",
+    "excerpt": "Kredim üyelik, kimlik doğrulama, bilgi tamamlama ve limit değerlendirme adımları.",
+    "category": "Kredim"
+  },
+  {
+    "slug": "kredim-limiti-bozdurulur-mu",
+    "title": "Kredim Limiti Bozdurulur mu? Nakit Çevirme Seçenekleri ve Riskler",
+    "excerpt": "Kredim alışveriş limitinin nakde çevrilmesi hakkında gerçekçi değerlendirme.",
+    "category": "Kredim"
+  },
+  {
+    "slug": "financell-limiti-nedir",
+    "title": "Financell Limiti Nedir? Nasıl Öğrenilir ve Nerelerde Kullanılır?",
+    "excerpt": "Financell tüketici finansmanı, kredi değerlendirmesi, cihaz ve diğer ürün alışverişleri.",
+    "category": "Cihaz Finansmanı"
+  },
+  {
+    "slug": "financell-ile-cihaz-nasil-alinir",
+    "title": "Financell ile Cihaz Nasıl Alınır? Limit, Başvuru ve Ödeme Rehberi",
+    "excerpt": "Financell kredisiyle telefon ve cihaz alma süreci, fatura ve diğer ödeme kanalları.",
+    "category": "Cihaz Finansmanı"
+  },
+  {
+    "slug": "vodafone-faturaya-ek-cihaz",
+    "title": "Vodafone Faturaya Ek Cihaz Nasıl Alınır? Limit ve Ürün Rehberi",
+    "excerpt": "Vodafone Flex ve faturaya ek cihaz satın alma uygunluğu, ürün listeleme ve ödeme.",
+    "category": "Cihaz Finansmanı"
+  },
+  {
+    "slug": "turk-telekom-faturaya-ek-cihaz",
+    "title": "Türk Telekom Faturaya Ek Cihaz Nasıl Alınır? Limit ve Model Rehberi",
+    "excerpt": "Türk Telekom bireysel faturalı müşteriler için cihaz alma limiti, eMağaza ve mağaza süreci.",
+    "category": "Cihaz Finansmanı"
+  },
+  {
+    "slug": "fair-finans-limiti-nedir",
+    "title": "Fair Finans Limiti Nedir? Nerelerde Geçer ve Nasıl Kullanılır?",
+    "excerpt": "Fair Finans alışveriş finansmanı hakkında limit, başvuru, kullanım ve bozum değerlendirmesi.",
+    "category": "Finansman"
+  },
+  {
+    "slug": "amazon-hediye-karti-nedir",
+    "title": "Amazon Hediye Kartı Nedir? Nerede Kullanılır ve Bozdurulur mu?",
+    "excerpt": "Amazon hediye kartlarının hesap, ülke, para birimi ve kullanım kısıtları.",
+    "category": "Hediye Kartları"
+  },
+  {
+    "slug": "eneba-hediye-karti-nedir",
+    "title": "Eneba Hediye Kartı Nedir? Nerelerde Geçer ve Nasıl Kullanılır?",
+    "excerpt": "Eneba cüzdan/hediye kartı kodlarında bölge, para birimi ve hesap kullanım rehberi.",
+    "category": "Hediye Kartları"
+  },
+  {
+    "slug": "defacto-hediye-karti-nedir",
+    "title": "DeFacto Hediye Kartı Nedir? Nerelerde Geçer ve Bozdurulur mu?",
+    "excerpt": "DeFacto mağaza ve dijital hediye kartlarının kullanım koşulları.",
+    "category": "Hediye Kartları"
+  },
+  {
+    "slug": "lc-waikiki-hediye-karti-nedir",
+    "title": "LC Waikiki Hediye Kartı Nedir? Nerelerde Geçer ve Bozdurulur mu?",
+    "excerpt": "LC Waikiki hediye kartı bakiye, kullanım alanı, süre ve bozum durumu.",
+    "category": "Hediye Kartları"
+  },
+  {
+    "slug": "magaza-hediye-kartlari-rehberi",
+    "title": "Mağaza Hediye Kartları Rehberi: 25+ Marka, Kullanım Alanı ve Bozum Durumu",
+    "excerpt": "Moda, market, oyun, teknoloji ve eğlence markalarının hediye kartlarını tek rehberde karşılaştırın.",
+    "category": "Hediye Kartları"
+  },
+  {
+    "slug": "istanbulkart-nedir",
+    "title": "İstanbulkart Nedir? Kart Türleri, Kullanım Alanları ve Mobil Özellikler",
+    "excerpt": "İstanbulkart fiziksel ve dijital kart türleri, ulaşım ve alışveriş kullanım alanları.",
+    "category": "Ulaşım Kartları"
+  },
+  {
+    "slug": "istanbulkart-bakiye-nasil-yuklenir",
+    "title": "İstanbulkart Bakiye Nasıl Yüklenir? Güvenli Yükleme Yöntemleri",
+    "excerpt": "İstanbulkart Mobil, web, otomatik makineler ve resmî kanallardan bakiye yükleme.",
+    "category": "Ulaşım Kartları"
+  },
+  {
+    "slug": "istanbulkart-bozulur-mu",
+    "title": "İstanbulkart Bakiyesi Bozdurulur mu? İade, Transfer ve Nakit Çevirme",
+    "excerpt": "İstanbulkart bakiyesinin nakde çevrilmesi, kart kapatma/iade ve güvenlik riskleri.",
+    "category": "Ulaşım Kartları"
+  },
+  {
+    "slug": "paycell-nedir-nasil-kullanilir",
+    "title": "Paycell Nedir, Nasıl Kullanılır?",
+    "excerpt": "Paycell kart, internet alışverişi ve Razer Gold satın alma sürecini öğrenin.",
+    "category": "Paycell"
+  },
+  {
+    "slug": "paycell-ile-razer-gold-nasil-alinir",
+    "title": "Paycell ile Razer Gold Nasıl Alınır?",
+    "excerpt": "Hepsiburada, Trendyol ve ByNoGame üzerinden adım adım Razer Gold rehberi.",
+    "category": "Paycell"
+  },
+  {
+    "slug": "vodafone-mobil-odeme-nedir",
+    "title": "Vodafone Mobil Ödeme Nedir?",
+    "excerpt": "Vodafone mobil ödeme limiti ve bakiye değerlendirme yöntemleri.",
+    "category": "Vodafone"
+  },
+  {
+    "slug": "turkcell-mobil-odeme-nasil-kullanilir",
+    "title": "Turkcell Mobil Ödeme Nasıl Kullanılır?",
+    "excerpt": "Turkcell mobil ödeme, Paycell kart ve Razer Gold süreci.",
+    "category": "Turkcell"
+  },
+  {
+    "slug": "turk-telekom-mobil-odeme-rehberi",
+    "title": "Türk Telekom Mobil Ödeme Rehberi",
+    "excerpt": "Türk Telekom mobil ödeme, Pokus kart ve dijital ürün işlemleri.",
+    "category": "Türk Telekom"
+  },
+  {
+    "slug": "pokus-nedir-razer-gold-nasil-alinir",
+    "title": "Pokus Nedir, Razer Gold Nasıl Alınır?",
+    "excerpt": "Pokus kartın kullanımı ve Razer Gold bozum adımları.",
+    "category": "Pokus"
+  },
+  {
+    "slug": "razer-gold-nedir",
+    "title": "Razer Gold Nedir?",
+    "excerpt": "Razer Gold kodları, kullanım alanları ve bozum süreci.",
+    "category": "Razer Gold"
+  },
+  {
+    "slug": "razer-gold-kodu-nasil-satilir",
+    "title": "Razer Gold Kodu Nasıl Satılır?",
+    "excerpt": "Kod doğrulama, güncel oran ve ödeme sürecini öğrenin.",
+    "category": "Razer Gold"
+  }
+]

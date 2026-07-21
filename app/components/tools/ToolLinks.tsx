@@ -1,0 +1,4 @@
+import Link from 'next/link';
+import { toolPages } from '../../lib/tools';
+
+export default function ToolLinks() { return <section className="content-shell pb-14 sm:pb-20"><div className="border-t border-white/8 pt-10"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="eyebrow">Ücretsiz yardımcı araçlar</p><h2 className="mt-3 text-3xl font-black">Diğer hesaplama araçları</h2></div><Link href="/araclar" className="text-sm font-black text-rose-300">Tüm araçlar →</Link></div><div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">{toolPages.map((tool) => <Link key={tool.href} href={tool.href} className="interactive-card rounded-2xl border border-white/8 bg-white/[.03] p-5"><h3 className="text-lg font-black">{tool.shortTitle}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{tool.description}</p><span className="mt-4 inline-flex text-sm font-black text-rose-300">Hesaplamayı aç →</span></Link>)}</div></div></section>; }

@@ -1,4 +1,62 @@
-import type { Metadata } from "next";
-export const metadata:Metadata={title:"Referanslar",description:"Sky Bozum hizmet yaklaşımı ve müşteri deneyimi."};
-const notes=["İşlem öncesinde net oran bilgisi verildi.","WhatsApp üzerinden hızlı geri dönüş aldım.","Süreç adım adım açık şekilde anlatıldı.","Kod kontrolü ve ödeme süreci düzenli ilerledi.","Mobil ödeme konusunda doğru yönlendirme yapıldı.","Tekrar işlem yapmak isteyeceğim bir deneyimdi."];
-export default function Page(){return <main className="bg-[#f6f8fc]"><section className="bg-slate-950 text-white"><div className="mx-auto max-w-7xl px-5 py-20 lg:px-8"><p className="text-sm font-black uppercase tracking-[.2em] text-blue-300">Referanslar</p><h1 className="mt-5 text-4xl font-black sm:text-6xl">Güveni şeffaf süreçle kazanıyoruz</h1><p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Aşağıdaki örnekler taslak müşteri deneyimi alanıdır. Gerçek ve izinli yorumlar admin paneliyle yönetilebilir.</p></div></section><section className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24"><div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">{notes.map((n,i)=><div key={n} className="rounded-[28px] border border-slate-200 bg-white p-7 shadow-sm"><div className="text-amber-400">★★★★★</div><p className="mt-5 text-base leading-8 text-slate-700">“{n}”</p><p className="mt-6 text-sm font-black text-slate-950">Doğrulanmış işlem #{String(i+1).padStart(3,'0')}</p></div>)}</div></section></main>}
+import type { Metadata } from 'next';
+import SkyReferencesSection from './references/components/SkyReferencesSection';
+import { skyReferences } from './references/data/skyReferences.data';
+import { absoluteUrl, breadcrumbSchema, createMetadata, jsonLd, SITE_NAME } from '../lib/seo';
+
+const title = 'Referanslar ve Kullanıcı Yorumları';
+const description =
+  'Sky Bozum hakkında WM Aracı üzerinde paylaşılmış açık kaynak kullanıcı yorumlarını inceleyin ve deneyiminizi paylaşın.';
+
+export const metadata: Metadata = createMetadata({
+  title,
+  description,
+  path: '/referanslar',
+  keywords: [
+    'Sky Bozum referanslar',
+    'mobil ödeme bozum yorumları',
+    'Razer Gold bozum yorumları',
+    'güvenilir mobil ödeme bozum',
+    'WM Aracı kullanıcı yorumları',
+  ],
+  imageAlt: 'Sky Bozum referanslar ve doğrulanmış müşteri deneyimleri',
+});
+
+const breadcrumb = breadcrumbSchema([
+  { name: 'Ana Sayfa', path: '/' },
+  { name: 'Referanslar', path: '/referanslar' },
+]);
+
+const publicReferences = skyReferences.filter((reference) => reference.source === 'wmaraci' && reference.sourceUrl && reference.verified);
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${absoluteUrl('/referanslar')}#collection`,
+  name: title,
+  description,
+  url: absoluteUrl('/referanslar'),
+  isPartOf: { '@id': `${absoluteUrl('/')}#website` },
+  about: { '@id': `${absoluteUrl('/')}#organization`, name: SITE_NAME },
+  inLanguage: 'tr-TR',
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: publicReferences.length,
+    itemListElement: publicReferences.slice(0, 20).map((reference, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: `${absoluteUrl('/referanslar')}#reference-${reference.id}`,
+      name: reference.title,
+    })),
+  },
+};
+
+export default function ReferencesPage() {
+  return (
+    <main className="min-h-screen bg-[#090b10] text-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumb) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(collectionSchema) }} />
+      <h1 className="sr-only">{title}</h1>
+      <SkyReferencesSection references={skyReferences} />
+    </main>
+  );
+}

@@ -1,9 +1,11 @@
 import {
   addDoc,
   collection,
+  doc,
   onSnapshot,
   query,
   serverTimestamp,
+  setDoc,
   where,
   type Firestore,
   type Timestamp,
@@ -18,6 +20,8 @@ export type PublicComment = {
   rating: number | null;
   createdAt: Date | null;
 };
+
+export type EngagementCounts = Record<string, number>;
 
 type CommentDocument = {
   parentId?: string | null;
@@ -35,6 +39,11 @@ type CreateCommentInput = {
   service: string;
   message: string;
   rating?: number | null;
+};
+
+type EngagementDocument = {
+  type?: 'like' | 'view';
+  targetId?: string;
 };
 
 export function subscribeToApprovedComments(
@@ -93,4 +102,55 @@ export async function createPendingComment(
     status: 'pending',
     createdAt: serverTimestamp(),
   });
+}
+
+export function getOrCreateVisitorId() {
+  if (typeof window === 'undefined') return '';
+  const storageKey = 'sky-reference-visitor';
+  const current = window.localStorage.getItem(storageKey);
+  if (current) return current;
+  const generated = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  window.localStorage.setItem(storageKey, generated);
+  return generated;
+}
+
+export async function registerEngagement(
+  firestore: Firestore,
+  visitorId: string,
+  type: 'like' | 'view',
+  targetId: string,
+) {
+  if (!visitorId || !targetId) return;
+  const safeTarget = targetId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 100);
+  const safeVisitor = visitorId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80);
+  await setDoc(doc(firestore, 'referenceEngagements', `${type}_${safeTarget}_${safeVisitor}`), {
+    type,
+    targetId,
+    visitorId,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export function subscribeToEngagementCounts(
+  firestore: Firestore,
+  onChange: (counts: { likes: EngagementCounts; views: EngagementCounts }) => void,
+  onError: () => void,
+) {
+  return onSnapshot(
+    collection(firestore, 'referenceEngagements'),
+    (snapshot) => {
+      const likes: EngagementCounts = {};
+      const views: EngagementCounts = {};
+      snapshot.docs.forEach((document) => {
+        const data = document.data() as EngagementDocument;
+        if (!data.targetId) return;
+        const target = data.type === 'view' ? views : likes;
+        target[data.targetId] = (target[data.targetId] ?? 0) + 1;
+      });
+      onChange({ likes, views });
+    },
+    onError,
+  );
 }

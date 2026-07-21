@@ -1,34 +1,28 @@
-import Image from "next/image";
-import Link from "next/link";
-import type { ServiceItem } from "../../lib/site";
-import { ArrowIcon } from "../ui/Icons";
+import Image from 'next/image';
+import Link from 'next/link';
+import type { ServiceItem } from '../../lib/site';
 
 const tones = {
-  emerald: "from-emerald-50 via-white to-lime-50 border-emerald-200/70",
-  blue: "from-blue-50 via-white to-cyan-50 border-blue-200/70",
-  violet: "from-violet-50 via-white to-fuchsia-50 border-violet-200/70",
-  orange: "from-orange-50 via-white to-amber-50 border-orange-200/70",
-  rose: "from-rose-50 via-white to-red-50 border-rose-200/70",
-  slate: "from-slate-100 via-white to-slate-50 border-slate-200",
+  emerald: 'from-emerald-500/20 to-emerald-950/10 border-emerald-400/20',
+  blue: 'from-cyan-500/20 to-blue-950/10 border-cyan-400/20',
+  violet: 'from-violet-500/20 to-violet-950/10 border-violet-400/20',
+  orange: 'from-amber-500/20 to-orange-950/10 border-amber-400/20',
+  rose: 'from-rose-500/20 to-rose-950/10 border-rose-400/20',
+  slate: 'from-slate-400/15 to-slate-950/10 border-slate-300/15',
 };
 
 export default function ServiceCard({ service }: { service: ServiceItem }) {
   return (
-    <Link href={`/hizmetler/${service.slug}`} className="group relative flex min-h-[420px] flex-col overflow-hidden rounded-[30px] border bg-white p-5 shadow-[0_15px_50px_rgba(15,23,42,.07)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_30px_80px_rgba(15,23,42,.14)]">
-      <div className={`relative flex h-44 items-center justify-center overflow-hidden rounded-[24px] border bg-gradient-to-br ${tones[service.tone]}`}>
-        <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-white/70 blur-2xl" />
-        <Image src={service.logo} alt={`${service.shortName} logosu`} width={360} height={150} className="relative z-10 h-28 w-[78%] object-contain transition duration-500 group-hover:scale-110" />
-        {service.popular && <span className="absolute left-4 top-4 rounded-full bg-slate-950 px-3 py-1.5 text-[10px] font-black uppercase tracking-[.15em] text-white">Popüler</span>}
-        <span className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-md transition group-hover:translate-x-1 group-hover:bg-slate-950 group-hover:text-white"><ArrowIcon /></span>
+    <Link href={`/hizmetler/${service.slug}`} aria-label={`${service.name} sayfasını aç`} className="focus-ring interactive-card group flex h-full min-h-80 flex-col rounded-[24px] border border-white/8 bg-[#0e1118] p-4 hover:border-rose-400/25 hover:bg-[#12151d]">
+      <div className={`relative flex h-[140px] items-center justify-center overflow-hidden rounded-2xl border bg-gradient-to-br p-5 ${tones[service.tone]} ${service.slug === 'itunes-apple' ? 'bg-white' : ''}`}>
+        <Image src={service.logo} alt={`${service.shortName} logosu`} width={230} height={92} sizes="(max-width: 639px) 70vw, (max-width: 1279px) 34vw, 230px" className="relative z-10 h-[100px] w-full max-w-[230px] object-contain drop-shadow-xl transition duration-300 group-hover:scale-[1.03]" />
+        {service.popular && <span className="absolute left-3 top-3 rounded-full bg-black/45 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-white">Popüler</span>}
       </div>
-      <div className="flex flex-1 flex-col px-2 pb-2 pt-7">
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-xs font-black uppercase tracking-[.18em] text-blue-700">{service.category}</p>
-          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black text-blue-700">{service.rate}</span>
-        </div>
-        <h3 className="mt-3 text-2xl font-black tracking-[-.03em] text-slate-950">{service.shortName}</h3>
-        <p className="mt-3 text-sm leading-7 text-slate-600">{service.description}</p>
-        <div className="mt-auto flex items-center gap-2 pt-7 text-sm font-black text-slate-950">Hizmeti incele <ArrowIcon className="h-4 w-4 transition group-hover:translate-x-1" /></div>
+      <div className="flex flex-1 flex-col pt-5">
+        <div className="flex items-center justify-between gap-3"><p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">{service.category}</p><span className="rounded-lg border border-white/8 bg-white/[0.035] px-2.5 py-1 text-xs font-black text-rose-300" title="Kesin oran işlem öncesinde teyit edilir">Aralık {service.rate}</span></div>
+        <h3 className="mt-3 text-xl font-black tracking-tight text-white">{service.shortName}</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-400">{service.description}</p>
+        <div className="mt-auto pt-5"><span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[.045] px-4 text-sm font-extrabold text-rose-300 transition group-hover:border-rose-300/30 group-hover:bg-rose-400/10 group-hover:text-orange-200">Hizmeti incele <span aria-hidden="true">→</span></span></div>
       </div>
     </Link>
   );

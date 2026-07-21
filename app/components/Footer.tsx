@@ -1,86 +1,75 @@
-import Link from "next/link";
-import { siteConfig } from "../lib/site";
+import Image from 'next/image';
+import Link from 'next/link';
+import { siteConfig } from '../lib/site';
+import PrivacyControls from './personalization/PrivacyControls';
 
 const groups = [
-  ["Hizmetler", [["Tüm Hizmetler", "/hizmetler"], ["Oran Hesapla", "/oran-hesapla"], ["Razer Gold", "/hizmetler/razer-gold-tl"], ["Paycell", "/hizmetler/paycell"]]],
-  ["Bilgi Merkezi", [["Makaleler", "/bilgi-merkezi"], ["Referanslar", "/referanslar"], ["Sık Sorulan Sorular", "/sss"]]],
-  ["Kurumsal", [["Hakkımızda", "/hakkimizda"], ["İletişim", "/iletisim"], ["Gizlilik Politikası", "/gizlilik-politikasi"], ["Kullanım Şartları", "/kullanim-sartlari"]]],
+  ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],
+  ['Keşfet', [['Oran Hesapla', '/araclar#oran-hesapla'], ['Operatörler', '/operatorler'], ['Rehber', '/bilgi-merkezi'], ['Referanslar', '/referanslar'], ['S.S.S.', '/sss']]],
+  ['Kurumsal', [['Hakkımızda', '/hakkimizda'], ['İş Ortaklığı', '/is-ortakligi'], ['Güven Merkezi', '/guven-merkezi'], ['Gizlilik Politikası', '/gizlilik-politikasi'], ['Kullanım Şartları', '/kullanim-sartlari'], ['İletişim', '/iletisim']]],
+] as const;
+
+const socials = [
+  { label: 'WhatsApp', href: siteConfig.whatsapp, icon: 'M12 2a9.7 9.7 0 0 0-8.4 14.55L2.3 21.3l4.87-1.28A9.7 9.7 0 1 0 12 2Zm0 17.64a7.9 7.9 0 0 1-4.03-1.1l-.29-.17-2.89.76.77-2.81-.19-.3A7.91 7.91 0 1 1 12 19.64Z' },
+  { label: 'E-posta', href: `mailto:${siteConfig.email}`, icon: 'M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm0 0 8 7 8-7' },
 ] as const;
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#07110f] px-5 pb-8 pt-16 text-white lg:px-8 lg:pt-20">
-      <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[52rem] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl" />
-
-      <div className="relative mx-auto max-w-7xl">
-        <div className="mb-14 grid gap-8 rounded-[34px] border border-white/10 bg-white/[.04] p-7 shadow-2xl shadow-black/20 backdrop-blur sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[.2em] text-emerald-300">İşleme hazır mısınız?</p>
-            <h2 className="mt-3 max-w-2xl text-3xl font-black tracking-[-.04em] sm:text-4xl">
-              Güncel oranınızı öğrenin, işleminizi güvenle başlatın.
-            </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">
-              Ürün türünü ve tutarı paylaşın. Uygunluk kontrolünden sonra net oran bilgisi alın.
-            </p>
-          </div>
-          <a
-            href={siteConfig.whatsapp}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-14 items-center justify-center rounded-2xl bg-emerald-400 px-7 text-sm font-black text-emerald-950 transition hover:-translate-y-0.5 hover:bg-emerald-300"
-          >
-            WhatsApp&apos;tan oran al
-          </a>
-        </div>
-
-        <div className="grid gap-12 border-b border-white/10 pb-14 lg:grid-cols-[1.3fr_2fr]">
+    <footer className="relative overflow-hidden border-t border-white/8 bg-[#07080d] pb-8 pt-14 text-white">
+      <div className="content-wide relative">
+        <div className="grid gap-10 border-b border-white/8 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div className="max-w-sm">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl border border-emerald-300/20 bg-emerald-400 text-lg font-black text-emerald-950 shadow-lg shadow-emerald-950/30">
-                S
-              </span>
+            <Link href="/" className="focus-ring inline-flex items-center gap-3 rounded-lg">
+              <Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme" width={52} height={52} className="size-12 rounded-2xl border border-[#e8c27a]/20 object-cover" />
               <span>
-                <b className="block text-xl">Sky Bozum</b>
-                <span className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">bozumcu.net</span>
+                <strong className="block font-[var(--font-display)] text-lg font-bold tracking-tight">Sky Bozum</strong>
+                <span className="mt-0.5 block text-xs font-semibold text-slate-500">bozumcu.net</span>
               </span>
             </Link>
-            <p className="mt-6 text-sm leading-7 text-slate-400">
-              Mobil ödeme, dijital kod ve kart işlemleri için şeffaf bilgi, hesaplama ve destek platformu.
-            </p>
-            <div className="mt-6 space-y-2 text-sm text-slate-400">
-              <a className="block transition hover:text-white" href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}>{siteConfig.phone}</a>
-              <a className="block transition hover:text-white" href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            <p className="mt-5 text-sm leading-7 text-slate-400">Mobil ödeme ve dijital bakiyeler için açık oran bilgisi, kontrollü işlem akışı ve yazılı destek.</p>
+
+            <div className="mt-6 flex gap-2.5">
+              {socials.map((social) => (
+                <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className="focus-ring grid size-9 place-items-center rounded-full border border-white/10 bg-white/[.03] text-slate-400 transition hover:border-[#e8c27a]/35 hover:text-[#f2c98a]">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d={social.icon} strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </a>
+              ))}
             </div>
           </div>
 
-          <div className="grid gap-9 sm:grid-cols-3">
-            {groups.map(([title, links]) => (
-              <div key={title}>
-                <h3 className="text-xs font-black uppercase tracking-[.18em] text-slate-300">{title}</h3>
-                <ul className="mt-5 space-y-3.5">
-                  {links.map(([label, href]) => (
-                    <li key={href}>
-                      <Link href={href} className="text-sm text-slate-500 transition hover:translate-x-1 hover:text-emerald-300">
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+          <div className="grid gap-8 sm:grid-cols-4">
+            <nav aria-label="Alt menü" className="contents">
+              {groups.map(([title, links]) => (
+                <div key={title}>
+                  <h3 className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-300">{title}</h3>
+                  <ul className="mt-4 space-y-3">
+                    {links.map(([label, href]) => (
+                      <li key={href}><Link href={href} className="text-sm text-slate-500 transition hover:text-[#f2c98a]">{label}</Link></li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+            <div>
+              <h3 className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-300">İletişim</h3>
+              <div className="mt-4 space-y-3 text-sm text-slate-500">
+                <a className="flex items-center gap-2 transition hover:text-[#f2c98a]" href={`mailto:${siteConfig.email}`}><svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm0 0 8 7 8-7" strokeLinecap="round" strokeLinejoin="round" /></svg>{siteConfig.email}</a>
+                <a className="flex items-center gap-2 transition hover:text-[#f2c98a]" href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}><svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 5c0 8.3 6.7 15 15 15l3-4-6-3-2 2a11 11 0 0 1-5-5l2-2-3-6Z" strokeLinecap="round" strokeLinejoin="round" /></svg>{siteConfig.phone}</a>
               </div>
-            ))}
+              <a href={siteConfig.liveSupportHref} target="_blank" rel="noopener noreferrer" className="btn-primary focus-ring mt-5 min-h-11 w-full px-4 text-xs">{siteConfig.liveSupportLabel}</a>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-6 text-slate-600">
-            © {new Date().getFullYear()} Sky Bozum. Tüm hakları saklıdır.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {['SSL korumalı bağlantı', 'Şeffaf işlem bilgisi', '7/24 destek'].map((item) => (
-              <span key={item} className="rounded-full border border-white/10 bg-white/[.03] px-3 py-1.5 text-[11px] font-bold text-slate-500">
-                {item}
-              </span>
-            ))}
+        <div className="flex flex-col gap-4 pt-7 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p>© {new Date().getFullYear()} Sky Bozum. Tüm hakları saklıdır.</p>
+            <div className="mt-3"><PrivacyControls /></div>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 font-bold text-slate-400">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 10V7a5 5 0 0 1 10 0v3m-11 0h12v11H6V10Z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            SSL Güvenli
           </div>
         </div>
       </div>

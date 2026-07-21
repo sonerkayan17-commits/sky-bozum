@@ -10,13 +10,15 @@ service cloud.firestore {
 
     function isValidService() {
       return request.resource.data.service in [
+        'Mobil Ödeme',
         'Vodafone Mobil Ödeme',
         'Turkcell Mobil Ödeme',
         'Türk Telekom Mobil Ödeme',
+        'Vodafone Pay',
         'Paycell',
         'Pokus',
         'Razer Gold',
-        'Apple Hediye Kartı',
+        'Apple / iTunes',
         'Steam',
         'Diğer'
       ];
@@ -42,7 +44,7 @@ service cloud.firestore {
       return request.resource.data.parentId == null
         && request.resource.data.message is string
         && request.resource.data.message.size() >= 10
-        && request.resource.data.message.size() <= 800
+        && request.resource.data.message.size() <= 600
         && request.resource.data.rating is int
         && request.resource.data.rating >= 1
         && request.resource.data.rating <= 5;
@@ -51,6 +53,7 @@ service cloud.firestore {
     function isValidReply() {
       return request.resource.data.parentId is string
         && request.resource.data.parentId.size() > 0
+        && request.resource.data.parentId.size() <= 140
         && request.resource.data.message is string
         && request.resource.data.message.size() >= 3
         && request.resource.data.message.size() <= 500
@@ -61,6 +64,22 @@ service cloud.firestore {
       allow read: if resource.data.status == 'approved';
       allow create: if isValidBaseComment()
         && (isValidReview() || isValidReply());
+      allow update, delete: if false;
+    }
+
+    match /referenceEngagements/{engagementId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+          'type', 'targetId', 'visitorId', 'createdAt'
+        ])
+        && request.resource.data.type in ['like', 'view']
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() >= 1
+        && request.resource.data.targetId.size() <= 100
+        && request.resource.data.visitorId is string
+        && request.resource.data.visitorId.size() >= 8
+        && request.resource.data.visitorId.size() <= 80
+        && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 

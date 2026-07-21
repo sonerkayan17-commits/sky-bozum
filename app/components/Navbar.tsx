@@ -1,6 +1,110 @@
 'use client';
+
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {useEffect,useState} from 'react';
-const items=[['Ana Sayfa','/'],['Hizmetler','/hizmetler'],['Oran Hesapla','/oran-hesapla'],['Bilgi Merkezi','/bilgi-merkezi'],['Referanslar','/referanslar'],['S.S.S.','/sss'],['İletişim','/iletisim']] as const;
-export default function Navbar(){const p=usePathname();const[open,setOpen]=useState(false);const[dark,setDark]=useState(false);const[mounted,setMounted]=useState(false);useEffect(()=>{const timer=window.setTimeout(()=>{const saved=localStorage.getItem('theme');const d=saved?saved==='dark':matchMedia('(prefers-color-scheme: dark)').matches;setDark(d);setMounted(true);document.documentElement.classList.toggle('dark',d)},0);return()=>window.clearTimeout(timer)},[]);useEffect(()=>{document.body.style.overflow=open?'hidden':'';return()=>{document.body.style.overflow=''}},[open]);useEffect(()=>{const timer=window.setTimeout(()=>setOpen(false),0);return()=>window.clearTimeout(timer)},[p]);useEffect(()=>{const f=(e:KeyboardEvent)=>e.key==='Escape'&&setOpen(false);addEventListener('keydown',f);return()=>removeEventListener('keydown',f)},[]);const active=(h:string)=>h==='/'?p==='/':p.startsWith(h);const toggle=()=>{const n=!dark;setDark(n);localStorage.setItem('theme',n?'dark':'light');document.documentElement.classList.toggle('dark',n)};return <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/85"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><div className="flex h-16 items-center justify-between"><Link href="/" className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-lime-400 text-sm font-black text-white shadow-lg shadow-emerald-500/20">S</span><span className="text-lg font-black tracking-tight text-slate-950 dark:text-white">Sky Bozum</span></Link><nav className="hidden items-center gap-1 lg:flex">{items.map(([l,h])=><Link key={h} href={h} className={`rounded-xl px-3 py-2 text-sm font-bold transition ${active(h)?'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300':'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white'}`}>{l}</Link>)}</nav><div className="flex items-center gap-2"><button onClick={toggle} title={dark?'Açık tema':'Koyu tema'} aria-label={dark?'Açık tema':'Koyu tema'} className="rounded-xl p-2.5 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900">{mounted&&dark?<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>:<svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>}</button><button onClick={()=>setOpen(v=>!v)} aria-expanded={open} aria-label={open?'Menüyü kapat':'Menüyü aç'} className="rounded-xl p-2.5 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-900 lg:hidden"><svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeWidth="2" d={open?'M6 18 18 6M6 6l12 12':'M4 6h16M4 12h16M4 18h16'}/></svg></button></div></div><div className={`overflow-hidden transition-all duration-300 lg:hidden ${open?'max-h-[70vh] opacity-100':'max-h-0 opacity-0'}`}><nav className="space-y-1 border-t border-slate-200 py-4 dark:border-slate-800">{items.map(([l,h])=><Link key={h} href={h} className={`block rounded-xl px-4 py-3 text-sm font-bold ${active(h)?'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300':'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-900'}`}>{l}</Link>)}</nav></div></div></header>}
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { siteConfig } from '../lib/site';
+import SiteSearch from './SiteSearch';
+
+const items = [
+  ['Ana Sayfa', '/'],
+  ['Hizmetlerimiz', '/hizmetler'],
+  ['İş Ortaklığı', '/is-ortakligi'],
+  ['Araçlar', '/araclar'],
+  ['Operatörler', '/operatorler'],
+  ['Rehber', '/bilgi-merkezi'],
+  ['Referanslar', '/referanslar'],
+  ['Güven', '/guven-merkezi'],
+  ['S.S.S.', '/sss'],
+  ['İletişim', '/iletisim'],
+] as const;
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const firstMobileLink = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
+    const focusFrame = requestAnimationFrame(() => firstMobileLink.current?.focus());
+    window.addEventListener('keydown', close);
+    return () => { cancelAnimationFrame(focusFrame); document.body.style.overflow = previous; window.removeEventListener('keydown', close); };
+  }, [open]);
+
+  const active = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08090e]/88 text-white backdrop-blur-2xl">
+      <div className="content-shell flex h-[68px] items-center justify-between gap-4">
+        <Link href="/" className="group flex items-center gap-3" aria-label="Sky Bozum ana sayfa">
+          <span className="relative h-11 w-11 overflow-hidden rounded-xl border border-pink-500/20 shadow-[0_10px_28px_rgba(236,72,153,.18)]"><Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme logosu" fill sizes="44px" className="object-cover" priority /></span>
+          <span className="leading-none">
+            <span className="block text-[11px] font-black uppercase tracking-[.24em] text-[#f2c98a]">Sky</span>
+            <span className="mt-1 block text-lg font-black tracking-[-.04em] text-white">BOZUM</span>
+          </span>
+        </Link>
+
+        <SiteSearch mode="desktop" />
+
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Ana menü">
+          {items.map(([label, href]) => (
+            <Link
+              key={href}
+              href={href}
+              aria-current={active(href) ? 'page' : undefined}
+              className={`relative inline-flex min-h-11 items-center rounded-lg px-3 py-2.5 text-[13px] font-bold tracking-[-.01em] transition ${
+                active(href)
+                  ? 'text-pink-400'
+                  : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
+              }`}
+            >
+              {label}
+              {active(href) && <span className="absolute inset-x-3 -bottom-[17px] h-0.5 rounded-full bg-gradient-to-r from-pink-500 to-[#e8c27a] shadow-[0_0_12px_rgba(236,72,153,.65)]" />}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2.5">
+          <a
+            href={siteConfig.liveSupportHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden min-h-11 items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 via-rose-500 to-orange-400 px-5 text-sm font-black text-white shadow-[0_12px_30px_rgba(236,72,153,.22)] transition hover:-translate-y-0.5 hover:brightness-110 sm:inline-flex"
+          >
+            Destek Hattı
+          </a>
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? 'Menüyü kapat' : 'Menüyü aç'}
+            onClick={() => setOpen((value) => !value)}
+            className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[.045] text-slate-200 transition hover:bg-white/[.09] xl:hidden"
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path strokeLinecap="round" d={open ? 'M6 18 18 6M6 6l12 12' : 'M4 7h16M4 12h16M4 17h16'} />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="mobile-navigation" aria-hidden={!open} className={`overflow-hidden border-t border-white/10 bg-[#0b0d12]/98 transition-all duration-300 xl:hidden ${open ? 'max-h-[calc(100dvh-74px)] overflow-y-auto opacity-100' : 'pointer-events-none max-h-0 opacity-0'}`}>
+        <nav className="content-shell space-y-1 py-4" aria-label="Mobil menü">
+          <div className="mb-4"><SiteSearch mode="mobile" onNavigate={() => setOpen(false)} /></div>
+          {items.map(([label, href], index) => (
+            <Link ref={index === 0 ? firstMobileLink : undefined} key={href} href={href} aria-current={active(href) ? 'page' : undefined} onClick={() => setOpen(false)} className={`block min-h-11 rounded-xl px-4 py-3 text-sm font-bold ${active(href) ? 'bg-pink-500/15 text-pink-300' : 'text-slate-300 hover:bg-white/[.05] hover:text-white'}`}>
+              {label}
+            </Link>
+          ))}
+          <a href={siteConfig.liveSupportHref} target="_blank" rel="noopener noreferrer" className="mt-3 flex min-h-11 items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 to-orange-400 px-4 py-3 text-center text-sm font-black text-white">
+            {siteConfig.liveSupportLabel}
+          </a>
+        </nav>
+      </div>
+    </header>
+  );
+}
