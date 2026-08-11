@@ -1,0 +1,156 @@
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+  type Firestore,
+  type Timestamp,
+} from 'firebase/firestore';
+
+export type PublicComment = {
+  id: string;
+  parentId: string | null;
+  author: string;
+  service: string;
+  message: string;
+  rating: number | null;
+  createdAt: Date | null;
+};
+
+export type EngagementCounts = Record<string, number>;
+
+type CommentDocument = {
+  parentId?: string | null;
+  author?: string;
+  service?: string;
+  message?: string;
+  rating?: number | null;
+  status?: 'pending' | 'approved' | 'rejected';
+  createdAt?: Timestamp;
+};
+
+type CreateCommentInput = {
+  parentId?: string | null;
+  author: string;
+  service: string;
+  message: string;
+  rating?: number | null;
+};
+
+type EngagementDocument = {
+  type?: 'like' | 'view';
+  targetId?: string;
+};
+
+export function subscribeToApprovedComments(
+  firestore: Firestore,
+  onChange: (comments: PublicComment[]) => void,
+  onError: () => void,
+) {
+  const commentsQuery = query(
+    collection(firestore, 'comments'),
+    where('status', '==', 'approved'),
+  );
+
+  return onSnapshot(
+    commentsQuery,
+    (snapshot) => {
+      const comments = snapshot.docs
+        .map((document) => {
+          const data = document.data() as CommentDocument;
+
+          return {
+            id: document.id,
+            parentId: data.parentId ?? null,
+            author: data.author ?? 'Ziyaretçi',
+            service: data.service ?? 'Diğer',
+            message: data.message ?? '',
+            rating:
+              typeof data.rating === 'number' && data.rating >= 1 && data.rating <= 5
+                ? data.rating
+                : null,
+            createdAt: data.createdAt?.toDate() ?? null,
+          } satisfies PublicComment;
+        })
+        .filter((comment) => comment.message)
+        .sort((first, second) => {
+          const firstTime = first.createdAt?.getTime() ?? 0;
+          const secondTime = second.createdAt?.getTime() ?? 0;
+          return secondTime - firstTime;
+        });
+
+      onChange(comments);
+    },
+    onError,
+  );
+}
+
+export async function createPendingComment(
+  firestore: Firestore,
+  input: CreateCommentInput,
+) {
+  await addDoc(collection(firestore, 'comments'), {
+    parentId: input.parentId ?? null,
+    author: input.author,
+    service: input.service,
+    message: input.message,
+    rating: input.parentId ? null : (input.rating ?? 5),
+    status: 'pending',
+    createdAt: serverTimestamp(),
+  });
+}
+
+export function getOrCreateVisitorId() {
+  if (typeof window === 'undefined') return '';
+  const storageKey = 'sky-reference-visitor';
+  const current = window.localStorage.getItem(storageKey);
+  if (current) return current;
+  const generated = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  window.localStorage.setItem(storageKey, generated);
+  return generated;
+}
+
+export async function registerEngagement(
+  firestore: Firestore,
+  visitorId: string,
+  type: 'like' | 'view',
+  targetId: string,
+) {
+  if (!visitorId || !targetId) return;
+  const safeTarget = targetId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 100);
+  const safeVisitor = visitorId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80);
+  await setDoc(doc(firestore, 'referenceEngagements', `${type}_${safeTarget}_${safeVisitor}`), {
+    type,
+    targetId,
+    visitorId,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export function subscribeToEngagementCounts(
+  firestore: Firestore,
+  onChange: (counts: { likes: EngagementCounts; views: EngagementCounts }) => void,
+  onError: () => void,
+) {
+  return onSnapshot(
+    collection(firestore, 'referenceEngagements'),
+    (snapshot) => {
+      const likes: EngagementCounts = {};
+      const views: EngagementCounts = {};
+      snapshot.docs.forEach((document) => {
+        const data = document.data() as EngagementDocument;
+        if (!data.targetId) return;
+        const target = data.type === 'view' ? views : likes;
+        target[data.targetId] = (target[data.targetId] ?? 0) + 1;
+      });
+      onChange({ likes, views });
+    },
+    onError,
+  );
+}

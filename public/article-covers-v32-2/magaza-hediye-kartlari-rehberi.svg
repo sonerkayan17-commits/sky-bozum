@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" rx="44" fill="#081421"/>
+<circle cx="1400" cy="100" r="300" fill="#fb7185" opacity=".14"/><circle cx="1280" cy="800" r="360" fill="#38bdf8" opacity=".08"/>
+<text x="92" y="104" fill="#fb7185" font-family="Arial" font-size="25" font-weight="700" letter-spacing="3">KARŞILAŞTIRMALI HEDİYE KARTI REHBERİ</text>
+<text x="92" y="184" fill="#ffffff" font-family="Arial" font-size="58" font-weight="700">Mağaza hediye kartları rehberi</text>
+<text x="92" y="232" fill="#a8b7c8" font-family="Arial" font-size="25">Kart türünü, kullanım kanalını ve temel kısıtları tek ekranda karşılaştırın.</text>
+<g font-family="Arial">
+<rect x="88" y="315" width="438" height="360" rx="28" fill="#101e2d" stroke="#344b60" stroke-width="2"/>
+<rect x="118" y="345" width="378" height="82" rx="20" fill="#fb7185"/><text x="148" y="378" fill="#35101a" font-size="18" font-weight="700">MODA &amp; MAĞAZA KARTI</text><text x="148" y="410" fill="#1c1015" font-size="27" font-weight="700">₺ 750 BAKİYE</text>
+<text x="122" y="478" fill="#fff" font-size="22" font-weight="700">Nerede kullanılır?</text><text x="122" y="514" fill="#9fb0c1" font-size="18">Fiziksel mağaza ve bazı online kanallar</text>
+<rect x="122" y="552" width="164" height="43" rx="14" fill="#22364a"/><text x="145" y="580" fill="#d8e2eb" font-size="16">MAĞAZA</text><rect x="300" y="552" width="164" height="43" rx="14" fill="#22364a"/><text x="341" y="580" fill="#d8e2eb" font-size="16">ONLINE</text>
+<text x="122" y="635" fill="#fda4af" font-size="16">Nakit iade genellikle yoktur.</text>
+<rect x="581" y="315" width="438" height="360" rx="28" fill="#101e2d" stroke="#344b60" stroke-width="2"/>
+<rect x="611" y="345" width="378" height="82" rx="20" fill="#38bdf8"/><text x="641" y="378" fill="#07202d" font-size="18" font-weight="700">DİJİTAL PLATFORM KARTI</text><text x="641" y="410" fill="#051721" font-size="27" font-weight="700">500 TL KOD</text>
+<text x="615" y="478" fill="#fff" font-size="22" font-weight="700">Nasıl çalışır?</text><text x="615" y="514" fill="#9fb0c1" font-size="18">Kod hesaba tanımlanır, platform bakiyesine dönüşür</text>
+<rect x="615" y="552" width="164" height="43" rx="14" fill="#22364a"/><text x="651" y="580" fill="#d8e2eb" font-size="16">BÖLGE</text><rect x="793" y="552" width="164" height="43" rx="14" fill="#22364a"/><text x="823" y="580" fill="#d8e2eb" font-size="16">PARA BİRİMİ</text>
+<text x="615" y="635" fill="#7dd3fc" font-size="16">Kod uyumluluğu satın almadan önce kontrol edilir.</text>
+<rect x="1074" y="315" width="438" height="360" rx="28" fill="#101e2d" stroke="#344b60" stroke-width="2"/>
+<rect x="1104" y="345" width="378" height="82" rx="20" fill="#f59e0b"/><text x="1134" y="378" fill="#2d1900" font-size="18" font-weight="700">MARKET &amp; YEMEK KARTI</text><text x="1134" y="410" fill="#241500" font-size="27" font-weight="700">₺ 1.250 BAKİYE</text>
+<text x="1108" y="478" fill="#fff" font-size="22" font-weight="700">Temel kontrol</text><text x="1108" y="514" fill="#9fb0c1" font-size="18">Anlaşmalı iş yeri, kategori ve harcama sınırı</text>
+<rect x="1108" y="552" width="164" height="43" rx="14" fill="#22364a"/><text x="1139" y="580" fill="#d8e2eb" font-size="16">İŞ YERİ</text><rect x="1286" y="552" width="164" height="43" rx="14" fill="#22364a"/><text x="1320" y="580" fill="#d8e2eb" font-size="16">KATEGORİ</text>
+<text x="1108" y="635" fill="#fbbf24" font-size="16">Her bakiye serbest nakit niteliğinde değildir.</text>
+</g>
+<rect x="88" y="714" width="1424" height="66" rx="20" fill="#0e2235" stroke="#29445d"/>
+<text x="122" y="755" fill="#dce8f2" font-family="Arial" font-size="20">Satın almadan önce:</text><text x="330" y="755" fill="#fb7185" font-family="Arial" font-size="20" font-weight="700">kart türü</text><text x="455" y="755" fill="#8ba0b5" font-family="Arial" font-size="20">•</text><text x="495" y="755" fill="#38bdf8" font-family="Arial" font-size="20" font-weight="700">kullanım kanalı</text><text x="700" y="755" fill="#8ba0b5" font-family="Arial" font-size="20">•</text><text x="740" y="755" fill="#f59e0b" font-family="Arial" font-size="20" font-weight="700">bölge / kategori</text><text x="960" y="755" fill="#8ba0b5" font-family="Arial" font-size="20">•</text><text x="1000" y="755" fill="#22c55e" font-family="Arial" font-size="20" font-weight="700">iade koşulu</text><text x="1155" y="755" fill="#dce8f2" font-family="Arial" font-size="20">kontrol edilmeli.</text>
+<text x="92" y="832" fill="#526a80" font-family="Arial" font-size="17">SKY BOZUM • BİLGİ MERKEZİ • bozumcu.net</text>
+</svg>

@@ -1,0 +1,51 @@
+/* The CTA occupies half of the homepage grid, so its internal layout stays single-column. */
+.home-page .home-contact-band {
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto auto auto !important;
+  gap: 1.15rem !important;
+  min-height: 470px !important;
+  padding: 1.7rem !important;
+}
+
+.home-page .home-contact-band__copy,
+.home-page .home-contact-band__actions,
+.home-page .home-contact-band__facts {
+  grid-column: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.home-page .home-contact-band__copy h2 {
+  max-width: 440px !important;
+  font-size: clamp(2rem, 2.65vw, 2.8rem) !important;
+  line-height: .98 !important;
+  letter-spacing: -.045em !important;
+}
+
+.home-page .home-contact-band__copy > span {
+  max-width: 500px !important;
+  margin-top: .75rem !important;
+  font-size: .7rem !important;
+  line-height: 1.6 !important;
+}
+
+.home-page .home-contact-band__actions {
+  align-self: start !important;
+  justify-content: flex-start !important;
+}
+
+.home-page .home-contact-band__actions > a {
+  width: 100% !important;
+}
+
+.home-page .home-contact-band__facts {
+  align-self: end !important;
+  margin-top: auto !important;
+}
+
+@media (max-width: 640px) {
+  .home-page .home-contact-band {
+    min-height: 0 !important;
+    padding: 1.25rem !important;
+  }
+}

@@ -1,0 +1,132 @@
+/* Homepage density correction: preserve hierarchy without oversized empty sections. */
+.home-page .home-trust.home-trust--executive {
+  padding-block: clamp(2.5rem, 4vw, 4rem) !important;
+}
+
+.home-page .trust-dossier__header {
+  min-height: 60px !important;
+  padding-block: .7rem !important;
+}
+
+.home-page .trust-dossier__body {
+  min-height: 300px !important;
+}
+
+.home-page .trust-dossier__intro {
+  padding: clamp(1.6rem, 2.5vw, 2.4rem) !important;
+}
+
+.home-page .trust-dossier__intro h2 {
+  max-width: 610px !important;
+  font-size: clamp(2.15rem, 3.5vw, 3.65rem) !important;
+  line-height: .95 !important;
+}
+
+.home-page .trust-dossier__intro > p:not(.eyebrow) {
+  margin-top: 1rem !important;
+  font-size: .78rem !important;
+  line-height: 1.65 !important;
+}
+
+.home-page .trust-dossier__actions {
+  margin-top: 1.25rem !important;
+}
+
+.home-page .trust-dossier__rings {
+  width: 138px !important;
+  height: 138px !important;
+}
+
+.home-page .trust-dossier__rings svg {
+  width: 58px !important;
+}
+
+.home-page .trust-dossier__registry {
+  padding: 1.45rem 1.25rem !important;
+}
+
+.home-page .trust-dossier__registry dl {
+  margin-top: .9rem !important;
+}
+
+.home-page .trust-dossier__registry dl div {
+  padding: .72rem 0 !important;
+}
+
+.home-page .trust-dossier__protocol-title,
+.home-page .trust-dossier__protocol li {
+  padding-block: .9rem !important;
+}
+
+.home-page .trust-dossier__footer {
+  padding-block: .65rem !important;
+}
+
+.home-page .home-final-section {
+  padding-top: 2.25rem !important;
+  padding-bottom: 3rem !important;
+}
+
+.home-page .home-faq-card,
+.home-page .contact-concierge {
+  min-height: 470px !important;
+}
+
+.home-page .home-faq-card {
+  padding: 1.4rem !important;
+}
+
+.home-page .home-faq-question {
+  min-height: 51px !important;
+}
+
+.home-page .home-faq-list {
+  margin-top: 14px !important;
+}
+
+.home-page .home-faq-links {
+  margin-top: 12px !important;
+  padding-top: 12px !important;
+}
+
+.home-page .contact-concierge__topline {
+  min-height: 44px !important;
+}
+
+.home-page .contact-concierge__main {
+  min-height: 330px !important;
+}
+
+.home-page .contact-concierge__copy {
+  padding: 1.55rem !important;
+}
+
+.home-page .contact-concierge__copy h2 {
+  font-size: clamp(2rem, 3vw, 3.2rem) !important;
+}
+
+.home-page .contact-concierge__copy > span {
+  margin-top: .85rem !important;
+  line-height: 1.55 !important;
+}
+
+.home-page .contact-concierge__copy > a {
+  min-height: 46px !important;
+  margin-top: 1rem !important;
+}
+
+.home-page .contact-concierge__desk {
+  padding: 1.2rem !important;
+}
+
+.home-page .contact-concierge__footer > p {
+  min-height: 70px !important;
+  padding-block: .7rem !important;
+}
+
+@media (max-width: 1024px) {
+  .home-page .home-faq-card,
+  .home-page .contact-concierge {
+    min-height: 0 !important;
+  }
+}

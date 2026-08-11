@@ -1,0 +1,59 @@
+{
+  "css_original_bytes": 264681,
+  "css_entry_bytes": 1190,
+  "css_chunks": [
+    {
+      "file": "app/styles/foundation.css",
+      "bytes": 39915
+    },
+    {
+      "file": "app/styles/homepage-legacy.css",
+      "bytes": 39152
+    },
+    {
+      "file": "app/styles/homepage-polish.css",
+      "bytes": 39037
+    },
+    {
+      "file": "app/styles/content-services.css",
+      "bytes": 39570
+    },
+    {
+      "file": "app/styles/tools-production.css",
+      "bytes": 39290
+    },
+    {
+      "file": "app/styles/bilgi-merkezi-v45-1.css",
+      "bytes": 48313
+    },
+    {
+      "file": "app/styles/bilgi-merkezi-v45-2.css",
+      "bytes": 31680
+    }
+  ],
+  "article_count": 30,
+  "article_parts": [
+    {
+      "file": "app/lib/v21ExtendedArticles.part1.ts",
+      "articles": 8,
+      "bytes": 80856
+    },
+    {
+      "file": "app/lib/v21ExtendedArticles.part2.ts",
+      "articles": 8,
+      "bytes": 79758
+    },
+    {
+      "file": "app/lib/v21ExtendedArticles.part3.ts",
+      "articles": 8,
+      "bytes": 80108
+    },
+    {
+      "file": "app/lib/v21ExtendedArticles.part4.ts",
+      "articles": 6,
+      "bytes": 59976
+    }
+  ],
+  "original_css_body_sha256": "f2da1d8d5c8a3c990521bde6f25f278fe6e9bc1c6e6ce48ecbc6c49014ac9b79",
+  "article_slugs_sha256": "9cdbacc927ce4eb44eb489200fd647bf954ba8e4f84ccc17bedcf8ce7ed4598f"
+}

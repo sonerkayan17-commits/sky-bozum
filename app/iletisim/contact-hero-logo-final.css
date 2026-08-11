@@ -1,0 +1,22 @@
+/* Final collision guard. This file intentionally loads last. */
+.contact-page .contact-hero-grid.contact-hero-grid--268 > .contact-hero-brandmark {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 3 !important;
+  display: block !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  width: 176px !important;
+  height: 176px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+@media (max-width: 1320px) {
+  .contact-page .contact-hero-grid.contact-hero-grid--268 > .contact-hero-brandmark {
+    display: none !important;
+  }
+}

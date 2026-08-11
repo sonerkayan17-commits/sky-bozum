@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">Hadi nedir, nasıl kullanılır</title><desc id="desc">Hadi uygulamasındaki cüzdan, kart ve limit alanlarını adım adım gösteren premium rehber kapağı.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071827"/><stop offset="1" stop-color="#102f3a"/></linearGradient>
+ <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb126"/><stop offset="1" stop-color="#ff7a18"/></linearGradient>
+ <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#163747"/><stop offset="1" stop-color="#09202f"/></linearGradient>
+</defs>
+<rect width="1200" height="675" rx="34" fill="url(#bg)"/>
+<circle cx="1080" cy="70" r="170" fill="#ff9a22" opacity=".08"/><path d="M0 570 C260 470 400 690 680 575 C900 485 1030 500 1200 570 V675 H0Z" fill="#0b2431"/>
+<text x="64" y="70" fill="#ffb02b" font-family="Arial" font-size="18" font-weight="700" letter-spacing="3">HADİ EKOSİSTEMİ</text>
+<text x="64" y="128" fill="#fff" font-family="Arial" font-size="44" font-weight="800">Hadi nedir, nasıl kullanılır?</text>
+<text x="64" y="168" fill="#a9c0ca" font-family="Arial" font-size="20">Cüzdanı, kartı ve limit alanlarını birbirine karıştırmadan öğren</text>
+
+<g transform="translate(75 225)">
+ <rect width="420" height="320" rx="28" fill="#0d2938" stroke="#275064" stroke-width="2"/>
+ <text x="30" y="44" fill="#a9c1cb" font-family="Arial" font-size="15">HADİ ANA EKRANI</text>
+ <text x="30" y="88" fill="#fff" font-family="Arial" font-size="35" font-weight="800">₺ 5.600</text>
+ <text x="30" y="112" fill="#7297a7" font-family="Arial" font-size="13">Kullanılabilir cüzdan bakiyesi</text>
+ <rect x="30" y="140" width="360" height="64" rx="18" fill="url(#orange)"/>
+ <circle cx="62" cy="172" r="16" fill="#fff3d9"/><path d="M54 172h16M62 164v16" stroke="#a64c09" stroke-width="3" stroke-linecap="round"/>
+ <text x="92" y="168" fill="#4c2105" font-family="Arial" font-size="17" font-weight="800">Cüzdana para yükle</text><text x="92" y="188" fill="#6e350b" font-family="Arial" font-size="13">Banka kartı veya desteklenen kanal</text>
+ <g transform="translate(30 228)"><rect width="170" height="62" rx="17" fill="#14394a"/><circle cx="31" cy="31" r="15" fill="#28c58b"/><rect x="23" y="25" width="16" height="12" rx="2" fill="none" stroke="#063527" stroke-width="2.5"/><text x="57" y="27" fill="#fff" font-family="Arial" font-size="15" font-weight="700">Hadi Kart</text><text x="57" y="47" fill="#83a7b4" font-family="Arial" font-size="12">Mağaza / online</text></g>
+ <g transform="translate(220 228)"><rect width="170" height="62" rx="17" fill="#14394a"/><circle cx="31" cy="31" r="15" fill="#8a6df1"/><path d="M25 33l5 5 8-13" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><text x="57" y="27" fill="#fff" font-family="Arial" font-size="15" font-weight="700">Limitler</text><text x="57" y="47" fill="#83a7b4" font-family="Arial" font-size="12">Uygun hesaba göre</text></g>
+</g>
+
+<g transform="translate(545 215)">
+ <text x="0" y="24" fill="#e9f0f3" font-family="Arial" font-size="22" font-weight="800">Kullanım yolu</text>
+ <line x1="36" y1="72" x2="36" y2="305" stroke="#355564" stroke-width="4"/>
+ <g transform="translate(0 45)"><circle cx="36" cy="36" r="30" fill="#ff9b21"/><text x="36" y="44" text-anchor="middle" fill="#3e1d05" font-family="Arial" font-size="22" font-weight="800">1</text><text x="86" y="31" fill="#fff" font-family="Arial" font-size="19" font-weight="800">Hesabını oluştur</text><text x="86" y="55" fill="#91acb7" font-family="Arial" font-size="14">Telefon ve kimlik adımlarını tamamla</text></g>
+ <g transform="translate(0 128)"><circle cx="36" cy="36" r="30" fill="#2bc48a"/><text x="36" y="44" text-anchor="middle" fill="#063326" font-family="Arial" font-size="22" font-weight="800">2</text><text x="86" y="31" fill="#fff" font-family="Arial" font-size="19" font-weight="800">Cüzdan veya kart seç</text><text x="86" y="55" fill="#91acb7" font-family="Arial" font-size="14">Ödeme yöntemini işlemine göre belirle</text></g>
+ <g transform="translate(0 211)"><circle cx="36" cy="36" r="30" fill="#8a6df1"/><text x="36" y="44" text-anchor="middle" fill="#fff" font-family="Arial" font-size="22" font-weight="800">3</text><text x="86" y="31" fill="#fff" font-family="Arial" font-size="19" font-weight="800">Uygun limitini kontrol et</text><text x="86" y="55" fill="#91acb7" font-family="Arial" font-size="14">Veresiye ve taksitli limitler ayrı çalışır</text></g>
+ <g transform="translate(0 294)"><circle cx="36" cy="36" r="30" fill="#2f8bd8"/><text x="36" y="44" text-anchor="middle" fill="#fff" font-family="Arial" font-size="22" font-weight="800">4</text><text x="86" y="31" fill="#fff" font-family="Arial" font-size="19" font-weight="800">Ödemeyi onayla</text><text x="86" y="55" fill="#91acb7" font-family="Arial" font-size="14">Tutarı ve kullanılan kaynağı son kez gör</text></g>
+</g>
+
+<g transform="translate(880 250) rotate(6)"><rect width="240" height="150" rx="22" fill="#112f3d" stroke="#ff9b21" stroke-width="2"/><rect x="18" y="18" width="52" height="18" rx="9" fill="#ff9b21"/><text x="44" y="31" text-anchor="middle" fill="#3f1d04" font-family="Arial" font-size="10" font-weight="800">HADİ</text><text x="20" y="72" fill="#91aeb9" font-family="Arial" font-size="12">KULLANILABİLİR LİMİT</text><text x="20" y="108" fill="#fff" font-family="Arial" font-size="28" font-weight="800">₺ •••••</text><circle cx="205" cy="28" r="14" fill="#ffb52b"/><circle cx="219" cy="28" r="14" fill="#ff7f1a" opacity=".85"/></g>
+<rect x="884" y="447" width="260" height="78" rx="20" fill="#0c2432" stroke="#2b5262"/><circle cx="920" cy="486" r="16" fill="#ff9d22"/><text x="920" y="492" text-anchor="middle" fill="#3c1a03" font-family="Arial" font-size="18" font-weight="900">!</text><text x="950" y="478" fill="#fff" font-family="Arial" font-size="15" font-weight="700">Bakiye ile limit aynı şey değildir</text><text x="950" y="500" fill="#89a8b4" font-family="Arial" font-size="12">İşlem öncesi kullanılan kaynağı kontrol et.</text>
+<text x="64" y="635" fill="#668896" font-family="Arial" font-size="13" letter-spacing="2">SKY BOZUM • BİLGİ MERKEZİ • bozumcu.net</text>
+</svg>

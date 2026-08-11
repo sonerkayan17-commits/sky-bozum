@@ -1,0 +1,42 @@
+/* Use the official transparent artwork as a compact brand mark without creating a grid row. */
+.contact-page .contact-hero-brandmark {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 3 !important;
+  display: block !important;
+  width: 176px !important;
+  height: 176px !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+}
+
+.contact-page .contact-official-logo-crop {
+  position: relative !important;
+  display: block !important;
+  width: 176px !important;
+  height: 176px !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  filter: drop-shadow(0 22px 38px rgba(0, 0, 0, .42)) !important;
+}
+
+.contact-page .contact-official-logo-crop img {
+  position: absolute !important;
+  left: 50% !important;
+  top: -20px !important;
+  width: 350px !important;
+  height: 350px !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  transform: translateX(-50%) !important;
+  border-radius: 0 !important;
+}
+
+@media (max-width: 1320px) {
+  .contact-page .contact-hero-brandmark {
+    display: none !important;
+  }
+}

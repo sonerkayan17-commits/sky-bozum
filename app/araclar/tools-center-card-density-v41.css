@@ -1,0 +1,70 @@
+/* Araç kartları için tek ve sıkı düzen sistemi. */
+.tools-center .tc-product-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.tools-center .tc-product {
+  display: grid;
+  grid-template-columns: minmax(210px, .88fr) minmax(0, 1.12fr);
+  min-height: 274px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 14px;
+  background: #0d0f14;
+}
+
+.tools-center .tc-product__visual {
+  min-height: 0;
+  aspect-ratio: auto;
+  border-right: 1px solid rgba(255,255,255,.09);
+  border-bottom: 0;
+}
+
+.tools-center .tc-product__body {
+  display: grid;
+  grid-template-columns: 32px minmax(0,1fr);
+  align-content: center;
+  gap: 0 13px;
+  padding: 24px 26px;
+}
+
+.tools-center .tc-product__number { padding-top: 3px; color: #eb647c; font-size: 11px; }
+.tools-center .tc-product__title p { font-size: 9px; letter-spacing: .13em; }
+.tools-center .tc-product__title h3 { margin-top: 7px; font-size: 23px; line-height: 1.06; }
+.tools-center .tc-product__description { margin-top: 10px; color: #aeb3bb; font-size: 12px; line-height: 1.6; }
+.tools-center .tc-product__body > strong { margin-top: 17px !important; min-height: 34px !important; font-size: 12px; }
+
+/* Şemalar kartın bir yarısını doldurur; minyatür gibi görünmez. */
+.tools-center .tc-tool-visual small,
+.tools-center .tc-tool-visual p,
+.tools-center .tc-tool-visual span { font-size: 9px; }
+.tools-center .tc-tool-visual--mobile { padding: 22px 18px; gap: 12px; }
+.tools-center .tc-tool-visual__logos img { width: 31px; height: 31px; }
+.tools-center .tc-tool-visual__amount { padding-left: 12px; }
+.tools-center .tc-tool-visual__amount b { font-size: 22px; }
+.tools-center .tc-tool-visual__result { align-items: center; }
+.tools-center .tc-tool-visual__result strong { font-size: 13px; }
+.tools-center .tc-tool-visual--target { grid-template-columns: 1fr; gap: 10px; padding: 20px; text-align: left; }
+.tools-center .tc-tool-visual--target > span { text-align: left; }
+.tools-center .tc-tool-visual--target div { padding: 11px; }
+.tools-center .tc-tool-visual--target b { font-size: 16px; }
+.tools-center .tc-tool-visual--compare { padding: 20px; }
+.tools-center .tc-tool-visual--compare div { grid-template-columns: 1fr; gap: 4px; margin-top: 12px; }
+.tools-center .tc-tool-visual--compare i { width: var(--size); }
+.tools-center .tc-tool-visual--compare b { text-align: left; }
+.tools-center .tc-tool-visual--codes { grid-template-columns: 1fr; gap: 14px; padding: 20px; }
+.tools-center .tc-tool-visual--codes div { grid-template-columns: 1fr; }
+.tools-center .tc-tool-visual--codes b { padding: 9px; font-size: 10px; }
+
+@media (max-width: 640px) {
+  .tools-center .tc-product-list { grid-template-columns: 1fr; gap: 14px; }
+  .tools-center .tc-product { grid-template-columns: 40% 60%; min-height: 245px; }
+  .tools-center .tc-product__body { padding: 20px 18px; grid-template-columns: 27px minmax(0,1fr); gap: 0 10px; }
+  .tools-center .tc-product__title h3 { font-size: 20px; }
+  .tools-center .tc-product__description { font-size: 11px; }
+  .tools-center .tc-tool-visual--mobile { padding: 16px 12px; }
+  .tools-center .tc-tool-visual__logos { gap: 4px; }
+  .tools-center .tc-tool-visual__logos img { width: 24px; height: 24px; padding: 4px; }
+  .tools-center .tc-tool-visual__amount b { font-size: 18px; }
+}

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">MoneyPay nedir ve limitleri</title><desc id="desc">MoneyPay cüzdanı, para yükleme, transfer, kart ve limit kontrollerini anlatan premium rehber kapağı.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071b2d"/><stop offset="1" stop-color="#0d3342"/></linearGradient>
+ <linearGradient id="phone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#17394c"/><stop offset="1" stop-color="#0a1f30"/></linearGradient>
+ <linearGradient id="money" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#36e37a"/><stop offset="1" stop-color="#13b8a5"/></linearGradient>
+</defs>
+<rect width="1200" height="675" rx="34" fill="url(#bg)"/>
+<circle cx="1090" cy="80" r="170" fill="#2fd887" opacity=".07"/><circle cx="120" cy="650" r="210" fill="#20b7a5" opacity=".06"/>
+<text x="66" y="72" fill="#56e99b" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="3">DİJİTAL CÜZDAN REHBERİ</text>
+<text x="66" y="130" fill="#fff" font-family="Arial,sans-serif" font-size="42" font-weight="800">MoneyPay nedir, limitleri nasıl çalışır?</text>
+<text x="66" y="170" fill="#a9c2ce" font-family="Arial,sans-serif" font-size="20">Cüzdan bakiyesi, kart, transfer ve işlem sınırlarını tek ekranda anla</text>
+
+<g transform="translate(64 220)">
+ <rect width="600" height="360" rx="26" fill="#0b2537" stroke="#245168" stroke-width="2"/>
+ <text x="32" y="48" fill="#b9d3dc" font-family="Arial,sans-serif" font-size="16">KULLANILABİLİR CÜZDAN BAKİYESİ</text>
+ <text x="32" y="102" fill="#fff" font-family="Arial,sans-serif" font-size="48" font-weight="800">₺ 8.240</text>
+ <rect x="430" y="54" width="130" height="44" rx="22" fill="url(#money)"/><text x="495" y="82" text-anchor="middle" fill="#052419" font-family="Arial,sans-serif" font-size="15" font-weight="800">AKTİF CÜZDAN</text>
+ <line x1="32" y1="132" x2="568" y2="132" stroke="#23485d"/>
+ <g transform="translate(32 160)"><rect width="160" height="72" rx="18" fill="#12354a"/><circle cx="34" cy="36" r="16" fill="#36e37a"/><path d="M28 36h12M34 30v12" stroke="#07301f" stroke-width="3" stroke-linecap="round"/><text x="62" y="31" fill="#fff" font-family="Arial" font-size="16" font-weight="700">Para yükle</text><text x="62" y="53" fill="#8fb0bd" font-family="Arial" font-size="13">Banka / kart</text></g>
+ <g transform="translate(214 160)"><rect width="160" height="72" rx="18" fill="#12354a"/><circle cx="34" cy="36" r="16" fill="#26c6b6"/><path d="M27 36h14M36 31l5 5-5 5" fill="none" stroke="#07313a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="62" y="31" fill="#fff" font-family="Arial" font-size="16" font-weight="700">Transfer</text><text x="62" y="53" fill="#8fb0bd" font-family="Arial" font-size="13">Uygun hesaplara</text></g>
+ <g transform="translate(396 160)"><rect width="172" height="72" rx="18" fill="#12354a"/><circle cx="34" cy="36" r="16" fill="#6fdc93"/><rect x="25" y="29" width="18" height="14" rx="3" fill="none" stroke="#0c3823" stroke-width="3"/><text x="62" y="31" fill="#fff" font-family="Arial" font-size="16" font-weight="700">Kartlarım</text><text x="62" y="53" fill="#8fb0bd" font-family="Arial" font-size="13">Fiziksel / sanal</text></g>
+ <text x="32" y="275" fill="#b9d3dc" font-family="Arial" font-size="15">Aylık kullanım görünümü</text>
+ <rect x="32" y="294" width="536" height="14" rx="7" fill="#173e50"/><rect x="32" y="294" width="346" height="14" rx="7" fill="url(#money)"/>
+ <text x="32" y="336" fill="#7fa3b1" font-family="Arial" font-size="14">Limitler; hesap seviyesi, doğrulama ve işlem türüne göre değişebilir.</text>
+</g>
+
+<g transform="translate(705 220)">
+ <rect width="430" height="360" rx="26" fill="#f5fafb"/>
+ <text x="30" y="46" fill="#153447" font-family="Arial" font-size="22" font-weight="800">Limit kontrol merkezi</text>
+ <text x="30" y="72" fill="#607b88" font-family="Arial" font-size="14">İşleme başlamadan önce dört noktayı kontrol et</text>
+ <g transform="translate(30 98)"><circle cx="22" cy="22" r="22" fill="#dcf9e8"/><text x="22" y="28" text-anchor="middle" fill="#0a7b42" font-family="Arial" font-size="18" font-weight="800">1</text><text x="58" y="18" fill="#17384a" font-family="Arial" font-size="17" font-weight="700">Hesap doğrulaması</text><text x="58" y="40" fill="#6a828d" font-family="Arial" font-size="13">Kimlik ve hesap seviyesi</text></g>
+ <g transform="translate(30 158)"><circle cx="22" cy="22" r="22" fill="#dff8f5"/><text x="22" y="28" text-anchor="middle" fill="#087b70" font-family="Arial" font-size="18" font-weight="800">2</text><text x="58" y="18" fill="#17384a" font-family="Arial" font-size="17" font-weight="700">İşlem türü</text><text x="58" y="40" fill="#6a828d" font-family="Arial" font-size="13">Yükleme, transfer veya kart</text></g>
+ <g transform="translate(30 218)"><circle cx="22" cy="22" r="22" fill="#e8f7ee"/><text x="22" y="28" text-anchor="middle" fill="#187f4d" font-family="Arial" font-size="18" font-weight="800">3</text><text x="58" y="18" fill="#17384a" font-family="Arial" font-size="17" font-weight="700">Günlük ve aylık sınır</text><text x="58" y="40" fill="#6a828d" font-family="Arial" font-size="13">Kalan kullanılabilir tutar</text></g>
+ <g transform="translate(30 278)"><circle cx="22" cy="22" r="22" fill="#eef5f7"/><text x="22" y="28" text-anchor="middle" fill="#3d6878" font-family="Arial" font-size="18" font-weight="800">4</text><text x="58" y="18" fill="#17384a" font-family="Arial" font-size="17" font-weight="700">Güvenlik kontrolü</text><text x="58" y="40" fill="#6a828d" font-family="Arial" font-size="13">Tek kullanımlık onay bilgisi</text></g>
+</g>
+<text x="66" y="635" fill="#668896" font-family="Arial" font-size="13" letter-spacing="2">SKY BOZUM • BİLGİ MERKEZİ • bozumcu.net</text>
+</svg>

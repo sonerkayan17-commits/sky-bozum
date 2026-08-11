@@ -1,0 +1,30 @@
+/* Exact SB symbol crop from the official transparent artwork; no partial wordmark. */
+.contact-page .contact-hero-grid.contact-hero-grid--268 > .contact-hero-brandmark {
+  width: 196px !important;
+  height: 158px !important;
+}
+
+.contact-page .contact-hero-brandmark > .contact-official-logo-crop {
+  position: relative !important;
+  display: block !important;
+  width: 196px !important;
+  height: 158px !important;
+  overflow: hidden !important;
+}
+
+.contact-page .contact-hero-brandmark > .contact-official-logo-crop > img {
+  position: absolute !important;
+  left: 50% !important;
+  top: -23px !important;
+  width: 370px !important;
+  height: 370px !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  transform: translateX(-50%) !important;
+}
+
+@media (max-width: 1320px) {
+  .contact-page .contact-hero-grid.contact-hero-grid--268 > .contact-hero-brandmark {
+    display: none !important;
+  }
+}

@@ -1,0 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = { title: 'Kullanım Şartları', description: 'Sky Bozum oran, ürün uygunluğu, doğrulama ve güvenli kullanım koşulları.', alternates: { canonical: '/kullanim-sartlari' } };
+const sections = [
+  ['Bilgilendirme oranları', 'Sitedeki oran ve hesaplama sonuçları yaklaşık bilgi verir. Kesin oran; ürün, tutar, stok ve işlem koşulları kontrol edildikten sonra yazılı olarak teyit edilir.'],
+  ['Ürün uygunluğu', 'Kullanıcı ilettiği kodun veya bakiyenin kendisine ait, kullanılmamış ve hukuka uygun olduğunu kabul eder. Uygun olmayan ürünler işleme alınmayabilir.'],
+  ['Doğrulama süreci', 'İşlem güvenliği için satın alma kaydı veya ürün kaynağını gösteren bilgi talep edilebilir. Şifre ve tek kullanımlık hesap doğrulama kodu talep edilmez.'],
+  ['Ödeme bilgileri', 'Kullanıcı alıcı adı ve IBAN gibi bilgileri doğru iletmekle sorumludur. Yanlış bilgi nedeniyle oluşan gecikmeler yeniden kontrol gerektirebilir.'],
+  ['Güvenli kullanım', 'Kodlar üçüncü kişilerle veya birden fazla alıcıyla aynı anda paylaşılmamalıdır. Şüpheli durumda işlem durdurulmalı ve resmi iletişim kanalı doğrulanmalıdır.'],
+];
+export default function Page(){return <main className="min-h-screen bg-[#090b10] text-white"><header className="border-b border-white/8 py-14"><div className="content-shell max-w-4xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Yasal bilgilendirme</p><h1 className="mt-4 text-4xl font-black sm:text-6xl">Kullanım Şartları</h1><p className="mt-4 text-sm text-slate-500">Son güncelleme: 17 Temmuz 2026</p></div></header><article className="content-shell max-w-4xl py-12 sm:py-16"><div className="premium-card p-6 sm:p-9"><p className="rounded-xl border border-amber-400/15 bg-amber-500/[0.05] p-4 text-sm leading-7 text-amber-100/75">Bu metin genel bilgilendirme taslağıdır; yayına almadan önce faaliyet modelinize uygun biçimde hukuk uzmanına inceletilmelidir.</p>{sections.map(([title,text],index)=><section key={title} className="mt-8 border-t border-white/8 pt-8"><h2 className="text-xl font-black"><span className="mr-3 text-xs text-rose-400">0{index+1}</span>{title}</h2><p className="mt-3 text-sm leading-8 text-slate-300">{text}</p></section>)}</div></article></main>}

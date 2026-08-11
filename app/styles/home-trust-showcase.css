@@ -1,0 +1,126 @@
+/* Homepage showcase: compact, high-information and aligned with Sky Bozum metallic red. */
+.home-page .home-trust-editorial {
+  border-block-color: rgba(255,255,255,.075) !important;
+  background:
+    radial-gradient(540px 230px at 15% 50%, rgba(219,39,72,.13), transparent 72%),
+    radial-gradient(460px 210px at 88% 15%, rgba(245,104,48,.08), transparent 74%),
+    linear-gradient(105deg,#090b0f 0%,#111218 47%,#090a0e 100%) !important;
+  padding-block: 2rem !important;
+}
+
+.home-page .home-trust-editorial:after {
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:2px;
+  background:linear-gradient(90deg,transparent 5%,#95152f 25%,#ef3f62 50%,#f07b36 72%,transparent 94%);
+  opacity:.72;
+}
+
+.home-page .home-trust-editorial__main {
+  grid-template-columns:minmax(0,.82fr) minmax(520px,1.18fr) !important;
+  gap:clamp(2rem,4vw,4.5rem) !important;
+}
+
+.home-page .home-trust-editorial__eyebrow {
+  color:#ed6a7f !important;
+  font-size:.5rem !important;
+}
+
+.home-page .home-trust-editorial__copy h2 {
+  max-width:560px !important;
+  margin-top:.7rem !important;
+  font-size:clamp(2.35rem,3.45vw,3.75rem) !important;
+  line-height:.91 !important;
+}
+
+.home-page .home-trust-editorial__copy h2 em {
+  display:inline !important;
+  background:linear-gradient(100deg,#ef6b83,#df3f61 55%,#f07a38) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+}
+
+.home-page .home-trust-editorial__copy>p:not(.home-trust-editorial__eyebrow) {
+  max-width:540px !important;
+  margin-top:.8rem !important;
+  font-size:.72rem !important;
+  line-height:1.55 !important;
+  color:#9299a4 !important;
+}
+
+.home-page .home-trust-editorial__copy>div {
+  margin-top:1rem !important;
+}
+
+.home-page .home-trust-editorial__copy a {
+  min-height:40px !important;
+  border-radius:6px !important;
+  padding-inline:.85rem !important;
+  font-size:.58rem !important;
+}
+
+.home-page .home-trust-editorial__copy a:first-child {
+  border-color:rgba(255,105,126,.38) !important;
+  background:linear-gradient(110deg,#b51f3e,#86132c 64%,#5f0d1d) !important;
+  box-shadow:0 12px 28px rgba(91,7,24,.24),inset 0 1px rgba(255,255,255,.12) !important;
+}
+
+.home-page .home-trust-editorial__standards {
+  border-top-color:rgba(255,255,255,.09) !important;
+}
+
+.home-page .home-trust-editorial__standards li {
+  grid-template-columns:34px 1fr 24px !important;
+  gap:.75rem !important;
+  min-height:76px !important;
+  padding:.7rem .2rem !important;
+  border-bottom-color:rgba(255,255,255,.075) !important;
+}
+
+.home-page .home-trust-editorial__standards li:hover {
+  padding-left:.55rem !important;
+  background:linear-gradient(90deg,rgba(220,48,80,.075),rgba(244,108,49,.025),transparent) !important;
+}
+
+.home-page .home-trust-editorial__standards li>span {
+  color:#e1506a !important;
+}
+
+.home-page .home-trust-editorial__standards h3 {
+  font-size:.76rem !important;
+}
+
+.home-page .home-trust-editorial__standards p {
+  margin-top:.22rem !important;
+  font-size:.58rem !important;
+  line-height:1.45 !important;
+  color:#7e8691 !important;
+}
+
+.home-page .home-trust-editorial__standards b {
+  width:22px !important;
+  height:22px !important;
+  border-color:rgba(239,80,106,.32) !important;
+  color:#ef6078 !important;
+}
+
+.home-page .home-trust-editorial__registry {
+  gap:1rem !important;
+  margin-top:1.15rem !important;
+  padding-top:.75rem !important;
+}
+
+.home-page .home-trust-editorial__registry p span {
+  color:#666e79 !important;
+}
+
+.home-page .home-trust-editorial__registry p strong {
+  color:#c5c9cf !important;
+  font-size:.56rem !important;
+}
+
+@media(max-width:980px){
+  .home-page .home-trust-editorial{padding-block:2.5rem !important}
+  .home-page .home-trust-editorial__main{grid-template-columns:1fr !important;gap:1.8rem !important}
+}

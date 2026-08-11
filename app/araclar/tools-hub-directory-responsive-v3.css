@@ -1,0 +1,2 @@
+@media(max-width:1100px){.tools-hub-grid{grid-template-columns:1fr!important}.tools-hub-card,.tools-hub-card:nth-child(2n){grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr)!important;border-right:0!important}.tools-hub-card__preview{transform:scale(1.05)}}
+@media(max-width:520px){.tools-hub-card{grid-template-columns:1fr!important;min-height:0}.tools-hub-card__visual{min-height:190px;border-right:0;border-bottom:1px solid rgba(255,255,255,.065)}.tools-hub-card__body{padding:1.35rem!important}}

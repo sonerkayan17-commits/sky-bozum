@@ -1,0 +1,29 @@
+/* Show the complete user-supplied official artwork without cropping. */
+.contact-page .contact-hero-brandmark{
+  width:184px!important;
+  height:184px!important;
+}
+.contact-page .contact-official-logo-crop{
+  width:184px!important;
+  height:184px!important;
+  overflow:visible!important;
+  border-radius:0!important;
+  filter:drop-shadow(0 22px 38px rgba(0,0,0,.48))!important;
+}
+.contact-page .contact-official-logo-crop img{
+  position:static!important;
+  display:block!important;
+  width:184px!important;
+  height:184px!important;
+  max-width:100%!important;
+  object-fit:contain!important;
+  border-radius:0!important;
+  transform:none!important;
+  filter:none!important;
+}
+@media(max-width:1100px){
+  .contact-page .contact-hero-brandmark,.contact-page .contact-official-logo-crop,.contact-page .contact-official-logo-crop img{width:150px!important;height:150px!important}
+}
+@media(max-width:820px){
+  .contact-page .contact-hero-brandmark,.contact-page .contact-official-logo-crop,.contact-page .contact-official-logo-crop img{width:126px!important;height:126px!important}
+}

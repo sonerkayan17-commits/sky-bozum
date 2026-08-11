@@ -1,0 +1,57 @@
+.tool-related-card {
+  position: relative;
+  min-height: 142px;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  border-right: 1px solid rgba(255, 255, 255, .07);
+  border-bottom: 1px solid rgba(255, 255, 255, .07);
+  border-left: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .012));
+}
+
+.tool-related-card:hover {
+  border-color: rgba(222, 82, 109, .42);
+  background: linear-gradient(145deg, rgba(146, 28, 52, .13), rgba(255, 255, 255, .018));
+}
+
+.tool-related-card > span:last-child {
+  align-items: center;
+  gap: .55rem;
+  font-size: 0;
+}
+
+.tool-related-card > span:last-child::before {
+  content: 'Aracı aç';
+  font-size: .875rem;
+}
+
+.tool-related-card > span:last-child::after {
+  content: '→';
+  font-size: .875rem;
+  transition: transform .25s ease;
+}
+
+.tool-related-card:hover > span:last-child::after {
+  transform: translateX(4px);
+}
+
+@media (max-width: 767px) {
+  .tool-related-card { min-height: 0; }
+}
+
+/* Tek bir rehber veya hizmet varsa yarım kolon bırakmayın. */
+.tool-page-bridges:not(:has(> :nth-child(2))) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.tool-page-bridges:not(:has(> :nth-child(2))) > .premium-card {
+  min-height: 164px;
+  padding: 1.4rem 1.55rem !important;
+  background:
+    linear-gradient(90deg, rgba(163, 30, 56, .11), transparent 55%),
+    linear-gradient(145deg, rgba(255, 255, 255, .038), rgba(255, 255, 255, .014));
+}
+
+.tool-page-bridges:not(:has(> :nth-child(2))) > .premium-card h2,
+.tool-page-bridges:not(:has(> :nth-child(2))) > .premium-card p { max-width: 42rem; }

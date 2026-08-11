@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Kredim limiti nerelerde geçer?</title>
+  <desc id="desc">Kredim limitinin anlaşmalı mağaza, elektronik ve ev yaşam kategorilerinde kullanımını gösteren premium rehber görseli.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071926"/><stop offset="1" stop-color="#0b3944"/></linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d3d4d"/><stop offset="1" stop-color="#102b39"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#4fe0c1"/><stop offset="1" stop-color="#557cff"/></linearGradient>
+  </defs>
+  <rect width="1200" height="675" rx="34" fill="url(#bg)"/>
+  <circle cx="1070" cy="80" r="170" fill="#1d6070" opacity=".22"/>
+  <circle cx="1010" cy="610" r="220" fill="#3652a8" opacity=".16"/>
+  <g font-family="Inter,Arial,sans-serif">
+    <rect x="58" y="58" width="190" height="30" rx="15" fill="#0f3541" stroke="#3bc9b2" stroke-opacity=".35"/>
+    <circle cx="78" cy="73" r="5" fill="#52e1c0"/>
+    <text x="92" y="79" fill="#7de8d3" font-size="13" font-weight="700" letter-spacing="1.1">KREDİM KULLANIM REHBERİ</text>
+    <text x="58" y="142" fill="#fff" font-size="45" font-weight="800">Kredim limiti nerelerde geçer?</text>
+    <text x="58" y="180" fill="#a9bdc8" font-size="19">Limit, yalnız anlaşmalı mağaza ve desteklenen ürün gruplarında kullanılabilir.</text>
+
+    <rect x="58" y="228" width="430" height="340" rx="28" fill="url(#card)" stroke="#5fe0c7" stroke-opacity=".18"/>
+    <text x="88" y="271" fill="#8aa6b4" font-size="14" font-weight="700" letter-spacing="1">KULLANIM ÖNCESİ KONTROL</text>
+    <rect x="88" y="296" width="370" height="74" rx="18" fill="#0b2330"/>
+    <circle cx="124" cy="333" r="18" fill="#48d9bc"/><path d="M116 333l6 6 12-14" fill="none" stroke="#06242b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="154" y="326" fill="#fff" font-size="18" font-weight="750">Anlaşmalı mağaza</text><text x="154" y="349" fill="#8eabb8" font-size="14">Kasa veya ödeme ekranında Kredim desteğini doğrula.</text>
+    <rect x="88" y="384" width="370" height="74" rx="18" fill="#0b2330"/>
+    <circle cx="124" cy="421" r="18" fill="#557cff"/><path d="M115 421h18M124 412v18" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <text x="154" y="414" fill="#fff" font-size="18" font-weight="750">Ürün ve tutar uygunluğu</text><text x="154" y="437" fill="#8eabb8" font-size="14">Kategori, sepet tutarı ve vade seçeneğini kontrol et.</text>
+    <rect x="88" y="472" width="370" height="66" rx="18" fill="#153a42" stroke="#50d9bd" stroke-opacity=".28"/>
+    <text x="112" y="501" fill="#77e6d0" font-size="15" font-weight="750">ÖNEMLİ</text><text x="112" y="523" fill="#c2d4dc" font-size="14">Limit nakit bakiye değildir; mağaza ve ürün koşullarına bağlıdır.</text>
+
+    <rect x="530" y="230" width="612" height="338" rx="30" fill="#092633" stroke="#69d6c4" stroke-opacity=".18"/>
+    <text x="566" y="271" fill="#fff" font-size="21" font-weight="800">Desteklenen kullanım alanları</text>
+    <g>
+      <rect x="566" y="302" width="166" height="166" rx="23" fill="#113848"/>
+      <rect x="616" y="329" width="66" height="50" rx="9" fill="#557cff"/><rect x="626" y="338" width="46" height="30" rx="5" fill="#b9c8ff"/><path d="M606 397h86" stroke="#7794ff" stroke-width="8" stroke-linecap="round"/>
+      <text x="649" y="432" fill="#fff" font-size="17" font-weight="750" text-anchor="middle">Elektronik</text><text x="649" y="453" fill="#8faab7" font-size="12" text-anchor="middle">Telefon • tablet • aksesuar</text>
+    </g>
+    <g>
+      <rect x="753" y="302" width="166" height="166" rx="23" fill="#113848"/>
+      <path d="M795 377l41-37 41 37v44h-82z" fill="#4fd8ba"/><rect x="826" y="391" width="21" height="30" rx="4" fill="#0e3944"/>
+      <text x="836" y="432" fill="#fff" font-size="17" font-weight="750" text-anchor="middle">Ev &amp; yaşam</text><text x="836" y="453" fill="#8faab7" font-size="12" text-anchor="middle">Mobilya • küçük ev aleti</text>
+    </g>
+    <g>
+      <rect x="940" y="302" width="166" height="166" rx="23" fill="#113848"/>
+      <path d="M982 358h82l-8 63h-66z" fill="#ffb43d"/><path d="M997 358c0-20 12-31 26-31s26 11 26 31" fill="none" stroke="#ffd886" stroke-width="8"/>
+      <text x="1023" y="432" fill="#fff" font-size="17" font-weight="750" text-anchor="middle">Mağazalar</text><text x="1023" y="453" fill="#8faab7" font-size="12" text-anchor="middle">Anlaşmalı satış noktaları</text>
+    </g>
+    <path d="M649 495h374" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="649" cy="495" r="9" fill="#4fe0c1"/><circle cx="836" cy="495" r="9" fill="#4fe0c1"/><circle cx="1023" cy="495" r="9" fill="#557cff"/>
+    <text x="836" y="531" fill="#a9bdc8" font-size="14" text-anchor="middle">Mağaza desteği → ürün uygunluğu → ödeme onayı</text>
+    <text x="58" y="628" fill="#65808d" font-size="12" letter-spacing="1">SKY BOZUM • BİLGİ MERKEZİ • BOZUMCU.NET</text>
+  </g>
+</svg>

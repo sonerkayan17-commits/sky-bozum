@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">PlayStation Store hediye kartı rehberi</title><desc id="desc">PlayStation Store kartında hesap bölgesi, cüzdan bakiyesi ve oyun ile abonelik kullanımını anlatan premium editoryal kapak.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#070d2c"/><stop offset=".58" stop-color="#142e77"/><stop offset="1" stop-color="#3158d6"/></linearGradient><linearGradient id="purple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8da7ff"/><stop offset="1" stop-color="#586eea"/></linearGradient></defs>
+<rect width="1600" height="900" rx="42" fill="url(#bg)"/><circle cx="1350" cy="90" r="280" fill="#7a8fff" opacity=".15"/><circle cx="180" cy="820" r="300" fill="#2a4fc9" opacity=".18"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="90" y="105" fill="#9eb3ff" font-size="28" font-weight="700" letter-spacing="5">PLAYSTATION STORE • REHBER</text>
+<text x="90" y="180" fill="#fff" font-size="62" font-weight="800">Kartı hesaba tanımla,</text><text x="90" y="247" fill="#fff" font-size="62" font-weight="800">bakiyeyi doğru yerde kullan</text>
+<text x="90" y="300" fill="#c5d0ff" font-size="26">Hesap bölgesi, cüzdan ve içerik uyumunu tek ekranda görün.</text>
+<rect x="90" y="370" width="610" height="300" rx="36" fill="#f4f6ff"/>
+<text x="130" y="425" fill="#243975" font-size="22" font-weight="700">STORE BAKİYESİ</text><text x="130" y="490" fill="#17265a" font-size="43" font-weight="800">₺1.000 Cüzdan Kodu</text>
+<rect x="130" y="535" width="530" height="58" rx="16" fill="#e1e7ff"/><text x="165" y="572" fill="#3553bb" font-size="22" font-weight="700">KODU HESABA TANIMLA</text>
+<text x="130" y="635" fill="#5a6994" font-size="20">Oyun • eklenti • abonelik • dijital içerik</text>
+<rect x="765" y="355" width="750" height="420" rx="38" fill="#0b1748" stroke="#7e96ff" stroke-width="2"/>
+<text x="815" y="415" fill="#9db1ff" font-size="24" font-weight="700">UYUMLULUK KONTROLÜ</text>
+<g>
+<rect x="815" y="460" width="650" height="78" rx="20" fill="#182b70"/><circle cx="855" cy="499" r="25" fill="url(#purple)"/><text x="847" y="507" fill="#fff" font-size="20" font-weight="800">1</text><text x="900" y="490" fill="#fff" font-size="25" font-weight="700">Hesap bölgesi</text><text x="900" y="520" fill="#b9c6f4" font-size="18">Kart ülkesi ile PSN hesabı eşleşmeli.</text>
+<rect x="815" y="565" width="650" height="78" rx="20" fill="#182b70"/><circle cx="855" cy="604" r="25" fill="url(#purple)"/><text x="847" y="612" fill="#fff" font-size="20" font-weight="800">2</text><text x="900" y="595" fill="#fff" font-size="25" font-weight="700">Bakiye tanımlama</text><text x="900" y="625" fill="#b9c6f4" font-size="18">Kod, cüzdan bakiyesine eklenir.</text>
+<rect x="815" y="670" width="650" height="78" rx="20" fill="#182b70"/><circle cx="855" cy="709" r="25" fill="url(#purple)"/><text x="847" y="717" fill="#fff" font-size="20" font-weight="800">3</text><text x="900" y="700" fill="#fff" font-size="25" font-weight="700">Dijital alışveriş</text><text x="900" y="730" fill="#b9c6f4" font-size="18">Oyun ve abonelik koşullarını kontrol et.</text>
+</g><text x="90" y="830" fill="#bac6ff" font-size="20">bozumcu.net • Bilgi Merkezi</text></g></svg>

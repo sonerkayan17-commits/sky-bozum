@@ -1,0 +1,78 @@
+/* Ana araçlar: kart kataloğu değil, karar akışı. */
+.tc-product-list {
+  display: block;
+  border-top: 1px solid rgba(255, 255, 255, .13);
+}
+
+.tc-product {
+  display: grid;
+  grid-template-columns: 48px minmax(230px, .9fr) minmax(260px, 1.25fr) auto;
+  align-items: center;
+  min-height: 132px;
+  gap: 28px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 0;
+  background: transparent;
+}
+
+.tc-product:hover {
+  padding-inline: 16px;
+  background: linear-gradient(90deg, rgba(156, 28, 54, .13), transparent 66%);
+}
+
+.tc-product__number {
+  color: #df526c;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+
+.tc-product__title p {
+  color: #d94c65;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.tc-product__title h3 {
+  margin-top: 9px;
+  font-size: 23px;
+  line-height: 1.08;
+}
+
+.tc-product__description {
+  max-width: 32rem;
+  color: #9ba1aa;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.tc-product > strong {
+  display: inline-flex !important;
+  align-items: center;
+  min-width: 112px;
+  min-height: 38px;
+  margin: 0 !important;
+  border: 1px solid rgba(221, 72, 101, .34) !important;
+  border-radius: 7px !important;
+  padding: 0 13px !important;
+  color: #f0dde1 !important;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.tc-product__copy, .tc-product__scene { display: none; }
+
+@media (max-width: 760px) {
+  .tc-product {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    min-height: 0;
+    gap: 13px;
+    padding: 20px 0;
+  }
+  .tc-product__description { grid-column: 2 / -1; font-size: 12px; }
+  .tc-product > strong { grid-column: 2 / -1; justify-self: start; margin-top: 2px !important; }
+  .tc-product:hover { padding-inline: 9px; }
+}

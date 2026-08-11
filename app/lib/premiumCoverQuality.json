@@ -1,0 +1,390 @@
+{
+  "version": "V45.136",
+  "total": 63,
+  "items": [
+    {
+      "slug": "mobil-odeme-nasil-acilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-nasil-acilir-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "dijital-kod-hediye-karti-rehberi",
+      "src": "/images/bilgi-merkezi/premium-reference-v1/dijital-kod-hediye-karti-rehberi/dijital-kod-hediye-karti-rehberi-cover.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "hepsipay-nedir-nasil-kullanilir",
+      "src": "/images/bilgi-merkezi/hepsipay/hepsipay-nedir-nasil-kullanilir/hepsipay-nedir-nasil-kullanilir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hepsiburada-limiti-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/hepsiburada-limit-nedir-v3.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hepsiburada-limiti-nasil-alinir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/hepsiburada-limit-nasil-alinir-v3.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hepsiburada-limiti-neye-gore-hesaplanir",
+      "src": "/images/bilgi-merkezi/hepsipay/hepsiburada-limiti-neye-gore-hesaplanir/hepsiburada-limiti-neye-gore-hesaplanir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hepsiburada-limiti-nasil-kullanilir",
+      "src": "/images/bilgi-merkezi/premium-reference-v1/hepsiburada-limiti-nasil-kullanilir/hepsiburada-limiti-nasil-kullanilir-cover.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "hepsiburada-limiti-nerelerde-gecer",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/hepsiburada-limit-nerelerde-gecer-v3.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hepsiburada-limiti-bozdurulur-mu",
+      "src": "/images/bilgi-merkezi/hepsipay/hepsiburada-limiti-bozdurulur-mu/hepsiburada-limiti-bozdurulur-mu-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hepsipay-hizli-kredi-nedir",
+      "src": "/images/bilgi-merkezi/hepsipay/hepsipay-hizli-kredi-nedir/hepsipay-hizli-kredi-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "pluxee-sodexo-nedir-nerelerde-gecer",
+      "src": "/images/bilgi-merkezi/yemek-kartlari/pluxee-sodexo-nedir-nerelerde-gecer/pluxee-sodexo-nedir-nerelerde-gecer-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "multinet-nedir-nerelerde-gecer",
+      "src": "/images/bilgi-merkezi/yemek-kartlari/multinet-nedir-nerelerde-gecer/multinet-nedir-nerelerde-gecer-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "tokenflex-nedir-nerelerde-gecer",
+      "src": "/images/bilgi-merkezi/yemek-kartlari/tokenflex-nedir-nerelerde-gecer/tokenflex-nedir-nerelerde-gecer-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "ticket-restaurant-nedir-nerelerde-gecer",
+      "src": "/images/bilgi-merkezi/yemek-kartlari/ticket-restaurant-nedir-nerelerde-gecer/ticket-restaurant-nedir-nerelerde-gecer-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "yemek-kartlari-bozdurulur-mu",
+      "src": "/images/bilgi-merkezi/yemek-kartlari/yemek-kartlari-bozdurulur-mu/yemek-kartlari-bozdurulur-mu-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "moneypay-nedir-limitleri",
+      "src": "/images/bilgi-merkezi/dijital-cuzdanlar/moneypay-nedir-limitleri/moneypay-nedir-limitleri-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hadi-kredi-karti-limiti",
+      "src": "/images/bilgi-merkezi/hadi/hadi-kredi-karti-limiti/hadi-kredi-karti-limiti-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "a101-hadi-odeme-limitleri",
+      "src": "/images/bilgi-merkezi/hadi/a101-hadi-odeme-limitleri/a101-hadi-odeme-limitleri-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "cepte-sok-nedir",
+      "src": "/article-covers-v32-2/cepte-sok-nedir.svg",
+      "tier": "brand-illustration",
+      "reason": "Başlıkla birebir eşleşen özgün Cepte ŞOK kapak çizimi."
+    },
+    {
+      "slug": "bim-card-nedir",
+      "src": "/images/bilgi-merkezi/market-kartlari/bim-card-nedir/bim-card-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hadi-nedir-nasil-kullanilir",
+      "src": "/images/bilgi-merkezi/hadi/hadi-nedir-nasil-kullanilir/hadi-nedir-nasil-kullanilir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hadi-veresiye-limiti-nedir",
+      "src": "/images/bilgi-merkezi/hadi/hadi-veresiye-limiti-nedir/hadi-veresiye-limiti-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "hadi-taksitli-limit-nedir",
+      "src": "/images/bilgi-merkezi/hadi/hadi-taksitli-limit-nedir/hadi-taksitli-limit-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "kredim-nedir-limiti-nasil-alinir",
+      "src": "/images/bilgi-merkezi/kredim/kredim-nedir-limiti-nasil-alinir/kredim-nedir-limiti-nasil-alinir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "kredim-limiti-nerelerde-gecer",
+      "src": "/images/bilgi-merkezi/kredim/kredim-limiti-nerelerde-gecer/kredim-limiti-nerelerde-gecer-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "kredim-limiti-nasil-aktif-edilir",
+      "src": "/images/bilgi-merkezi/kredim/kredim-limiti-nasil-aktif-edilir/kredim-limiti-nasil-aktif-edilir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "kredim-limiti-bozdurulur-mu",
+      "src": "/images/bilgi-merkezi/kredim/kredim-limiti-bozdurulur-mu/kredim-limiti-bozdurulur-mu-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "financell-limiti-nedir",
+      "src": "/images/bilgi-merkezi/financell/financell-limiti-nedir/financell-limiti-nedir-premium-cover.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "financell-ile-cihaz-nasil-alinir",
+      "src": "/images/bilgi-merkezi/financell/financell-ile-cihaz-nasil-alinir/financell-ile-cihaz-nasil-alinir-premium-cover.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "vodafone-faturaya-ek-cihaz",
+      "src": "/images/bilgi-merkezi/cihaz-finansmani/vodafone-faturaya-ek-cihaz/vodafone-faturaya-ek-cihaz-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "turk-telekom-faturaya-ek-cihaz",
+      "src": "/images/bilgi-merkezi/cihaz-finansmani/turk-telekom-faturaya-ek-cihaz/turk-telekom-faturaya-ek-cihaz-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "fair-finans-limiti-nedir",
+      "src": "/images/bilgi-merkezi/fair-finans/fair-finans-limiti-nedir/fair-finans-limiti-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "amazon-hediye-karti-nedir",
+      "src": "/images/bilgi-merkezi/hediye-kartlari/amazon-hediye-karti-nedir/amazon-hediye-karti-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "eneba-hediye-karti-nedir",
+      "src": "/images/bilgi-merkezi/hediye-kartlari/eneba-hediye-karti-nedir/eneba-hediye-karti-nedir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "defacto-hediye-karti-nedir",
+      "src": "/article-covers-v32-2/defacto-hediye-karti-nedir.svg",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "lc-waikiki-hediye-karti-nedir",
+      "src": "/article-covers-v32-2/lc-waikiki-hediye-karti-nedir.svg",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "magaza-hediye-kartlari-rehberi",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/magaza-hediye-karti-bozum.webp",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "istanbulkart-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/istanbulkart-bakiye-uygunluk.webp",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "istanbulkart-bakiye-nasil-yuklenir",
+      "src": "/article-covers-v32-2/istanbulkart-bakiye-nasil-yuklenir.svg",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "istanbulkart-bozulur-mu",
+      "src": "/article-covers-v32-2/istanbulkart-bozulur-mu.svg",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "paycell-nedir-nasil-kullanilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/paycell-bakiye-limit-bozum.webp",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "paycell-ile-razer-gold-nasil-alinir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/paycell-razer-gold-satin-alma-v2.webp",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "vodafone-mobil-odeme-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/vodafone-mobil-odeme-bozum.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "turkcell-mobil-odeme-nasil-kullanilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/turkcell-mobil-odeme-bozum.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "turk-telekom-mobil-odeme-rehberi",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/turk-telekom-mobil-odeme-bozum.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "pokus-nedir-razer-gold-nasil-alinir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/pokus-bakiye-limit-bozum.webp",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "razer-gold-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/razer-gold-tl-usd-bozum.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "razer-gold-kodu-nasil-satilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/razer-gold-kodu-satis-v2.webp",
+      "tier": "brand-illustration",
+      "reason": "Marka/konu odaklı özgün SVG kapak havuzu."
+    },
+    {
+      "slug": "google-play-hediye-karti-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/google-play-kod-bozum.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "apple-gift-card-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/apple-gift-card-bolge-bozum.webp",
+      "tier": "editorial-premium",
+      "reason": "Konuya özel premium bozum kapağı."
+    },
+    {
+      "slug": "steam-cuzdan-kodu-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/steam-cuzdan-kodu-bolge-bozum.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "playstation-store-hediye-karti-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/playstation-store-kod-bozum.webp",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "razer-gold-pin-nasil-kullanilir",
+      "src": "/images/bilgi-merkezi/razer-gold/razer-gold-pin-nasil-kullanilir/razer-gold-pin-nasil-kullanilir-card.svg",
+      "tier": "structured-svg",
+      "reason": "Makale başlığına özel mevcut SVG kart çizimi."
+    },
+    {
+      "slug": "mobil-odeme-guvenli-mi",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-guvenlik-rehberi-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "mobil-odeme-limiti-nasil-ogrenilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-limit-rehberi-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "mobil-odeme-limit-sifir-gorunuyor",
+      "src": "/images/bilgi-merkezi/premium-reference-v1/mobil-odeme-limit-sifir-gorunuyor/mobil-odeme-limit-sifir-gorunuyor-cover.webp",
+      "tier": "editorial-premium",
+      "reason": "Raster premium reference veya özel üretilmiş kapak."
+    },
+    {
+      "slug": "mobil-odeme-bozum-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-bozum-rehberi-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Mevcut premium mobil ödeme rehberi görseli."
+    },
+    {
+      "slug": "mobil-bozum-yaparken-dolandirilabilir-miyim",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Mevcut premium dijital ödeme güvenliği görseli."
+    },
+    {
+      "slug": "dijital-kod-bolge-hatasi-nedir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/dijital-kod-bolge-hatasi-v2.webp",
+      "tier": "structured-svg",
+      "reason": "Dijital kod güvenliği ve bölge kontrolünü anlatan mevcut SVG."
+    },
+    {
+      "slug": "sky-bozum-iletisim-rehberi",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/sky-bozum-iletisim-logo-free-v3.webp",
+      "tier": "structured-svg",
+      "reason": "İletişim ve kanal yönlendirmesine uygun mevcut editoryal SVG."
+    },
+    {
+      "slug": "islem-destegi-nasil-alinir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/islem-destegi-logo-free-v3.webp",
+      "tier": "structured-svg",
+      "reason": "İşlem kontrolü ve destek akışına uygun mevcut SVG."
+    },
+    {
+      "slug": "guncel-bozum-orani-nasil-ogrenilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/guncel-bozum-orani-ekosistem-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Oran ve piyasa kontrolü temasına uygun mevcut premium görsel."
+    },
+    {
+      "slug": "bozum-talebi-nasil-olusturulur",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/bozum-talebi-ekosistem-v2.webp",
+      "tier": "structured-svg",
+      "reason": "Talep oluşturma ve işlem akışına uygun mevcut SVG."
+    },
+    {
+      "slug": "dijital-kod-teslim-edilince-ne-yapilmali",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/dijital-kod-teslim-sonrasi-v2.webp",
+      "tier": "structured-svg",
+      "reason": "Kod teslimi sonrası kontrollü akışa uygun mevcut SVG."
+    }
+  ]
+}

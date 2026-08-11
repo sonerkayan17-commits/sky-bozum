@@ -1,0 +1,57 @@
+.tools-center .tc-product__body > strong > i,
+.tools-center .tc-utility > i {
+  display: inline-block !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin-left: 0 !important;
+  color: transparent !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 0 !important;
+  line-height: 14px !important;
+  vertical-align: middle !important;
+}
+
+.tools-center .tc-product__body > strong {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  min-width: 116px !important;
+  min-height: 34px !important;
+  border: 1px solid rgba(221, 72, 101, .34) !important;
+  border-radius: 7px !important;
+  padding: 0 12px !important;
+  background: rgba(157, 27, 51, .08) !important;
+}
+
+.tools-center .tc-product__body > strong > i::after,
+.tools-center .tc-utility > i::after {
+  content: '→' !important;
+  display: block !important;
+  color: #df536b !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 13px !important;
+  font-style: normal !important;
+  line-height: 14px !important;
+}
+
+/* Tek, fonttan bağımsız yön oku: bazı cihazlarda emoji okunmasının önüne geçer. */
+.tools-center .tc-product__body > strong > i::after,
+.tools-center .tc-utility > i::after {
+  content: "\2192 " !important;
+}
+
+.tools-center .tc-legacy-anchor { position: absolute; top: 0; left: 0; }
+
+/* Ok HTML içeriğidir; CSS kaçış kodu nedeniyle metne dönüşemez. */
+.tools-center .tc-product__body > strong > i {
+  width: auto !important;
+  height: auto !important;
+  color: #df536b !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+}
+
+.tools-center .tc-product__body > strong > i::after {
+  content: none !important;
+}

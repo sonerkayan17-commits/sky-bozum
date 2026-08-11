@@ -1,0 +1,19 @@
+/* The calculator suite uses one calm brand palette: crimson for direction,
+   amber for attention and platinum-pink for a positive estimate. */
+.tool-page-hero + .narrow-shell .text-emerald-300,
+.tool-page-hero + .narrow-shell .text-emerald-400,
+.tool-page-hero + .narrow-shell .text-cyan-300 {
+  color: #efbdc8 !important;
+}
+
+.tool-page-hero + .narrow-shell .border-emerald-400\/15 {
+  border-color: rgba(222, 126, 146, .2) !important;
+}
+
+.tool-page-hero + .narrow-shell .bg-emerald-500\/\[\.06\] {
+  background: linear-gradient(145deg, rgba(131, 38, 60, .14), rgba(255, 255, 255, .022)) !important;
+}
+
+.tool-page-hero + .narrow-shell [role="radiogroup"] + [role="status"] > p:first-child {
+  color: #efbdc8 !important;
+}

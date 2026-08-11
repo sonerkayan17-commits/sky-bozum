@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+build/
+.vercel/
+.env
+.env.local
+.env.*.local
+*.log
+*.tsbuildinfo
+tmp/
+admin-preview.png

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07192b"/><stop offset="1" stop-color="#173b52"/></linearGradient><linearGradient id="red" x1="0" x2="1"><stop stop-color="#ed174c"/><stop offset="1" stop-color="#ff4f6d"/></linearGradient></defs>
+<rect width="1600" height="900" rx="42" fill="url(#bg)"/><circle cx="1450" cy="90" r="260" fill="#fff" opacity=".035"/><circle cx="70" cy="860" r="220" fill="#fff" opacity=".025"/>
+<text x="90" y="105" fill="#ff7791" font-family="Arial" font-size="28" font-weight="700">YEMEK KARTLARI</text><text x="90" y="170" fill="#fff" font-family="Arial" font-size="54" font-weight="700">MultiNet nerelerde geçer?</text><text x="90" y="215" fill="#b9cad6" font-family="Arial" font-size="24">Yakındaki noktayı, kanalı ve ürün uygunluğunu birlikte kontrol et</text>
+<rect x="90" y="285" width="520" height="470" rx="34" fill="#0d2a40" stroke="#5d7d91" stroke-width="2"/>
+<text x="135" y="345" fill="#fff" font-family="Arial" font-size="28" font-weight="700">Yakındaki kullanım noktaları</text>
+<rect x="135" y="385" width="430" height="72" rx="20" fill="#15384f"/><circle cx="175" cy="421" r="14" fill="#ed174c"/><text x="205" y="430" fill="#fff" font-family="Arial" font-size="24">Restoran ve kafe</text>
+<rect x="135" y="475" width="430" height="72" rx="20" fill="#15384f"/><circle cx="175" cy="511" r="14" fill="#ffb547"/><text x="205" y="520" fill="#fff" font-family="Arial" font-size="24">Market ve seçili ürünler</text>
+<rect x="135" y="565" width="430" height="72" rx="20" fill="#15384f"/><circle cx="175" cy="601" r="14" fill="#45d1b6"/><text x="205" y="610" fill="#fff" font-family="Arial" font-size="24">Online sipariş kanalları</text>
+<rect x="135" y="665" width="430" height="48" rx="16" fill="#fff" opacity=".07"/><text x="160" y="697" fill="#b9cad6" font-family="Arial" font-size="19">Şube ve ürün uygunluğu değişebilir</text>
+<rect x="680" y="285" width="830" height="470" rx="36" fill="#f7fafc"/>
+<text x="730" y="345" fill="#173348" font-family="Arial" font-size="28" font-weight="700">Kullanım kontrolü</text>
+<path d="M790 470 C930 360 1080 600 1240 435 S1420 485 1450 410" fill="none" stroke="#d9e4ea" stroke-width="10" stroke-linecap="round"/>
+<circle cx="810" cy="460" r="42" fill="url(#red)"/><text x="795" y="470" fill="#fff" font-family="Arial" font-size="28" font-weight="700">1</text><text x="750" y="535" fill="#173348" font-family="Arial" font-size="22" font-weight="700">Noktayı bul</text>
+<circle cx="1080" cy="510" r="42" fill="#ffb547"/><text x="1065" y="520" fill="#173348" font-family="Arial" font-size="28" font-weight="700">2</text><text x="1015" y="585" fill="#173348" font-family="Arial" font-size="22" font-weight="700">Kanalı doğrula</text>
+<circle cx="1370" cy="430" r="42" fill="#45d1b6"/><text x="1355" y="440" fill="#173348" font-family="Arial" font-size="28" font-weight="700">3</text><text x="1298" y="505" fill="#173348" font-family="Arial" font-size="22" font-weight="700">Ürünü kontrol et</text>
+<rect x="760" y="630" width="650" height="78" rx="24" fill="#eaf1f5"/><text x="800" y="679" fill="#173348" font-family="Arial" font-size="22">En güncel listeyi MultiNet uygulamasından doğrula</text>
+<text x="90" y="835" fill="#7f9aaa" font-family="Arial" font-size="20">bozumcu.net • Bilgi Merkezi</text></svg>

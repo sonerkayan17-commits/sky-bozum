@@ -1,0 +1,36 @@
+/* Complete official transparent composition for the wide editorial hero. */
+.contact-page .contact-hero-grid.contact-hero-grid--268 > .contact-hero-brandmark {
+  position: absolute !important;
+  left: 50% !important;
+  top: 52% !important;
+  display: block !important;
+  width: 400px !important;
+  height: 400px !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.contact-page .contact-hero-brandmark > .contact-official-logo-crop {
+  position: static !important;
+  display: block !important;
+  width: 400px !important;
+  height: 400px !important;
+  overflow: visible !important;
+  background: transparent !important;
+  filter: drop-shadow(0 28px 48px rgba(0, 0, 0, .38)) !important;
+}
+
+.contact-page .contact-hero-brandmark > .contact-official-logo-crop > img {
+  position: static !important;
+  display: block !important;
+  width: 400px !important;
+  height: 400px !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  transform: none !important;
+}
+
+@media (max-width: 1599px) {
+  .contact-page .contact-hero-grid.contact-hero-grid--268 > .contact-hero-brandmark {
+    display: none !important;
+  }
+}

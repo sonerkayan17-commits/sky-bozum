@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" rx="44" fill="#07111f"/>
+<circle cx="1410" cy="100" r="300" fill="#ff9900" opacity=".13"/>
+<circle cx="1200" cy="760" r="320" fill="#18c7c8" opacity=".07"/>
+<text x="92" y="104" fill="#ffb23f" font-family="Arial" font-size="25" font-weight="700" letter-spacing="3">AMAZON HEDİYE KARTI REHBERİ</text>
+<text x="92" y="184" fill="#ffffff" font-family="Arial" font-size="58" font-weight="700">Amazon Hediye Kartı nedir?</text>
+<text x="92" y="232" fill="#a9b7c8" font-family="Arial" font-size="25">Kodu hesabına ekle, bakiyeyi uygun alışverişlerde kullan.</text>
+<rect x="88" y="305" width="520" height="440" rx="30" fill="#0d1d30" stroke="#26425f" stroke-width="2"/>
+<text x="126" y="360" fill="#ffffff" font-family="Arial" font-size="25" font-weight="700">HESAP BAKİYESİNE DÖNÜŞÜR</text>
+<rect x="126" y="397" width="442" height="126" rx="22" fill="#ff9900"/>
+<text x="160" y="437" fill="#1a1a1a" font-family="Arial" font-size="18" font-weight="700">AMAZON HEDİYE KARTI</text>
+<text x="160" y="488" fill="#111827" font-family="Arial" font-size="37" font-weight="700">₺ 1.000 BAKİYE</text>
+<rect x="126" y="557" width="442" height="82" rx="18" fill="#07111f" stroke="#29435d"/>
+<text x="154" y="589" fill="#8094aa" font-family="Arial" font-size="16">KOD</text>
+<text x="154" y="620" fill="#ffffff" font-family="monospace" font-size="23">AMZ-7F3K-9Q2L</text>
+<circle cx="527" cy="598" r="17" fill="#22c55e"/>
+<path d="M518 598l6 7 12-15" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="126" y="689" fill="#93a6ba" font-family="Arial" font-size="17">Kod nakit değildir; hesaba tanımlanan alışveriş bakiyesidir.</text>
+<rect x="664" y="305" width="848" height="440" rx="30" fill="#0b192a" stroke="#223a54" stroke-width="2"/>
+<text x="710" y="362" fill="#ffffff" font-family="Arial" font-size="26" font-weight="700">KULLANIM AKIŞI</text>
+<g font-family="Arial">
+<circle cx="756" cy="443" r="28" fill="#ff9900"/><text x="747" y="453" fill="#101828" font-size="26" font-weight="700">1</text>
+<text x="814" y="435" fill="#fff" font-size="23" font-weight="700">Kodu hesabına tanımla</text><text x="814" y="468" fill="#8fa4b9" font-size="18">Kod ve hesap bölgesi uyumlu olmalı.</text>
+<path d="M756 479v53" stroke="#34516c" stroke-width="4"/>
+<circle cx="756" cy="568" r="28" fill="#18c7c8"/><text x="747" y="578" fill="#05202b" font-size="26" font-weight="700">2</text>
+<text x="814" y="560" fill="#fff" font-size="23" font-weight="700">Bakiyeyi kontrol et</text><text x="814" y="593" fill="#8fa4b9" font-size="18">Tanımlanan tutar hesap bakiyesinde görünür.</text>
+<path d="M756 604v53" stroke="#34516c" stroke-width="4"/>
+<circle cx="756" cy="693" r="28" fill="#22c55e"/><text x="747" y="703" fill="#052015" font-size="26" font-weight="700">3</text>
+<text x="814" y="685" fill="#fff" font-size="23" font-weight="700">Uygun ürünlerde kullan</text><text x="814" y="718" fill="#8fa4b9" font-size="18">Kullanım şartları ülke ve ürün türüne göre değişebilir.</text>
+</g>
+<rect x="1224" y="385" width="220" height="278" rx="30" fill="#f8fafc"/>
+<rect x="1252" y="420" width="164" height="24" rx="12" fill="#ff9900"/>
+<rect x="1252" y="470" width="68" height="68" rx="14" fill="#e8eef4"/><rect x="1338" y="470" width="78" height="14" rx="7" fill="#a7b4c3"/><rect x="1338" y="497" width="58" height="12" rx="6" fill="#d0d8e0"/>
+<rect x="1252" y="558" width="164" height="48" rx="14" fill="#ff9900"/><text x="1291" y="589" fill="#15202c" font-family="Arial" font-size="17" font-weight="700">BAKİYEYLE ÖDE</text>
+<text x="92" y="822" fill="#536a81" font-family="Arial" font-size="17">SKY BOZUM • BİLGİ MERKEZİ • bozumcu.net</text>
+</svg>

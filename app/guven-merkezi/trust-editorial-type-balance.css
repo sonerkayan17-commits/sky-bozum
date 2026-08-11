@@ -1,0 +1,10 @@
+.trust-premium-page .trust-hero-copy h1{font-size:clamp(2.55rem,3.8vw,3.7rem)!important;line-height:.96!important}
+.trust-premium-page .trust-hero-kicker{font-size:.64rem!important}
+.trust-premium-page .trust-ledger-head>span{font-size:.65rem!important}
+.trust-premium-page .trust-ledger-head b{font-size:.59rem!important}
+.trust-premium-page .trust-hero-ledger dt{font-size:.8rem!important}
+.trust-premium-page .trust-hero-ledger dd{font-size:1.05rem!important}
+.trust-premium-page .trust-hero-ledger dl span{font-size:.62rem!important}
+.trust-premium-page .trust-hero-ledger>p span{font-size:.58rem!important}
+.trust-premium-page .trust-hero-ledger>p b{font-size:.8rem!important}
+@media(max-width:600px){.trust-premium-page .trust-hero-copy h1{font-size:2.5rem!important}.trust-premium-page .trust-hero-ledger dd{font-size:.96rem!important}}

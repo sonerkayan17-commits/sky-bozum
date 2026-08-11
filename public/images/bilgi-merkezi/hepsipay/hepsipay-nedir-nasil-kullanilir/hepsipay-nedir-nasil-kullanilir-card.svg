@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Hepsipay nedir ve nasıl kullanılır?</title>
+  <desc id="desc">Hepsipay cüzdanı, Hepsipara, alışveriş limiti ve hızlı kredi ürünlerinin tek ekosistemde ayrışmasını anlatan premium editoryal kapak.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071421"/><stop offset=".55" stop-color="#10283c"/><stop offset="1" stop-color="#07131f"/></linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff9b32"/><stop offset="1" stop-color="#ff5a00"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity=".18"/><stop offset="1" stop-color="#ffffff" stop-opacity=".05"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="24" stdDeviation="26" flood-color="#000" flood-opacity=".34"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="20"/></filter>
+  </defs>
+  <rect width="1600" height="900" rx="42" fill="url(#bg)"/>
+  <circle cx="1285" cy="155" r="220" fill="#ff6a00" opacity=".10" filter="url(#glow)"/>
+  <circle cx="1015" cy="765" r="250" fill="#21c7b7" opacity=".08" filter="url(#glow)"/>
+  <g opacity=".18" stroke="#8fb1c9"><path d="M780 110H1480"/><path d="M780 790H1480"/><path d="M815 70V825"/><path d="M1450 70V825"/></g>
+
+  <g transform="translate(112 128)">
+    <rect x="0" y="0" width="178" height="42" rx="21" fill="#ff6a00" opacity=".18"/><text x="89" y="28" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#ff9b32">HEPSIPAY REHBERİ</text>
+    <text x="0" y="112" font-family="Arial,sans-serif" font-size="64" font-weight="800" fill="#fff">Hepsipay nedir?</text>
+    <text x="0" y="176" font-family="Arial,sans-serif" font-size="30" font-weight="600" fill="#b9cddd">Tek cüzdan, dört farklı ürün mantığı</text>
+    <text x="0" y="234" font-family="Arial,sans-serif" font-size="22" fill="#8fa8bc">Ödeme yöntemini doğru seç, ürün türünü karıştırma.</text>
+
+    <g transform="translate(0 320)">
+      <rect width="520" height="260" rx="30" fill="url(#glass)" stroke="#ffffff" stroke-opacity=".16"/>
+      <text x="34" y="54" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#ff9b32">KULLANMADAN ÖNCE AYIRT ET</text>
+      <g font-family="Arial,sans-serif" font-size="21" fill="#eaf3f8">
+        <circle cx="48" cy="102" r="7" fill="#ff7a16"/><text x="70" y="110">Kayıtlı kart ve cüzdan bakiyesi</text>
+        <circle cx="48" cy="148" r="7" fill="#f6c84f"/><text x="70" y="156">Hepsipara kampanya ödülü</text>
+        <circle cx="48" cy="194" r="7" fill="#25c8b5"/><text x="70" y="202">Hepsiburada alışveriş limiti</text>
+        <circle cx="48" cy="240" r="7" fill="#79a7ff"/><text x="70" y="248">Anlaşmalı banka hızlı kredisi</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(790 128)">
+    <rect x="120" y="64" width="430" height="560" rx="66" fill="#0e1c2b" stroke="#55718a" stroke-width="3"/>
+    <rect x="145" y="95" width="380" height="510" rx="46" fill="#f7fafc"/>
+    <rect x="270" y="78" width="130" height="12" rx="6" fill="#2b4153"/>
+
+    <g transform="translate(188 132)">
+      <circle cx="44" cy="44" r="44" fill="url(#orange)"/><path d="M22 44h44M44 22v44" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+      <text x="104" y="42" font-family="Arial,sans-serif" font-size="31" font-weight="800" fill="#183247">Hepsipay</text>
+      <text x="104" y="70" font-family="Arial,sans-serif" font-size="16" fill="#6f8494">Ödeme ekosistemi</text>
+    </g>
+
+    <g transform="translate(176 252)">
+      <rect width="318" height="92" rx="24" fill="#fff3e7" stroke="#ffd0a5"/>
+      <circle cx="48" cy="46" r="25" fill="#ff7a16"/><path d="M35 47h26" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+      <text x="88" y="38" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#233b4d">Cüzdan ve kayıtlı kart</text><text x="88" y="64" font-family="Arial,sans-serif" font-size="15" fill="#6c8292">Hızlı ödeme</text>
+    </g>
+    <g transform="translate(176 360)">
+      <rect width="318" height="92" rx="24" fill="#fff9dc" stroke="#f4df82"/>
+      <circle cx="48" cy="46" r="25" fill="#f6c84f"/><path d="M38 34l20 24M58 34L38 58" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+      <text x="88" y="38" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#233b4d">Hepsipara</text><text x="88" y="64" font-family="Arial,sans-serif" font-size="15" fill="#6c8292">Kampanya ödülü</text>
+    </g>
+    <g transform="translate(176 468)">
+      <rect width="150" height="94" rx="24" fill="#e6fbf7" stroke="#9be4d8"/><circle cx="40" cy="46" r="22" fill="#25c8b5"/><path d="M30 46h20" stroke="#fff" stroke-width="6" stroke-linecap="round"/><text x="72" y="39" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#233b4d">Limit</text><text x="72" y="61" font-family="Arial,sans-serif" font-size="13" fill="#6c8292">Alışveriş</text>
+      <rect x="168" width="150" height="94" rx="24" fill="#edf3ff" stroke="#b8ccff"/><circle cx="208" cy="46" r="22" fill="#79a7ff"/><path d="M197 50l9-9 13 13" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/><text x="240" y="39" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#233b4d">Kredi</text><text x="240" y="61" font-family="Arial,sans-serif" font-size="13" fill="#6c8292">Banka teklifi</text>
+    </g>
+  </g>
+
+  <g transform="translate(740 700)"><path d="M0 0H760" stroke="#29465b" stroke-width="2"/><circle cx="65" cy="0" r="7" fill="#ff7a16"/><circle cx="270" cy="0" r="7" fill="#f6c84f"/><circle cx="475" cy="0" r="7" fill="#25c8b5"/><circle cx="680" cy="0" r="7" fill="#79a7ff"/></g>
+  <text x="1490" y="842" text-anchor="end" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#6f899d">SKY BOZUM • BİLGİ MERKEZİ</text>
+</svg>

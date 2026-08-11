@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+
+<defs>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="26" stdDeviation="24" flood-color="#020617" flood-opacity=".45"/>
+  </filter>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="38"/>
+  </filter>
+</defs>
+
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06172f"/><stop offset=".58" stop-color="#08254a"/><stop offset="1" stop-color="#07111f"/></linearGradient>
+  <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#67e8f9"/><stop offset="1" stop-color="#2f8cff"/></linearGradient>
+  <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#12365e"/><stop offset="1" stop-color="#071b35"/></linearGradient>
+</defs>
+<rect width="1600" height="900" rx="48" fill="url(#bg)"/>
+<path d="M0 745C320 620 458 890 800 756c339-132 463-423 800-330v474H0z" fill="#0c3563" opacity=".42"/>
+<circle cx="1280" cy="125" r="240" fill="#22d3ee" opacity=".11" filter="url(#soft)"/>
+<g font-family="Arial, Helvetica, sans-serif">
+ <text x="88" y="140" fill="#72ddff" font-size="30" font-weight="700" letter-spacing="4">TÜRK TELEKOM • EMAĞAZA</text>
+ <text x="88" y="225" fill="#fff" font-size="66" font-weight="800">Faturaya Ek Cihaz</text>
+ <text x="88" y="294" fill="#fff" font-size="66" font-weight="800">Seçim Rehberi</text>
+ <text x="88" y="354" fill="#b9d9f7" font-size="27">Limit, model uygunluğu ve aylık fatura planı</text>
+ <g transform="translate(88 425)">
+   <rect width="500" height="248" rx="34" fill="#071a33" stroke="#4cc9ff" stroke-opacity=".35"/>
+   <text x="34" y="48" fill="#73dcff" font-size="19" font-weight="700" letter-spacing="2">SEÇİM ÖNCESİ 3 KONTROL</text>
+   <g transform="translate(34 77)"><circle cx="22" cy="22" r="22" fill="url(#cyan)"/><text x="16" y="30" font-size="22" font-weight="800" fill="#082140">1</text><text x="62" y="19" fill="#fff" font-size="23" font-weight="700">Hat uygunluğu</text><text x="62" y="45" fill="#9fc2e6" font-size="17">Faturalı hat ve ödeme geçmişi</text></g>
+   <g transform="translate(34 137)"><circle cx="22" cy="22" r="22" fill="url(#cyan)"/><text x="16" y="30" font-size="22" font-weight="800" fill="#082140">2</text><text x="62" y="19" fill="#fff" font-size="23" font-weight="700">Model uygunluğu</text><text x="62" y="45" fill="#9fc2e6" font-size="17">Stok, kategori ve güncel teklif</text></g>
+   <g transform="translate(34 197)"><circle cx="22" cy="22" r="22" fill="url(#cyan)"/><text x="16" y="30" font-size="22" font-weight="800" fill="#082140">3</text><text x="62" y="19" fill="#fff" font-size="23" font-weight="700">Aylık toplam</text><text x="62" y="45" fill="#9fc2e6" font-size="17">Vade ve faturaya eklenecek tutar</text></g>
+ </g>
+</g>
+<g transform="translate(670 120)">
+ <rect x="0" y="65" width="790" height="585" rx="52" fill="url(#panel)" stroke="#62d8ff" stroke-opacity=".28"/>
+ <rect x="38" y="102" width="714" height="78" rx="24" fill="#eaf7ff"/>
+ <circle cx="82" cy="141" r="18" fill="url(#cyan)"/><text x="116" y="151" font-family="Arial" font-size="27" font-weight="800" fill="#082648">eMağaza cihaz seçimi</text>
+ <rect x="38" y="210" width="440" height="390" rx="34" fill="#06172c"/>
+ <text x="70" y="252" font-family="Arial" font-size="18" fill="#78dcff">UYGUN MODELLER</text>
+ <g transform="translate(68 280)">
+  <rect width="116" height="220" rx="24" fill="#f8fafc"/><rect x="24" y="22" width="68" height="124" rx="16" fill="#16385e"/><circle cx="58" cy="132" r="5" fill="#72ddff"/><text x="20" y="180" font-family="Arial" font-size="16" font-weight="700" fill="#0f2742">Telefon</text><rect x="20" y="194" width="76" height="10" rx="5" fill="#d6e8f5"/>
+  <rect x="136" width="116" height="220" rx="24" fill="#f8fafc"/><rect x="156" y="34" width="76" height="102" rx="12" fill="#16385e"/><rect x="148" y="142" width="92" height="10" rx="5" fill="#72ddff"/><text x="157" y="180" font-family="Arial" font-size="16" font-weight="700" fill="#0f2742">Tablet</text><rect x="156" y="194" width="76" height="10" rx="5" fill="#d6e8f5"/>
+  <rect x="272" width="116" height="220" rx="24" fill="#f8fafc"/><rect x="294" y="44" width="72" height="90" rx="36" fill="#16385e"/><rect x="306" y="57" width="48" height="62" rx="24" fill="#72ddff"/><text x="292" y="180" font-family="Arial" font-size="16" font-weight="700" fill="#0f2742">Aksesuar</text><rect x="292" y="194" width="76" height="10" rx="5" fill="#d6e8f5"/>
+ </g>
+ <rect x="506" y="210" width="246" height="390" rx="34" fill="#eaf7ff"/>
+ <text x="536" y="254" font-family="Arial" font-size="18" fill="#2b6a9a">FATURA PLANI</text>
+ <text x="536" y="305" font-family="Arial" font-size="44" font-weight="800" fill="#082648">₺1.890</text>
+ <text x="536" y="334" font-family="Arial" font-size="17" fill="#557792">aylık cihaz tutarı</text>
+ <g transform="translate(536 382)">
+   <rect width="184" height="16" rx="8" fill="#cce5f5"/><rect width="122" height="16" rx="8" fill="url(#cyan)"/>
+   <text y="52" font-family="Arial" font-size="18" font-weight="700" fill="#0b3458">12 ay vade</text>
+   <text y="83" font-family="Arial" font-size="16" fill="#557792">Tarife + cihaz ayrımı</text>
+ </g>
+ <rect x="536" y="508" width="184" height="58" rx="20" fill="#082648"/><text x="576" y="545" font-family="Arial" font-size="20" font-weight="700" fill="#fff">Planı kontrol et</text>
+</g>
+</svg>

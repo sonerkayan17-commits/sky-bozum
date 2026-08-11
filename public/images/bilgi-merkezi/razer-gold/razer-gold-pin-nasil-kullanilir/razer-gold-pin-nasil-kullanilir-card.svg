@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06100c"/><stop offset=".58" stop-color="#092018"/><stop offset="1" stop-color="#101b10"/></linearGradient>
+ <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#72ff9f"/><stop offset="1" stop-color="#18ad58"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe891"/><stop offset="1" stop-color="#c59325"/></linearGradient>
+</defs>
+<rect width="1200" height="675" rx="36" fill="url(#bg)"/>
+<circle cx="1080" cy="80" r="235" fill="#4aff85" opacity=".07"/><circle cx="75" cy="620" r="220" fill="#e2b13e" opacity=".05"/>
+<text x="70" y="67" fill="#72ff9f" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="2">RAZER GOLD • PIN KULLANIM REHBERİ</text>
+<text x="70" y="140" fill="#fff" font-family="Arial, sans-serif" font-size="48" font-weight="800">Razer Gold PIN nasıl kullanılır?</text>
+<text x="70" y="185" fill="#b4c6ba" font-family="Arial, sans-serif" font-size="21">Kodu doğru hesaba tanımlamak için üç kritik adım.</text>
+<rect x="70" y="235" width="450" height="335" rx="28" fill="#0c1e15" stroke="#2b563b"/>
+<text x="102" y="278" fill="#8fa698" font-family="Arial, sans-serif" font-size="15" font-weight="700">PIN GİRİŞİ</text>
+<rect x="102" y="300" width="386" height="72" rx="18" fill="#07130d" stroke="#397a50"/>
+<text x="128" y="344" fill="#fff" font-family="monospace" font-size="25" font-weight="700" letter-spacing="5">RG-••••-••••-••••</text>
+<circle cx="455" cy="336" r="17" fill="#174d2d"/><path d="M447 336l6 6 11-13" fill="none" stroke="#75ff9e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="102" y="397" width="386" height="56" rx="16" fill="#12281c"/><text x="128" y="421" fill="#fff" font-family="Arial, sans-serif" font-size="17" font-weight="700">Hesap bölgesi</text><text x="128" y="442" fill="#8da192" font-family="Arial, sans-serif" font-size="13">Türkiye • TL kodu</text><rect x="392" y="411" width="72" height="28" rx="14" fill="#194d2f"/><text x="428" y="430" text-anchor="middle" fill="#7cff9f" font-family="Arial, sans-serif" font-size="12" font-weight="700">UYUMLU</text>
+<rect x="102" y="470" width="386" height="66" rx="18" fill="url(#accent)"/><text x="295" y="511" text-anchor="middle" fill="#06200f" font-family="Arial, sans-serif" font-size="18" font-weight="900">PIN’İ DOĞRULA</text>
+<rect x="570" y="220" width="560" height="380" rx="30" fill="#091911" stroke="#294c36"/>
+<text x="610" y="267" fill="#fff" font-family="Arial, sans-serif" font-size="24" font-weight="800">Güvenli kullanım akışı</text>
+<g font-family="Arial, sans-serif">
+ <line x1="655" y1="330" x2="655" y2="510" stroke="#28573b" stroke-width="5"/>
+ <circle cx="655" cy="328" r="27" fill="#1d673a"/><text x="655" y="336" text-anchor="middle" fill="#8dffac" font-size="20" font-weight="900">1</text><text x="705" y="319" fill="#fff" font-size="20" font-weight="800">Doğru hesaba giriş yap</text><text x="705" y="344" fill="#93a99a" font-size="15">Kodun bölgesiyle hesap bölgesini eşleştir.</text>
+ <circle cx="655" cy="416" r="27" fill="#5b4518"/><text x="655" y="424" text-anchor="middle" fill="#ffe38b" font-size="20" font-weight="900">2</text><text x="705" y="407" fill="#fff" font-size="20" font-weight="800">PIN’i eksiksiz gir</text><text x="705" y="432" fill="#93a99a" font-size="15">Boşluk, karakter ve kod türünü kontrol et.</text>
+ <circle cx="655" cy="504" r="27" fill="#1d673a"/><text x="655" y="512" text-anchor="middle" fill="#8dffac" font-size="20" font-weight="900">3</text><text x="705" y="495" fill="#fff" font-size="20" font-weight="800">Bakiyeyi doğrula</text><text x="705" y="520" fill="#93a99a" font-size="15">İşlem sonrası güncel bakiyeyi kontrol et.</text>
+</g>
+<rect x="610" y="548" width="480" height="28" rx="14" fill="#17281d"/><circle cx="628" cy="562" r="7" fill="#e3b33e"/><text x="645" y="567" fill="#d7dfd9" font-family="Arial, sans-serif" font-size="13" font-weight="700">PIN’i kimseyle paylaşma • Ekran görüntüsü gönderme</text>
+<text x="70" y="635" fill="#5c7866" font-family="Arial, sans-serif" font-size="13">SKY BOZUM BİLGİ MERKEZİ • bozumcu.net</text>
+</svg>

@@ -1,0 +1,31 @@
+/* The rate comparison stays readable on a phone without a horizontal table. */
+@media (max-width: 560px) {
+  .tool-page-hero + .narrow-shell [role="region"] { overflow: visible; }
+
+  .tool-page-hero + .narrow-shell [role="region"] > div {
+    min-width: 0 !important;
+  }
+
+  .tool-page-hero + .narrow-shell [role="region"] > div > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .55rem !important;
+  }
+
+  .tool-page-hero + .narrow-shell [role="region"] > div > div:first-child {
+    padding: .8rem 1rem !important;
+  }
+
+  .tool-page-hero + .narrow-shell [role="region"] > div > div:first-child > span:first-child,
+  .tool-page-hero + .narrow-shell [role="region"] > div > div:not(:first-child) > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .tool-page-hero + .narrow-shell [role="region"] > div > div:not(:first-child) {
+    padding: 1rem !important;
+  }
+
+  .tool-page-hero + .narrow-shell [role="region"] > div > div:not(:first-child) > span {
+    border-top: 1px solid rgba(255, 255, 255, .07);
+    padding-top: .65rem;
+  }
+}

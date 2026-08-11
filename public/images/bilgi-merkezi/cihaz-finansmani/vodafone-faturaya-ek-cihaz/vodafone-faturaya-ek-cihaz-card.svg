@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+
+<defs>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="26" stdDeviation="24" flood-color="#020617" flood-opacity=".45"/>
+  </filter>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="38"/>
+  </filter>
+</defs>
+
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2a0710"/><stop offset=".55" stop-color="#16040a"/><stop offset="1" stop-color="#07080d"/></linearGradient>
+  <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff5a67"/><stop offset="1" stop-color="#d80027"/></linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity=".18"/><stop offset="1" stop-color="#ffffff" stop-opacity=".05"/></linearGradient>
+</defs>
+<rect width="1600" height="900" rx="48" fill="url(#bg)"/>
+<circle cx="1280" cy="160" r="250" fill="#e6002d" opacity=".18" filter="url(#soft)"/>
+<circle cx="1030" cy="740" r="260" fill="#ff5a67" opacity=".10" filter="url(#soft)"/>
+<g font-family="Arial, Helvetica, sans-serif">
+  <text x="92" y="145" fill="#ff6674" font-size="30" font-weight="700" letter-spacing="4">VODAFONE • CİHAZ FİNANSMANI</text>
+  <text x="92" y="228" fill="#fff" font-size="68" font-weight="800">Faturaya Ek Cihaz</text>
+  <text x="92" y="298" fill="#fff" font-size="68" font-weight="800">Nasıl Alınır?</text>
+  <text x="92" y="358" fill="#f6cbd0" font-size="28">Uygunluk, ürün seçimi ve fatura planı tek akışta</text>
+  <g transform="translate(92 420)">
+    <rect width="470" height="92" rx="28" fill="#ffffff" opacity=".08" stroke="#ff6876" stroke-opacity=".35"/>
+    <circle cx="50" cy="46" r="22" fill="url(#red)"/><path d="M40 46l7 7 15-18" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="88" y="38" fill="#fff" font-size="24" font-weight="700">1. Uygunluk kontrolü</text><text x="88" y="66" fill="#efb9c0" font-size="18">Hat, ödeme geçmişi ve mevcut limit</text>
+  </g>
+  <g transform="translate(92 530)">
+    <rect width="470" height="92" rx="28" fill="#ffffff" opacity=".08" stroke="#ff6876" stroke-opacity=".35"/>
+    <rect x="30" y="25" width="42" height="42" rx="10" fill="url(#red)"/><path d="M40 38h22M40 48h15M40 58h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <text x="88" y="38" fill="#fff" font-size="24" font-weight="700">2. Cihaz ve vade seçimi</text><text x="88" y="66" fill="#efb9c0" font-size="18">Desteklenen model ve toplam ödeme</text>
+  </g>
+  <g transform="translate(92 640)">
+    <rect width="470" height="92" rx="28" fill="#ffffff" opacity=".08" stroke="#ff6876" stroke-opacity=".35"/>
+    <path d="M31 32h39v34H31z" fill="url(#red)"/><path d="M38 40h25M38 49h18M38 58h22" stroke="#fff" stroke-width="3"/>
+    <text x="88" y="38" fill="#fff" font-size="24" font-weight="700">3. Taksitler faturaya yansır</text><text x="88" y="66" fill="#efb9c0" font-size="18">Aylık tutar ve kalan vade görünür</text>
+  </g>
+</g>
+<g transform="translate(690 115)">
+  <path d="M74 107C196 2 436-12 663 85c125 53 198 147 197 258-2 136-113 265-293 332-184 69-395 44-511-61C-55 514-45 210 74 107z" fill="url(#glass)" stroke="#ff6c79" stroke-opacity=".28"/>
+  <g transform="translate(150 72) rotate(-7 210 320)">
+    <rect x="0" y="0" width="330" height="650" rx="58" fill="#090b12" stroke="#ff7782" stroke-width="5"/>
+    <rect x="20" y="22" width="290" height="606" rx="42" fill="#f8fafc"/>
+    <rect x="105" y="38" width="120" height="24" rx="12" fill="#111827"/>
+    <circle cx="64" cy="115" r="24" fill="url(#red)"/><path d="M55 111c16-13 30-1 22 13-6 10-20 13-28 2-7-10-2-22 6-27" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    <text x="100" y="123" font-family="Arial" font-size="25" font-weight="700" fill="#111827">Flex cihaz teklifin</text>
+    <rect x="42" y="168" width="246" height="140" rx="28" fill="#1b0a10"/>
+    <text x="66" y="208" font-family="Arial" font-size="19" fill="#f8c8ce">KULLANILABİLİR LİMİT</text>
+    <text x="66" y="263" font-family="Arial" font-size="46" font-weight="800" fill="#fff">₺24.500</text>
+    <rect x="42" y="338" width="116" height="112" rx="24" fill="#ffe8eb"/>
+    <rect x="172" y="338" width="116" height="112" rx="24" fill="#f1f5f9"/>
+    <path d="M78 360h44v66H78z" rx="8" fill="#e6002d"/><circle cx="100" cy="415" r="4" fill="#fff"/>
+    <path d="M193 381h75M193 397h52M193 413h63" stroke="#334155" stroke-width="8" stroke-linecap="round"/>
+    <text x="42" y="504" font-family="Arial" font-size="19" fill="#64748b">12 AYLIK FATURA PLANI</text>
+    <rect x="42" y="526" width="246" height="18" rx="9" fill="#e2e8f0"/><rect x="42" y="526" width="164" height="18" rx="9" fill="url(#red)"/>
+    <text x="42" y="584" font-family="Arial" font-size="22" font-weight="700" fill="#111827">Toplam ödeme ekranda net</text>
+  </g>
+  <g transform="translate(470 340)">
+    <rect width="260" height="300" rx="34" fill="#11131b" stroke="#ff6573" stroke-opacity=".45"/>
+    <rect x="26" y="28" width="208" height="130" rx="24" fill="url(#red)"/>
+    <rect x="84" y="44" width="92" height="98" rx="18" fill="#111827"/><circle cx="112" cy="72" r="15" fill="#2b3340"/><circle cx="150" cy="72" r="15" fill="#2b3340"/>
+    <text x="32" y="204" font-family="Arial" font-size="18" fill="#ff9aa4">SEÇİLEN CİHAZ</text>
+    <text x="32" y="242" font-family="Arial" font-size="27" font-weight="700" fill="#fff">Model + vade</text>
+    <text x="32" y="274" font-family="Arial" font-size="18" fill="#cbd5e1">Ödeme planı doğrulanır</text>
+  </g>
+</g>
+</svg>

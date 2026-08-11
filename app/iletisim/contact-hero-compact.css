@@ -1,0 +1,63 @@
+/* Compact contact hero: content-driven height, no empty stage. */
+.contact-page .contact-hero.contact-hero--268{
+  min-height:0!important;
+  padding-top:clamp(1.25rem,2.2vw,2rem)!important;
+  padding-bottom:clamp(1.25rem,2.2vw,2rem)!important;
+}
+.contact-page .contact-hero-grid.contact-hero-grid--268{
+  align-items:center!important;
+  gap:clamp(1.8rem,3.5vw,3.4rem)!important;
+}
+.contact-page .contact-hero-copy--268{
+  align-self:center!important;
+  padding:0!important;
+}
+.contact-page .contact-title.contact-title--268{
+  max-width:760px!important;
+  margin-top:.75rem!important;
+  font-size:clamp(2.7rem,5vw,4.8rem)!important;
+  line-height:.9!important;
+}
+.contact-page .contact-lead--263{
+  margin-top:.8rem!important;
+  font-size:.95rem!important;
+  line-height:1.65!important;
+}
+.contact-page .contact-actions--263{
+  margin-top:1rem!important;
+}
+.contact-page .contact-action-primary,
+.contact-page .contact-action-secondary{
+  min-height:44px!important;
+  padding:.65rem .85rem!important;
+}
+.contact-page .contact-hero-signature{
+  margin-top:.9rem!important;
+  padding:.5rem 0!important;
+}
+.contact-page .contact-command-card--268{
+  align-self:center!important;
+  max-width:470px!important;
+  min-height:0!important;
+  border-radius:12px!important;
+}
+.contact-page .contact-command-statement--268{
+  padding-top:1rem!important;
+  padding-bottom:.8rem!important;
+}
+.contact-page .contact-command-statement--268 h2{
+  font-size:clamp(1.8rem,2.8vw,2.8rem)!important;
+}
+.contact-page .contact-command-facts--268>div{
+  min-height:46px!important;
+  padding-top:.55rem!important;
+  padding-bottom:.55rem!important;
+}
+@media(max-width:1023px){
+  .contact-page .contact-hero-grid.contact-hero-grid--268{grid-template-columns:1fr!important}
+  .contact-page .contact-command-card--268{width:100%!important;max-width:680px!important}
+}
+@media(max-width:640px){
+  .contact-page .contact-hero.contact-hero--268{padding-top:1rem!important;padding-bottom:1rem!important}
+  .contact-page .contact-title.contact-title--268{font-size:2.75rem!important}
+}
