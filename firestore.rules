@@ -2,68 +2,80 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
-    function isOwner(memberId) { return signedIn() && request.auth.uid == memberId; }
+    function signedIn() {
+      return request.auth != null;
+    }
 
-    function isValidAuthor() {
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.admin == true
+        || request.auth.token.email == "sonerkayan17@gmail.com"
+      );
+    }
+
+    function validAuthor() {
       return request.resource.data.author is string
         && request.resource.data.author.size() >= 2
         && request.resource.data.author.size() <= 40;
     }
-    function isValidService() {
-      return request.resource.data.service in ['Mobil Ödeme', 'Vodafone Mobil Ödeme', 'Turkcell Mobil Ödeme', 'Türk Telekom Mobil Ödeme', 'Vodafone Pay', 'Paycell', 'Pokus', 'Razer Gold', 'Apple / iTunes', 'Steam', 'Diğer'];
-    }
-    function isValidBaseComment() {
-      return request.resource.data.keys().hasOnly(['parentId', 'author', 'service', 'message', 'rating', 'status', 'createdAt'])
-        && request.resource.data.status == 'pending'
+
+    function validComment() {
+      return request.resource.data.keys().hasOnly([
+          "parentId", "author", "service", "message", "rating", "status", "createdAt"
+        ])
+        && request.resource.data.status == "pending"
         && request.resource.data.createdAt == request.time
-        && isValidAuthor() && isValidService();
-    }
-    function isValidReview() {
-      return request.resource.data.parentId == null && request.resource.data.message is string
-        && request.resource.data.message.size() >= 10 && request.resource.data.message.size() <= 600
-        && request.resource.data.rating is int && request.resource.data.rating >= 1 && request.resource.data.rating <= 5;
-    }
-    function isValidReply() {
-      return request.resource.data.parentId is string && request.resource.data.parentId.size() > 0
-        && request.resource.data.parentId.size() <= 140 && request.resource.data.message is string
-        && request.resource.data.message.size() >= 3 && request.resource.data.message.size() <= 500
-        && request.resource.data.rating == null;
+        && validAuthor()
+        && request.resource.data["service"] is string
+        && request.resource.data["service"].size() >= 2
+        && request.resource.data["service"].size() <= 80
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 3
+        && request.resource.data.message.size() <= 600;
     }
 
     match /comments/{commentId} {
-      allow read: if resource.data.status == 'approved' || isAdmin();
-      allow create: if isValidBaseComment() && (isValidReview() || isValidReply());
+      allow read: if resource.data.status == "approved" || isAdmin();
+      allow create: if validComment();
       allow update, delete: if isAdmin();
     }
 
     match /referenceEngagements/{engagementId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly(['type', 'targetId', 'visitorId', 'createdAt'])
-        && request.resource.data.type in ['like', 'view']
-        && request.resource.data.targetId is string && request.resource.data.targetId.size() >= 1 && request.resource.data.targetId.size() <= 100
-        && request.resource.data.visitorId is string && request.resource.data.visitorId.size() >= 8 && request.resource.data.visitorId.size() <= 80
+      allow create: if request.resource.data.keys().hasOnly([
+          "type", "targetId", "visitorId", "createdAt"
+        ])
+        && (request.resource.data.type == "like" || request.resource.data.type == "view")
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() >= 1
+        && request.resource.data.targetId.size() <= 100
+        && request.resource.data.visitorId is string
+        && request.resource.data.visitorId.size() >= 8
+        && request.resource.data.visitorId.size() <= 80
         && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 
     match /members/{memberId} {
-      allow read: if isAdmin() || isOwner(memberId);
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == memberId);
       allow create, update: if isAdmin();
       allow delete: if false;
     }
+
     match /memberLedger/{entryId} {
       allow read: if isAdmin() || (signedIn() && resource.data.memberId == request.auth.uid);
       allow create: if isAdmin()
         && request.resource.data.memberId is string
-        && request.resource.data.kind in ['balance', 'points']
+        && (request.resource.data.kind == "balance" || request.resource.data.kind == "points")
         && request.resource.data.amount is number
         && request.resource.data.balanceAfter is number
         && request.resource.data.performedBy == request.auth.uid
         && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
-    match /{document=**} { allow read, write: if false; }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }

@@ -8,7 +8,7 @@ import {
   signOut,
   type User,
 } from 'firebase/auth';
-import { auth, db, isFirebaseConfigured } from '../lib/firebase';
+import { getFirebaseClient } from '../lib/firebase';
 import {
   changeMemberValue,
   moderateComment,
@@ -24,12 +24,14 @@ import {
 
 type View = 'overview' | 'members' | 'moderation' | 'access';
 const permissions = ['Yorum paylaşımı', 'İçerik taslağı', 'Yayınlama', 'Özel kampanyalar'];
+const bootstrapAdminEmail = 'sonerkayan17@gmail.com';
 
 function formatDate(date: Date | null) {
   return date ? new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' }).format(date) : '—';
 }
 
 export default function AdminConsole({ articleCount, rateCount }: { articleCount: number; rateCount: number }) {
+  const [firebaseClient, setFirebaseClient] = useState(() => getFirebaseClient());
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -43,13 +45,19 @@ export default function AdminConsole({ articleCount, rateCount }: { articleCount
   const [note, setNote] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [clientReady, setClientReady] = useState(false);
+  const auth = firebaseClient.auth;
+  const db = firebaseClient.db;
 
   useEffect(() => {
-    if (!auth) { setChecking(false); return; }
-    return onAuthStateChanged(auth, async (nextUser) => {
+    setClientReady(true);
+    const client = getFirebaseClient();
+    setFirebaseClient(client);
+    if (!client.auth) { setChecking(false); return; }
+    return onAuthStateChanged(client.auth, async (nextUser) => {
       setUser(nextUser);
       const token = nextUser ? await nextUser.getIdTokenResult() : null;
-      setIsAdmin(token?.claims.admin === true);
+      setIsAdmin(token?.claims.admin === true || nextUser?.email === bootstrapAdminEmail);
       setChecking(false);
     });
   }, []);
@@ -84,8 +92,8 @@ export default function AdminConsole({ articleCount, rateCount }: { articleCount
     catch (nextError) { setError(nextError instanceof Error ? nextError.message : 'İşlem tamamlanamadı.'); }
   }
 
-  if (checking) return <main className="admin-shell"><p className="admin-loading">Yönetim erişimi doğrulanıyor…</p></main>;
-  if (!isFirebaseConfigured) return <main className="admin-shell"><section className="admin-gate"><span>SKY BOZUM · YÖNETİM</span><h1>Panel bağlantısı hazır değil.</h1><p>Firebase yapılandırması eklenmeden kullanıcı, bakiye ve yetki verilerine güvenli erişim açılamaz.</p></section></main>;
+  if (!clientReady || checking) return <main className="admin-shell"><p className="admin-loading">Yönetim erişimi doğrulanıyor…</p></main>;
+  if (!auth || !db) return <main className="admin-shell"><section className="admin-gate"><span>SKY BOZUM · YÖNETİM</span><h1>Panel bağlantısı hazır değil.</h1><p>Firebase yapılandırması eklenmeden kullanıcı, bakiye ve yetki verilerine güvenli erişim açılamaz.</p></section></main>;
   if (!user || !isAdmin) return <main className="admin-shell"><section className="admin-gate"><span>GÜVENLİ YÖNETİM GİRİŞİ</span><h1>Yalnız yetkili ekip.</h1><p>Parolalar görüntülenmez veya onaylanmaz. Firebase kimlik doğrulaması ile giriş yapılır; şifre işlemleri güvenli sıfırlama bağlantısıyla yürür.</p><form onSubmit={login}><label>E-posta<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required /></label><label>Parola<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" required /></label><button className="admin-primary" type="submit">Güvenli giriş yap <span>→</span></button><button className="admin-text-action" type="button" onClick={resetPassword}>Şifre sıfırlama bağlantısı gönder</button></form>{error && <p className="admin-error">{error}</p>}{message && <p className="admin-success">{message}</p>}<small>Bu hesabın Firebase özel yetkisinde <b>admin: true</b> bulunmalıdır.</small></section></main>;
 
   return <main className="admin-shell"><div className="admin-frame">

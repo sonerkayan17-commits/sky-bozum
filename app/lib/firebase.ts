@@ -12,8 +12,9 @@ const firebaseConfig = {
 };
 
 export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+const canInitializeFirebase = typeof window !== 'undefined' && isFirebaseConfigured;
 
-export const firebaseApp = isFirebaseConfigured
+export const firebaseApp = canInitializeFirebase
   ? getApps().length
     ? getApp()
     : initializeApp(firebaseConfig)
@@ -21,3 +22,12 @@ export const firebaseApp = isFirebaseConfigured
 
 export const db = firebaseApp ? getFirestore(firebaseApp) : null;
 export const auth = firebaseApp ? getAuth(firebaseApp) : null;
+
+export function getFirebaseClient() {
+  if (typeof window === 'undefined' || !isFirebaseConfigured) {
+    return { auth: null, db: null };
+  }
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  return { auth: getAuth(app), db: getFirestore(app) };
+}
