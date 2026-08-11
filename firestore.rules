@@ -58,7 +58,24 @@ service cloud.firestore {
 
     match /members/{memberId} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == memberId);
-      allow create, update: if isAdmin();
+      allow create: if isAdmin() || (
+        signedIn()
+        && request.auth.uid == memberId
+        && request.resource.data.keys().hasOnly([
+          "displayName", "email", "role", "status", "balance", "points", "permissions", "createdAt"
+        ])
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 80
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role == "member"
+        && request.resource.data.status == "pending"
+        && request.resource.data.balance == 0
+        && request.resource.data.points == 0
+        && request.resource.data.permissions.size() == 0
+        && request.resource.data.createdAt == request.time
+      );
+      allow update: if isAdmin();
       allow delete: if false;
     }
 
