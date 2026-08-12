@@ -11,6 +11,7 @@ import {
 import { collection, onSnapshot } from "firebase/firestore";
 import { getFirebaseClient } from "../lib/firebase";
 import "./content.css";
+import "./admin-tools.css";
 import RichArticleEditor from "./RichArticleEditor";
 import { articles } from "../lib/site";
 import {
@@ -72,6 +73,8 @@ export default function AdminConsole({
   const [members, setMembers] = useState<AdminMember[]>([]);
   const [comments, setComments] = useState<AdminComment[]>([]);
   const [managedArticles, setManagedArticles] = useState<ManagedArticleRecord[]>([]);
+  const [contentQuery, setContentQuery] = useState("");
+  const [contentStatus, setContentStatus] = useState<"all" | ContentArticleDraft["status"]>("all");
   const [selectedMember, setSelectedMember] = useState<AdminMember | null>(
     null,
   );
@@ -165,6 +168,12 @@ export default function AdminConsole({
       ),
     [managedArticles],
   );
+
+  const contentMatches = (article: Pick<ContentArticleDraft, "title" | "excerpt" | "category" | "status">) => {
+    const query = contentQuery.trim().toLocaleLowerCase("tr-TR");
+    const matchesQuery = !query || `${article.title} ${article.excerpt} ${article.category}`.toLocaleLowerCase("tr-TR").includes(query);
+    return matchesQuery && (contentStatus === "all" || article.status === contentStatus);
+  };
 
   const duplicateArticle = (article: ContentArticleDraft) => {
     setEditingArticle({
@@ -399,8 +408,21 @@ export default function AdminConsole({
             >
               Yeni makale oluştur <span>→</span>
             </button>
+            <div className="admin-content-tools" role="search" aria-label="İçerik filtreleri">
+              <input value={contentQuery} onChange={(event) => setContentQuery(event.target.value)} placeholder="Başlık, kategori veya özet ara" />
+              <select value={contentStatus} onChange={(event) => setContentStatus(event.target.value as "all" | ContentArticleDraft["status"])}>
+                <option value="all">Tüm durumlar</option>
+                <option value="published">Yayında</option>
+                <option value="draft">Taslak</option>
+                <option value="archived">Arşiv</option>
+              </select>
+              <span>{articles.length + customArticles.length} içerik kaydı</span>
+            </div>
             <div className="admin-content-list">
-              {articles.map((article) => (
+              {articles.filter((article) => {
+                const managed = managedArticles.find((entry) => entry.slug === article.slug);
+                return contentMatches({ title: article.title, excerpt: article.excerpt, category: article.category, status: managed?.status || "published" });
+              }).map((article) => (
                 <article key={article.slug}>
                   <div>
                     <small>
@@ -431,6 +453,7 @@ export default function AdminConsole({
                     >
                       Düzenle
                     </button>
+                    <a className="admin-secondary compact" href={`/bilgi-merkezi/${article.slug}`} target="_blank" rel="noreferrer">Önizle</a>
                     <button
                       className="admin-secondary compact"
                       onClick={() =>
@@ -491,7 +514,7 @@ export default function AdminConsole({
                   </div>
                 </article>
               ))}
-              {customArticles.map((article) => (
+              {customArticles.filter(contentMatches).map((article) => (
                 <article key={article.id}>
                   <div>
                     <small>
@@ -504,6 +527,7 @@ export default function AdminConsole({
                     <button className="admin-primary compact" onClick={() => setEditingArticle(article)}>
                       Düzenle
                     </button>
+                    {article.status === "published" && <a className="admin-secondary compact" href={`/bilgi-merkezi/${article.slug}`} target="_blank" rel="noreferrer">Önizle</a>}
                     <button className="admin-secondary compact" onClick={() => duplicateArticle(article)}>
                       Kopyala
                     </button>
