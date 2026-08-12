@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const TAWK_PROPERTY_ID = '69fa97b6b2c8791c30a70ea8';
 const TAWK_WIDGET_ID = '1jvqhf0gc';
@@ -20,20 +20,5 @@ export default function TawkChat() {
     document.head.appendChild(script);
   }, []);
 
-  const openChat = useCallback(() => {
-    const tawk = (window as Window & { Tawk_API?: { maximize?: () => void } }).Tawk_API;
-    tawk?.maximize?.();
-  }, []);
-
-  return (
-    <aside className="tawk-support-intro" aria-label="Sky Bozum canlı destek">
-      <strong>👋 Merhaba! Size nasıl yardımcı olabiliriz?</strong>
-      <p className="tawk-support-notice">• &nbsp;Tek gerçek sitemiz <a href="https://bozumcu.net" target="_blank" rel="noreferrer">https://bozumcu.net</a> adresidir. Lütfen dolandırıcı sitelere itibar etmeyiniz.</p>
-      <p>Talebinizi iletin ve en kısa sürede size destek olacağız.</p>
-      <div className="tawk-support-actions">
-        <button type="button" onClick={openChat}>Bozum yapmak istiyorum</button>
-        <button type="button" onClick={openChat}>Detaylı bilgi almak istiyorum</button>
-      </div>
-    </aside>
-  );
+  return null;
 }
