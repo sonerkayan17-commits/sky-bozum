@@ -19,6 +19,7 @@ import { relatedArticles } from '../../lib/internalLinks';
 import { getArticleEditorialLabels, getArticleEditorialTemplate } from '../../lib/articleEditorialTemplate';
 import { serviceForArticle } from '../../lib/contentBridges';
 import { getHubForArticle } from '../../lib/topicHubs';
+import { getManagedContentArticle, mergeManagedArticles } from '../../lib/managedContent';
 
 
 function distributeMedia(sectionCount: number, mediaCount: number, reservedSections: number[] = []) {
@@ -74,7 +75,8 @@ export function generateStaticParams() { return articles.map((article) => ({ slu
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const managed = await getManagedContentArticle(slug);
+  const article = mergeManagedArticles(articles, managed ? [managed] : []).find((item) => item.slug === slug);
   if (!article) return {};
   const title = article.seoTitle ?? article.title;
   const description = article.metaDescription ?? article.excerpt;
@@ -106,7 +108,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const managed = await getManagedContentArticle(slug);
+  const article = mergeManagedArticles(articles, managed ? [managed] : []).find((item) => item.slug === slug);
   if (!article) return notFound();
   const related = relatedArticles(article, 2);
   const relatedService = serviceForArticle(article);

@@ -6,6 +6,7 @@ import LearningPathShowcase from '../components/articles/LearningPathShowcase';
 import { articles } from '../lib/site';
 import { absoluteUrl, jsonLd } from '../lib/seo';
 import { getIntentCoverage } from '../lib/searchIntent';
+import { getManagedContentArticles, mergeManagedArticles } from '../lib/managedContent';
 
 type SearchParamValue = string | string[] | undefined;
 type KnowledgeSearchParams = Record<string, SearchParamValue>;
@@ -83,6 +84,7 @@ export async function generateMetadata({
 
 export default async function Page({ searchParams }: { searchParams: Promise<KnowledgeSearchParams> }) {
   const { q, kategori, sirala, konu } = normalizeKnowledgeParams(await searchParams);
+  const visibleArticles = mergeManagedArticles(articles, await getManagedContentArticles());
   const intentCoverage = getIntentCoverage();
   const entryRoutes = [
     { eyebrow: 'Hizmete göre', title: 'Hangi bakiyeyi kullanacağınızı biliyorsanız', description: 'Vodafone, Turkcell, Türk Telekom, Paycell, Pokus ve dijital kod hizmetlerinden doğru başlangıç noktasını seçin.', href: '/hizmetler', action: 'Hizmetleri incele', number: '01' },
@@ -93,7 +95,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Kno
   const schema = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'Blog', '@id': `${absoluteUrl('/bilgi-merkezi')}#blog`, name: 'Sky Bozum Bilgi Merkezi', url: absoluteUrl('/bilgi-merkezi'), description: 'Mobil ödeme, dijital cüzdanlar, hediye kartları ve güvenli işlem rehberleri.', inLanguage: 'tr-TR', publisher: { '@id': `${absoluteUrl('/')}#organization` } },
     { '@type': 'CollectionPage', '@id': absoluteUrl('/bilgi-merkezi'), name: 'Sky Bozum Bilgi Merkezi', isPartOf: { '@id': `${absoluteUrl('/')}#website` }, mainEntity: { '@id': `${absoluteUrl('/bilgi-merkezi')}#blog` } },
-    { '@type': 'ItemList', itemListElement: articles.slice(0, 50).map((article, index) => ({ '@type': 'ListItem', position: index + 1, url: absoluteUrl(`/bilgi-merkezi/${article.slug}`), name: article.title })) },
+    { '@type': 'ItemList', itemListElement: visibleArticles.slice(0, 50).map((article, index) => ({ '@type': 'ListItem', position: index + 1, url: absoluteUrl(`/bilgi-merkezi/${article.slug}`), name: article.title })) },
   ] };
   return (
     <main className="knowledge-center-page min-h-screen bg-[#090b10] text-white">
@@ -164,7 +166,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Kno
         <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-rose-400">Tek soruyla başlayın</p><h2 id="knowledge-entry-title" className="mt-2 text-2xl font-black tracking-tight sm:text-4xl">Bugün neyi çözmek istiyorsunuz?</h2></div><p className="max-w-xl text-sm leading-7 text-slate-400">Makale listesinde kaybolmadan ihtiyacınıza en yakın yolu seçin; ilgili hizmete, kontrole veya araca doğrudan geçin.</p></div>
         <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">{entryRoutes.map((route) => <Link key={route.href} href={route.href} className="focus-ring group flex min-h-64 flex-col rounded-3xl border border-white/8 bg-[linear-gradient(155deg,rgba(255,255,255,.045),rgba(9,12,17,.96))] p-6 transition hover:-translate-y-1 hover:border-rose-400/30"><div className="flex items-center justify-between"><span className="text-xs font-extrabold uppercase tracking-[.16em] text-rose-400">{route.eyebrow}</span><span className="text-sm font-black text-slate-700">{route.number}</span></div><h3 className="mt-8 text-xl font-black leading-7 text-white">{route.title}</h3><p className="mt-3 text-sm leading-6 text-slate-500">{route.description}</p><span className="mt-auto pt-6 text-sm font-black text-slate-200 transition group-hover:text-rose-300">{route.action} →</span></Link>)}</div>
       </section>
-      <section className="content-shell py-10 sm:py-16"><ArticleExplorer articles={articles} initialQuery={q} initialCategory={kategori} initialSort={sirala} initialTopic={konu} /></section>
+      <section className="content-shell py-10 sm:py-16"><ArticleExplorer articles={visibleArticles} initialQuery={q} initialCategory={kategori} initialSort={sirala} initialTopic={konu} /></section>
     </main>
   );
 }
