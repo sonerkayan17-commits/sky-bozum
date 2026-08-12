@@ -14,6 +14,17 @@ export default function TawkChat() {
   useEffect(() => {
     if (document.getElementById(SCRIPT_ID)) return;
 
+    // Keep the support experience visible: the established Tawk flow contains
+    // the welcome text and ready choices, which would otherwise remain hidden
+    // behind the small avatar bubble.
+    const windowWithTawk = window as typeof window & {
+      Tawk_API?: { maximize?: () => void; onLoad?: () => void };
+    };
+    windowWithTawk.Tawk_API = windowWithTawk.Tawk_API || {};
+    windowWithTawk.Tawk_API.onLoad = () => {
+      window.setTimeout(() => windowWithTawk.Tawk_API?.maximize?.(), 450);
+    };
+
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
     script.async = true;
