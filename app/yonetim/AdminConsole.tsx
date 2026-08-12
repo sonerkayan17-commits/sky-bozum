@@ -27,10 +27,12 @@ import {
   removeComment,
   setMemberAccess,
   setMemberStatus,
+  subscribeToContentAudit,
   subscribeToMembers,
   subscribeToModerationQueue,
   type AdminComment,
   type AdminMember,
+  type ContentAuditEvent,
   type MemberRole,
 } from "../lib/admin";
 
@@ -72,6 +74,7 @@ export default function AdminConsole({
   const [view, setView] = useState<View>("overview");
   const [members, setMembers] = useState<AdminMember[]>([]);
   const [comments, setComments] = useState<AdminComment[]>([]);
+  const [contentAudit, setContentAudit] = useState<ContentAuditEvent[]>([]);
   const [managedArticles, setManagedArticles] = useState<ManagedArticleRecord[]>([]);
   const [contentQuery, setContentQuery] = useState("");
   const [contentStatus, setContentStatus] = useState<"all" | ContentArticleDraft["status"]>("all");
@@ -117,9 +120,15 @@ export default function AdminConsole({
       setComments,
       (nextError) => setError(nextError.message),
     );
+    const stopContentAudit = subscribeToContentAudit(
+      db,
+      setContentAudit,
+      (nextError) => setError(nextError.message),
+    );
     return () => {
       stopMembers();
       stopComments();
+      stopContentAudit();
     };
   }, [isAdmin]);
 
@@ -376,6 +385,11 @@ export default function AdminConsole({
                 Yorumları incele →
               </button>
             </div>
+            <section className="admin-activity" aria-label="İçerik işlem geçmişi">
+              <div><span>İÇERİK HAREKETLERİ</span><h3>Son yayın kararları</h3></div>
+              {contentAudit.length === 0 ? <p>Henüz içerik işlemi kaydı yok.</p> : <ol>{contentAudit.map((event) => <li key={event.id}><b>{event.articleSlug}</b><span>{event.action}</span><small>{formatDate(event.createdAt)}</small></li>)}</ol>}
+              <button onClick={() => setView("content")}>İçerik merkezine git →</button>
+            </section>
           </section>
         )}
         {view === "content" && (

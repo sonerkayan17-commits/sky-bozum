@@ -35,8 +35,17 @@ export type AdminComment = {
   createdAt: Date | null;
 };
 
+export type ContentAuditEvent = {
+  id: string;
+  action: string;
+  articleSlug: string;
+  actorId: string;
+  createdAt: Date | null;
+};
+
 type MemberDocument = Omit<AdminMember, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type CommentDocument = Omit<AdminComment, 'id' | 'createdAt'> & { createdAt?: Timestamp };
+type ContentAuditDocument = Omit<ContentAuditEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 
 function asMember(id: string, value: MemberDocument): AdminMember {
   return {
@@ -63,6 +72,16 @@ function asComment(id: string, value: CommentDocument): AdminComment {
   };
 }
 
+function asContentAuditEvent(id: string, value: ContentAuditDocument): ContentAuditEvent {
+  return {
+    id,
+    action: value.action || 'updated',
+    articleSlug: value.articleSlug || 'unknown',
+    actorId: value.actorId || 'unknown',
+    createdAt: value.createdAt?.toDate() ?? null,
+  };
+}
+
 export function subscribeToMembers(
   firestore: Firestore,
   onChange: (members: AdminMember[]) => void,
@@ -80,6 +99,16 @@ export function subscribeToModerationQueue(
 ) {
   return onSnapshot(query(collection(firestore, 'comments'), orderBy('createdAt', 'desc')), (snapshot) => {
     onChange(snapshot.docs.map((entry) => asComment(entry.id, entry.data() as CommentDocument)));
+  }, onError);
+}
+
+export function subscribeToContentAudit(
+  firestore: Firestore,
+  onChange: (events: ContentAuditEvent[]) => void,
+  onError: (error: Error) => void,
+) {
+  return onSnapshot(query(collection(firestore, 'contentAudit'), orderBy('createdAt', 'desc')), (snapshot) => {
+    onChange(snapshot.docs.slice(0, 18).map((entry) => asContentAuditEvent(entry.id, entry.data() as ContentAuditDocument)));
   }, onError);
 }
 
