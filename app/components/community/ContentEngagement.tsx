@@ -2,7 +2,7 @@
 
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import Link from 'next/link';
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedComments, subscribeToEngagementCounts, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
 import { recordMemberActivity } from '../../lib/memberProgress';
@@ -11,7 +11,8 @@ import { followContent, likeComment, notify } from '../../lib/social';
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
 export default function ContentEngagement({ targetId, title, kind = 'article' }: Props) {
-  const { auth, db } = useMemo(() => getFirebaseClient(), []);
+  const [client, setClient] = useState<ReturnType<typeof getFirebaseClient>>({ auth: null, db: null });
+  const { auth, db } = client;
   const service = `${kind}:${targetId}`.slice(0, 100);
   const [user, setUser] = useState<User | null>(null);
   const [comments, setComments] = useState<PublicComment[]>([]);
@@ -22,8 +23,9 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [message, setMessage] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
-  const [showComposer, setShowComposer] = useState(false);
   const [replyTarget, setReplyTarget] = useState<PublicComment | null>(null);
+
+  useEffect(() => setClient(getFirebaseClient()), []);
 
   useEffect(() => auth ? onAuthStateChanged(auth, (nextUser) => { setUser(nextUser); if (nextUser?.displayName) setAuthor(nextUser.displayName); }) : undefined, [auth]);
 
@@ -58,7 +60,6 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       await recordMemberActivity(db, user.uid, 'comment', service).catch(() => undefined);
       if (replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
       setMessage('');
-      setShowComposer(false);
       setReplyTarget(null);
       setNotice('Yorumunuz yayınlandı.');
     } catch { setNotice('İşlem tamamlanamadı. Lütfen tekrar deneyin.'); }
@@ -75,7 +76,6 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
   function quote(comment: PublicComment) {
     setMessage(`“${comment.message.slice(0, 180)}”\n\n`);
-    setShowComposer(true);
     setReplyTarget(comment);
     window.setTimeout(() => document.getElementById(`comment-${targetId}`)?.focus(), 0);
   }
@@ -91,7 +91,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     <nav className="flex flex-wrap items-center gap-1 border-b border-white/10 bg-black/15 px-4 py-2" aria-label="Konu işlemleri">
       <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
-      {user ? <button type="button" onClick={() => setShowComposer(true)} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
+      {user ? <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
       {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : null}
       <span className="ml-auto hidden text-[11px] font-bold text-slate-600 sm:inline">Beğeniler konuyu üste çıkarır</span>
     </nav>
@@ -107,11 +107,11 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
     {!user ? <div className="border-t border-white/10 bg-black/10 p-5 text-center"><p className="text-sm font-bold text-slate-300">Yorum yapmak veya alıntılamak için üye hesabınızı kullanın.</p><div className="mt-4 flex justify-center gap-2"><Link href="/giris" className="focus-ring rounded-lg bg-rose-600 px-4 py-2 text-xs font-black text-white">Giriş yap</Link><Link href="/kayit" className="focus-ring rounded-lg border border-white/15 px-4 py-2 text-xs font-black text-slate-200">Üye ol</Link></div></div> : null}
 
-    {user && showComposer ? <form onSubmit={submit} className="border-t border-white/10 bg-black/10 p-6 sm:p-8">
+    {user ? <form onSubmit={submit} className="border-t border-white/10 bg-black/10 p-6 sm:p-8">
       <h3 className="text-lg font-black">Yorum ekle</h3><p className="mt-2 text-xs text-slate-500">Üye yorumunuz doğrudan yayınlanır.</p>
       <label className="mt-5 block text-xs font-bold text-slate-300">Adınız<input required minLength={2} maxLength={40} value={author} onChange={(event) => setAuthor(event.target.value)} className="mt-2 min-h-11 w-full rounded-xl border border-white/10 bg-[#090b10] px-4 text-sm text-white outline-none focus:border-rose-400" /></label>
       <label className="mt-4 block text-xs font-bold text-slate-300">Yorumunuz<textarea id={`comment-${targetId}`} required minLength={3} maxLength={600} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-[#090b10] p-4 text-sm text-white outline-none focus:border-rose-400" /></label>
-      <div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => setShowComposer(false)} className="focus-ring min-h-10 rounded-lg border border-white/10 px-4 text-xs font-bold text-slate-400">Vazgeç</button><button disabled={busy} className="focus-ring min-h-10 rounded-lg bg-rose-600 px-5 text-xs font-black text-white disabled:opacity-60">{busy ? 'Kaydediliyor…' : 'Yorumu gönder'}</button></div>
+      <div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => { setMessage(''); setReplyTarget(null); }} className="focus-ring min-h-10 rounded-lg border border-white/10 px-4 text-xs font-bold text-slate-400">Temizle</button><button disabled={busy} className="focus-ring min-h-10 rounded-lg bg-rose-600 px-5 text-xs font-black text-white disabled:opacity-60">{busy ? 'Kaydediliyor…' : 'Yorumu gönder'}</button></div>
     </form> : null}
     {notice ? <p aria-live="polite" className="border-t border-white/10 px-5 py-3 text-xs text-rose-200">{notice}</p> : null}
   </section>;

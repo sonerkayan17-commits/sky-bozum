@@ -12,6 +12,7 @@ import TelekomPokusPremiumSections from './TelekomPokusPremiumSections';
 import DigitalCodePremiumSections from './DigitalCodePremiumSections';
 import CardSmsPremiumSections from './CardSmsPremiumSections';
 import ServiceSupportLink from './ServiceSupportLink';
+import ContentEngagement from '../community/ContentEngagement';
 
 const safetyChecks = [
   'Ürün veya kodu satın almadan önce hizmetin uygunluğunu yazılı olarak doğrulayın.',
@@ -160,6 +161,7 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
           </div>
         </div>
       </section>
+      <section className="content-shell pb-16"><ContentEngagement targetId={`hizmet-${service.slug}`} title={`${service.name} rehberi`} /></section>
     </main>
   );
 }

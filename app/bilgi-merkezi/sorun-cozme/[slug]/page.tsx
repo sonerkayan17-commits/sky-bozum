@@ -5,6 +5,7 @@ import { articles, getService } from '../../../lib/site';
 import { siteConfig } from '../../../lib/site-config';
 import { absoluteUrl, jsonLd } from '../../../lib/seo';
 import { getTroubleshootingGuide, troubleshootingGuides } from '../../../lib/troubleshooting';
+import ContentEngagement from '../../../components/community/ContentEngagement';
 
 export function generateStaticParams() {
   return troubleshootingGuides.map((guide) => ({ slug: guide.slug }));
@@ -58,6 +59,7 @@ export default async function TroubleshootingDetailPage({ params }: { params: Pr
         <section className="premium-card p-6 sm:p-8"><h2 className="text-2xl font-black">Olası nedenler</h2><ul className="mt-5 space-y-3">{guide.causes.map((item) => <li key={item} className="flex gap-3 text-sm leading-7 text-slate-300"><span className="text-rose-300">•</span>{item}</li>)}</ul></section>
         <section className="premium-card p-6 sm:p-8" aria-labelledby="troubleshooting-checks-title"><h2 id="troubleshooting-checks-title" className="text-xs font-extrabold uppercase tracking-[.16em] text-emerald-300">Adım adım kontrol</h2><div className="mt-6 space-y-5">{guide.checks.map((check, index) => <div key={check.title} className="rounded-2xl border border-white/8 bg-white/[.025] p-5"><div className="flex gap-4"><span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-emerald-400/10 text-sm font-black text-emerald-300">{index + 1}</span><div><h3 className="text-lg font-black">{check.title}</h3><p className="mt-2 text-sm leading-7 text-slate-400">{check.text}</p></div></div></div>)}</div></section>
         <section className="rounded-3xl border border-amber-300/15 bg-amber-300/[.045] p-6 sm:p-8"><h2 className="text-xl font-black text-amber-200">Güvenlik uyarıları</h2><ul className="mt-4 space-y-3">{guide.warnings.map((warning) => <li key={warning} className="flex gap-3 text-sm leading-7 text-slate-300"><span>⚠</span>{warning}</li>)}</ul></section>
+        <ContentEngagement targetId={`sorun-${guide.slug}`} title={guide.title} />
       </article>
       <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
         {service && <div className="premium-card p-6"><p className="text-xs font-extrabold uppercase tracking-[.15em] text-rose-400">İlgili hizmet</p><h2 className="mt-3 text-xl font-black">{service.shortName}</h2><p className="mt-2 text-sm leading-6 text-slate-500">{service.summary}</p><Link href={`/bilgi-merkezi/konu/${service.slug}`} className="btn-secondary focus-ring mt-5 w-full">İlgili rehberleri aç</Link></div>}
