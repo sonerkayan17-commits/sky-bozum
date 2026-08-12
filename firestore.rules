@@ -65,11 +65,13 @@ service cloud.firestore {
         signedIn()
         && request.auth.uid == memberId
         && request.resource.data.keys().hasOnly([
-          "displayName", "email", "role", "status", "balance", "points", "permissions", "createdAt"
+          "displayName", "phone", "email", "role", "status", "balance", "points", "permissions", "createdAt"
         ])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
         && request.resource.data.displayName.size() <= 80
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() <= 24
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.role == "member"
         && request.resource.data.status == "pending"

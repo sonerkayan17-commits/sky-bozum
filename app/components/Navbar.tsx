@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { siteConfig } from '../lib/site-config';
 import SiteSearch from './SiteSearch';
 
 const items = [
@@ -121,14 +120,12 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2.5">
-          <a
-            href={siteConfig.liveSupportHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden min-h-11 items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 via-rose-500 to-orange-400 px-5 text-sm font-black text-white shadow-[0_12px_30px_rgba(236,72,153,.22)] transition hover:-translate-y-0.5 hover:brightness-110 sm:inline-flex"
-          >
-            Destek Hattı
-          </a>
+          <div className="hidden items-center gap-2 sm:flex">
+            <span className="hidden max-w-36 text-right text-[10px] font-bold leading-4 text-slate-400 2xl:block">Forum ve ücretsiz içeriklere sınırsız erişim</span>
+            <Link href="/giris" className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-pink-400/25 bg-pink-500/10 px-4 text-xs font-black text-pink-200 shadow-[0_10px_26px_rgba(236,72,153,.12)] transition hover:border-pink-300/45 hover:bg-pink-500/16">
+              Giriş yap <span className="mx-1 text-pink-500/70">/</span> Kayıt ol
+            </Link>
+          </div>
           <button
             type="button"
             aria-expanded={searchOpen}
@@ -186,9 +183,13 @@ export default function Navbar() {
                   {label}
                 </Link>
               ))}
-              <a href={siteConfig.liveSupportHref} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="mt-3 flex min-h-11 items-center justify-center rounded-xl bg-gradient-to-r from-pink-600 to-orange-400 px-4 py-3 text-center text-sm font-black text-white">
-                {siteConfig.liveSupportLabel}
-              </a>
+              <div className="mt-3 rounded-2xl border border-pink-400/20 bg-pink-500/[.07] p-3">
+                <p className="mb-2 text-center text-[11px] font-bold text-slate-400">Forum ve ücretsiz içeriklere sınırsız erişim</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href="/giris" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl bg-pink-600 px-3 text-sm font-black text-white">Giriş yap</Link>
+                  <Link href="/kayit" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl border border-white/15 px-3 text-sm font-black text-slate-100">Kayıt ol</Link>
+                </div>
+              </div>
             </nav>
           </div>
         </>
