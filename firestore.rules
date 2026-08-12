@@ -91,6 +91,16 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    match /contentArticles/{articleId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /contentAudit/{entryId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
