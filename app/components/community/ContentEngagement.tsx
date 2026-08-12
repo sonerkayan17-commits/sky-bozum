@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedComments, subscribeToEngagementCounts, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
 import { recordMemberActivity } from '../../lib/memberProgress';
-import { likeComment, notify } from '../../lib/social';
+import { followContent, likeComment, notify } from '../../lib/social';
 
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
@@ -92,6 +92,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
       {user ? <button type="button" onClick={() => setShowComposer(true)} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
+      {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : null}
       <span className="ml-auto hidden text-[11px] font-bold text-slate-600 sm:inline">Beğeniler konuyu üste çıkarır</span>
     </nav>
 

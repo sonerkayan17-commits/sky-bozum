@@ -1,0 +1,1 @@
+import CommunityTopics from '../../components/member/CommunityTopics';import '../utility.css';export const metadata={title:'Yeni Konu Aç',robots:{index:false,follow:false}};export default function Page(){return <CommunityTopics compose/>}

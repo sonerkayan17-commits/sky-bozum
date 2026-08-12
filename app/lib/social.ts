@@ -24,3 +24,8 @@ export async function likeComment(db: Firestore, senderId: string, commentId: st
   await setDoc(doc(db, 'commentLikes', `${senderId}_${commentId}`), { senderId, receiverId: ownerId, commentId, createdAt: serverTimestamp() });
   await notify(db, senderId, ownerId, 'comment_like', `${senderName} yorumunuzu beğendi.`, '#community');
 }
+
+export async function followContent(db: Firestore, uid: string, targetId: string, title: string, href: string) {
+  const safeTarget = targetId.replace(/[^a-zA-Z0-9:_-]/g, '-').slice(0, 100);
+  await setDoc(doc(db, 'memberSubscriptions', `${uid}_${safeTarget}`), { uid, targetId: safeTarget, title: title.slice(0, 120), href: href.slice(0, 180), createdAt: serverTimestamp() });
+}

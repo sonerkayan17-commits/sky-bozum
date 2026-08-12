@@ -108,6 +108,43 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    match /memberPrivate/{memberId} {
+      allow read: if signedIn() && request.auth.uid == memberId;
+      allow create, update: if signedIn() && request.auth.uid == memberId
+        && request.resource.data.keys().hasOnly(["accountHolder", "bankName", "iban", "updatedAt"])
+        && request.resource.data.accountHolder is string
+        && request.resource.data.accountHolder.size() >= 2
+        && request.resource.data.accountHolder.size() <= 80
+        && request.resource.data.bankName is string
+        && request.resource.data.bankName.size() <= 80
+        && request.resource.data.iban is string
+        && request.resource.data.iban.size() >= 24
+        && request.resource.data.iban.size() <= 34
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+
+    match /memberSubscriptions/{subscriptionId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /memberPosts/{postId} {
+      allow read: if resource.data.status == "published" || isAdmin();
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == "published"
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 5
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.body is string
+        && request.resource.data.body.size() >= 10
+        && request.resource.data.body.size() <= 1200
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if isAdmin();
+    }
+
     match /publicProfiles/{memberId} {
       allow read: if true;
       allow create, update: if signedIn() && request.auth.uid == memberId
