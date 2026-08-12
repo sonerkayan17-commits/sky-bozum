@@ -12,6 +12,8 @@ export type ContentArticleDraft = {
   metaDescription: string;
   cover: string;
   body?: string;
+  keywords?: string[];
+  serviceSlug?: string;
   status: ContentStatus;
 };
 
@@ -19,7 +21,7 @@ export async function seedArticleForEditing(db: Firestore, article: ArticleItem,
   await setDoc(doc(db, 'contentArticles', article.slug), {
     slug: article.slug, title: article.title, excerpt: article.excerpt, category: article.category,
     seoTitle: article.seoTitle || article.title, metaDescription: article.metaDescription || article.excerpt,
-    cover: article.cover || '', body: article.sections.flatMap((section) => section.paragraphs).join('\n\n'), status: 'published', source: 'site', updatedBy: actorId,
+    cover: article.cover || '', body: article.sections.flatMap((section) => section.paragraphs).join('\n\n'), keywords: article.keywords ? [...article.keywords] : [], serviceSlug: article.serviceSlug || '', status: 'published', source: 'site', updatedBy: actorId,
     updatedAt: serverTimestamp(), createdAt: serverTimestamp(),
   }, { merge: true });
   await setDoc(doc(collection(db, 'contentAudit')), { action: 'edit-ready', articleSlug: article.slug, actorId, createdAt: serverTimestamp() });
@@ -37,6 +39,8 @@ export async function setArticleStatus(db: Firestore, slug: string, status: Cont
       seoTitle: source.seoTitle || source.title,
       metaDescription: source.metaDescription || source.excerpt,
       cover: source.cover || '',
+      keywords: source.keywords ? [...source.keywords] : [],
+      serviceSlug: source.serviceSlug || '',
     } : {}),
     updatedBy: actorId,
     updatedAt: serverTimestamp(),
@@ -55,6 +59,8 @@ export async function saveManagedArticle(db: Firestore, article: ContentArticleD
     metaDescription: article.metaDescription.trim().slice(0, 320),
     cover: article.cover.trim().slice(0, 500),
     body: article.body?.trim().slice(0, 24000) || '',
+    keywords: (article.keywords || []).map((keyword) => keyword.trim().slice(0, 80)).filter(Boolean).slice(0, 20),
+    serviceSlug: article.serviceSlug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 80) || '',
   };
   if (!clean.slug || !clean.title || !clean.excerpt || !clean.category) throw new Error('Başlık, özet, kategori ve bağlantı adı zorunludur.');
   await setDoc(doc(db, 'contentArticles', clean.slug), {

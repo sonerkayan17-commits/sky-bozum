@@ -151,6 +151,8 @@ export default function AdminConsole({
               metaDescription: String(data.metaDescription || ""),
               cover: String(data.cover || ""),
               body: String(data.body || ""),
+              keywords: Array.isArray(data.keywords) ? data.keywords.map(String) : [],
+              serviceSlug: String(data.serviceSlug || ""),
               status: ["draft", "published", "archived"].includes(status)
                 ? status
                 : "draft",
@@ -416,6 +418,8 @@ export default function AdminConsole({
                   metaDescription: "",
                   cover: "",
                   body: "",
+                  keywords: [],
+                  serviceSlug: "",
                   status: "draft",
                 })
               }
@@ -461,6 +465,8 @@ export default function AdminConsole({
                           body: article.sections
                             .flatMap((section) => section.paragraphs)
                             .join("\n\n"),
+                          keywords: article.keywords ? [...article.keywords] : [],
+                          serviceSlug: article.serviceSlug || "",
                           status: "published",
                         })
                       }
@@ -854,6 +860,22 @@ export default function AdminConsole({
                     })
                   }
                   placeholder="/images/..."
+                />
+              </label>
+              <label>
+                Arama anahtar kelimeleri
+                <input
+                  value={(editingArticle.keywords || []).join(", ")}
+                  onChange={(event) => setEditingArticle({ ...editingArticle, keywords: event.target.value.split(",").map((item) => item.trim()).filter(Boolean) })}
+                  placeholder="mobil ödeme, bozum, vodafone"
+                />
+              </label>
+              <label>
+                Bağlı hizmet kodu
+                <input
+                  value={editingArticle.serviceSlug || ""}
+                  onChange={(event) => setEditingArticle({ ...editingArticle, serviceSlug: event.target.value })}
+                  placeholder="vodafone-mobil-odeme"
                 />
               </label>
               <label>

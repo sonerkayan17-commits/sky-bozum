@@ -9,11 +9,13 @@ export type ManagedArticle = {
   metaDescription?: string;
   cover?: string;
   body?: string;
+  keywords?: string[];
+  serviceSlug?: string;
   status: 'draft' | 'published' | 'archived';
   updatedAt?: string;
 };
 
-type FirestoreValue = { stringValue?: string; timestampValue?: string };
+type FirestoreValue = { stringValue?: string; timestampValue?: string; arrayValue?: { values?: FirestoreValue[] } };
 type FirestoreDocument = { name?: string; fields?: Record<string, FirestoreValue> };
 
 function articleParagraphs(body: string, fallback: string) {
@@ -23,6 +25,7 @@ function articleParagraphs(body: string, fallback: string) {
 }
 
 function text(fields: Record<string, FirestoreValue>, key: string) { return fields[key]?.stringValue?.trim() || ''; }
+function stringList(fields: Record<string, FirestoreValue>, key: string) { return (fields[key]?.arrayValue?.values || []).map((item) => item.stringValue?.trim() || '').filter(Boolean); }
 
 function parseDocument(document: FirestoreDocument): ManagedArticle | null {
   const fields = document.fields || {};
@@ -32,7 +35,7 @@ function parseDocument(document: FirestoreDocument): ManagedArticle | null {
   const category = text(fields, 'category');
   const status = text(fields, 'status') as ManagedArticle['status'];
   if (!slug || !title || !excerpt || !category || !['draft', 'published', 'archived'].includes(status)) return null;
-  return { slug, title, excerpt, category, status, seoTitle: text(fields, 'seoTitle') || undefined, metaDescription: text(fields, 'metaDescription') || undefined, cover: text(fields, 'cover') || undefined, body: text(fields, 'body') || undefined, updatedAt: fields.updatedAt?.timestampValue };
+  return { slug, title, excerpt, category, status, seoTitle: text(fields, 'seoTitle') || undefined, metaDescription: text(fields, 'metaDescription') || undefined, cover: text(fields, 'cover') || undefined, body: text(fields, 'body') || undefined, keywords: stringList(fields, 'keywords'), serviceSlug: text(fields, 'serviceSlug') || undefined, updatedAt: fields.updatedAt?.timestampValue };
 }
 
 export async function getManagedContentArticles(): Promise<ManagedArticle[]> {
@@ -53,9 +56,9 @@ export function mergeManagedArticles(staticArticles: ArticleItem[], managedArtic
     const managed = overrides.get(article.slug);
     if (!managed) return [article];
     if (managed.status !== 'published') return [];
-    return [{ ...article, title: managed.title, excerpt: managed.excerpt, category: managed.category, seoTitle: managed.seoTitle || article.seoTitle, metaDescription: managed.metaDescription || article.metaDescription, cover: managed.cover || article.cover, updatedAt: managed.updatedAt || article.updatedAt }];
+    return [{ ...article, title: managed.title, excerpt: managed.excerpt, category: managed.category, seoTitle: managed.seoTitle || article.seoTitle, metaDescription: managed.metaDescription || article.metaDescription, cover: managed.cover || article.cover, keywords: managed.keywords?.length ? managed.keywords : article.keywords, serviceSlug: managed.serviceSlug || article.serviceSlug, updatedAt: managed.updatedAt || article.updatedAt }];
   });
-  const newArticles: ArticleItem[] = managedArticles.filter((article) => article.status === 'published' && !staticSlugs.has(article.slug)).map((article) => ({ slug: article.slug, title: article.title, excerpt: article.excerpt, category: article.category, readTime: `${Math.max(2, Math.ceil((article.body || article.excerpt).split(/\s+/).length / 180))} dk`, publishedAt: article.updatedAt, updatedAt: article.updatedAt, seoTitle: article.seoTitle, metaDescription: article.metaDescription, cover: article.cover, coverAlt: article.title, keywords: [article.category, 'Sky Bozum'], sections: [{ title: article.title, paragraphs: articleParagraphs(article.body || '', article.excerpt) }] }));
+  const newArticles: ArticleItem[] = managedArticles.filter((article) => article.status === 'published' && !staticSlugs.has(article.slug)).map((article) => ({ slug: article.slug, title: article.title, excerpt: article.excerpt, category: article.category, readTime: `${Math.max(2, Math.ceil((article.body || article.excerpt).split(/\s+/).length / 180))} dk`, publishedAt: article.updatedAt, updatedAt: article.updatedAt, seoTitle: article.seoTitle, metaDescription: article.metaDescription, cover: article.cover, coverAlt: article.title, keywords: article.keywords?.length ? article.keywords : [article.category, 'Sky Bozum'], serviceSlug: article.serviceSlug, sections: [{ title: article.title, paragraphs: articleParagraphs(article.body || '', article.excerpt) }] }));
   return [...newArticles, ...merged];
 }
 
