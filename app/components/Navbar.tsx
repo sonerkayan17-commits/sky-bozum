@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { getFirebaseClient } from '../lib/firebase';
 import SiteSearch from './SiteSearch';
 
 const items = [
@@ -22,6 +24,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [memberName, setMemberName] = useState<string | null>(null);
+  const [authReady, setAuthReady] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
@@ -30,6 +34,21 @@ export default function Navbar() {
     setOpen(false);
     setSearchOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const { auth } = getFirebaseClient();
+    if (!auth) { setAuthReady(true); return; }
+    return onAuthStateChanged(auth, (user) => {
+      setMemberName(user ? (user.displayName?.trim() || user.email?.split('@')[0] || 'Hesabım') : null);
+      setAuthReady(true);
+    });
+  }, []);
+
+  async function logout() {
+    const { auth } = getFirebaseClient();
+    if (auth) await signOut(auth);
+    setOpen(false);
+  }
 
   useEffect(() => {
     if (!open && !searchOpen) return;
@@ -120,14 +139,20 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2.5">
-          <div className="group relative hidden sm:block">
+          {authReady && memberName ? <div className="group relative hidden sm:block">
+            <Link href="/bilgi-merkezi" className="focus-ring inline-flex min-h-10 max-w-40 items-center justify-center truncate rounded-lg border border-emerald-400/20 bg-emerald-500/[.08] px-3 text-[12px] font-bold text-emerald-200">{memberName}</Link>
+            <div className="invisible absolute right-0 top-[calc(100%+.55rem)] z-50 grid w-40 translate-y-1 gap-1 rounded-xl border border-white/10 bg-[#11141b]/98 p-2 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,.45)] transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+              <Link href="/bilgi-merkezi" className="rounded-lg px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[.06]">Foruma git</Link>
+              <button type="button" onClick={logout} className="rounded-lg px-3 py-2 text-left text-xs font-bold text-rose-300 hover:bg-white/[.06]">Çıkış yap</button>
+            </div>
+          </div> : authReady ? <div className="group relative hidden sm:block">
             <Link href="/giris" aria-describedby="account-access-hint" className="focus-ring inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-lg border border-pink-400/20 bg-pink-500/[.08] px-3 text-[12px] font-bold tracking-[-.01em] text-pink-200 transition hover:border-pink-300/40 hover:bg-pink-500/14">
               Giriş yap <span className="mx-1 text-pink-500/70">/</span> Kayıt ol
             </Link>
             <span id="account-access-hint" role="tooltip" className="pointer-events-none absolute right-0 top-[calc(100%+.65rem)] z-50 w-52 translate-y-1 rounded-xl border border-white/10 bg-[#11141b]/98 px-3 py-2.5 text-center text-[11px] font-bold leading-5 text-slate-300 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,.45)] transition duration-150 before:absolute before:-top-1.5 before:right-7 before:h-3 before:w-3 before:rotate-45 before:border-l before:border-t before:border-white/10 before:bg-[#11141b] group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
               Forum ve ücretsiz içeriklere sınırsız erişim
             </span>
-          </div>
+          </div> : null}
           <button
             type="button"
             aria-expanded={searchOpen}
@@ -185,13 +210,19 @@ export default function Navbar() {
                   {label}
                 </Link>
               ))}
-              <div className="mt-3 rounded-2xl border border-pink-400/20 bg-pink-500/[.07] p-3">
+              {memberName ? <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-500/[.07] p-3">
+                <p className="mb-2 truncate text-center text-xs font-black text-emerald-200">{memberName}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href="/bilgi-merkezi" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-3 text-sm font-black text-white">Foruma git</Link>
+                  <button type="button" onClick={logout} className="focus-ring min-h-11 rounded-xl border border-white/15 px-3 text-sm font-black text-slate-100">Çıkış yap</button>
+                </div>
+              </div> : <div className="mt-3 rounded-2xl border border-pink-400/20 bg-pink-500/[.07] p-3">
                 <p className="mb-2 text-center text-[11px] font-bold text-slate-400">Forum ve ücretsiz içeriklere sınırsız erişim</p>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/giris" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl bg-pink-600 px-3 text-sm font-black text-white">Giriş yap</Link>
                   <Link href="/kayit" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl border border-white/15 px-3 text-sm font-black text-slate-100">Kayıt ol</Link>
                 </div>
-              </div>
+              </div>}
             </nav>
           </div>
         </>

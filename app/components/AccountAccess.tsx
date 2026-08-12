@@ -50,6 +50,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     setError(''); setStatus('');
     const { auth } = getFirebaseClient();
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı. Sayfayı yenileyin.'); return; }
+    auth.languageCode = 'tr';
 
     try {
       if (mode === 'login') {
@@ -74,6 +75,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     setError(''); setStatus('');
     const { auth } = getFirebaseClient();
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
+    auth.languageCode = 'tr';
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       await saveMember(result.user, result.user.displayName || 'Google kullanıcısı');
@@ -86,6 +88,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     if (!email.trim()) { setError('Önce e-posta adresinizi yazın.'); return; }
     const { auth } = getFirebaseClient();
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
+    auth.languageCode = 'tr';
     try { await sendPasswordResetEmail(auth, email.trim()); setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.'); }
     catch { setError('Parola yenileme e-postası gönderilemedi. Adresi kontrol edin.'); }
   }
