@@ -92,8 +92,8 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
       {service.slug === 'sms-mobil-odeme' && <CardSmsPremiumSections mode="sms" />}
       {service.slug === 'kredi-karti-sanal-kart' && <CardSmsPremiumSections mode="card" />}
 
-      <section className="content-shell grid gap-10 pb-16 lg:grid-cols-[1fr_340px]">
-        <article className="premium-card p-6 sm:p-8">
+      <section className="content-shell grid items-start gap-10 pb-16 lg:grid-cols-[1fr_340px]">
+        <article className="premium-card self-start p-6 sm:p-8">
           {service.sections.map((section, index) => (
             <section key={section.title} className={index ? 'mt-10 border-t border-white/8 pt-10' : ''}>
               <h2 className="text-2xl font-black tracking-tight sm:text-3xl">{section.title}</h2>
@@ -101,6 +101,31 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
               {section.bullets && <ul className="mt-5 space-y-3">{section.bullets.map((bullet) => <li key={bullet} className="flex gap-3 text-sm leading-6 text-slate-300"><span className="text-rose-400">✓</span>{bullet}</li>)}</ul>}
             </section>
           ))}
+
+          <section className="mt-10 border-t border-white/8 pt-8" aria-labelledby="service-content-next-title">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-rose-400">Buradan devam edin</p>
+                <h2 id="service-content-next-title" className="mt-2 text-xl font-black tracking-tight sm:text-2xl">Bilgiyi sonraki adıma dönüştürün</h2>
+              </div>
+              <Link href={`/bilgi-merkezi?search=${encodeURIComponent(service.shortName)}`} className="focus-ring rounded text-xs font-black text-rose-300 hover:text-rose-200">Tüm rehberler →</Link>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {related.slice(0, 2).map((item) => (
+                <Link key={item.slug} href={`/bilgi-merkezi/${item.slug}`} className="focus-ring group rounded-2xl border border-white/8 bg-white/[0.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[0.045]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">İlgili rehber</span>
+                  <strong className="mt-2 block text-sm leading-6 text-slate-200 transition group-hover:text-rose-200">{item.title}</strong>
+                  <span className="mt-3 inline-flex text-xs font-black text-rose-300">Rehberi aç →</span>
+                </Link>
+              ))}
+              <Link href={`/oran-hesapla?service=${service.slug}`} className="focus-ring group rounded-2xl border border-white/8 bg-white/[0.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[0.045]">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">Hızlı araç</span>
+                <strong className="mt-2 block text-sm leading-6 text-slate-200 transition group-hover:text-rose-200">{service.shortName} için yaklaşık tutarı hesaplayın</strong>
+                <span className="mt-3 inline-flex text-xs font-black text-rose-300">Hesaplamaya geç →</span>
+              </Link>
+            </div>
+          </section>
         </article>
 
         <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
