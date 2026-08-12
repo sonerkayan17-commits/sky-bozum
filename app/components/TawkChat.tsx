@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 const TAWK_PROPERTY_ID = '69fa97b6b2c8791c30a70ea8';
 const TAWK_WIDGET_ID = '1jvqhf0gc';
@@ -20,5 +20,20 @@ export default function TawkChat() {
     document.head.appendChild(script);
   }, []);
 
-  return null;
+  const openChat = useCallback(() => {
+    const tawk = (window as Window & { Tawk_API?: { maximize?: () => void } }).Tawk_API;
+    tawk?.maximize?.();
+  }, []);
+
+  return (
+    <aside className="tawk-support-intro" aria-label="Sky Bozum canlı destek">
+      <span className="tawk-support-eyebrow"><i aria-hidden="true" /> SKY BOZUM</span>
+      <strong>Canlı destek burada.</strong>
+      <p>Oran, işlem ve ödeme sorularınız için ekibimize doğrudan yazın.</p>
+      <div className="tawk-support-actions">
+        <button type="button" onClick={openChat}>Bozum yapmak istiyorum</button>
+        <button type="button" onClick={openChat}>Güncel oran öğren</button>
+      </div>
+    </aside>
+  );
 }
