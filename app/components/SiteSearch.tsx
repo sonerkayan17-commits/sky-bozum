@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { featuredSearchItems, searchContent, type SearchItem } from '../lib/search';
+import { featuredSearchItems, searchContent, searchItems, type SearchItem } from '../lib/search';
 
 type Props = { mode?: 'desktop' | 'mobile'; onNavigate?: () => void; autoFocus?: boolean };
 
@@ -24,13 +24,37 @@ const typeStyles: Record<SearchItem['type'], string> = {
   Sayfa: 'border-violet-300/20 bg-violet-300/10 text-violet-200',
 };
 
+function dynamicSearch(items: SearchItem[], query: string, limit = 14) {
+  const normalized = query.trim().toLocaleLowerCase('tr-TR');
+  const tokens = normalized.split(/\s+/).filter(Boolean);
+  return items.map((item) => {
+    const haystack = `${item.title} ${item.description} ${item.keywords.join(' ')}`.toLocaleLowerCase('tr-TR');
+    const matches = tokens.filter((token) => haystack.includes(token)).length;
+    const score = (item.title.toLocaleLowerCase('tr-TR').startsWith(normalized) ? 8 : 0) + (haystack.includes(normalized) ? 4 : 0) + matches;
+    return { item, score };
+  }).filter((entry) => entry.score > 0).sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title, 'tr')).slice(0, limit).map((entry) => entry.item);
+}
+
 export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = false }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [managedArticles, setManagedArticles] = useState<SearchItem[] | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/search').then((response) => response.ok ? response.json() : []).then((items: SearchItem[]) => {
+      if (alive && Array.isArray(items)) setManagedArticles(items);
+    }).catch(() => undefined);
+    return () => { alive = false; };
+  }, []);
+  const availableItems = useMemo(() => {
+    if (!managedArticles) return searchItems;
+    const managedHrefs = new Set(managedArticles.map((item) => item.href));
+    return [...searchItems.filter((item) => item.type !== 'Makale' || !managedHrefs.has(item.href)), ...managedArticles];
+  }, [managedArticles]);
   const results = useMemo<SearchItem[]>(
-    () => query.trim() ? searchContent(query, 14) : featuredSearchItems,
-    [query],
+    () => query.trim() ? (managedArticles ? dynamicSearch(availableItems, query, 14) : searchContent(query, 14)) : featuredSearchItems,
+    [availableItems, managedArticles, query],
   );
   const groups = useMemo<SearchGroup[]>(() => groupOrder.map((type) => ({
     label: groupLabels[type],

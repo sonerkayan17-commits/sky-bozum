@@ -16,9 +16,9 @@ function tokens(article: ArticleItem) {
   ].join(' ')).split(/\s+/).filter((token) => token.length > 2));
 }
 
-export function relatedArticles(article: ArticleItem, limit = 6) {
+export function relatedArticles(article: ArticleItem, limit = 6, source: ArticleItem[] = articles) {
   const sourceTokens = tokens(article);
-  return articles
+  return source
     .filter((candidate) => candidate.slug !== article.slug)
     .map((candidate) => {
       const candidateTokens = tokens(candidate);

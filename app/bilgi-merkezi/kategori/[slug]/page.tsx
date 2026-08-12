@@ -8,6 +8,7 @@ import { absoluteUrl, jsonLd } from '../../../lib/seo';
 import { getCategoryVisual } from '../../../lib/categoryVisuals';
 import ArticleCover from '../../../components/articles/ArticleCover';
 import { getArticleJourneyStages, getTopicHubs } from '../../../lib/topicHubs';
+import { getManagedContentArticles, mergeManagedArticles } from '../../../lib/managedContent';
 
 export function generateStaticParams() {
   return getArticleCategories(articles).map((category) => ({ slug: category.slug }));
@@ -15,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const category = getCategoryBySlug(articles, slug);
+  const category = getCategoryBySlug(mergeManagedArticles(articles, await getManagedContentArticles()), slug);
   if (!category) return {};
   const title = `${category.name} Rehberleri ve Güncel Bilgiler`;
   return {
@@ -28,9 +29,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const category = getCategoryBySlug(articles, slug);
+  const visibleArticles = mergeManagedArticles(articles, await getManagedContentArticles());
+  const category = getCategoryBySlug(visibleArticles, slug);
   if (!category) return notFound();
-  const items = articles.filter((article) => article.category === category.name).sort((a, b) => articleJourneyRank(a) - articleJourneyRank(b) || a.title.localeCompare(b.title, 'tr'));
+  const items = visibleArticles.filter((article) => article.category === category.name).sort((a, b) => articleJourneyRank(a) - articleJourneyRank(b) || a.title.localeCompare(b.title, 'tr'));
   const primaryArticle = items[0];
   const stages = getArticleJourneyStages(items.slice(1));
   const relatedHubs = getTopicHubs().filter((hub) => hub.articles.some((article) => article.category === category.name));

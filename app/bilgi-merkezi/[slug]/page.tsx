@@ -19,7 +19,7 @@ import { relatedArticles } from '../../lib/internalLinks';
 import { getArticleEditorialLabels, getArticleEditorialTemplate } from '../../lib/articleEditorialTemplate';
 import { serviceForArticle } from '../../lib/contentBridges';
 import { getHubForArticle } from '../../lib/topicHubs';
-import { getManagedContentArticle, mergeManagedArticles } from '../../lib/managedContent';
+import { getManagedContentArticle, getManagedContentArticles, mergeManagedArticles } from '../../lib/managedContent';
 
 
 function distributeMedia(sectionCount: number, mediaCount: number, reservedSections: number[] = []) {
@@ -108,10 +108,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const managed = await getManagedContentArticle(slug);
-  const article = mergeManagedArticles(articles, managed ? [managed] : []).find((item) => item.slug === slug);
+  const managed = await getManagedContentArticles();
+  const article = mergeManagedArticles(articles, managed).find((item) => item.slug === slug);
   if (!article) return notFound();
-  const related = relatedArticles(article, 2);
+  const related = relatedArticles(article, 2, mergeManagedArticles(articles, managed));
   const relatedService = serviceForArticle(article);
   const topicHub = getHubForArticle(article);
   const canonicalUrl = articleUrl(article);
