@@ -78,6 +78,7 @@ export default function AdminConsole({
   const [editingArticle, setEditingArticle] =
     useState<ContentArticleDraft | null>(null);
   const [amount, setAmount] = useState("");
+  const [valueKind, setValueKind] = useState<"balance" | "points">("balance");
   const [note, setNote] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -164,6 +165,15 @@ export default function AdminConsole({
       ),
     [managedArticles],
   );
+
+  const duplicateArticle = (article: ContentArticleDraft) => {
+    setEditingArticle({
+      ...article,
+      slug: `${article.slug}-kopya`,
+      title: `${article.title} — Kopya`,
+      status: "draft",
+    });
+  };
 
   async function login(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -493,6 +503,9 @@ export default function AdminConsole({
                   <div>
                     <button className="admin-primary compact" onClick={() => setEditingArticle(article)}>
                       Düzenle
+                    </button>
+                    <button className="admin-secondary compact" onClick={() => duplicateArticle(article)}>
+                      Kopyala
                     </button>
                     <button className="admin-secondary compact" onClick={() => run(() => setArticleStatus(db!, article.slug, "draft", user.uid), "Makale taslağa alındı.")}>Taslak</button>
                     <button className="admin-secondary compact" onClick={() => run(() => setArticleStatus(db!, article.slug, "published", user.uid), "Makale yayına alındı.")}>Yayınla</button>
@@ -892,18 +905,25 @@ export default function AdminConsole({
                       db!,
                       user.uid,
                       selectedMember,
-                      "balance",
+                      valueKind,
                       numeric,
                       note,
                     ),
-                  "Bakiye hareketi kayda alındı.",
+                  valueKind === "balance" ? "Bakiye hareketi kayda alındı." : "Puan hareketi kayda alındı.",
                 ).then(() => {
                   setAmount("");
                   setNote("");
                 });
               }}
             >
-              <h3>Bakiye hareketi</h3>
+              <h3>Bakiye ve puan hareketi</h3>
+              <label>
+                İşlem türü
+                <select value={valueKind} onChange={(event) => setValueKind(event.target.value as "balance" | "points")}>
+                  <option value="balance">Bakiye (TL)</option>
+                  <option value="points">Puan</option>
+                </select>
+              </label>
               <label>
                 Tutar (+ ekle, − düş)
                 <input
