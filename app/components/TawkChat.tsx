@@ -11,6 +11,14 @@ export default function TawkChat() {
   useEffect(() => {
     if (document.getElementById(SCRIPT_ID)) return;
 
+    const tawkWindow = window as typeof window & {
+      Tawk_API?: { maximize?: () => void; onLoad?: () => void };
+    };
+    tawkWindow.Tawk_API = tawkWindow.Tawk_API || {};
+    tawkWindow.Tawk_API.onLoad = () => {
+      window.setTimeout(() => tawkWindow.Tawk_API?.maximize?.(), 350);
+    };
+
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
     script.async = true;
