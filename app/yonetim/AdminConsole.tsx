@@ -11,6 +11,7 @@ import {
 import { collection, onSnapshot } from "firebase/firestore";
 import { getFirebaseClient } from "../lib/firebase";
 import "./content.css";
+import RichArticleEditor from "./RichArticleEditor";
 import { articles } from "../lib/site";
 import {
   removeManagedArticle,
@@ -806,16 +807,15 @@ export default function AdminConsole({
               </label>
               <label>
                 Makale metni
-                <textarea
+                <RichArticleEditor
                   value={editingArticle.body || ""}
-                  onChange={(event) =>
+                  onChange={(body) =>
                     setEditingArticle({
                       ...editingArticle,
-                      body: event.target.value,
+                      body,
                     })
                   }
                   placeholder="Makalenin paragraflarını boş bir satır bırakarak yazın."
-                  rows={12}
                 />
               </label>
               <label>

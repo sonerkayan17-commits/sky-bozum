@@ -16,6 +16,12 @@ export type ManagedArticle = {
 type FirestoreValue = { stringValue?: string; timestampValue?: string };
 type FirestoreDocument = { name?: string; fields?: Record<string, FirestoreValue> };
 
+function articleParagraphs(body: string, fallback: string) {
+  const plain = body.replace(/<\/(p|h2|h3|li|blockquote)>/gi, '\n\n').replace(/<br\s*\/?\s*>/gi, '\n').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+  const paragraphs = plain.split(/\n{2,}/).map((item) => item.trim()).filter(Boolean).slice(0, 40);
+  return paragraphs.length ? paragraphs : [fallback];
+}
+
 function text(fields: Record<string, FirestoreValue>, key: string) { return fields[key]?.stringValue?.trim() || ''; }
 
 function parseDocument(document: FirestoreDocument): ManagedArticle | null {
@@ -49,7 +55,7 @@ export function mergeManagedArticles(staticArticles: ArticleItem[], managedArtic
     if (managed.status !== 'published') return [];
     return [{ ...article, title: managed.title, excerpt: managed.excerpt, category: managed.category, seoTitle: managed.seoTitle || article.seoTitle, metaDescription: managed.metaDescription || article.metaDescription, cover: managed.cover || article.cover, updatedAt: managed.updatedAt || article.updatedAt }];
   });
-  const newArticles: ArticleItem[] = managedArticles.filter((article) => article.status === 'published' && !staticSlugs.has(article.slug)).map((article) => ({ slug: article.slug, title: article.title, excerpt: article.excerpt, category: article.category, readTime: `${Math.max(2, Math.ceil((article.body || article.excerpt).split(/\s+/).length / 180))} dk`, publishedAt: article.updatedAt, updatedAt: article.updatedAt, seoTitle: article.seoTitle, metaDescription: article.metaDescription, cover: article.cover, coverAlt: article.title, keywords: [article.category, 'Sky Bozum'], sections: [{ title: article.title, paragraphs: (article.body || article.excerpt).split(/\n{2,}/).filter(Boolean) }] }));
+  const newArticles: ArticleItem[] = managedArticles.filter((article) => article.status === 'published' && !staticSlugs.has(article.slug)).map((article) => ({ slug: article.slug, title: article.title, excerpt: article.excerpt, category: article.category, readTime: `${Math.max(2, Math.ceil((article.body || article.excerpt).split(/\s+/).length / 180))} dk`, publishedAt: article.updatedAt, updatedAt: article.updatedAt, seoTitle: article.seoTitle, metaDescription: article.metaDescription, cover: article.cover, coverAlt: article.title, keywords: [article.category, 'Sky Bozum'], sections: [{ title: article.title, paragraphs: articleParagraphs(article.body || '', article.excerpt) }] }));
   return [...newArticles, ...merged];
 }
 
