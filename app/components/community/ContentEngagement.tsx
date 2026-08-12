@@ -7,6 +7,7 @@ import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscri
 import { getFirebaseClient } from '../../lib/firebase';
 import { recordMemberActivity } from '../../lib/memberProgress';
 import { followContent, likeComment, notify } from '../../lib/social';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
@@ -24,6 +25,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
   const [replyTarget, setReplyTarget] = useState<PublicComment | null>(null);
+  const [avatars, setAvatars] = useState<Record<string, string>>({});
 
   useEffect(() => setClient(getFirebaseClient()), []);
 
@@ -39,12 +41,14 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     return () => { stopComments(); stopCounts(); };
   }, [db, service]);
 
+  useEffect(() => db ? onSnapshot(collection(db, 'publicProfiles'), (snapshot) => { const next: Record<string,string> = {}; snapshot.docs.forEach((item) => { const avatar = String(item.data().avatar || ''); if (avatar) next[item.id] = avatar; }); setAvatars(next); }) : undefined, [db]);
+
   async function likeAndBump() {
     if (!db || liked) return;
     setBusy(true);
     try {
       await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
-      if (user) await recordMemberActivity(db, user.uid, 'like', service).catch(() => undefined);
+      if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
       localStorage.setItem(`sky-liked:${service}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
@@ -57,7 +61,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     setBusy(true);
     try {
       await createPendingComment(db, { parentId: replyTarget?.id ?? null, author: author.trim(), uid: user.uid, service, message: message.trim(), status: 'approved' });
-      await recordMemberActivity(db, user.uid, 'comment', service).catch(() => undefined);
+      await recordMemberActivity(db, user.uid, 'comment', service, title, window.location.pathname).catch(() => undefined);
       if (replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
       setMessage('');
       setReplyTarget(null);
@@ -70,7 +74,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     try {
       if (navigator.share) await navigator.share({ title, text: `${title} başlığına göz atın`, url: window.location.href });
       else { await navigator.clipboard.writeText(window.location.href); setNotice('Bağlantı panoya kopyalandı.'); }
-      if (user && db) await recordMemberActivity(db, user.uid, 'share', service).catch(() => undefined);
+      if (user && db) await recordMemberActivity(db, user.uid, 'share', service, title, window.location.pathname).catch(() => undefined);
     } catch {}
   }
 
@@ -99,7 +103,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     <div className="space-y-3 p-5 sm:p-6">
       <h3 className="text-sm font-black text-white">Yorumlar ({comments.length})</h3>
       {comments.length ? comments.map((comment, index) => <article key={comment.id} className="overflow-hidden rounded-xl border border-white/8 bg-white/[.025]">
-        <header className="flex items-center gap-3 border-b border-white/8 bg-white/[.025] px-4 py-2">{comment.uid ? <Link href={`/uyeler/${comment.uid}`} className="text-xs font-bold text-white hover:text-rose-300">{comment.author}</Link> : <strong className="text-xs text-white">{comment.author}</strong>}<time className="text-[10px] text-slate-600">{comment.createdAt?.toLocaleDateString('tr-TR') ?? 'Yeni'}</time><span className="ml-auto text-[10px] font-black text-slate-600">#{index + 1}</span></header>
+        <header className="flex items-center gap-3 border-b border-white/8 bg-white/[.025] px-4 py-2">{comment.uid&&avatars[comment.uid]?<span className="h-8 w-8 rounded-full bg-cover bg-center" style={{backgroundImage:`url(${avatars[comment.uid]})`}}/>:<span className="grid h-8 w-8 place-items-center rounded-full bg-rose-500/15 text-[10px] font-black text-rose-300">{comment.author.charAt(0).toUpperCase()}</span>}{comment.uid ? <Link href={`/uyeler/${comment.uid}`} className="text-xs font-bold text-white hover:text-rose-300">{comment.author}</Link> : <strong className="text-xs text-white">{comment.author}</strong>}<time className="text-[10px] text-slate-600">{comment.createdAt?.toLocaleDateString('tr-TR') ?? 'Yeni'}</time><span className="ml-auto text-[10px] font-black text-slate-600">#{index + 1}</span></header>
         <p className="px-4 py-4 text-sm leading-7 text-slate-300">{comment.message}</p>
         <footer className="flex justify-end gap-2 border-t border-white/8 px-3 py-2">{user && comment.uid && comment.uid !== user.uid ? <button type="button" onClick={() => likeComment(db!, user.uid, comment.id, comment.uid!, user.displayName || 'Bir üye').then(()=>setNotice('Yorum beğenildi.')).catch(()=>setNotice('Bu yorumu daha önce beğendiniz.'))} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">♡ Beğen</button> : null}{user ? <button type="button" onClick={() => quote(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</button> : <Link href="/giris" className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</Link>}</footer>
       </article>) : <p className="rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">İlk yorumu siz yazın.</p>}

@@ -96,15 +96,17 @@ service cloud.firestore {
     match /memberActivities/{activityId} {
       allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(["uid", "type", "targetId", "points", "createdAt"])
+        && request.resource.data.keys().hasOnly(["uid", "type", "targetId", "title", "href", "points", "createdAt"])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.targetId is string
         && request.resource.data.targetId.size() >= 1
         && request.resource.data.targetId.size() <= 100
         && request.resource.data.createdAt == request.time
-        && ((request.resource.data.type == "like" && request.resource.data.points == 2)
-          || (request.resource.data.type == "comment" && request.resource.data.points == 5)
-          || (request.resource.data.type == "share" && request.resource.data.points == 10));
+        && request.resource.data.title is string && request.resource.data.title.size() <= 140
+        && request.resource.data.href is string && request.resource.data.href.size() <= 180
+        && ((request.resource.data.type == "like" && request.resource.data.points == 1)
+          || (request.resource.data.type == "comment" && request.resource.data.points == 2)
+          || (request.resource.data.type == "share" && request.resource.data.points == 3));
       allow update, delete: if false;
     }
 
@@ -148,10 +150,12 @@ service cloud.firestore {
     match /publicProfiles/{memberId} {
       allow read: if true;
       allow create, update: if signedIn() && request.auth.uid == memberId
-        && request.resource.data.keys().hasOnly(["displayName", "createdAt"])
+        && request.resource.data.keys().hasOnly(["displayName", "avatar", "createdAt"])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
-        && request.resource.data.displayName.size() <= 80;
+        && request.resource.data.displayName.size() <= 80
+        && request.resource.data.avatar is string
+        && request.resource.data.avatar.size() <= 30000;
       allow delete: if false;
     }
 

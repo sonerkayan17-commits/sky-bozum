@@ -34,6 +34,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     if ((await getDoc(memberRef)).exists()) return;
     await setDoc(memberRef, {
       displayName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
+      avatar: '',
       phone: phoneNumber.trim(),
       email: user.email || email.trim(),
       role: 'member',
