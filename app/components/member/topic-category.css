@@ -1,0 +1,1 @@
+.topic-category-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.topic-path-preview{display:block;margin-top:-.35rem;border-left:2px solid #e32962;padding-left:.7rem;color:#8f99a7;font-size:.68rem;font-weight:750}@media(max-width:620px){.topic-category-grid{grid-template-columns:1fr}}
