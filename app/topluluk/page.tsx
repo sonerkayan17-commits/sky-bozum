@@ -1,1 +1,1 @@
-import CommunityTopics from '../components/member/CommunityTopics';import './community.css';export const metadata={title:'Üye Topluluğu'};export default function Page(){return <CommunityTopics/>}
+import CommunityTopics from'../components/member/CommunityTopics';import EditorialShelf from'./EditorialShelf';import'./community.css';export const metadata={title:'Üye Topluluğu'};export default function Page(){return <><EditorialShelf/><CommunityTopics/></>}
