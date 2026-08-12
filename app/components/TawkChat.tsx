@@ -27,12 +27,12 @@ export default function TawkChat() {
 
   return (
     <aside className="tawk-support-intro" aria-label="Sky Bozum canlı destek">
-      <span className="tawk-support-eyebrow"><i aria-hidden="true" /> SKY BOZUM</span>
-      <strong>Canlı destek burada.</strong>
-      <p>Oran, işlem ve ödeme sorularınız için ekibimize doğrudan yazın.</p>
+      <strong>👋 Merhaba! Size nasıl yardımcı olabiliriz?</strong>
+      <p className="tawk-support-notice">• &nbsp;Tek gerçek sitemiz <a href="https://bozumcu.net" target="_blank" rel="noreferrer">https://bozumcu.net</a> adresidir. Lütfen dolandırıcı sitelere itibar etmeyiniz.</p>
+      <p>Talebinizi iletin ve en kısa sürede size destek olacağız.</p>
       <div className="tawk-support-actions">
         <button type="button" onClick={openChat}>Bozum yapmak istiyorum</button>
-        <button type="button" onClick={openChat}>Güncel oran öğren</button>
+        <button type="button" onClick={openChat}>Detaylı bilgi almak istiyorum</button>
       </div>
     </aside>
   );
