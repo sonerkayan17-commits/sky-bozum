@@ -471,7 +471,7 @@ export default function AdminConsole({
                         run(
                           () =>
                             removeManagedArticle(db!, article.slug, user.uid),
-                          "Yönetim kaydı silindi.",
+                          "Makale yayından kaldırıldı; arşivden tekrar açılabilir.",
                         )
                       }
                     >

@@ -64,6 +64,11 @@ export async function saveManagedArticle(db: Firestore, article: ContentArticleD
 }
 
 export async function removeManagedArticle(db: Firestore, slug: string, actorId: string) {
+  if (articles.some((article) => article.slug === slug)) {
+    await setArticleStatus(db, slug, 'archived', actorId);
+    await setDoc(doc(collection(db, 'contentAudit')), { action: 'archived', articleSlug: slug, actorId, createdAt: serverTimestamp() });
+    return;
+  }
   await setDoc(doc(collection(db, 'contentAudit')), { action: 'deleted', articleSlug: slug, actorId, createdAt: serverTimestamp() });
   await deleteDoc(doc(db, 'contentArticles', slug));
 }
