@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedComments, subscribeToEngagementCounts, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
 import { recordMemberActivity } from '../../lib/memberProgress';
+import { likeComment, notify } from '../../lib/social';
 
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
@@ -22,6 +23,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
   const [showComposer, setShowComposer] = useState(false);
+  const [replyTarget, setReplyTarget] = useState<PublicComment | null>(null);
 
   useEffect(() => auth ? onAuthStateChanged(auth, (nextUser) => { setUser(nextUser); if (nextUser?.displayName) setAuthor(nextUser.displayName); }) : undefined, [auth]);
 
@@ -52,10 +54,12 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     if (!user || !db || author.trim().length < 2 || message.trim().length < 3) return;
     setBusy(true);
     try {
-      await createPendingComment(db, { author: author.trim(), service, message: message.trim(), status: 'approved' });
+      await createPendingComment(db, { parentId: replyTarget?.id ?? null, author: author.trim(), uid: user.uid, service, message: message.trim(), status: 'approved' });
       await recordMemberActivity(db, user.uid, 'comment', service).catch(() => undefined);
+      if (replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
       setMessage('');
       setShowComposer(false);
+      setReplyTarget(null);
       setNotice('Yorumunuz yayınlandı.');
     } catch { setNotice('İşlem tamamlanamadı. Lütfen tekrar deneyin.'); }
     finally { setBusy(false); }
@@ -72,6 +76,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   function quote(comment: PublicComment) {
     setMessage(`“${comment.message.slice(0, 180)}”\n\n`);
     setShowComposer(true);
+    setReplyTarget(comment);
     window.setTimeout(() => document.getElementById(`comment-${targetId}`)?.focus(), 0);
   }
 
@@ -93,9 +98,9 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     <div className="space-y-3 p-5 sm:p-6">
       <h3 className="text-sm font-black text-white">Yorumlar ({comments.length})</h3>
       {comments.length ? comments.map((comment, index) => <article key={comment.id} className="overflow-hidden rounded-xl border border-white/8 bg-white/[.025]">
-        <header className="flex items-center gap-3 border-b border-white/8 bg-white/[.025] px-4 py-2"><strong className="text-xs text-white">{comment.author}</strong><time className="text-[10px] text-slate-600">{comment.createdAt?.toLocaleDateString('tr-TR') ?? 'Yeni'}</time><span className="ml-auto text-[10px] font-black text-slate-600">#{index + 1}</span></header>
+        <header className="flex items-center gap-3 border-b border-white/8 bg-white/[.025] px-4 py-2">{comment.uid ? <Link href={`/uyeler/${comment.uid}`} className="text-xs font-bold text-white hover:text-rose-300">{comment.author}</Link> : <strong className="text-xs text-white">{comment.author}</strong>}<time className="text-[10px] text-slate-600">{comment.createdAt?.toLocaleDateString('tr-TR') ?? 'Yeni'}</time><span className="ml-auto text-[10px] font-black text-slate-600">#{index + 1}</span></header>
         <p className="px-4 py-4 text-sm leading-7 text-slate-300">{comment.message}</p>
-        <footer className="flex justify-end border-t border-white/8 px-3 py-2">{user ? <button type="button" onClick={() => quote(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</button> : <Link href="/giris" className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</Link>}</footer>
+        <footer className="flex justify-end gap-2 border-t border-white/8 px-3 py-2">{user && comment.uid && comment.uid !== user.uid ? <button type="button" onClick={() => likeComment(db!, user.uid, comment.id, comment.uid!, user.displayName || 'Bir üye').then(()=>setNotice('Yorum beğenildi.')).catch(()=>setNotice('Bu yorumu daha önce beğendiniz.'))} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">♡ Beğen</button> : null}{user ? <button type="button" onClick={() => quote(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</button> : <Link href="/giris" className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</Link>}</footer>
       </article>) : <p className="rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">İlk yorumu siz yazın.</p>}
     </div>
 

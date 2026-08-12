@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile, type Auth, type User } from 'firebase/auth';
-import { collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { getMemberLevel, memberLevels, subscribeToMemberActivities, type MemberActivity } from '../../lib/memberProgress';
@@ -22,6 +22,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const [member, setMember] = useState<MemberData | null>(null);
   const [activities, setActivities] = useState<MemberActivity[]>([]);
   const [ledger, setLedger] = useState<Ledger[]>([]);
+  const [giftPoints, setGiftPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState(''); const [phone, setPhone] = useState('');
   const [notice, setNotice] = useState('');
@@ -38,14 +39,15 @@ export default function MemberHub({ view }: { view: MemberView }) {
         setMember(next); setName(next.displayName); setPhone(next.phone);
       });
       const stopActivities = subscribeToMemberActivities(db, nextUser.uid, setActivities);
+      const stopGifts = onSnapshot(query(collection(db, 'pointGifts'), where('receiverId', '==', nextUser.uid)), (snapshot) => setGiftPoints(snapshot.docs.reduce((sum, item) => sum + Number(item.data().amount || 0), 0)));
       const stopLedger = onSnapshot(query(collection(db, 'memberLedger'), where('memberId', '==', nextUser.uid)), (snapshot) => setLedger(snapshot.docs.map((item) => { const data = item.data(); return { id: item.id, kind: String(data.kind || ''), amount: Number(data.amount) || 0, note: String(data.note || ''), createdAt: data.createdAt?.toDate?.() ?? null }; }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))));
-      return () => { stopMember(); stopActivities(); stopLedger(); };
+      return () => { stopMember(); stopActivities(); stopGifts(); stopLedger(); };
     });
   }, []);
 
   const counts = useMemo(() => ({ like: activities.filter((item) => item.type === 'like').length, comment: activities.filter((item) => item.type === 'comment').length, share: activities.filter((item) => item.type === 'share').length }), [activities]);
   const taskBonus = (counts.like >= 10 ? 50 : 0) + (counts.comment >= 5 ? 75 : 0) + (counts.share >= 1 ? 100 : 0);
-  const totalPoints = (member?.points || 0) + activities.reduce((sum, item) => sum + item.points, 0) + taskBonus;
+  const totalPoints = (member?.points || 0) + giftPoints + activities.reduce((sum, item) => sum + item.points, 0) + taskBonus;
   const level = getMemberLevel(totalPoints);
   const nextLevel = memberLevels.find((item) => item.min > totalPoints);
   const progress = nextLevel ? Math.min(100, Math.round(((totalPoints - level.min) / (nextLevel.min - level.min)) * 100)) : 100;
@@ -54,6 +56,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
     event.preventDefault(); const { auth, db } = getFirebaseClient(); if (!auth?.currentUser || !db) return;
     await updateProfile(auth.currentUser, { displayName: name.trim() });
     await updateDoc(doc(db, 'members', auth.currentUser.uid), { displayName: name.trim(), phone: phone.trim() });
+    await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), createdAt: serverTimestamp() });
     setNotice('Üyelik bilgileriniz güncellendi.');
   }
 

@@ -21,13 +21,14 @@ service cloud.firestore {
 
     function validComment() {
       return request.resource.data.keys().hasOnly([
-          "parentId", "author", "service", "message", "rating", "status", "createdAt"
+          "parentId", "author", "uid", "service", "message", "rating", "status", "createdAt"
         ])
         && (
           request.resource.data.status == "pending"
           || (signedIn() && request.resource.data.status == "approved")
         )
         && request.resource.data.createdAt == request.time
+        && (request.resource.data.uid == null || (signedIn() && request.resource.data.uid == request.auth.uid))
         && validAuthor()
         && request.resource.data["service"] is string
         && request.resource.data["service"].size() >= 2
@@ -104,6 +105,47 @@ service cloud.firestore {
         && ((request.resource.data.type == "like" && request.resource.data.points == 2)
           || (request.resource.data.type == "comment" && request.resource.data.points == 5)
           || (request.resource.data.type == "share" && request.resource.data.points == 10));
+      allow update, delete: if false;
+    }
+
+    match /publicProfiles/{memberId} {
+      allow read: if true;
+      allow create, update: if signedIn() && request.auth.uid == memberId
+        && request.resource.data.keys().hasOnly(["displayName", "createdAt"])
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 80;
+      allow delete: if false;
+    }
+
+    match /profileLikes/{likeId} {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /pointGifts/{giftId} {
+      allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.amount == 5 && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /messages/{messageId} {
+      allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if signedIn() && resource.data.receiverId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
+      allow update: if signedIn() && resource.data.receiverId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["read"]);
+      allow delete: if false;
+    }
+
+    match /commentLikes/{likeId} {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 

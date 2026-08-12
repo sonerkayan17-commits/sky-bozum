@@ -43,6 +43,10 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       permissions: [],
       createdAt: serverTimestamp(),
     });
+    await setDoc(doc(db, 'publicProfiles', user.uid), {
+      displayName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
+      createdAt: serverTimestamp(),
+    });
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {

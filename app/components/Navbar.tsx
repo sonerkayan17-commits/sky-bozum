@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getFirebaseClient } from '../lib/firebase';
 import SiteSearch from './SiteSearch';
+import MemberNotifications from './member/MemberNotifications';
+import './member/member-notifications.css';
 
 const items = [
   ['Ana Sayfa', '/'],
@@ -139,6 +141,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2.5">
+          <MemberNotifications />
           {authReady && memberName ? <div className="group relative hidden sm:block">
             <Link href="/hesabim" className="focus-ring inline-flex min-h-10 max-w-40 items-center justify-center truncate rounded-lg border border-emerald-400/20 bg-emerald-500/[.08] px-3 text-[12px] font-bold text-emerald-200">{memberName}</Link>
             <div className="invisible absolute right-0 top-[calc(100%+.55rem)] z-50 grid w-40 translate-y-1 gap-1 rounded-xl border border-white/10 bg-[#11141b]/98 p-2 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,.45)] transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">

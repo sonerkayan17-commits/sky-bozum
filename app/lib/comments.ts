@@ -15,6 +15,7 @@ export type PublicComment = {
   id: string;
   parentId: string | null;
   author: string;
+  uid?: string | null;
   service: string;
   message: string;
   rating: number | null;
@@ -26,6 +27,7 @@ export type EngagementCounts = Record<string, number>;
 type CommentDocument = {
   parentId?: string | null;
   author?: string;
+  uid?: string | null;
   service?: string;
   message?: string;
   rating?: number | null;
@@ -36,6 +38,7 @@ type CommentDocument = {
 type CreateCommentInput = {
   parentId?: string | null;
   author: string;
+  uid?: string | null;
   service: string;
   message: string;
   rating?: number | null;
@@ -68,6 +71,7 @@ export function subscribeToApprovedComments(
             id: document.id,
             parentId: data.parentId ?? null,
             author: data.author ?? 'Ziyaretçi',
+            uid: data.uid ?? null,
             service: data.service ?? 'Diğer',
             message: data.message ?? '',
             rating:
@@ -94,9 +98,10 @@ export async function createPendingComment(
   firestore: Firestore,
   input: CreateCommentInput,
 ) {
-  await addDoc(collection(firestore, 'comments'), {
+  return addDoc(collection(firestore, 'comments'), {
     parentId: input.parentId ?? null,
     author: input.author,
+    uid: input.uid ?? null,
     service: input.service,
     message: input.message,
     rating: input.parentId ? null : (input.rating ?? 5),
