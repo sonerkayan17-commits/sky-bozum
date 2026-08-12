@@ -80,8 +80,31 @@ service cloud.firestore {
         && request.resource.data.permissions.size() == 0
         && request.resource.data.createdAt == request.time
       );
-      allow update: if isAdmin();
+      allow update: if isAdmin() || (
+        signedIn() && request.auth.uid == memberId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["displayName", "phone"])
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 80
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() <= 24
+      );
       allow delete: if false;
+    }
+
+    match /memberActivities/{activityId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(["uid", "type", "targetId", "points", "createdAt"])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() >= 1
+        && request.resource.data.targetId.size() <= 100
+        && request.resource.data.createdAt == request.time
+        && ((request.resource.data.type == "like" && request.resource.data.points == 2)
+          || (request.resource.data.type == "comment" && request.resource.data.points == 5)
+          || (request.resource.data.type == "share" && request.resource.data.points == 10));
+      allow update, delete: if false;
     }
 
     match /memberLedger/{entryId} {

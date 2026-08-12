@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedComments, subscribeToEngagementCounts, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
+import { recordMemberActivity } from '../../lib/memberProgress';
 
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
@@ -39,6 +40,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     setBusy(true);
     try {
       await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
+      if (user) await recordMemberActivity(db, user.uid, 'like', service).catch(() => undefined);
       localStorage.setItem(`sky-liked:${service}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
@@ -51,6 +53,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     setBusy(true);
     try {
       await createPendingComment(db, { author: author.trim(), service, message: message.trim(), status: 'approved' });
+      await recordMemberActivity(db, user.uid, 'comment', service).catch(() => undefined);
       setMessage('');
       setShowComposer(false);
       setNotice('Yorumunuz yayınlandı.');
@@ -62,6 +65,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     try {
       if (navigator.share) await navigator.share({ title, text: `${title} başlığına göz atın`, url: window.location.href });
       else { await navigator.clipboard.writeText(window.location.href); setNotice('Bağlantı panoya kopyalandı.'); }
+      if (user && db) await recordMemberActivity(db, user.uid, 'share', service).catch(() => undefined);
     } catch {}
   }
 

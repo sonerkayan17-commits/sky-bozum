@@ -140,9 +140,10 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2.5">
           {authReady && memberName ? <div className="group relative hidden sm:block">
-            <Link href="/bilgi-merkezi" className="focus-ring inline-flex min-h-10 max-w-40 items-center justify-center truncate rounded-lg border border-emerald-400/20 bg-emerald-500/[.08] px-3 text-[12px] font-bold text-emerald-200">{memberName}</Link>
+            <Link href="/hesabim" className="focus-ring inline-flex min-h-10 max-w-40 items-center justify-center truncate rounded-lg border border-emerald-400/20 bg-emerald-500/[.08] px-3 text-[12px] font-bold text-emerald-200">{memberName}</Link>
             <div className="invisible absolute right-0 top-[calc(100%+.55rem)] z-50 grid w-40 translate-y-1 gap-1 rounded-xl border border-white/10 bg-[#11141b]/98 p-2 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,.45)] transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-              <Link href="/bilgi-merkezi" className="rounded-lg px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[.06]">Foruma git</Link>
+              <Link href="/hesabim" className="rounded-lg px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[.06]">Profilim</Link>
+              <Link href="/hesabim/gorev-merkezi" className="rounded-lg px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[.06]">Görev merkezi</Link>
               <button type="button" onClick={logout} className="rounded-lg px-3 py-2 text-left text-xs font-bold text-rose-300 hover:bg-white/[.06]">Çıkış yap</button>
             </div>
           </div> : authReady ? <div className="group relative hidden sm:block">
@@ -213,7 +214,7 @@ export default function Navbar() {
               {memberName ? <div className="mt-3 rounded-2xl border border-emerald-400/20 bg-emerald-500/[.07] p-3">
                 <p className="mb-2 truncate text-center text-xs font-black text-emerald-200">{memberName}</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <Link href="/bilgi-merkezi" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-3 text-sm font-black text-white">Foruma git</Link>
+                  <Link href="/hesabim" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-3 text-sm font-black text-white">Profilim</Link>
                   <button type="button" onClick={logout} className="focus-ring min-h-11 rounded-xl border border-white/15 px-3 text-sm font-black text-slate-100">Çıkış yap</button>
                 </div>
               </div> : <div className="mt-3 rounded-2xl border border-pink-400/20 bg-pink-500/[.07] p-3">

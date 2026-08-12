@@ -1,0 +1,1 @@
+import MemberHub from '../../components/member/MemberHub'; import '../profile.css'; export const metadata={title:'İşlem Geçmişi',robots:{index:false,follow:false}}; export default function Page(){return <MemberHub view="history"/>}
