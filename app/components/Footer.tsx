@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
 import PrivacyControls from './personalization/PrivacyControls';
+import TawkChat from './TawkChat';
 
 const groups = [
   ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],
@@ -16,7 +17,9 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/8 bg-[#07080d] pb-8 pt-14 text-white">
+    <>
+      <TawkChat />
+      <footer className="relative overflow-hidden border-t border-white/8 bg-[#07080d] pb-8 pt-14 text-white">
       <div className="content-wide relative">
         <div className="grid gap-10 border-b border-white/8 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div className="max-w-sm">
@@ -73,6 +76,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </footer>
+      </footer>
+    </>
   );
 }
