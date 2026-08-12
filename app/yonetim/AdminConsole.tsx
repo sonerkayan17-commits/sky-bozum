@@ -9,6 +9,7 @@ import {
   type User,
 } from 'firebase/auth';
 import { getFirebaseClient } from '../lib/firebase';
+import './content.css';
 import { articles } from '../lib/site';
 import { removeManagedArticle, saveManagedArticle, seedArticleForEditing, setArticleStatus, type ContentArticleDraft } from '../lib/contentAdmin';
 import {
