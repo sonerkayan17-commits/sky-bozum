@@ -142,9 +142,22 @@ service cloud.firestore {
         && request.resource.data.title.size() <= 100
         && request.resource.data.body is string
         && request.resource.data.body.size() >= 10
-        && request.resource.data.body.size() <= 1200
+        && request.resource.data.body.size() <= 30000
         && request.resource.data.createdAt == request.time;
-      allow update, delete: if isAdmin();
+      allow update: if isAdmin() || (signedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.author == resource.data.author
+        && request.resource.data.status == "published"
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 5
+        && request.resource.data.title.size() <= 100
+        && request.resource.data.body is string
+        && request.resource.data.body.size() >= 10
+        && request.resource.data.body.size() <= 30000
+        && request.resource.data.updatedAt == request.time);
+      allow delete: if isAdmin();
     }
 
     match /publicProfiles/{memberId} {
