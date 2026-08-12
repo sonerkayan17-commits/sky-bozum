@@ -102,13 +102,13 @@ export default function Navbar() {
 
         <SiteSearch mode="desktop" />
 
-        <nav className="hidden items-center gap-1 xl:flex" aria-label="Ana menü">
+        <nav className="hidden shrink-0 items-center gap-0.5 xl:flex" aria-label="Ana menü">
           {items.map(([label, href]) => (
             <Link
               key={href}
               href={href}
               aria-current={active(href) ? 'page' : undefined}
-              className={`relative inline-flex min-h-11 items-center rounded-lg px-3 py-2.5 text-[13px] font-bold tracking-[-.01em] transition ${
+              className={`relative inline-flex min-h-11 shrink-0 whitespace-nowrap items-center rounded-lg px-2.5 py-2.5 text-[12px] font-bold tracking-[-.01em] transition ${
                 active(href)
                   ? 'text-pink-400'
                   : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
