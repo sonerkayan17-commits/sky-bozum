@@ -27,3 +27,5 @@ export const forumSections:ForumSection[]=[
 {slug:'forum-destek',title:'Forum Destek',icon:'?',description:'Üyelik, içerik bildirimi, teknik sorun ve forum kullanım desteği.',categories:['Üyelik ve hesap sorunları','Forum kullanım rehberi','İçerik şikâyeti','Teknik sorun bildirimi','Öneri ve geri bildirim']}
 ];
 export const findForumSection=(slug:string)=>forumSections.find(section=>section.slug===slug);
+export const slugifyForumCategory=(value:string)=>value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+export const findForumCategory=(sectionSlug:string,categorySlug:string)=>{const section=findForumSection(sectionSlug);const title=section?.categories.find(category=>slugifyForumCategory(category)===categorySlug);return section&&title?{section,title,slug:categorySlug}:null};

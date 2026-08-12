@@ -15,7 +15,7 @@ const actions: DockAction[] = [
   { label: 'Hesapla', href: '/araclar#oran-hesapla', icon: '↗' },
   { label: 'Araçlar', href: '/araclar', icon: '◇', activeRoutes: ['/araclar'] },
   { label: 'Rehber', href: '/bilgi-merkezi', icon: '≡', activeRoutes: ['/bilgi-merkezi'] },
-  { label: 'S.S.S.', href: '/sss', icon: '?', activeRoutes: ['/sss'] },
+  { label: 'Forum', href: '/topluluk', icon: '☵', activeRoutes: ['/topluluk'] },
 ];
 
 const routesWithDedicatedDock = ['/guven-merkezi'];

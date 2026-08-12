@@ -16,6 +16,7 @@ const items = [
   ['Araçlar', '/araclar'],
   ['Operatörler', '/operatorler'],
   ['Rehber', '/bilgi-merkezi'],
+  ['Forum', '/topluluk'],
   ['Referanslar', '/referanslar'],
   ['Güven', '/guven-merkezi'],
   ['S.S.S.', '/sss'],

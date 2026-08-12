@@ -6,7 +6,7 @@ import TawkChat from './TawkChat';
 
 const groups = [
   ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],
-  ['Keşfet', [['Oran Hesapla', '/araclar#hesapla'], ['Operatörler', '/operatorler'], ['Rehber', '/bilgi-merkezi'], ['Referanslar', '/referanslar'], ['S.S.S.', '/sss']]],
+  ['Keşfet', [['Oran Hesapla', '/araclar#hesapla'], ['Operatörler', '/operatorler'], ['Rehber', '/bilgi-merkezi'], ['Forum', '/topluluk'], ['Referanslar', '/referanslar'], ['S.S.S.', '/sss']]],
   ['Kurumsal', [['Hakkımızda', '/hakkimizda'], ['İş Ortaklığı', '/is-ortakligi'], ['Güven Merkezi', '/guven-merkezi'], ['Gizlilik Politikası', '/gizlilik-politikasi'], ['Kullanım Şartları', '/kullanim-sartlari'], ['İletişim', '/iletisim']]],
 ] as const;
 
