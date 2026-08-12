@@ -120,11 +120,13 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2.5">
-          <div className="hidden items-center gap-2 sm:flex">
-            <span className="hidden max-w-36 text-right text-[10px] font-bold leading-4 text-slate-400 2xl:block">Forum ve ücretsiz içeriklere sınırsız erişim</span>
-            <Link href="/giris" className="focus-ring inline-flex min-h-11 items-center justify-center rounded-full border border-pink-400/25 bg-pink-500/10 px-4 text-xs font-black text-pink-200 shadow-[0_10px_26px_rgba(236,72,153,.12)] transition hover:border-pink-300/45 hover:bg-pink-500/16">
+          <div className="group relative hidden sm:block">
+            <Link href="/giris" aria-describedby="account-access-hint" className="focus-ring inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-lg border border-pink-400/20 bg-pink-500/[.08] px-3 text-[12px] font-bold tracking-[-.01em] text-pink-200 transition hover:border-pink-300/40 hover:bg-pink-500/14">
               Giriş yap <span className="mx-1 text-pink-500/70">/</span> Kayıt ol
             </Link>
+            <span id="account-access-hint" role="tooltip" className="pointer-events-none absolute right-0 top-[calc(100%+.65rem)] z-50 w-52 translate-y-1 rounded-xl border border-white/10 bg-[#11141b]/98 px-3 py-2.5 text-center text-[11px] font-bold leading-5 text-slate-300 opacity-0 shadow-[0_18px_50px_rgba(0,0,0,.45)] transition duration-150 before:absolute before:-top-1.5 before:right-7 before:h-3 before:w-3 before:rotate-45 before:border-l before:border-t before:border-white/10 before:bg-[#11141b] group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+              Forum ve ücretsiz içeriklere sınırsız erişim
+            </span>
           </div>
           <button
             type="button"
