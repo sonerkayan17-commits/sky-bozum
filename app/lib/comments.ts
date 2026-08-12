@@ -39,6 +39,7 @@ type CreateCommentInput = {
   service: string;
   message: string;
   rating?: number | null;
+  status?: 'pending' | 'approved';
 };
 
 type EngagementDocument = {
@@ -99,7 +100,7 @@ export async function createPendingComment(
     service: input.service,
     message: input.message,
     rating: input.parentId ? null : (input.rating ?? 5),
-    status: 'pending',
+    status: input.status ?? 'pending',
     createdAt: serverTimestamp(),
   });
 }

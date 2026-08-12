@@ -7,6 +7,7 @@ import ArticleVisual from '../../components/articles/ArticleVisual';
 import ArticleSupportLink from '../../components/articles/ArticleSupportLink';
 import ArticleLearningPath from '../../components/articles/ArticleLearningPath';
 import ArticleFeedback from '../../components/articles/ArticleFeedback';
+import ContentEngagement from '../../components/community/ContentEngagement';
 import ReadingProgress from '../../components/articles/ReadingProgress';
 import { slugifyCategory } from '../../lib/articleCategories';
 import Link from 'next/link';
@@ -180,6 +181,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           {article.faq?.length ? <section className="article-faq"><p>SIK SORULAN SORULAR</p><h2>{article.title} hakkında sık sorulan sorular</h2><div>{article.faq.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div></section> : null}
 
           <ArticleFeedback slug={article.slug} />
+          <ContentEngagement targetId={article.slug} title={article.title} />
 
           <section className="article-editorial-close" aria-labelledby="article-close-title">
             <div className="article-editorial-close__header"><p>SONRAKİ ADIM</p><h2 id="article-close-title">{editorialLabels.closeTitle}</h2></div>

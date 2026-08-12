@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getTopicHub, getTopicHubs, getTopicHubStages } from '../../../lib/topicHubs';
 import { absoluteUrl, jsonLd } from '../../../lib/seo';
 import ArticleCover from '../../../components/articles/ArticleCover';
+import ContentEngagement from '../../../components/community/ContentEngagement';
 
 export function generateStaticParams() {
   return getTopicHubs().map((hub) => ({ slug: hub.slug }));
@@ -74,6 +75,7 @@ export default async function TopicPage({ params }: { params: Promise<{ slug: st
           </div>
         </section>)}
       </div>
+      <ContentEngagement targetId={hub.slug} title={`${hub.name} konusu`} kind="topic" />
     </section>
   </main>;
 }

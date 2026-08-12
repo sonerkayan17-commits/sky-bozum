@@ -23,12 +23,15 @@ service cloud.firestore {
       return request.resource.data.keys().hasOnly([
           "parentId", "author", "service", "message", "rating", "status", "createdAt"
         ])
-        && request.resource.data.status == "pending"
+        && (
+          request.resource.data.status == "pending"
+          || (signedIn() && request.resource.data.status == "approved")
+        )
         && request.resource.data.createdAt == request.time
         && validAuthor()
         && request.resource.data["service"] is string
         && request.resource.data["service"].size() >= 2
-        && request.resource.data["service"].size() <= 80
+        && request.resource.data["service"].size() <= 100
         && request.resource.data.message is string
         && request.resource.data.message.size() >= 3
         && request.resource.data.message.size() <= 600;
