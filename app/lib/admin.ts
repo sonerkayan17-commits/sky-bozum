@@ -43,9 +43,21 @@ export type ContentAuditEvent = {
   createdAt: Date | null;
 };
 
+export type MemberLedgerEvent = {
+  id: string;
+  memberId: string;
+  kind: 'balance' | 'points';
+  amount: number;
+  balanceAfter: number;
+  note: string;
+  performedBy: string;
+  createdAt: Date | null;
+};
+
 type MemberDocument = Omit<AdminMember, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type CommentDocument = Omit<AdminComment, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type ContentAuditDocument = Omit<ContentAuditEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
+type MemberLedgerDocument = Omit<MemberLedgerEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 
 function asMember(id: string, value: MemberDocument): AdminMember {
   return {
@@ -82,6 +94,19 @@ function asContentAuditEvent(id: string, value: ContentAuditDocument): ContentAu
   };
 }
 
+function asMemberLedgerEvent(id: string, value: MemberLedgerDocument): MemberLedgerEvent {
+  return {
+    id,
+    memberId: value.memberId || 'unknown',
+    kind: value.kind === 'points' ? 'points' : 'balance',
+    amount: Number(value.amount) || 0,
+    balanceAfter: Number(value.balanceAfter) || 0,
+    note: value.note || 'Yönetici işlemi',
+    performedBy: value.performedBy || 'unknown',
+    createdAt: value.createdAt?.toDate() ?? null,
+  };
+}
+
 export function subscribeToMembers(
   firestore: Firestore,
   onChange: (members: AdminMember[]) => void,
@@ -109,6 +134,16 @@ export function subscribeToContentAudit(
 ) {
   return onSnapshot(query(collection(firestore, 'contentAudit'), orderBy('createdAt', 'desc')), (snapshot) => {
     onChange(snapshot.docs.slice(0, 18).map((entry) => asContentAuditEvent(entry.id, entry.data() as ContentAuditDocument)));
+  }, onError);
+}
+
+export function subscribeToMemberLedger(
+  firestore: Firestore,
+  onChange: (events: MemberLedgerEvent[]) => void,
+  onError: (error: Error) => void,
+) {
+  return onSnapshot(query(collection(firestore, 'memberLedger'), orderBy('createdAt', 'desc')), (snapshot) => {
+    onChange(snapshot.docs.slice(0, 30).map((entry) => asMemberLedgerEvent(entry.id, entry.data() as MemberLedgerDocument)));
   }, onError);
 }
 

@@ -28,15 +28,17 @@ import {
   setMemberAccess,
   setMemberStatus,
   subscribeToContentAudit,
+  subscribeToMemberLedger,
   subscribeToMembers,
   subscribeToModerationQueue,
   type AdminComment,
   type AdminMember,
   type ContentAuditEvent,
+  type MemberLedgerEvent,
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "members" | "moderation" | "access" | "content";
+type View = "overview" | "members" | "moderation" | "access" | "content" | "audit";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -75,6 +77,10 @@ export default function AdminConsole({
   const [members, setMembers] = useState<AdminMember[]>([]);
   const [comments, setComments] = useState<AdminComment[]>([]);
   const [contentAudit, setContentAudit] = useState<ContentAuditEvent[]>([]);
+  const [memberLedger, setMemberLedger] = useState<MemberLedgerEvent[]>([]);
+  const [memberQuery, setMemberQuery] = useState("");
+  const [memberStatusFilter, setMemberStatusFilter] = useState<"all" | AdminMember["status"]>("all");
+  const [commentStatusFilter, setCommentStatusFilter] = useState<"all" | AdminComment["status"]>("all");
   const [managedArticles, setManagedArticles] = useState<ManagedArticleRecord[]>([]);
   const [contentQuery, setContentQuery] = useState("");
   const [contentStatus, setContentStatus] = useState<"all" | ContentArticleDraft["status"]>("all");
@@ -125,12 +131,18 @@ export default function AdminConsole({
       setContentAudit,
       (nextError) => setError(nextError.message),
     );
+    const stopMemberLedger = subscribeToMemberLedger(
+      db,
+      setMemberLedger,
+      (nextError) => setError(nextError.message),
+    );
     return () => {
       stopMembers();
       stopComments();
       stopContentAudit();
+      stopMemberLedger();
     };
-  }, [isAdmin]);
+  }, [db, isAdmin]);
 
   useEffect(() => {
     if (!db || !isAdmin) return;
@@ -172,6 +184,19 @@ export default function AdminConsole({
     () => members.filter((member) => member.status === "active"),
     [members],
   );
+  const filteredMembers = useMemo(() => {
+    const query = memberQuery.trim().toLocaleLowerCase("tr-TR");
+    return members.filter((member) => {
+      const matchesQuery = !query || `${member.displayName} ${member.email}`.toLocaleLowerCase("tr-TR").includes(query);
+      return matchesQuery && (memberStatusFilter === "all" || member.status === memberStatusFilter);
+    });
+  }, [memberQuery, memberStatusFilter, members]);
+  const filteredComments = useMemo(
+    () => comments.filter((comment) => commentStatusFilter === "all" || comment.status === commentStatusFilter),
+    [commentStatusFilter, comments],
+  );
+  const publishedContentCount = useMemo(() => managedArticles.filter((article) => article.status === "published").length, [managedArticles]);
+  const draftContentCount = useMemo(() => managedArticles.filter((article) => article.status === "draft").length, [managedArticles]);
   const customArticles = useMemo(
     () =>
       managedArticles.filter(
@@ -231,6 +256,11 @@ export default function AdminConsole({
         nextError instanceof Error ? nextError.message : "İşlem tamamlanamadı.",
       );
     }
+  }
+
+  function confirmAction(message: string, action: () => Promise<void>, success: string) {
+    if (!window.confirm(message)) return;
+    run(action, success);
   }
 
   if (!clientReady || checking)
@@ -325,6 +355,7 @@ export default function AdminConsole({
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
               ["access", "Yetkiler"],
+              ["audit", "İşlem geçmişi"],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -376,6 +407,12 @@ export default function AdminConsole({
                 <strong>{articleCount}</strong>
                 <span>rehber içeriği</span>
               </article>
+            </div>
+            <div className="admin-command-strip">
+              <button onClick={() => setView("content")}><b>{publishedContentCount}</b><span>yönetilen yayın</span></button>
+              <button onClick={() => setView("content")}><b>{draftContentCount}</b><span>hazırlanan taslak</span></button>
+              <button onClick={() => setView("members")}><b>{members.filter((member) => member.status === "pending").length}</b><span>üyelik onayı</span></button>
+              <button onClick={() => setView("audit")}><b>{contentAudit.length + memberLedger.length}</b><span>denetim kaydı</span></button>
             </div>
             <div className="admin-checklist">
               <h3>Bugünün kontrolü</h3>
@@ -522,7 +559,8 @@ export default function AdminConsole({
                     <button
                       className="admin-danger"
                       onClick={() =>
-                        run(
+                        confirmAction(
+                          `“${article.title}” yayından kaldırılıp arşive alınacak. Devam edilsin mi?`,
                           () =>
                             removeManagedArticle(db!, article.slug, user.uid),
                           "Makale yayından kaldırıldı; arşivden tekrar açılabilir.",
@@ -553,7 +591,7 @@ export default function AdminConsole({
                     </button>
                     <button className="admin-secondary compact" onClick={() => run(() => setArticleStatus(db!, article.slug, "draft", user.uid), "Makale taslağa alındı.")}>Taslak</button>
                     <button className="admin-secondary compact" onClick={() => run(() => setArticleStatus(db!, article.slug, "published", user.uid), "Makale yayına alındı.")}>Yayınla</button>
-                    <button className="admin-danger" onClick={() => run(() => removeManagedArticle(db!, article.slug, user.uid), "Makale silindi.")}>Sil</button>
+                    <button className="admin-danger" onClick={() => confirmAction(`“${article.title}” kalıcı olarak silinecek. Devam edilsin mi?`, () => removeManagedArticle(db!, article.slug, user.uid), "Makale silindi.")}>Sil</button>
                   </div>
                 </article>
               ))}
@@ -569,15 +607,22 @@ export default function AdminConsole({
               </div>
               <p>Ban, onay ve bakiye hareketleri kullanıcı kaydına işlenir.</p>
             </div>
+            <div className="admin-filterbar" role="search" aria-label="Üye filtreleri">
+              <input value={memberQuery} onChange={(event) => setMemberQuery(event.target.value)} placeholder="Ad veya e-posta ara" />
+              <select value={memberStatusFilter} onChange={(event) => setMemberStatusFilter(event.target.value as "all" | AdminMember["status"])}>
+                <option value="all">Tüm üyeler</option><option value="pending">Onay bekleyen</option><option value="active">Aktif</option><option value="banned">Banlı</option>
+              </select>
+              <span>{filteredMembers.length} kayıt</span>
+            </div>
             <div className="admin-table">
-              {members.length === 0 ? (
+              {filteredMembers.length === 0 ? (
                 <p className="admin-empty">
                   Henüz yönetilebilir üye kaydı yok. Yeni üyeler{" "}
                   <code>members</code> koleksiyonuna güvenli kayıt akışıyla
                   düşer.
                 </p>
               ) : (
-                members.map((member) => (
+                filteredMembers.map((member) => (
                   <article key={member.id}>
                     <div>
                       <strong>{member.displayName}</strong>
@@ -615,11 +660,17 @@ export default function AdminConsole({
                 Onaylanan yorum yayına çıkar; silme işlemi geri döndürülemez.
               </p>
             </div>
+            <div className="admin-filterbar">
+              <select value={commentStatusFilter} onChange={(event) => setCommentStatusFilter(event.target.value as "all" | AdminComment["status"])}>
+                <option value="all">Tüm yorumlar</option><option value="pending">Bekleyen</option><option value="approved">Onaylanan</option><option value="rejected">Reddedilen</option>
+              </select>
+              <span>{filteredComments.length} yorum</span>
+            </div>
             <div className="admin-comments">
-              {comments.length === 0 ? (
+              {filteredComments.length === 0 ? (
                 <p className="admin-empty">İncelenecek yorum bulunmuyor.</p>
               ) : (
-                comments.map((comment) => (
+                filteredComments.map((comment) => (
                   <article key={comment.id}>
                     <div>
                       <span className={`admin-status status-${comment.status}`}>
@@ -673,7 +724,8 @@ export default function AdminConsole({
                       <button
                         className="admin-danger"
                         onClick={() =>
-                          run(
+                          confirmAction(
+                            "Bu yorum kalıcı olarak silinecek. Devam edilsin mi?",
                             () => removeComment(db!, comment.id),
                             "Yorum silindi.",
                           )
@@ -743,6 +795,31 @@ export default function AdminConsole({
                   </article>
                 ))
               )}
+            </div>
+          </section>
+        )}
+        {view === "audit" && (
+          <section className="admin-section">
+            <div className="admin-section-head">
+              <div><span>DENETİM MERKEZİ</span><h2>Değişiklik ve değer hareketleri</h2></div>
+              <p>İçerik kararları ile bakiye ve puan işlemleri zaman damgası ve yönetici kimliğiyle izlenir.</p>
+            </div>
+            <div className="admin-audit-grid">
+              <section>
+                <header><h3>İçerik geçmişi</h3><span>{contentAudit.length} kayıt</span></header>
+                <div className="admin-audit-list">
+                  {contentAudit.length ? contentAudit.map((event) => <article key={event.id}><div><strong>{event.articleSlug}</strong><span>{event.action}</span></div><small>{formatDate(event.createdAt)}</small><code>{event.actorId}</code></article>) : <p className="admin-empty">İçerik hareketi bulunmuyor.</p>}
+                </div>
+              </section>
+              <section>
+                <header><h3>Bakiye ve puan defteri</h3><span>{memberLedger.length} kayıt</span></header>
+                <div className="admin-audit-list">
+                  {memberLedger.length ? memberLedger.map((event) => {
+                    const member = members.find((item) => item.id === event.memberId);
+                    return <article key={event.id}><div><strong>{member?.displayName || event.memberId}</strong><span>{event.note}</span></div><b className={event.amount >= 0 ? "is-positive" : "is-negative"}>{event.amount >= 0 ? "+" : ""}{event.amount.toLocaleString("tr-TR")} {event.kind === "balance" ? "TL" : "puan"}</b><small>{formatDate(event.createdAt)}</small></article>;
+                  }) : <p className="admin-empty">Değer hareketi bulunmuyor.</p>}
+                </div>
+              </section>
             </div>
           </section>
         )}
@@ -946,7 +1023,8 @@ export default function AdminConsole({
               </button>
               <button
                 onClick={() =>
-                  run(
+                  confirmAction(
+                    `${selectedMember.displayName} adlı üyenin erişimi engellenecek. Devam edilsin mi?`,
                     () => setMemberStatus(db!, selectedMember.id, "banned"),
                     "Üye banlandı.",
                   )
