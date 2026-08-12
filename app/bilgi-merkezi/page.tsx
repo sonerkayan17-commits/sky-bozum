@@ -5,7 +5,6 @@ import ArticleExplorer from '../components/articles/ArticleExplorer';
 import LearningPathShowcase from '../components/articles/LearningPathShowcase';
 import { articles } from '../lib/site';
 import { absoluteUrl, jsonLd } from '../lib/seo';
-import { getIntentCoverage } from '../lib/searchIntent';
 import { getManagedContentArticles, mergeManagedArticles } from '../lib/managedContent';
 
 type SearchParamValue = string | string[] | undefined;
@@ -85,7 +84,6 @@ export async function generateMetadata({
 export default async function Page({ searchParams }: { searchParams: Promise<KnowledgeSearchParams> }) {
   const { q, kategori, sirala, konu } = normalizeKnowledgeParams(await searchParams);
   const visibleArticles = mergeManagedArticles(articles, await getManagedContentArticles());
-  const intentCoverage = getIntentCoverage();
   const entryRoutes = [
     { eyebrow: 'Hizmete göre', title: 'Hangi bakiyeyi kullanacağınızı biliyorsanız', description: 'Vodafone, Turkcell, Türk Telekom, Paycell, Pokus ve dijital kod hizmetlerinden doğru başlangıç noktasını seçin.', href: '/hizmetler', action: 'Hizmetleri incele', number: '01' },
     { eyebrow: 'Soruna göre', title: 'İşlem tamamlanmıyor veya hata veriyorsa', description: 'Limit, SMS, kart ve kod sorunlarında tekrar denemeden önce güvenli kontrol sırasını uygulayın.', href: '/bilgi-merkezi/sorun-cozme', action: 'Sorunu çöz', number: '02' },
@@ -151,7 +149,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Kno
             <div className="inline-flex items-center gap-2 rounded-full border border-rose-300/15 bg-rose-300/[.07] px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-rose-300"><span className="size-1.5 rounded-full bg-rose-300 shadow-[0_0_16px_rgba(251,113,133,.9)]" /> Sky Bozum Editoryal</div>
             <h1 className="mt-6 max-w-4xl text-[2.45rem] font-black leading-[1.02] tracking-[-0.045em] sm:text-6xl lg:text-7xl">Aradığınız işlem rehberine <span className="bg-gradient-to-r from-rose-300 via-orange-200 to-amber-200 bg-clip-text text-transparent">saniyeler içinde</span> ulaşın.</h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">Mobil ödeme, operatörler, dijital kodlar ve güvenli işlem adımları için düzenli, güncel ve görsel destekli içerikler.</p>
-            <div className="mt-7 flex flex-wrap gap-2 text-xs font-bold text-slate-400"><span className="rounded-full border border-white/8 bg-white/[.025] px-3 py-1.5"><b className="text-rose-300">{articles.length}</b> doğrulanmış rehber</span><span className="rounded-full border border-white/8 bg-white/[.025] px-3 py-1.5"><b className="text-rose-300">{intentCoverage.total}</b> arama niyeti</span><span className="rounded-full border border-white/8 bg-white/[.025] px-3 py-1.5"><b className="text-rose-300">%{intentCoverage.coverage}</b> içerik kapsamı</span></div>
+            <div className="mt-7 flex flex-wrap gap-2 text-xs font-bold text-slate-400"><span className="rounded-full border border-white/8 bg-white/[.025] px-3 py-1.5">Hizmete göre düzenlenmiş rehberler</span><span className="rounded-full border border-white/8 bg-white/[.025] px-3 py-1.5">İşlem öncesi kontrol adımları</span><span className="rounded-full border border-white/8 bg-white/[.025] px-3 py-1.5">Güvenlik uyarıları</span></div>
           </div>
           <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[.02] shadow-2xl shadow-black/40">
             <Image src="/images/bilgi-merkezi/v40-guide-system/guide-hub-hero.webp" alt="Mobil ödeme, operatör bakiyesi, Paycell, Pokus, Razer Gold ve dijital kod rehberlerini gösteren Sky Bozum Bilgi Merkezi görseli" fill priority sizes="(max-width: 1023px) 100vw, 650px" className="object-cover" />

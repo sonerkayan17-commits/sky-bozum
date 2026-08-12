@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
 import PrivacyControls from './personalization/PrivacyControls';
 import TawkChat from './TawkChat';
+import { siteFeatures } from '../lib/features';
 
 const groups = [
   ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],
-  ['Keşfet', [['Oran Hesapla', '/araclar#hesapla'], ['Operatörler', '/operatorler'], ['Rehber', '/bilgi-merkezi'], ['Forum', '/topluluk'], ['Referanslar', '/referanslar'], ['S.S.S.', '/sss']]],
+  ['Keşfet', [['Oran Hesapla', '/araclar#hesapla'], ['Operatörler', '/operatorler'], ['Rehber', '/bilgi-merkezi'], ...(siteFeatures.communityForum ? [['Forum', '/topluluk'] as const] : []), ['Referanslar', '/referanslar'], ['S.S.S.', '/sss']]],
   ['Kurumsal', [['Hakkımızda', '/hakkimizda'], ['İş Ortaklığı', '/is-ortakligi'], ['Güven Merkezi', '/guven-merkezi'], ['Gizlilik Politikası', '/gizlilik-politikasi'], ['Kullanım Şartları', '/kullanim-sartlari'], ['İletişim', '/iletisim']]],
 ] as const;
 
@@ -70,10 +71,7 @@ export default function Footer() {
             <p>© {new Date().getFullYear()} Sky Bozum. Tüm hakları saklıdır.</p>
             <div className="mt-3"><PrivacyControls /></div>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 font-bold text-slate-400">
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 10V7a5 5 0 0 1 10 0v3m-11 0h12v11H6V10Z" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            SSL Güvenli
-          </div>
+          <p className="max-w-xs text-right leading-5 text-slate-600">Resmî iletişim kanalları ve işlem öncesi yazılı teyit için İletişim sayfasını kullanın.</p>
         </div>
       </div>
       </footer>

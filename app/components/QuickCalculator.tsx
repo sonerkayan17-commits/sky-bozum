@@ -152,7 +152,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                   </p>
                   <div className="mt-4 flex flex-wrap items-center gap-2 text-[9px] font-bold text-white/45">
                     <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">FAST / Havale</span>
-                    <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">1–5 dk</span>
+                    <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">Süre değişebilir</span>
                     <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">Kesin oran onayı</span>
                   </div>
                 </div>
@@ -200,7 +200,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                 </div>
                 <div className="rounded-[13px] border border-white/[0.065] bg-white/[0.022] px-3 py-2.5">
                   <p className="text-[8px] font-semibold text-white/38">Tahmini süre</p>
-                  <p className="mt-1 text-[14px] font-black text-white">1–5 dk</p>
+                  <p className="mt-1 text-[14px] font-black text-white">Banka ve doğrulamaya göre</p>
                 </div>
               </div>
 

@@ -61,8 +61,8 @@ export default function Page() {
           <div className="contact-section-header">
             <div>
               <p className="contact-eyebrow">İletişim kanalları</p>
-              <h2 id="contact-channels-title" className="contact-section-title">Bir amaç seçin.<br/>Gerisini merkez yönetsin.</h2>
-              <p className="contact-section-copy">Doğru kanal, kısa hazırlık ve güvenli paylaşım sınırı tek akışta.</p>
+              <h2 id="contact-channels-title" className="contact-section-title">Talebinizi seçin.<br/>Doğru kanala geçin.</h2>
+              <p className="contact-section-copy">İşlem türünüzü ve yaklaşık tutarı paylaşın; gerekli bilgileri güvenli biçimde netleştirelim.</p>
             </div>
             <div className="contact-section-index" aria-hidden="true"><span>01</span><b>İLETİŞİM</b></div>
           </div>

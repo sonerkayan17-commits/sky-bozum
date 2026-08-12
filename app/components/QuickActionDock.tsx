@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { siteConfig } from '../lib/site-config';
+import { siteFeatures } from '../lib/features';
 
 type DockAction = {
   label: string;
@@ -15,7 +16,7 @@ const actions: DockAction[] = [
   { label: 'Hesapla', href: '/araclar#oran-hesapla', icon: '↗' },
   { label: 'Araçlar', href: '/araclar', icon: '◇', activeRoutes: ['/araclar'] },
   { label: 'Rehber', href: '/bilgi-merkezi', icon: '≡', activeRoutes: ['/bilgi-merkezi'] },
-  { label: 'Forum', href: '/topluluk', icon: '☵', activeRoutes: ['/topluluk'] },
+  ...(siteFeatures.communityForum ? [{ label: 'Forum', href: '/topluluk', icon: '☵', activeRoutes: ['/topluluk'] }] : []),
 ];
 
 const routesWithDedicatedDock = ['/guven-merkezi'];

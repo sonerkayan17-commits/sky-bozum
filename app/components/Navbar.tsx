@@ -8,6 +8,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getFirebaseClient } from '../lib/firebase';
 import SiteSearch from './SiteSearch';
 import MemberNotifications from './member/MemberNotifications';
+import { siteFeatures } from '../lib/features';
 import './member/member-notifications.css';
 
 const items = [
@@ -109,6 +110,7 @@ export default function Navbar() {
   }, [open, searchOpen]);
 
   const active = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
+  const visibleItems = items.filter(([, href]) => href !== '/topluluk' || siteFeatures.communityForum);
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08090e]/88 text-white backdrop-blur-2xl">
@@ -124,7 +126,7 @@ export default function Navbar() {
         <SiteSearch mode="desktop" />
 
         <nav className="hidden shrink-0 items-center gap-0.5 xl:flex" aria-label="Ana menü">
-          {items.map(([label, href]) => (
+          {visibleItems.map(([label, href]) => (
             <Link
               key={href}
               href={href}
@@ -212,7 +214,7 @@ export default function Navbar() {
             className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-68px)] overflow-y-auto border-t border-white/10 bg-[#0b0d12]/98 shadow-[0_24px_70px_rgba(0,0,0,.55)] xl:hidden"
           >
             <nav className="content-shell space-y-1 py-4" aria-label="Mobil menü">
-              {items.map(([label, href]) => (
+              {visibleItems.map(([label, href]) => (
                 <Link key={href} href={href} aria-current={active(href) ? 'page' : undefined} onClick={() => setOpen(false)} className={`block min-h-11 rounded-xl px-4 py-3 text-sm font-bold ${active(href) ? 'bg-pink-500/15 text-pink-300' : 'text-slate-300 hover:bg-white/[.05] hover:text-white'}`}>
                   {label}
                 </Link>

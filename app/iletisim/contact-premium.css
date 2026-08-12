@@ -1332,3 +1332,9 @@
 .contact-section-nav a.is-active{border-color:rgba(213,72,99,.34);background:linear-gradient(115deg,rgba(132,18,41,.25),rgba(255,255,255,.025));color:#fff;box-shadow:inset 0 1px rgba(255,255,255,.04)}
 .contact-section-nav a.is-active span{color:#ed7d91}
 @media(max-width:720px){.contact-section-nav{padding-top:.4rem;padding-bottom:.4rem}.contact-section-nav a{flex:0 0 auto;min-height:37px;padding:.45rem .65rem}}
+
+/* V45.282 — İletişim akışını ziyaretçi için sade tut */
+.contact-access-overline,.contact-journey-rail,.contact-dossier-strip,.contact-concierge-guidance,.contact-dossier-copyall,.contact-dossier-side{display:none!important}
+.contact-dossier{display:block!important}
+.contact-dossier-main{border-right:0!important}
+.contact-recommendation-label{margin-bottom:.7rem}

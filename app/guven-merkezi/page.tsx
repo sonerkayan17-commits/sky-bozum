@@ -17,7 +17,7 @@ import './trust-editorial-type-balance.css';
 import './trust-hero-type-final.css';
 
 export const metadata: Metadata = {
-  title: 'Güven Merkezi | Sky Bozum',
+  title: 'Güven Merkezi',
   description: 'Gerçek dışı oranları, sahte iletişim kanallarını ve güvenli işlem adımlarını tanıyın. Sky Bozum resmî kanal ve işlem güvenliği rehberi.',
   alternates: { canonical: '/guven-merkezi' },
 };
@@ -114,7 +114,7 @@ export default function TrustCenterPage() {
             </div>
 
             <aside className="trust-hero-ledger" aria-label="Sky Bozum resmî kanal özeti">
-              <div className="trust-ledger-head"><span>CANLI KİMLİK KAYDI</span><b><i /> DOĞRULANMIŞ</b></div>
+              <div className="trust-ledger-head"><span>RESMÎ İLETİŞİM KANALLARI</span><b><i /> BU SAYFADA YAYINLI</b></div>
               <dl>
                 <div><dt>Alan adı</dt><dd>{siteConfig.domain}</dd><span>01</span></div>
                 <div><dt>WhatsApp</dt><dd>{siteConfig.phone}</dd><span>02</span></div>
