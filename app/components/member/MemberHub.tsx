@@ -62,6 +62,10 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const progress = nextLevel ? Math.min(100, Math.round(((totalPoints - level.min) / (nextLevel.min - level.min)) * 100)) : 100;
 
   useEffect(() => {
+    if (user && avatar) window.localStorage.setItem(`sky-avatar:${user.uid}`, avatar);
+  }, [avatar, user]);
+
+  useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>('.member-sidebar .member-avatar, .member-avatar-preview');
     elements.forEach((element) => {
       element.classList.toggle('member-avatar--has-photo', Boolean(avatar));
