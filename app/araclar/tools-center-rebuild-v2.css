@@ -1,9 +1,9 @@
 .tc2-page { background: #090c11; color: #f5f5f4; }
 .tc2-shell { width: min(calc(100% - 40px), 1220px); margin: 0 auto; }
-.tc2-hero { padding: 70px 0 34px; border-bottom: 1px solid #252a32; background: linear-gradient(115deg, #0a0d12, #11161d 70%, #180e12); }
-.tc2-hero-grid { display: grid; grid-template-columns: minmax(260px, .68fr) minmax(0, 1.32fr); gap: 46px; align-items: center; }
+.tc2-hero { padding: 34px 0 24px; border-bottom: 1px solid #252a32; background: linear-gradient(115deg, #0a0d12, #11161d 70%, #180e12); }
+.tc2-hero-grid { display: grid; grid-template-columns: minmax(230px, .55fr) minmax(0, 1.45fr); gap: 30px; align-items: start; }
 .tc2-eyebrow { color: #f47783; font-size: 10px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
-.tc2-hero h1 { margin-top: 14px; font-size: clamp(48px, 6vw, 76px); line-height: .9; letter-spacing: -.06em; }
+.tc2-hero h1 { margin-top: 10px; font-size: clamp(42px, 5vw, 62px); line-height: .92; letter-spacing: -.055em; }
 .tc2-hero h1 span { color: #f47783; }
 .tc2-hero-copy > p:last-child { max-width: 360px; margin-top: 22px; color: #a7adb6; font-size: 14px; line-height: 1.7; }
 .tc2-featured-calculator { overflow: hidden; border: 1px solid #303640; border-radius: 10px; background: #12171e; }
@@ -12,7 +12,15 @@
 .tc2-panel-icon { display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid #fa6f75; border-radius: 6px; color: #fa6f75; font-size: 20px; line-height: 1; }
 .tc2-featured-calculator .calculator-embedded { padding: 0 !important; }
 .tc2-featured-calculator .calculator-embedded > div { border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
-.tc2-featured-calculator .calculator-embedded > div > div:first-child { padding: 22px !important; }
+.tc2-featured-calculator .calculator-embedded > div > div:first-child { padding: 16px !important; }
+.tc2-featured-calculator .calculator-embedded .mt-3 { margin-top: 8px !important; }
+.tc2-featured-calculator .calculator-embedded .mt-4 { margin-top: 9px !important; }
+.tc2-featured-calculator .calculator-embedded .mt-6 { margin-top: 12px !important; }
+.tc2-featured-calculator .calculator-embedded .mt-7 { margin-top: 12px !important; }
+.tc2-featured-calculator .calculator-embedded .p-5 { padding: 11px !important; }
+.tc2-featured-calculator .calculator-embedded .p-4 { padding: 9px !important; }
+.tc2-featured-calculator .calculator-embedded .h-13 { height: 42px !important; }
+.tc2-featured-calculator .calculator-embedded .rounded-2xl { border-radius: 9px !important; }
 .tc2-featured-calculator .calculator-embedded aside { display: none !important; }
 .tc2-section { padding: 52px 0; border-bottom: 1px solid #252a32; }
 .tc2-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 20px; }
@@ -57,5 +65,5 @@
 .tc2-seo-list small { grid-column: 1; overflow: hidden; color: #89929d; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .tc2-seo-list b { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 16px; }
 @media (max-width: 1000px) { .tc2-featured-grid { grid-template-columns: repeat(2, 1fr); } .tc2-lower-grid { grid-template-columns: 1fr; } }
-@media (max-width: 700px) { .tc2-shell { width: min(calc(100% - 24px), 1220px); } .tc2-hero { padding-top: 48px; } .tc2-hero-grid { grid-template-columns: 1fr; gap: 30px; } .tc2-featured-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .tc2-card-footer { min-height: 76px; padding: 11px; } .tc2-card-footer h3 { font-size: 13px; } .tc2-section-heading { align-items: start; flex-direction: column; gap: 8px; } }
+@media (max-width: 700px) { .tc2-shell { width: min(calc(100% - 24px), 1220px); } .tc2-hero { padding-top: 32px; } .tc2-hero-grid { grid-template-columns: 1fr; gap: 24px; } .tc2-featured-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .tc2-card-footer { min-height: 76px; padding: 11px; } .tc2-card-footer h3 { font-size: 13px; } .tc2-section-heading { align-items: start; flex-direction: column; gap: 8px; } }
 @media (max-width: 460px) { .tc2-featured-grid { grid-template-columns: 1fr; } .tc2-seo-list { grid-template-columns: 1fr; } .tc2-seo-list a, .tc2-seo-list a:nth-child(even), .tc2-seo-list a:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid #2a3038; } .tc2-seo-list a:last-child { border-bottom: 0; } }
