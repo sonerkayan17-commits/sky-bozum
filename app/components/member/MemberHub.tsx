@@ -60,6 +60,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
     const avatarElement = document.querySelector<HTMLElement>('.member-sidebar .member-avatar');
     if (!avatarElement) return;
     avatarElement.textContent = avatar ? '' : (member?.displayName || user.email || 'Ü').charAt(0).toUpperCase();
+    avatarElement.classList.toggle('member-avatar--has-photo', Boolean(avatar));
     avatarElement.style.backgroundImage = avatar ? `url(${avatar})` : '';
     avatarElement.style.backgroundSize = avatar ? 'cover' : '';
     avatarElement.style.backgroundPosition = avatar ? 'center' : '';
