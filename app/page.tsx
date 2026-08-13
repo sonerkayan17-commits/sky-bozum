@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Hero from './components/Hero';
 import BrandStrip from './components/BrandStrip';
 import HomeTrust from './components/HomeTrust';
@@ -39,6 +40,14 @@ export default function Home() {
           <HomeFaq />
           <FinalCta />
         </div>
+        <nav className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-sm font-bold text-slate-400" aria-label="Önemli site bölümleri">
+          <span className="text-xs uppercase tracking-[0.16em] text-slate-600">Devam edin</span>
+          <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmetler</Link>
+          <Link href="/araclar" className="transition hover:text-rose-300">Araçlar Merkezi</Link>
+          <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">Bilgi Merkezi</Link>
+          <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk</Link>
+          <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven Merkezi</Link>
+        </nav>
       </section>
     </main>
   );

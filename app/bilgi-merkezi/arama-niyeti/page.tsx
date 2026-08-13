@@ -25,5 +25,14 @@ export default function SearchIntentPage() {
         <aside className="h-fit rounded-3xl border border-amber-400/20 bg-amber-400/[.04] p-6 lg:sticky lg:top-24"><h2 className="text-lg font-black">Öncelikli içerik boşlukları</h2><p className="mt-2 text-sm leading-6 text-slate-400">V32–V35 adımlarında önce yüksek niyetli eksikler tamamlanacak.</p><ol className="mt-5 space-y-3">{missing.map((item,index)=><li key={item.id} className="text-sm"><span className="mr-2 text-amber-400">{index+1}.</span>{item.query}</li>)}</ol></aside>
       </div>
     </section>
+    <nav className="content-shell border-t border-white/10 py-10" aria-label="İçerik merkezleri arasında gezin">
+      <p className="text-xs font-extrabold uppercase tracking-[.16em] text-slate-600">İçerikten işleme geçin</p>
+      <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold text-slate-300">
+        <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmet ve oran sayfaları →</Link>
+        <Link href="/araclar" className="transition hover:text-rose-300">Hesaplama araçları →</Link>
+        <Link href="/sss" className="transition hover:text-rose-300">SSS yanıtları →</Link>
+        <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk deneyimleri →</Link>
+      </div>
+    </nav>
   </main>;
 }

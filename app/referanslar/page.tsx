@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import SkyReferencesSection from './references/components/SkyReferencesSection';
 import { skyReferences } from './references/data/skyReferences.data';
 import { absoluteUrl, breadcrumbSchema, createMetadata, jsonLd, SITE_NAME } from '../lib/seo';
@@ -57,6 +58,15 @@ export default function ReferencesPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(collectionSchema) }} />
       <h1 className="sr-only">{title}</h1>
       <SkyReferencesSection references={skyReferences} />
+      <nav className="content-shell border-t border-white/10 py-10 text-center" aria-label="Referanslardan devam edilecek bölümler">
+        <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-600">Deneyimden sonra</p>
+        <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-400">
+          <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmet ve oranları incele</Link>
+          <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven standardını gör</Link>
+          <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">İşlem rehberlerini oku</Link>
+          <Link href="/iletisim" className="transition hover:text-rose-300">Resmî iletişim kanalları</Link>
+        </div>
+      </nav>
     </main>
   );
 }
