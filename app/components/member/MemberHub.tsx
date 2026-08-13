@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile, type Auth, type User } from 'firebase/auth';
-import { collection, doc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { getMemberLevel, memberLevels, subscribeToMemberActivities, type MemberActivity } from '../../lib/memberProgress';
@@ -59,6 +59,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
   useEffect(() => {
     const avatarElement = document.querySelector<HTMLElement>('.member-sidebar .member-avatar');
     if (!avatarElement) return;
+    avatarElement.textContent = avatar ? '' : (member?.displayName || user.email || 'Ü').charAt(0).toUpperCase();
     avatarElement.style.backgroundImage = avatar ? `url(${avatar})` : '';
     avatarElement.style.backgroundSize = avatar ? 'cover' : '';
     avatarElement.style.backgroundPosition = avatar ? 'center' : '';
@@ -71,10 +72,16 @@ export default function MemberHub({ view }: { view: MemberView }) {
 
   async function saveProfile(event: FormEvent) {
     event.preventDefault(); const { auth, db } = getFirebaseClient(); if (!auth?.currentUser || !db) return;
-    await updateProfile(auth.currentUser, { displayName: name.trim() });
-    await updateDoc(doc(db, 'members', auth.currentUser.uid), { displayName: name.trim(), phone: phone.trim() });
-    await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, createdAt: serverTimestamp() });
-    setNotice('Üyelik bilgileriniz güncellendi.');
+    try {
+      await updateProfile(auth.currentUser, { displayName: name.trim() });
+      await updateDoc(doc(db, 'members', auth.currentUser.uid), { displayName: name.trim(), phone: phone.trim() });
+      await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, createdAt: serverTimestamp() });
+      const saved = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
+      if (String(saved.data()?.avatar || '') !== avatar) throw new Error('avatar-not-saved');
+      setNotice('Profil bilgileriniz ve görseliniz kaydedildi.');
+    } catch (error) {
+      setNotice(error instanceof Error && error.message === 'avatar-not-saved' ? 'Profil görseli doğrulanamadı. Lütfen tekrar deneyin.' : 'Profil kaydedilemedi. Firebase yetkilerini kontrol edin.');
+    }
   }
 
   if (loading) return <main className="member-loading">Hesabınız hazırlanıyor…</main>;
@@ -91,4 +98,4 @@ export default function MemberHub({ view }: { view: MemberView }) {
 
 function Task({title,current,target,points,href}:{title:string;current:number;target:number;points:number;href:string}) { const done=current>=target; const percent=Math.min(100,Math.round(current/target*100)); return <article className={done?'done':''}><div><span>{done?'TAMAMLANDI':'AKTİF GÖREV'}</span><b>+{points} puan</b></div><h3>{title}</h3><p>{Math.min(current,target)} / {target}</p><div><i style={{width:`${percent}%`}} /></div><Link href={href}>{done?'Görev tamamlandı':'İçeriklere git →'}</Link></article> }
 
-function resizeAvatar(file: File | undefined, done: (value: string) => void) { if (!file) return; const reader = new FileReader(); reader.onload = () => { const image = new Image(); image.onload = () => { const canvas = document.createElement('canvas'); canvas.width = 100; canvas.height = 100; const context = canvas.getContext('2d'); if (!context) return; const size = Math.min(image.width, image.height); context.drawImage(image, (image.width-size)/2, (image.height-size)/2, size, size, 0, 0, 100, 100); done(canvas.toDataURL('image/webp', .78)); }; image.src = String(reader.result); }; reader.readAsDataURL(file); }
+function resizeAvatar(file: File | undefined, done: (value: string) => void) { if (!file) return; const reader = new FileReader(); reader.onload = () => { const image = new Image(); image.onload = () => { const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64; const context = canvas.getContext('2d'); if (!context) return; const size = Math.min(image.width, image.height); context.drawImage(image, (image.width-size)/2, (image.height-size)/2, size, size, 0, 0, 64, 64); done(canvas.toDataURL('image/webp', .6)); }; image.src = String(reader.result); }; reader.readAsDataURL(file); }
