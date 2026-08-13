@@ -20,6 +20,7 @@ import './tools-center-explainer-v22.css';
 import './tools-center-hero-flow-v23.css';
 import './tools-center-action-fix-v28.css';
 import './tools-center-card-density-v41.css';
+import './tools-center-refresh-v1.css';
 
 export const metadata: Metadata = {
   title: { absolute: 'Araçlar ve Oran Hesaplama Merkezi | Sky Bozum' },
