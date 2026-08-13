@@ -73,6 +73,18 @@ export default function MemberHub({ view }: { view: MemberView }) {
     });
   }, [avatar]);
 
+  useEffect(() => {
+    if (avatar || !user) return;
+    const timer = window.setTimeout(async () => {
+      const { db } = getFirebaseClient();
+      if (!db) return;
+      const saved = await getDoc(doc(db, 'publicProfiles', user.uid)).catch(() => null);
+      const savedAvatar = String(saved?.data()?.avatar || window.localStorage.getItem(`sky-avatar:${user.uid}`) || '');
+      if (savedAvatar) setAvatar(savedAvatar);
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [avatar, user]);
+
   async function saveProfile(event: FormEvent) {
     event.preventDefault(); const { auth, db } = getFirebaseClient(); if (!auth?.currentUser || !db) return;
     try {
