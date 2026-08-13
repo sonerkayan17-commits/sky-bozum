@@ -14,6 +14,8 @@ import "./content.css";
 import "./admin-tools.css";
 import RichArticleEditor from "./RichArticleEditor";
 import ForumArchivePanel from "./ForumArchivePanel";
+import AdminRatePanel from "./AdminRatePanel";
+import ForumModerationPanel from "./ForumModerationPanel";
 import { articles } from "../lib/site";
 import {
   removeManagedArticle,
@@ -39,7 +41,7 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit";
+type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -353,8 +355,10 @@ export default function AdminConsole({
             [
               ["overview", "Genel bakış"],
               ["content", "İçerik"],
+              ["rates", "Oranlar"],
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
+              ["forum", "Forum"],
               ["access", "Yetkiler"],
               ["archive", "Forum arşivi"],
               ["audit", "İşlem geçmişi"],
@@ -600,6 +604,7 @@ export default function AdminConsole({
             </div>
           </section>
         )}
+        {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "members" && (
           <section className="admin-section">
             <div className="admin-section-head">
@@ -728,7 +733,7 @@ export default function AdminConsole({
                         onClick={() =>
                           confirmAction(
                             "Bu yorum kalıcı olarak silinecek. Devam edilsin mi?",
-                            () => removeComment(db!, comment.id),
+                            () => removeComment(db!, comment.id, user.uid),
                             "Yorum silindi.",
                           )
                         }
@@ -742,6 +747,7 @@ export default function AdminConsole({
             </div>
           </section>
         )}
+        {view === "forum" && <ForumModerationPanel db={db} actorId={user.uid} />}
         {view === "access" && (
           <section className="admin-section">
             <div className="admin-section-head">
@@ -779,6 +785,7 @@ export default function AdminConsole({
                               member.id,
                               event.target.value as MemberRole,
                               member.permissions,
+                              user.uid,
                             ),
                           "Rol güncellendi.",
                         )
@@ -1017,7 +1024,7 @@ export default function AdminConsole({
               <button
                 onClick={() =>
                   run(
-                    () => setMemberStatus(db!, selectedMember.id, "active"),
+                    () => setMemberStatus(db!, selectedMember.id, "active", user.uid),
                     "Üye etkinleştirildi.",
                   )
                 }
@@ -1028,7 +1035,7 @@ export default function AdminConsole({
                 onClick={() =>
                   confirmAction(
                     `${selectedMember.displayName} adlı üyenin erişimi engellenecek. Devam edilsin mi?`,
-                    () => setMemberStatus(db!, selectedMember.id, "banned"),
+                    () => setMemberStatus(db!, selectedMember.id, "banned", user.uid),
                     "Üye banlandı.",
                   )
                 }
@@ -1110,6 +1117,7 @@ export default function AdminConsole({
                             selectedMember.id,
                             selectedMember.role,
                             next,
+                            user.uid,
                           ),
                         "Paylaşım yetkisi güncellendi.",
                       );

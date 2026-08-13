@@ -7,6 +7,7 @@ import {
   runTransaction,
   serverTimestamp,
   updateDoc,
+  addDoc,
   type Firestore,
   type Timestamp,
 } from 'firebase/firestore';
@@ -147,8 +148,18 @@ export function subscribeToMemberLedger(
   }, onError);
 }
 
-export async function setMemberStatus(firestore: Firestore, memberId: string, status: MemberStatus) {
+async function writeAdminAudit(firestore: Firestore, action: string, entityId: string, actorId: string) {
+  await addDoc(collection(firestore, 'contentAudit'), {
+    action,
+    articleSlug: `${entityId}`,
+    actorId,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export async function setMemberStatus(firestore: Firestore, memberId: string, status: MemberStatus, actorId: string) {
   await updateDoc(doc(firestore, 'members', memberId), { status, updatedAt: serverTimestamp() });
+  await writeAdminAudit(firestore, `member-status:${status}`, memberId, actorId);
 }
 
 export async function setMemberAccess(
@@ -156,12 +167,14 @@ export async function setMemberAccess(
   memberId: string,
   role: MemberRole,
   permissions: string[],
+  actorId: string,
 ) {
   await updateDoc(doc(firestore, 'members', memberId), {
     role,
     permissions,
     updatedAt: serverTimestamp(),
   });
+  await writeAdminAudit(firestore, `member-access:${role}`, memberId, actorId);
 }
 
 export async function changeMemberValue(
@@ -195,6 +208,7 @@ export async function changeMemberValue(
       createdAt: serverTimestamp(),
     });
   });
+  await writeAdminAudit(firestore, `member-${kind}:${amount >= 0 ? 'credit' : 'debit'}`, member.id, adminId);
 }
 
 export async function moderateComment(
@@ -208,9 +222,11 @@ export async function moderateComment(
     moderatedBy: adminId,
     moderatedAt: serverTimestamp(),
   });
+  await writeAdminAudit(firestore, `comment:${status}`, commentId, adminId);
 }
 
-export async function removeComment(firestore: Firestore, commentId: string) {
+export async function removeComment(firestore: Firestore, commentId: string, adminId: string) {
   const { deleteDoc } = await import('firebase/firestore');
   await deleteDoc(doc(firestore, 'comments', commentId));
+  await writeAdminAudit(firestore, 'comment:deleted', commentId, adminId);
 }

@@ -13,6 +13,21 @@ service cloud.firestore {
       );
     }
 
+    function staffRole() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/members/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/members/$(request.auth.uid)).data.role
+        : "member";
+    }
+
+    function canModerate() {
+      return isAdmin() || staffRole() == "moderator";
+    }
+
+    function canManageContent() {
+      return isAdmin() || staffRole() == "editor" || staffRole() == "publisher";
+    }
+
     function validAuthor() {
       return request.resource.data.author is string
         && request.resource.data.author.size() >= 2
@@ -84,7 +99,7 @@ service cloud.firestore {
     match /comments/{commentId} {
       allow read: if resource.data.status == "approved" || isAdmin();
       allow create: if validComment();
-      allow update, delete: if isAdmin();
+      allow update, delete: if canModerate();
     }
 
     match /referenceEngagements/{engagementId} {
@@ -204,7 +219,7 @@ service cloud.firestore {
     }
 
     match /memberPosts/{postId} {
-      allow read: if isAdmin() || validPublicForumPost(resource.data);
+      allow read: if canModerate() || validPublicForumPost(resource.data);
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
         && validPublicForumPost(request.resource.data)
@@ -215,7 +230,7 @@ service cloud.firestore {
         && request.resource.data.body.size() >= 10
         && request.resource.data.body.size() <= 30000
         && request.resource.data.createdAt == request.time;
-      allow update: if isAdmin() || (signedIn()
+      allow update: if canModerate() || (signedIn()
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
@@ -228,7 +243,7 @@ service cloud.firestore {
         && request.resource.data.body.size() >= 10
         && request.resource.data.body.size() <= 30000
         && request.resource.data.updatedAt == request.time);
-      allow delete: if isAdmin();
+      allow delete: if canModerate();
     }
 
     match /publicProfiles/{memberId} {
@@ -334,13 +349,20 @@ service cloud.firestore {
     }
 
     match /contentArticles/{articleId} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow read: if resource.data.status == "published" || isAdmin();
+      allow create, update: if canManageContent();
+      allow delete: if isAdmin();
     }
 
     match /contentAudit/{entryId} {
-      allow read, create: if isAdmin();
+      allow read, create: if isAdmin() || canManageContent() || canModerate();
       allow update, delete: if false;
+    }
+
+    match /rateOverrides/{rateId} {
+      allow read: if resource.data.status == "published" || isAdmin();
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /{document=**} {
