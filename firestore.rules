@@ -372,19 +372,19 @@ service cloud.firestore {
     match /operations/{operationId} {
       allow read: if canOperate();
       allow create, update: if canOperate()
-        && request.resource.data.customer is string
-        && request.resource.data.customer.size() >= 2
-        && request.resource.data.customer.size() <= 100
-        && request.resource.data.contact is string
-        && request.resource.data.contact.size() >= 3
-        && request.resource.data.contact.size() <= 120
-        && request.resource.data.service is string
-        && request.resource.data.service.size() >= 2
-        && request.resource.data.amount is number
-        && request.resource.data.amount > 0
-        && request.resource.data.payout is number
-        && request.resource.data.payout >= 0
-        && request.resource.data.status in ["new", "awaiting_product", "checking", "awaiting_payment", "completed", "cancelled"];
+        && request.resource.data["customer"] is string
+        && request.resource.data["customer"].size() >= 2
+        && request.resource.data["customer"].size() <= 100
+        && request.resource.data["contact"] is string
+        && request.resource.data["contact"].size() >= 3
+        && request.resource.data["contact"].size() <= 120
+        && request.resource.data["service"] is string
+        && request.resource.data["service"].size() >= 2
+        && request.resource.data["amount"] is number
+        && request.resource.data["amount"] > 0
+        && request.resource.data["payout"] is number
+        && request.resource.data["payout"] >= 0
+        && request.resource.data["status"] in ["new", "awaiting_product", "checking", "awaiting_payment", "completed", "cancelled"];
       allow delete: if isAdmin();
     }
 
