@@ -1,0 +1,14 @@
+.credibility-band { border-top: 1px solid #252b34; border-bottom: 1px solid #252b34; background: linear-gradient(100deg, #0d1117, #151017 72%, #0d1117); }
+.credibility-band__inner { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 40px; align-items: center; width: min(calc(100% - 40px), 1180px); margin: 0 auto; padding: 30px 0; }
+.credibility-band__intro p { color: #ef7788; font-size: 9px; font-weight: 900; letter-spacing: .16em; }
+.credibility-band__intro h2 { margin-top: 8px; color: #f2f4f6; font-size: clamp(23px, 3vw, 34px); line-height: 1; letter-spacing: -.045em; }
+.credibility-band__intro h2 span { color: #e66d82; }
+.credibility-band__intro a { display: inline-flex; margin-top: 14px; color: #a9b1bb; font-size: 11px; font-weight: 800; }
+.credibility-band__intro a:hover { color: #fff; }
+.credibility-band__stats { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid #303640; }
+.credibility-band__stats div { min-height: 75px; padding: 0 17px; border-right: 1px solid #303640; }
+.credibility-band__stats strong, .credibility-band__stats span { display: block; }
+.credibility-band__stats strong { color: #f1f3f5; font-size: clamp(20px, 2.4vw, 30px); letter-spacing: -.04em; }
+.credibility-band__stats span { margin-top: 7px; color: #89939e; font-size: 10px; line-height: 1.35; }
+.credibility-band.is-compact .credibility-band__inner { padding: 22px 0; }
+@media (max-width: 850px) { .credibility-band__inner { grid-template-columns: 1fr; gap: 22px; padding: 25px 0; } .credibility-band__stats { border-left: 0; } .credibility-band__stats div { padding: 0 10px; } .credibility-band__stats span { font-size: 9px; } }

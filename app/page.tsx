@@ -7,17 +7,20 @@ import HomeBlog from './components/HomeBlog';
 import HomeTestimonials from './components/HomeTestimonials';
 import HomeFaq from './components/HomeFaq';
 import FinalCta from './components/FinalCta';
+import CredibilityBand from './components/CredibilityBand';
 import './styles/home-density-fix.css';
 import './styles/home-contact-band.css';
 import './styles/home-contact-band-final.css';
 import './styles/home-trust-editorial.css';
 import './styles/home-trust-showcase.css';
+import './styles/credibility-band.css';
 
 export default function Home() {
   return (
     <main className="home-page">
       <Hero />
       <div className="render-later"><BrandStrip /></div>
+      <div className="render-later"><CredibilityBand /></div>
       <div className="render-later"><HomeServices /></div>
       <div className="render-later"><HomeTrust /></div>
 

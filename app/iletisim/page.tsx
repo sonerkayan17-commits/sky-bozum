@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
 import { absoluteUrl, createMetadata, jsonLd, SITE_LANGUAGE, SITE_URL } from '../lib/seo';
 import ContactCopyButton from './_components/ContactCopyButton';
+import CredibilityBand from '../components/CredibilityBand';
 import './contact-redesign-v1.css';
 import './contact-polish-v1.css';
+import '../styles/credibility-band.css';
 
 export const metadata: Metadata = createMetadata({
   title: 'İletişim ve Destek Merkezi | Sky Bozum',
@@ -43,6 +45,7 @@ const schema = { '@context': 'https://schema.org', '@graph': [
 export default function Page() {
   return <main className="contact-v1-page">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+    <CredibilityBand compact />
     <section className="contact-v1-hero">
       <div className="contact-v1-shell">
         <nav className="contact-v1-breadcrumb"><Link href="/">Ana Sayfa</Link><span>/</span>İletişim</nav>
