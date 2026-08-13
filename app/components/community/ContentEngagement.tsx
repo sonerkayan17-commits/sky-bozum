@@ -48,12 +48,13 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     if (!db || liked) return;
     setBusy(true);
     try {
-      await registerEngagement(db, getOrCreateVisitorId(), 'like', service, user ? { id: user.uid, name: user.displayName || 'Bir üye' } : undefined);
+      await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
       if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
       localStorage.setItem(`sky-liked:${service}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
-    } finally { setBusy(false); }
+    } catch { setNotice('Beğeni kaydedilemedi. Lütfen tekrar deneyin.'); }
+    finally { setBusy(false); }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {

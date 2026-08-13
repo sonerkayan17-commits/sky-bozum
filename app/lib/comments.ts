@@ -129,7 +129,6 @@ export async function registerEngagement(
   visitorId: string,
   type: 'like' | 'view',
   targetId: string,
-  member?: { id: string; name: string },
 ) {
   if (!visitorId || !targetId) return;
   const safeTarget = targetId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 100);
@@ -138,7 +137,6 @@ export async function registerEngagement(
     type,
     targetId,
     visitorId,
-    ...(type === 'like' && member ? { memberId: member.id, memberName: member.name.slice(0, 80) } : {}),
     createdAt: serverTimestamp(),
   });
 }

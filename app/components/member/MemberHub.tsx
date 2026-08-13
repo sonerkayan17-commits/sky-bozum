@@ -36,6 +36,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
     return onAuthStateChanged(auth, (nextUser) => {
       setUser(nextUser as (User & { auth: Auth }) | null); setLoading(false);
       if (!nextUser) return;
+      setAvatar(window.localStorage.getItem(`sky-avatar:${nextUser.uid}`) || '');
       const stopMember = onSnapshot(doc(db, 'members', nextUser.uid), (snapshot) => {
         const data = snapshot.data(); if (!data) return;
         const next = { displayName: String(data.displayName || nextUser.displayName || ''), phone: String(data.phone || ''), email: String(data.email || nextUser.email || ''), status: String(data.status || 'pending'), balance: Number(data.balance) || 0, points: Number(data.points) || 0 };
@@ -73,6 +74,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
       await updateProfile(auth.currentUser, { displayName: name.trim() });
       await updateDoc(doc(db, 'members', auth.currentUser.uid), { displayName: name.trim(), phone: phone.trim() });
       await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, createdAt: serverTimestamp() });
+      window.localStorage.setItem(`sky-avatar:${auth.currentUser.uid}`, avatar);
       const saved = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
       if (String(saved.data()?.avatar || '') !== avatar) throw new Error('avatar-not-saved');
       setNotice('Profil bilgileriniz ve görseliniz kaydedildi.');
