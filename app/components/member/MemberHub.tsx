@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile, type Auth, type User } from 'firebase/auth';
-import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { getMemberLevel, memberLevels, subscribeToMemberActivities, type MemberActivity } from '../../lib/memberProgress';
@@ -42,10 +42,10 @@ export default function MemberHub({ view }: { view: MemberView }) {
         setMember(next); setName(next.displayName); setPhone(next.phone);
       });
       const stopActivities = subscribeToMemberActivities(db, nextUser.uid, setActivities);
-      getDoc(doc(db, 'publicProfiles', nextUser.uid)).then((snapshot) => setAvatar(String(snapshot.data()?.avatar || '')));
+      const stopProfile = onSnapshot(doc(db, 'publicProfiles', nextUser.uid), (snapshot) => setAvatar(String(snapshot.data()?.avatar || '')));
       const stopGifts = onSnapshot(query(collection(db, 'pointGifts'), where('receiverId', '==', nextUser.uid)), (snapshot) => setGiftPoints(snapshot.docs.reduce((sum, item) => sum + Number(item.data().amount || 0), 0)));
       const stopLedger = onSnapshot(query(collection(db, 'memberLedger'), where('memberId', '==', nextUser.uid)), (snapshot) => setLedger(snapshot.docs.map((item) => { const data = item.data(); return { id: item.id, kind: String(data.kind || ''), amount: Number(data.amount) || 0, note: String(data.note || ''), createdAt: data.createdAt?.toDate?.() ?? null }; }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))));
-      return () => { stopMember(); stopActivities(); stopGifts(); stopLedger(); };
+      return () => { stopMember(); stopActivities(); stopGifts(); stopLedger(); stopProfile(); };
     });
   }, []);
 

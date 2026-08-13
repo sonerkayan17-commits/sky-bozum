@@ -32,7 +32,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
 
   return <main className="forum-topic-page"><article>
     <ForumBreadcrumbs section={{ slug: section.slug, title: section.title }} category={{ slug: category, title: item.category }} topic={item.title} />
-    <header><span>YÖNETİM YAYINI</span><h1>{item.title}</h1><p>{item.summary}</p><div><b>{item.author}</b><time>{date}</time></div></header>
+    <header><span>SKY BOZUM TOPLULUĞU</span><h1>{item.title}</h1><p>{item.summary}</p><div><b>Sky Bozum</b><time>{date}</time></div></header>
     <div className="forum-topic-body">{item.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
     <ContentEngagement targetId={`forum-${item.sectionSlug}-${item.categorySlug}-${item.slug}`} title={item.title} kind="topic" />
     <footer><Link href={forumRoutes.category(slug, category)}>← {item.category} kategorisine dön</Link></footer>

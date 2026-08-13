@@ -40,8 +40,8 @@ export const forumSections:ForumSection[]=[
 
 export const slugifyForumCategory=(value:string)=>value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
-export type ForumStarterTopic={slug:string;sectionSlug:string;category:string;categorySlug:string;title:string;summary:string;body:string[];author:'Sky Bozum Yönetim';publishedAt:string};
-const starter=(sectionSlug:string,category:string,slug:string,title:string,summary:string,body:string[]):ForumStarterTopic=>({sectionSlug,category,categorySlug:slugifyForumCategory(category),slug,title,summary,body,author:'Sky Bozum Yönetim',publishedAt:'2026-08-13'});
+export type ForumStarterTopic={slug:string;sectionSlug:string;category:string;categorySlug:string;title:string;summary:string;body:string[];author:'Sky Bozum';publishedAt:string};
+const starter=(sectionSlug:string,category:string,slug:string,title:string,summary:string,body:string[]):ForumStarterTopic=>({sectionSlug,category,categorySlug:slugifyForumCategory(category),slug,title,summary,body,author:'Sky Bozum',publishedAt:'2026-08-13'});
 
 // Başlangıç içerikleri build-time yönetim yayınlarıdır; ziyaretçi veya müşteri kimliği taklit edilmez.
 export const forumStarterTopics:ForumStarterTopic[]=[
