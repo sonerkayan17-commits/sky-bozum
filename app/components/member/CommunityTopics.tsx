@@ -1,4 +1,181 @@
 'use client';
-import Link from'next/link';import{onAuthStateChanged,type User}from'firebase/auth';import{addDoc,collection,doc,onSnapshot,query,serverTimestamp,updateDoc,where}from'firebase/firestore';import{useEffect,useMemo,useState,type FormEvent}from'react';import{getFirebaseClient}from'../../lib/firebase';import{forumSections,slugifyForumCategory}from'../../lib/forumTaxonomy';import RichArticleEditor,{sanitizeArticleHtml}from'../../yonetim/RichArticleEditor';import'../../yonetim/content.css';import'./community-editor.css';import'./topic-category.css';
-type Post={id:string;uid:string;author:string;title:string;body:string;category:string;subCategory:string;sectionSlug:string;categorySlug:string;createdAt:Date|null;updatedAt:Date|null};
-export default function CommunityTopics({compose=false}:{compose?:boolean}){const[user,setUser]=useState<User|null>(null),[posts,setPosts]=useState<Post[]>([]),[title,setTitle]=useState(''),[body,setBody]=useState(''),[sectionSlug,setSectionSlug]=useState(forumSections[0].slug),[subCategory,setSubCategory]=useState(forumSections[0].categories[0]),[editingId,setEditingId]=useState(''),[notice,setNotice]=useState('');const selectedSection=useMemo(()=>forumSections.find(item=>item.slug===sectionSlug)||forumSections[0],[sectionSlug]);useEffect(()=>{if(!selectedSection.categories.includes(subCategory))setSubCategory(selectedSection.categories[0])},[selectedSection,subCategory]);useEffect(()=>{const{auth,db}=getFirebaseClient();if(!auth||!db)return;const stopAuth=onAuthStateChanged(auth,setUser),stopPosts=onSnapshot(query(collection(db,'memberPosts'),where('status','==','published')),snapshot=>setPosts(snapshot.docs.map(item=>{const data=item.data();return{id:item.id,uid:String(data.uid),author:String(data.author),title:String(data.title),body:String(data.body),category:String(data.category||'Genel'),subCategory:String(data.subCategory||data.category||'Genel'),sectionSlug:String(data.sectionSlug||''),categorySlug:String(data.categorySlug||''),createdAt:data.createdAt?.toDate?.()??null,updatedAt:data.updatedAt?.toDate?.()??null}}).sort((a,b)=>(b.createdAt?.getTime()||0)-(a.createdAt?.getTime()||0))));return()=>{stopAuth();stopPosts()}},[]);function reset(){setTitle('');setBody('');setSectionSlug(forumSections[0].slug);setSubCategory(forumSections[0].categories[0]);setEditingId('')}function edit(post:Post){const section=forumSections.find(item=>item.slug===post.sectionSlug)||forumSections.find(item=>item.title===post.category)||forumSections[0];setTitle(post.title);setBody(post.body);setSectionSlug(section.slug);setSubCategory(section.categories.includes(post.subCategory)?post.subCategory:section.categories[0]);setEditingId(post.id);setNotice('');window.scrollTo({top:0,behavior:'smooth'})}async function submit(event:FormEvent){event.preventDefault();const{db}=getFirebaseClient();if(!user||!db){location.assign('/giris');return}const clean=sanitizeArticleHtml(body),plain=clean.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();if(plain.length<10){setNotice('Konu metni en az 10 karakter olmalıdır.');return}const categorySlug=slugifyForumCategory(subCategory),payload={title:title.trim(),body:clean,category:selectedSection.title,subCategory,sectionSlug:selectedSection.slug,categorySlug,updatedAt:serverTimestamp()};if(editingId){await updateDoc(doc(db,'memberPosts',editingId),payload);setNotice('Konunuz güncellendi.')}else{await addDoc(collection(db,'memberPosts'),{...payload,uid:user.uid,author:user.displayName||'Sky Bozum üyesi',status:'published',createdAt:serverTimestamp()});setNotice('Konunuz doğru forum kategorisinde yayınlandı.')}reset()}if(compose)return <main className="utility-page"><section><p>TOPLULUK</p><h1>{editingId?'Konuyu düzenle':'Yeni konu aç'}</h1><span>Ana bölümü ve ilgili alt kategoriyi seçerek paylaşımınızı doğru alana yerleştirin.</span><form onSubmit={submit}><div className="topic-category-grid"><label>Ana kategori<select value={sectionSlug} onChange={event=>setSectionSlug(event.target.value)}>{forumSections.map(section=><option key={section.slug} value={section.slug}>{section.title}</option>)}</select></label><label>Alt kategori<select value={subCategory} onChange={event=>setSubCategory(event.target.value)}>{selectedSection.categories.map(category=><option key={category}>{category}</option>)}</select></label></div><small className="topic-path-preview">Forum › {selectedSection.title} › {subCategory}</small><label>Konu başlığı<input value={title} onChange={event=>setTitle(event.target.value)} minLength={5} maxLength={100} required/></label><label>Mesajınız<RichArticleEditor value={body} onChange={setBody}/></label><div className="topic-form-actions"><button>{editingId?'Değişiklikleri kaydet':'Konuyu yayınla'}</button>{editingId&&<button type="button" className="topic-cancel" onClick={reset}>Vazgeç</button>}</div></form>{notice&&<b>{notice}</b>}{user&&<div className="my-topics"><h2>Konularım</h2>{posts.filter(post=>post.uid===user.uid).map(post=><article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.updatedAt?'Güncellendi':'Yayınlandı'} · {post.updatedAt?.toLocaleDateString('tr-TR')||post.createdAt?.toLocaleDateString('tr-TR')||'Yeni'}</small></div><button type="button" onClick={()=>edit(post)}>Düzenle</button></article>)}</div>}</section></main>;return <main className="community-page"><header><p>ÜYE TOPLULUĞU</p><h1>Konular ve paylaşımlar</h1><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link></header><section>{posts.length?posts.map(post=><article key={post.id}><span>{post.category} › {post.subCategory}</span><h2>{post.title}</h2><div className="community-post-body" dangerouslySetInnerHTML={{__html:sanitizeArticleHtml(post.body)}}/><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt?'Güncellendi: ':''}{(post.updatedAt||post.createdAt)?.toLocaleDateString('tr-TR')||'Yeni'}</time></footer></article>):<p>İlk üye konusunu siz açın.</p>}</section></main>}
+
+import Link from 'next/link';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { addDoc, collection, doc, onSnapshot, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { getFirebaseClient } from '../../lib/firebase';
+import { forumSections, publicForumKeys, slugifyForumCategory } from '../../lib/forumTaxonomy';
+import RichArticleEditor, { sanitizeArticleHtml } from '../../yonetim/RichArticleEditor';
+import '../../yonetim/content.css';
+import './community-editor.css';
+import './topic-category.css';
+
+type Post = {
+  id: string;
+  uid: string;
+  author: string;
+  title: string;
+  body: string;
+  category: string;
+  subCategory: string;
+  sectionSlug: string;
+  categorySlug: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+};
+
+type Props = {
+  compose?: boolean;
+  sectionSlug?: string;
+  categorySlug?: string;
+};
+
+export default function CommunityTopics({ compose = false, sectionSlug: scopedSectionSlug, categorySlug: scopedCategorySlug }: Props) {
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [sectionSlug, setSectionSlug] = useState(forumSections[0].slug);
+  const [subCategory, setSubCategory] = useState(forumSections[0].categories[0]);
+  const [editingId, setEditingId] = useState('');
+  const [notice, setNotice] = useState('');
+
+  const selectedSection = useMemo(
+    () => forumSections.find((item) => item.slug === sectionSlug) || forumSections[0],
+    [sectionSlug],
+  );
+  const visiblePosts = useMemo(
+    () => posts.filter((post) => (
+      (!scopedSectionSlug || post.sectionSlug === scopedSectionSlug)
+      && (!scopedCategorySlug || post.categorySlug === scopedCategorySlug)
+    )),
+    [posts, scopedCategorySlug, scopedSectionSlug],
+  );
+
+  useEffect(() => {
+    if (!selectedSection.categories.includes(subCategory)) setSubCategory(selectedSection.categories[0]);
+  }, [selectedSection, subCategory]);
+
+  useEffect(() => {
+    const { auth, db } = getFirebaseClient();
+    if (!auth || !db) return;
+
+    const stopAuth = onAuthStateChanged(auth, setUser);
+    const stopPosts = onSnapshot(
+      query(
+        collection(db, 'memberPosts'),
+        where('status', '==', 'published'),
+        where('visibility', '==', 'public'),
+        where('forumKey', 'in', publicForumKeys),
+      ),
+      (snapshot) => setPosts(snapshot.docs.map((item) => {
+        const data = item.data();
+        return {
+          id: item.id,
+          uid: String(data.uid),
+          author: String(data.author),
+          title: String(data.title),
+          body: String(data.body),
+          category: String(data.category || 'Genel'),
+          subCategory: String(data.subCategory || data.category || 'Genel'),
+          sectionSlug: String(data.sectionSlug || ''),
+          categorySlug: String(data.categorySlug || ''),
+          createdAt: data.createdAt?.toDate?.() ?? null,
+          updatedAt: data.updatedAt?.toDate?.() ?? null,
+        };
+      }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))),
+    );
+
+    return () => { stopAuth(); stopPosts(); };
+  }, []);
+
+  function reset() {
+    setTitle('');
+    setBody('');
+    setSectionSlug(forumSections[0].slug);
+    setSubCategory(forumSections[0].categories[0]);
+    setEditingId('');
+  }
+
+  function edit(post: Post) {
+    const section = forumSections.find((item) => item.slug === post.sectionSlug)
+      || forumSections.find((item) => item.title === post.category)
+      || forumSections[0];
+    setTitle(post.title);
+    setBody(post.body);
+    setSectionSlug(section.slug);
+    setSubCategory(section.categories.includes(post.subCategory) ? post.subCategory : section.categories[0]);
+    setEditingId(post.id);
+    setNotice('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    const { db } = getFirebaseClient();
+    if (!user || !db) {
+      location.assign('/giris');
+      return;
+    }
+
+    const clean = sanitizeArticleHtml(body);
+    const plain = clean.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (plain.length < 10) {
+      setNotice('Konu metni en az 10 karakter olmalıdır.');
+      return;
+    }
+
+    const categorySlug = slugifyForumCategory(subCategory);
+    const payload = {
+      title: title.trim(),
+      body: clean,
+      category: selectedSection.title,
+      subCategory,
+      sectionSlug: selectedSection.slug,
+      categorySlug,
+      forumKey: `${selectedSection.slug}/${categorySlug}`,
+      visibility: 'public' as const,
+      updatedAt: serverTimestamp(),
+    };
+
+    if (editingId) {
+      await updateDoc(doc(db, 'memberPosts', editingId), payload);
+      setNotice('Konunuz güncellendi.');
+    } else {
+      await addDoc(collection(db, 'memberPosts'), {
+        ...payload,
+        uid: user.uid,
+        author: user.displayName || 'Sky Bozum üyesi',
+        status: 'published',
+        createdAt: serverTimestamp(),
+      });
+      setNotice('Konunuz doğru forum kategorisinde yayınlandı.');
+    }
+    reset();
+  }
+
+  if (compose) return <main className="utility-page"><section>
+    <p>TOPLULUK</p>
+    <h1>{editingId ? 'Konuyu düzenle' : 'Yeni konu aç'}</h1>
+    <span>Ana bölümü ve ilgili alt kategoriyi seçerek paylaşımınızı doğru alana yerleştirin.</span>
+    <form onSubmit={submit}>
+      <div className="topic-category-grid">
+        <label>Ana kategori<select value={sectionSlug} onChange={(event) => setSectionSlug(event.target.value)}>{forumSections.map((section) => <option key={section.slug} value={section.slug}>{section.title}</option>)}</select></label>
+        <label>Alt kategori<select value={subCategory} onChange={(event) => setSubCategory(event.target.value)}>{selectedSection.categories.map((category) => <option key={category}>{category}</option>)}</select></label>
+      </div>
+      <small className="topic-path-preview">Forum › {selectedSection.title} › {subCategory}</small>
+      <label>Konu başlığı<input value={title} onChange={(event) => setTitle(event.target.value)} minLength={5} maxLength={100} required /></label>
+      <label>Mesajınız<RichArticleEditor value={body} onChange={setBody} /></label>
+      <div className="topic-form-actions"><button>{editingId ? 'Değişiklikleri kaydet' : 'Konuyu yayınla'}</button>{editingId && <button type="button" className="topic-cancel" onClick={reset}>Vazgeç</button>}</div>
+    </form>
+    {notice && <b>{notice}</b>}
+    {user && <div className="my-topics"><h2>Konularım</h2>{posts.filter((post) => post.uid === user.uid).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.updatedAt ? 'Güncellendi' : 'Yayınlandı'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><button type="button" onClick={() => edit(post)}>Düzenle</button></article>)}</div>}
+  </section></main>;
+
+  if (!visiblePosts.length) return null;
+  return <section className="community-page community-page--scoped" aria-label="Üye konuları">
+    <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link></header>
+    <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time></footer></article>)}</div>
+  </section>;
+}

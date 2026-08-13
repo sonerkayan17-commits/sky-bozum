@@ -3,5 +3,5 @@
  * sadece ziyaretçiye açık menülerde gösterilmez.
  */
 export const siteFeatures = {
-  communityForum: false,
+  communityForum: true,
 } as const;

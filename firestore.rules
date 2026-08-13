@@ -38,6 +38,49 @@ service cloud.firestore {
         && request.resource.data.message.size() <= 600;
     }
 
+    // Public forum yalnızca aktif Sky Bozum mimarisindeki 30 alt kategori için
+    // okunabilir. Eski konular silinmez; yöneticiler bunları arşivden okumaya
+    // devam eder.
+    function isPublicForumKey(value) {
+      return value == "mobil-odeme-operatorler/mobil-odeme-genel"
+        || value == "mobil-odeme-operatorler/turkcell"
+        || value == "mobil-odeme-operatorler/vodafone"
+        || value == "mobil-odeme-operatorler/turk-telekom"
+        || value == "mobil-odeme-operatorler/mobil-odeme-limit-sorunlari"
+        || value == "dijital-kod-hediye-kartlari/razer-gold-tl"
+        || value == "dijital-kod-hediye-kartlari/razer-gold-usd"
+        || value == "dijital-kod-hediye-kartlari/apple-itunes"
+        || value == "dijital-kod-hediye-kartlari/steam"
+        || value == "dijital-kod-hediye-kartlari/kod-sorunlari"
+        || value == "dijital-cuzdanlar/paycell"
+        || value == "dijital-cuzdanlar/pokus"
+        || value == "dijital-cuzdanlar/vodafone-pay"
+        || value == "dijital-cuzdanlar/dijital-cuzdan-limitleri"
+        || value == "dijital-cuzdanlar/dijital-cuzdan-sorunlari"
+        || value == "bozum-oranlar/guncel-oranlar"
+        || value == "bozum-oranlar/oran-hesaplama"
+        || value == "bozum-oranlar/komisyonlar"
+        || value == "bozum-oranlar/odeme-suresi"
+        || value == "bozum-oranlar/yuksek-oran-uyarilari"
+        || value == "guvenlik-dolandiricilik/guvenli-islem"
+        || value == "guvenlik-dolandiricilik/paylasilmamasi-gereken-bilgiler"
+        || value == "guvenlik-dolandiricilik/sahte-siteler"
+        || value == "guvenlik-dolandiricilik/whatsapp-guvenligi"
+        || value == "guvenlik-dolandiricilik/supheli-islem-bildirimleri"
+        || value == "sky-bozum-destek-topluluk/duyurular"
+        || value == "sky-bozum-destek-topluluk/nasil-islem-yapilir"
+        || value == "sky-bozum-destek-topluluk/sik-sorulanlar"
+        || value == "sky-bozum-destek-topluluk/oneri-geri-bildirim"
+        || value == "sky-bozum-destek-topluluk/genel-sohbet";
+    }
+
+    function validPublicForumPost(data) {
+      return data.status == "published"
+        && data.visibility == "public"
+        && data.forumKey is string
+        && isPublicForumKey(data.forumKey);
+    }
+
     match /comments/{commentId} {
       allow read: if resource.data.status == "approved" || isAdmin();
       allow create: if validComment();
@@ -133,10 +176,10 @@ service cloud.firestore {
     }
 
     match /memberPosts/{postId} {
-      allow read: if resource.data.status == "published" || isAdmin();
+      allow read: if isAdmin() || validPublicForumPost(resource.data);
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
-        && request.resource.data.status == "published"
+        && validPublicForumPost(request.resource.data)
         && request.resource.data.title is string
         && request.resource.data.title.size() >= 5
         && request.resource.data.title.size() <= 100
@@ -148,7 +191,7 @@ service cloud.firestore {
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
-        && request.resource.data.status == "published"
+        && validPublicForumPost(request.resource.data)
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.title is string
         && request.resource.data.title.size() >= 5

@@ -13,6 +13,7 @@ import { getFirebaseClient } from "../lib/firebase";
 import "./content.css";
 import "./admin-tools.css";
 import RichArticleEditor from "./RichArticleEditor";
+import ForumArchivePanel from "./ForumArchivePanel";
 import { articles } from "../lib/site";
 import {
   removeManagedArticle,
@@ -38,7 +39,7 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "members" | "moderation" | "access" | "content" | "audit";
+type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -355,6 +356,7 @@ export default function AdminConsole({
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
               ["access", "Yetkiler"],
+              ["archive", "Forum arşivi"],
               ["audit", "İşlem geçmişi"],
             ] as const
           ).map(([id, label]) => (
@@ -798,6 +800,7 @@ export default function AdminConsole({
             </div>
           </section>
         )}
+        {view === "archive" && <ForumArchivePanel db={db} />}
         {view === "audit" && (
           <section className="admin-section">
             <div className="admin-section-head">

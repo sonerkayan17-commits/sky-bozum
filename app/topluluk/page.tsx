@@ -1,1 +1,8 @@
-import CommunityTopics from'../components/member/CommunityTopics';import EditorialShelf from'./EditorialShelf';import ForumDirectory from'./ForumDirectory';import'./community.css';export const metadata={title:'Üye Topluluğu'};export default function Page(){return <><ForumDirectory/><EditorialShelf/><CommunityTopics/></>}
+import ForumDirectory from './ForumDirectory';
+import './community.css';
+
+export const metadata = { title: 'Sky Bozum Topluluğu' };
+
+export default function Page() {
+  return <ForumDirectory />;
+}

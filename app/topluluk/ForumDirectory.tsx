@@ -1,2 +1,38 @@
-import Link from'next/link';import{forumSections}from'../lib/forumTaxonomy';import{communityEditorials}from'../lib/communityEditorials';import'./forum-directory.css';import'./forum-directory-v2.css';
-export default function ForumDirectory(){const categoryCount=forumSections.reduce((sum,section)=>sum+section.categories.length,0);return <section className="forum-directory"><header><div><span>SKY BOZUM FORUM</span><h1>Bilgi paylaşın, sorunlara birlikte çözüm bulun.</h1><p>{forumSections.length} ana bölüm · {categoryCount} alt kategori</p></div><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link></header><nav className="forum-jump" aria-label="Forum hızlı erişim"><a href="#dijital">Dijital dünya</a><a href="#ticaret">Online ticaret</a><a href="#teknoloji">Teknoloji</a><a href="#topluluk">Topluluk</a></nav><div className="forum-groups">{forumSections.map((section,index)=>{const guides=communityEditorials.filter(item=>item.category===section.title||section.categories.includes(item.category));const anchor=index===0?'dijital':index===13?'ticaret':index===18?'teknoloji':index===23?'topluluk':undefined;return <article key={section.slug} id={anchor}><div className="forum-group-icon">{section.icon}</div><div className="forum-group-main"><Link href={`/topluluk/forum/${section.slug}`}><h2>{section.title}</h2></Link><p>{section.description}</p><div>{section.categories.map(category=><span key={category}>{category}</span>)}</div></div><aside><small>{section.categories.length} ALT KATEGORİ</small>{guides.length?<><Link href={`/topluluk/rehber/${guides[0].slug}`}>{guides[0].title}</Link><span>{guides.length} editör rehberi</span></>:<><Link href={`/topluluk/forum/${section.slug}`}>Bölümü görüntüle →</Link><span>İlk konuya açık</span></>}</aside></article>})}</div></section>}
+import Link from 'next/link';
+import { forumSections, getForumStarterTopic, slugifyForumCategory } from '../lib/forumTaxonomy';
+import { forumRoutes } from '../lib/forumRoutes';
+import './forum-directory.css';
+import './forum-directory-v2.css';
+
+export default function ForumDirectory() {
+  const categoryCount = forumSections.reduce((sum, section) => sum + section.categories.length, 0);
+
+  return <section className="forum-directory">
+    <header>
+      <div>
+        <span>SKY BOZUM TOPLULUĞU</span>
+        <h1>Bozum süreçleri için sade, güvenli ve anlaşılır bilgi alanı.</h1>
+        <p>{forumSections.length} ana bölüm · {categoryCount} aktif alt kategori</p>
+      </div>
+      <Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link>
+    </header>
+    <div className="forum-groups">
+      {forumSections.map((section) => {
+        const latestTopic = getForumStarterTopic(section.slug, slugifyForumCategory(section.categories[0]));
+        return <article key={section.slug}>
+          <div className="forum-group-icon" aria-hidden="true">{section.icon}</div>
+          <div className="forum-group-main">
+            <Link href={forumRoutes.section(section.slug)}><h2>{section.title}</h2></Link>
+            <p>{section.description}</p>
+            <div>{section.categories.map((category) => <span key={category}>{category}</span>)}</div>
+          </div>
+          <aside>
+            <small>{section.categories.length} AKTİF ALT KATEGORİ</small>
+            {latestTopic && <Link href={forumRoutes.topic(section.slug, latestTopic.categorySlug, latestTopic.slug)}>{latestTopic.title}</Link>}
+            <span>Başlangıç içeriği · Sky Bozum Yönetim</span>
+          </aside>
+        </article>;
+      })}
+    </div>
+  </section>;
+}

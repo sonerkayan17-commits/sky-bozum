@@ -1,4 +1,7 @@
-import type{Metadata}from'next';import Link from'next/link';import{notFound}from'next/navigation';import{communityEditorials,getCommunityEditorial}from'../../../lib/communityEditorials';import'./editorial.css';
-export function generateStaticParams(){return communityEditorials.map(item=>({slug:item.slug}))}
-export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const{slug}=await params,item=getCommunityEditorial(slug);return item?{title:item.title,description:item.summary,alternates:{canonical:`/topluluk/rehber/${item.slug}`}}:{}}
-export default async function Page({params}:{params:Promise<{slug:string}>}){const{slug}=await params,item=getCommunityEditorial(slug);if(!item)notFound();return <main className="editorial-page"><article><Link href="/topluluk" className="editorial-back">← Topluluğa dön</Link><header><span>{item.category} · EDİTÖR REHBERİ</span><h1>{item.title}</h1><p>{item.summary}</p><small>Yaklaşık {item.minutes} dakika · Son kaynak kontrolü: 12 Ağustos 2026</small></header>{item.sections.map(section=><section key={section.title}><h2>{section.title}</h2><p>{section.text}</p>{section.items&&<ul>{section.items.map(point=><li key={point}>{point}</li>)}</ul>}</section>)}<aside><h2>Resmî kaynaklar</h2><p>İçerik aşağıdaki kurumsal belgeler esas alınarak editoryal kontrolden geçirilmiştir.</p>{item.sources.map(source=><a key={source.href} href={source.href} target="_blank" rel="noopener noreferrer">{source.label} ↗</a>)}</aside><footer>Genel bilgilendirme ve risk farkındalığı amacı taşır; hizmet veya satın alma yönlendirmesi değildir.</footer></article></main>}
+import { notFound } from 'next/navigation';
+
+// Eski editör rehberleri korunur fakat yeni public forum mimarisinin parçası
+// değildir. Doğrudan eski adresler indexlenmez ve public içerik göstermez.
+export const metadata = { robots: { index: false, follow: false } };
+export function generateStaticParams() { return []; }
+export default function ArchivedCommunityGuide() { notFound(); }
