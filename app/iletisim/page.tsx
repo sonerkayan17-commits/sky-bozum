@@ -1,104 +1,64 @@
-import ContactChannels, { type ContactChannel } from './_components/ContactChannels';
-import ContactHero from './_components/ContactHero';
-import ContactConfidence from './_components/ContactConfidence';
-import ContactFaqPreview from './_components/ContactFaqPreview';
-import ContactFinalCta from './_components/ContactFinalCta';
-import ContactSectionNav from './_components/ContactSectionNav';
+import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
-import { contactFaqItems } from './contactData';
 import { absoluteUrl, createMetadata, jsonLd, SITE_LANGUAGE, SITE_URL } from '../lib/seo';
-import './contact-premium.css';
-import './contact-hero-compact.css';
-import './contact-hero-density.css';
-import './contact-hero-type-balance.css';
-import './contact-hero-bridge.css';
-import './contact-hero-brandmark.css';
-import './contact-hero-logo-correct.css';
-import './contact-hero-logo-full.css';
-import './contact-hero-logo-responsive.css';
-import './contact-hero-logo-final.css';
-import './contact-hero-logo-symbol.css';
-import './contact-hero-logo-complete.css';
+import './contact-redesign-v1.css';
 
-export const metadata = createMetadata({
-  title: 'Sky Bozum İletişim ve Destek Merkezi',
-  description: 'Sky Bozum resmi iletişim merkezi: güncel mobil ödeme bozum oranı, güvenli bozum talebi, işlem desteği ve doğrulanmış WhatsApp bağlantısı.',
+export const metadata: Metadata = createMetadata({
+  title: 'İletişim ve Destek Merkezi | Sky Bozum',
+  description: 'Sky Bozum ile doğru iletişim kanalını seçin, talebinizi güvenli biçimde iletin ve işlem öncesi gerekli bilgileri öğrenin.',
   path: '/iletisim',
   image: '/hero-customer.webp',
-  imageAlt: 'Sky Bozum resmi iletişim ve destek merkezi',
-  keywords: ['Sky Bozum iletişim','mobil ödeme bozum destek','bozum WhatsApp','güncel bozum oranı','bozumcu.net iletişim'],
+  imageAlt: 'Sky Bozum iletişim ve destek merkezi',
 });
 
 const channels = [
-  { title: 'WhatsApp Destek', eyebrow: 'En hızlı resmi kanal', response: '7/24 talep bırakabilirsiniz', value: siteConfig.phone, href: siteConfig.whatsapp, note: 'Güncel oran, işlem uygunluğu ve süreç desteği için öncelikli iletişim kanalı.', kind: 'whatsapp', external: true, primary: true },
-  { title: 'Telefon', eyebrow: 'Doğrudan görüşme', response: 'Uygunluk durumuna göre dönüş', value: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/\s/g, '')}`, note: 'Görüşme gerektiren konular için resmi Sky Bozum hattı.', kind: 'phone' },
-  { title: 'E-posta', eyebrow: 'Kurumsal ve yazılı talepler', response: 'Detaylı başvurular için', value: siteConfig.email, href: `mailto:${siteConfig.email}`, note: 'Kurumsal, ayrıntılı veya yazılı kayıt gerektiren talepler için.', kind: 'email' },
-] satisfies readonly ContactChannel[];
+  { id: 'whatsapp', label: 'WhatsApp', title: 'En hızlı başlangıç', text: 'Güncel oran, işlem uygunluğu ve devam eden süreçler için yazılı destek.', value: siteConfig.phone, href: siteConfig.whatsapp, cta: 'WhatsApp’ı aç', accent: 'primary' },
+  { id: 'phone', label: 'Telefon', title: 'Doğrudan görüşme', text: 'Görüşme gerektiren konular için resmî Sky Bozum hattı.', value: siteConfig.phone, href: `tel:${siteConfig.phone.replace(/\s/g, '')}`, cta: 'Ara', accent: 'default' },
+  { id: 'email', label: 'E-posta', title: 'Yazılı ve kurumsal', text: 'Ayrıntılı, kurumsal veya kayıt gerektiren talepler için.', value: siteConfig.email, href: `mailto:${siteConfig.email}`, cta: 'E-posta gönder', accent: 'default' },
+] as const;
 
-const contactPageUrl = absoluteUrl('/iletisim');
-const contactPointId = `${contactPageUrl}#customer-support`;
-const contactBreadcrumbJsonLd = { '@type': 'BreadcrumbList', '@id': `${contactPageUrl}#breadcrumb`, itemListElement: [
-  { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: absoluteUrl('/') },
-  { '@type': 'ListItem', position: 2, name: 'İletişim', item: contactPageUrl },
-] };
-const contactPageJsonLd = { '@context': 'https://schema.org', '@graph': [
-  { '@type': 'ContactPage', '@id': `${contactPageUrl}#contact-page`, name: 'Sky Bozum İletişim ve Destek Merkezi', description: 'Sky Bozum resmi iletişim kanalları, güncel oran bilgisi ve işlem desteği.', url: contactPageUrl, inLanguage: SITE_LANGUAGE, isPartOf: { '@id': `${SITE_URL}/#website` }, about: { '@id': `${SITE_URL}/#organization` }, mainEntity: { '@id': contactPointId } },
-  { '@type': 'ContactPoint', '@id': contactPointId, contactType: 'customer support', telephone: `+90${siteConfig.phone.replace(/\D/g, '').replace(/^0/, '')}`, email: siteConfig.email, availableLanguage: ['tr-TR'], areaServed: { '@type': 'Country', name: 'Türkiye' }, url: siteConfig.whatsapp },
-  { '@type': 'FAQPage', '@id': `${contactPageUrl}#faq`, mainEntity: contactFaqItems.map((item) => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } })) },
-  contactBreadcrumbJsonLd,
+const purposes = [
+  ['Güncel oran ve uygunluk', 'İşlem türünü ve yaklaşık tutarı yazın.', '/araclar'],
+  ['Devam eden işlem desteği', 'Sorunu, varsa işlem referansını paylaşın.', '/bilgi-merkezi/islem-destegi-nasil-alinir'],
+  ['Kurumsal talep', 'Talebinizi ve kurum bilgilerinizi e-posta ile iletin.', `mailto:${siteConfig.email}`],
+] as const;
+
+const faqs = [
+  ['İlk mesajda ne yazmalıyım?', 'İşlem türünü ve yaklaşık tutarı yazmanız yeterlidir. Güncel uygunluk ve oran işlem başlamadan önce paylaşılır.'],
+  ['Hangi bilgiler kesinlikle istenmez?', 'Şifre, kart PIN’i, CVV, SMS doğrulama kodu ve hesabınıza erişim sağlayan bilgiler istenmez.'],
+  ['En hızlı kanal hangisi?', 'Güncel oran ve işlem uygunluğu için resmî WhatsApp hattı; kurumsal talepler için e-posta daha uygundur.'],
+] as const;
+
+const pageUrl = absoluteUrl('/iletisim');
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'ContactPage', '@id': `${pageUrl}#page`, name: 'Sky Bozum İletişim ve Destek Merkezi', url: pageUrl, inLanguage: SITE_LANGUAGE, isPartOf: { '@id': `${SITE_URL}/#website` } },
+  { '@type': 'ContactPoint', '@id': `${pageUrl}#support`, contactType: 'customer support', telephone: `+90${siteConfig.phone.replace(/\D/g, '').replace(/^0/, '')}`, email: siteConfig.email, availableLanguage: ['tr-TR'], url: siteConfig.whatsapp },
+  { '@type': 'FAQPage', mainEntity: faqs.map(([question, answer]) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) },
 ] };
 
 export default function Page() {
-  return (
-    <main id="main-content" className="contact-page">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(contactPageJsonLd) }} />
-      <ContactHero whatsappHref={siteConfig.whatsapp} email={siteConfig.email} />
-      <ContactSectionNav />
-
-      <div className="content-shell contact-main-shell">
-        <section className="contact-section contact-channel-section" aria-labelledby="contact-channels-title">
-          <div className="contact-section-header">
-            <div>
-              <p className="contact-eyebrow">İletişim kanalları</p>
-              <h2 id="contact-channels-title" className="contact-section-title">Talebinizi seçin.<br/>Doğru kanala geçin.</h2>
-              <p className="contact-section-copy">İşlem türünüzü ve yaklaşık tutarı paylaşın; gerekli bilgileri güvenli biçimde netleştirelim.</p>
-            </div>
-            <div className="contact-section-index" aria-hidden="true"><span>01</span><b>İLETİŞİM</b></div>
-          </div>
-          <ContactChannels channels={channels} />
-        </section>
-
-        <section id="iletisim-hizli-gecisler" className="contact-section scroll-mt-32" aria-labelledby="contact-shortcuts-title">
-          <div className="contact-section-header">
-            <div>
-              <p className="contact-eyebrow">Hızlı geçişler</p>
-              <h2 id="contact-shortcuts-title" className="contact-section-title">Yanıt beklemeden ilerleyebileceğiniz alanlar.</h2>
-              <p className="contact-section-copy">İşlem türünü inceleyin, yaklaşık sonucu hesaplayın veya güvenlik kontrolünü açın. Her kart doğrudan ilgili sayfaya gider.</p>
-            </div>
-            <div className="contact-section-index" aria-hidden="true"><span>02</span><b>YÖNLENDİRME</b></div>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              { code: '01', title: 'Bozum hizmetini seç', text: 'Mobil ödeme ve dijital kod seçeneklerini karşılaştırın.', href: '/hizmetler', cta: 'Hizmetlere git' },
-              { code: '02', title: 'Yaklaşık tutarı hesapla', text: 'İşlem öncesinde tahmini ödeme aralığını görün.', href: '/araclar', cta: 'Araçları aç' },
-              { code: '03', title: 'İşlem desteği al', text: 'Devam eden işlem için hazırlamanız gerekenleri öğrenin.', href: '/bilgi-merkezi/islem-destegi-nasil-alinir', cta: 'Destek rehberi' },
-              { code: '04', title: 'Kanalı doğrula', text: 'Resmî numara, alan adı ve güvenlik sınırlarını kontrol edin.', href: '/guven-merkezi', cta: 'Güven Merkezi' },
-            ].map((item) => (
-              <Link key={item.href} href={item.href} className="contact-shortcut-card focus-ring group relative min-h-[190px] overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(145deg,rgba(25,29,36,.92),rgba(8,10,14,.98))] p-5 transition hover:-translate-y-1 hover:border-[#c0445b]/45 hover:shadow-[0_20px_55px_rgba(74,7,20,.22)]">
-                <span className="text-[10px] font-black tracking-[.2em] text-[#c0445b]">{item.code} / SKY BOZUM</span>
-                <h3 className="mt-7 text-xl font-black tracking-tight text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">{item.text}</p>
-                <span className="contact-shortcut-cta absolute inset-x-5 bottom-4 flex items-center justify-between border-t border-white/8 pt-3 text-xs font-black text-rose-300"><span>{item.cta}</span><b aria-hidden="true" className="transition group-hover:translate-x-1">→</b></span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <ContactConfidence />
-        <ContactFaqPreview />
-        <ContactFinalCta whatsappHref={siteConfig.whatsapp} />
+  return <main className="contact-v1-page">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
+    <section className="contact-v1-hero">
+      <div className="contact-v1-shell">
+        <nav className="contact-v1-breadcrumb"><Link href="/">Ana Sayfa</Link><span>/</span>İletişim</nav>
+        <div className="contact-v1-hero-grid">
+          <div className="contact-v1-hero-copy"><p className="contact-v1-eyebrow">SKY BOZUM / DESTEK MERKEZİ</p><h1>Doğru kanal.<br /><span>Net başlangıç.</span></h1><p>Talebinizi seçin, uygun iletişim yoluna geçin ve işlem öncesi gerekli bilgileri güvenli biçimde paylaşın.</p><div className="contact-v1-hero-actions"><a href="#kanallar" className="contact-v1-primary">İletişim kanalını seç <b>↓</b></a><Link href="/guven-merkezi" className="contact-v1-secondary">Güven standardı <b>→</b></Link></div></div>
+          <figure className="contact-v1-hero-image"><Image src="/hero-customer.webp" alt="Sky Bozum destek ekibiyle telefondan iletişim" fill priority sizes="(max-width: 800px) 100vw, 50vw" /><figcaption>Resmî kanal · Yazılı teyit · Sınırlı veri</figcaption></figure>
+        </div>
       </div>
-    </main>
-  );
+    </section>
+
+    <section id="kanallar" className="contact-v1-section contact-v1-channel-section"><div className="contact-v1-shell"><div className="contact-v1-section-head"><div><p className="contact-v1-eyebrow">01 / RESMÎ KANALLAR</p><h2>İhtiyacına göre<br />iletişim kur.</h2></div><span>Üç kanalın tamamı bu sayfadan doğrulanabilir.</span></div><div className="contact-v1-channel-grid">{channels.map((channel,index) => <article key={channel.id} className={`contact-v1-channel-card ${channel.accent==='primary'?'is-primary':''}`}><div className="contact-v1-channel-top"><span>0{index+1} / {channel.label}</span><b>{channel.id==='whatsapp'?'ÖNERİLEN':'DOĞRUDAN'}</b></div><h3>{channel.title}</h3><p>{channel.text}</p><strong>{channel.value}</strong><div className="contact-v1-card-actions"><a href={channel.href} target={channel.id==='whatsapp'?'_blank':undefined} rel={channel.id==='whatsapp'?'noopener noreferrer':undefined}>{channel.cta} <span>↗</span></a></div></article>)}</div></div></section>
+
+    <section className="contact-v1-section contact-v1-purpose-section"><div className="contact-v1-shell"><div className="contact-v1-section-head"><div><p className="contact-v1-eyebrow">02 / HIZLI YÖNLENDİRME</p><h2>İlk mesajı doğru<br />hazırla.</h2></div><span>Gereksiz bilgi paylaşmadan doğrudan ilgili adıma geç.</span></div><div className="contact-v1-purpose-list">{purposes.map(([title,text,href],index) => <Link href={href} key={title}><span>0{index+1}</span><div><h3>{title}</h3><p>{text}</p></div><b>→</b></Link>)}</div></div></section>
+
+    <section className="contact-v1-section contact-v1-security-section"><div className="contact-v1-shell contact-v1-security-grid"><div><p className="contact-v1-eyebrow">03 / VERİ SINIRI</p><h2>Güvenli iletişim<br /><span>az veriyle başlar.</span></h2><p>İlk değerlendirme için işlem türü ve yaklaşık tutar çoğu durumda yeterlidir. Hesaba veya karta erişim sağlayan bilgiler iletişim kapsamı dışındadır.</p><Link href="/guven-merkezi" className="contact-v1-inline-link">Güven Merkezi’ni incele →</Link></div><div className="contact-v1-never-share"><header><span>ASLA PAYLAŞMA</span><b>HASSAS VERİ / KAPSAM DIŞI</b></header><ul><li>Hesap veya uygulama şifresi</li><li>SMS doğrulama kodu</li><li>Kart PIN’i, CVV veya ekran erişimi</li></ul><p>Bu bilgiler istenirse görüşmeyi durdurun ve resmî kanaldan yeniden doğrulayın.</p></div></div></section>
+
+    <section className="contact-v1-section contact-v1-faq-section"><div className="contact-v1-shell contact-v1-faq-grid"><div><p className="contact-v1-eyebrow">04 / KISA CEVAPLAR</p><h2>İletişimden önce<br />bilmen gerekenler.</h2><Link href="/sss" className="contact-v1-inline-link">Tüm SSS bölümüne git →</Link></div><div className="contact-v1-faqs">{faqs.map(([question,answer]) => <details key={question}><summary>{question}<b>+</b></summary><p>{answer}</p></details>)}</div></div></section>
+
+    <section className="contact-v1-final"><div className="contact-v1-shell"><p className="contact-v1-eyebrow">SON KONTROL</p><h2>Talebin hazırsa,<br /><span>resmî kanaldan başla.</span></h2><a href={siteConfig.whatsapp} target="_blank" rel="noopener noreferrer" className="contact-v1-primary">WhatsApp müşteri masasına geç <b>↗</b></a><small>Şifre, PIN, CVV ve SMS doğrulama kodu hiçbir aşamada talep edilmez.</small></div></section>
+  </main>;
 }
