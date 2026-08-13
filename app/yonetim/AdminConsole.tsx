@@ -16,6 +16,7 @@ import RichArticleEditor from "./RichArticleEditor";
 import ForumArchivePanel from "./ForumArchivePanel";
 import AdminRatePanel from "./AdminRatePanel";
 import ForumModerationPanel from "./ForumModerationPanel";
+import AdminOperationPanel from "./AdminOperationPanel";
 import { articles } from "../lib/site";
 import {
   removeManagedArticle,
@@ -41,7 +42,7 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum";
+type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -356,6 +357,7 @@ export default function AdminConsole({
               ["overview", "Genel bakış"],
               ["content", "İçerik"],
               ["rates", "Oranlar"],
+              ["operations", "İşlemler"],
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
               ["forum", "Forum"],
@@ -605,6 +607,7 @@ export default function AdminConsole({
           </section>
         )}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
+        {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}
         {view === "members" && (
           <section className="admin-section">
             <div className="admin-section-head">
@@ -795,6 +798,7 @@ export default function AdminConsole({
                       <option value="editor">İçerik editörü</option>
                       <option value="publisher">Yayın yetkisi</option>
                       <option value="moderator">Moderatör</option>
+                      <option value="operator">Operasyon ekibi</option>
                     </select>
                     <p>
                       {member.permissions.length

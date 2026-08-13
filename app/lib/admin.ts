@@ -12,7 +12,7 @@ import {
   type Timestamp,
 } from 'firebase/firestore';
 
-export type MemberRole = 'member' | 'editor' | 'publisher' | 'moderator' | 'admin';
+export type MemberRole = 'member' | 'editor' | 'publisher' | 'moderator' | 'operator' | 'admin';
 export type MemberStatus = 'pending' | 'active' | 'banned';
 
 export type AdminMember = {
