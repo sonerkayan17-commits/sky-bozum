@@ -48,7 +48,10 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     if (!db || liked) return;
     setBusy(true);
     try {
-      await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
+      await registerEngagement(db, getOrCreateVisitorId(), 'like', service, user ? {
+        id: user.uid,
+        name: user.displayName || user.email || 'Sky Bozum üyesi',
+      } : undefined);
       if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
       localStorage.setItem(`sky-liked:${service}`, '1');
       setLiked(true);

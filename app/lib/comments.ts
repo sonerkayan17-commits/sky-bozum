@@ -129,6 +129,7 @@ export async function registerEngagement(
   visitorId: string,
   type: 'like' | 'view',
   targetId: string,
+  member?: { id: string; name: string },
 ) {
   if (!visitorId || !targetId) return;
   const safeTarget = targetId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 100);
@@ -137,6 +138,9 @@ export async function registerEngagement(
     type,
     targetId,
     visitorId,
+    ...(type === 'like' && member
+      ? { memberId: member.id, memberName: member.name.slice(0, 80) }
+      : {}),
     createdAt: serverTimestamp(),
   });
 }
@@ -155,6 +159,7 @@ export function subscribeToEngagementCounts(
       snapshot.docs.forEach((document) => {
         const data = document.data() as EngagementDocument;
         if (!data.targetId) return;
+        if (data.type !== 'like' && data.type !== 'view') return;
         const target = data.type === 'view' ? views : likes;
         target[data.targetId] = (target[data.targetId] ?? 0) + 1;
         if (data.type === 'like' && data.memberId && data.memberName) {
