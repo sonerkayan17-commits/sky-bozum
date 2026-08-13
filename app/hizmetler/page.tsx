@@ -5,6 +5,7 @@ import ServiceCard from '../components/services/ServiceCard';
 import { articles, services } from '../lib/site';
 
 export const metadata: Metadata = {
+  keywords: ['mobil odeme bozum', 'mobil odeme bozdurma', 'Razer Gold bozum', 'Paycell bozum', 'Pokus bozum', 'iTunes hediye karti bozum', 'Steam cuzdan kodu bozum', 'bozum islem rehberi'],
   title: 'Hizmetler',
   description: 'Mobil ödeme, Razer Gold, Paycell, Pokus, Apple, Steam ve kart hizmetlerini inceleyin.',
   alternates: { canonical: '/hizmetler' },

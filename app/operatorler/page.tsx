@@ -5,6 +5,7 @@ import { getRateRange } from '../lib/rates';
 import { guidesForService } from '../lib/contentBridges';
 
 export const metadata: Metadata = {
+  keywords: ['Vodafone mobil odeme bozum', 'Turkcell mobil odeme bozum', 'Turk Telekom mobil odeme bozum', 'mobil odeme limiti', 'operator mobil odeme rehberi'],
   title: 'Operatörler',
   description: 'Vodafone, Turkcell ve Türk Telekom mobil ödeme süreçlerini ve güncel oran bilgilerini inceleyin.',
   alternates: { canonical: '/operatorler' },

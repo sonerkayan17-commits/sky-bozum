@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return createMetadata({
     title: `${service.name} | Güncel Oran ve İşlem Rehberi`,
     description: service.summary,
+    keywords: [service.name, service.shortName, `${service.shortName} bozum`, `${service.shortName} bozdurma`, `${service.shortName} oran`, `${service.shortName} islem suresi`, service.category, 'bozum orani', 'net odeme hesaplama', 'islem rehberi'],
     path: `/hizmetler/${service.slug}`,
     image: service.logo,
     imageAlt: `${service.shortName} hizmeti`,
-    keywords: [service.name, service.shortName, service.category, 'bozum oranı', 'işlem rehberi'],
   });
 }
 

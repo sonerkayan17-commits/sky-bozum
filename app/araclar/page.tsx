@@ -7,6 +7,7 @@ import { absoluteUrl } from '../lib/seo';
 import './tools-center-rebuild-v2.css';
 
 export const metadata: Metadata = {
+  keywords: ['bozum orani hesaplama', 'mobil odeme hesaplama', 'Razer Gold hesaplama', 'oran karsilastirma', 'net odeme hesaplama', 'metin duzeltici', 'SEO araclari'],
   title: { absolute: 'Araçlar Merkezi | Sky Bozum' },
   description: 'Mobil ödeme, dijital kod, oran karşılaştırma ve metin araçlarını tek merkezden kullanın.',
   alternates: { canonical: '/araclar' },
@@ -31,6 +32,15 @@ const toolsSchema = {
   name: 'Sky Bozum Araçlar Merkezi',
   url: absoluteUrl('/araclar'),
   inLanguage: 'tr-TR',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: toolPages.map((tool, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: tool.title,
+      url: absoluteUrl(tool.href),
+    })),
+  },
 };
 
 function getTool(id: string) {
