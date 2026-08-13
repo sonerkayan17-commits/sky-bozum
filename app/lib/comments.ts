@@ -134,7 +134,9 @@ export async function registerEngagement(
   if (!visitorId || !targetId) return;
   const safeTarget = targetId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 100);
   const safeVisitor = visitorId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80);
-  await setDoc(doc(firestore, 'referenceEngagements', `${type}_${safeTarget}_${safeVisitor}`), {
+  const safeMember = member?.id.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80);
+  const identity = safeMember ? `${safeVisitor}_${safeMember}` : safeVisitor;
+  await setDoc(doc(firestore, 'referenceEngagements', `${type}_${safeTarget}_${identity}`), {
     type,
     targetId,
     visitorId,
