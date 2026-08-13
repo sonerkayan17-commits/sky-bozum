@@ -6,13 +6,22 @@
 .tc2-hero h1 { margin-top: 10px; font-size: clamp(42px, 5vw, 62px); line-height: .92; letter-spacing: -.055em; }
 .tc2-hero h1 span { color: #f47783; }
 .tc2-hero-copy > p:last-child { max-width: 360px; margin-top: 22px; color: #a7adb6; font-size: 14px; line-height: 1.7; }
+.tc2-quick-picks { display: grid; gap: 8px; max-width: 300px; margin-top: 32px; }
+.tc2-quick-picks > div { display: grid; grid-template-columns: 28px 1fr; gap: 1px 10px; padding: 10px 12px; border: 1px solid #2a3038; border-radius: 7px; background: rgba(255,255,255,.025); }
+.tc2-quick-picks > div:hover { border-color: #b63e57; background: rgba(220,68,96,.08); }
+.tc2-quick-picks span { grid-row: 1 / span 2; color: #f47783; font-size: 10px; font-weight: 900; }
+.tc2-quick-picks b { font-size: 12px; }
+.tc2-quick-picks small { color: #7f8994; font-size: 10px; }
 .tc2-featured-calculator { overflow: hidden; border: 1px solid #303640; border-radius: 10px; background: #12171e; }
 .tc2-panel-heading { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #2a3039; }
 .tc2-panel-heading h2 { font-size: 16px; }
 .tc2-panel-icon { display: grid; place-items: center; width: 26px; height: 26px; border: 1px solid #fa6f75; border-radius: 6px; color: #fa6f75; font-size: 20px; line-height: 1; }
 .tc2-featured-calculator .calculator-embedded { padding: 0 !important; }
-.tc2-featured-calculator .calculator-embedded > div { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; min-height: 0 !important; height: auto !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
-.tc2-featured-calculator .calculator-embedded > div > div:first-child { padding: 16px !important; }
+.tc2-featured-calculator .calculator-embedded > div { display: block !important; min-height: 0 !important; height: auto !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+.tc2-featured-calculator .calculator-embedded > div > div:first-child { display: grid !important; grid-template-columns: minmax(0, 1.12fr) minmax(280px, .88fr) !important; min-height: 0 !important; padding: 0 !important; }
+.tc2-featured-calculator .calculator-embedded > div > div:first-child > div:first-child { padding: 16px !important; }
+.tc2-featured-calculator .calculator-embedded > div > div:first-child > div:first-child { display: flex !important; flex-direction: column !important; }
+.tc2-featured-calculator .calculator-embedded > div > div:first-child > div:first-child::after { content: 'Sonuçlar bilgilendirme amaçlıdır. Kesin oran ve uygunluk işlem öncesi yazılı olarak teyit edilir.'; display: block; margin-top: auto; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.08); color: #7f8994; font-size: 10px; line-height: 1.45; }
 .tc2-featured-calculator .calculator-embedded .mt-3 { margin-top: 8px !important; }
 .tc2-featured-calculator .calculator-embedded .mt-4 { margin-top: 9px !important; }
 .tc2-featured-calculator .calculator-embedded .mt-6 { margin-top: 12px !important; }
@@ -24,7 +33,14 @@
 .tc2-featured-calculator .calculator-embedded .space-y-5 { gap: 12px !important; }
 .tc2-featured-calculator .calculator-embedded .leading-6 { line-height: 1.35 !important; }
 .tc2-featured-calculator .calculator-embedded .text-3xl { font-size: 1.65rem !important; line-height: 1.05 !important; }
-.tc2-featured-calculator .calculator-embedded aside { display: none !important; }
+.tc2-featured-calculator .calculator-embedded aside { display: block !important; padding: 20px !important; border-top: 0 !important; border-left: 1px solid rgba(255,255,255,.08) !important; background: rgba(255,255,255,.02) !important; }
+.tc2-featured-calculator .calculator-embedded aside .eyebrow { margin-bottom: 14px; }
+.tc2-featured-calculator .calculator-embedded aside ol { margin-top: 0 !important; }
+.tc2-featured-calculator .calculator-embedded aside li { gap: 10px !important; }
+.tc2-featured-calculator .calculator-embedded aside li > span { width: 28px !important; height: 28px !important; border-radius: 8px !important; }
+.tc2-featured-calculator .calculator-embedded aside li h2 { font-size: 12px !important; }
+.tc2-featured-calculator .calculator-embedded aside li p { font-size: 10px !important; line-height: 1.45 !important; }
+.tc2-featured-calculator .calculator-embedded aside > div { margin-top: 14px !important; padding: 12px !important; }
 .tc2-section { padding: 52px 0; border-bottom: 1px solid #252a32; }
 .tc2-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 20px; }
 .tc2-section-heading h2 { margin-top: 7px; font-size: clamp(24px, 3vw, 34px); letter-spacing: -.035em; }
@@ -68,5 +84,6 @@
 .tc2-seo-list small { grid-column: 1; overflow: hidden; color: #89929d; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .tc2-seo-list b { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 16px; }
 @media (max-width: 1000px) { .tc2-featured-grid { grid-template-columns: repeat(2, 1fr); } .tc2-lower-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .tc2-featured-calculator .calculator-embedded > div > div:first-child { grid-template-columns: 1fr !important; } .tc2-featured-calculator .calculator-embedded aside { display: none !important; } }
 @media (max-width: 700px) { .tc2-shell { width: min(calc(100% - 24px), 1220px); } .tc2-hero { padding-top: 32px; } .tc2-hero-grid { grid-template-columns: 1fr; gap: 24px; } .tc2-featured-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .tc2-card-footer { min-height: 76px; padding: 11px; } .tc2-card-footer h3 { font-size: 13px; } .tc2-section-heading { align-items: start; flex-direction: column; gap: 8px; } }
 @media (max-width: 460px) { .tc2-featured-grid { grid-template-columns: 1fr; } .tc2-seo-list { grid-template-columns: 1fr; } .tc2-seo-list a, .tc2-seo-list a:nth-child(even), .tc2-seo-list a:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid #2a3038; } .tc2-seo-list a:last-child { border-bottom: 0; } }

@@ -51,6 +51,11 @@ export default function Page() {
           <p className="tc2-eyebrow">SKY BOZUM / ARAÇLAR</p>
           <h1>Araçlar<br /><span>Merkezi</span></h1>
           <p>Günlük işlemlerinizi hızlı ve doğru şekilde hesaplayın, karşılaştırın ve yönetin.</p>
+          <div className="tc2-quick-picks" aria-label="Araç merkezi kullanım alanları">
+            <div><span>01</span><b>Hesapla</b><small>Oran ve karşılık</small></div>
+            <div><span>02</span><b>Karşılaştır</b><small>Farklı hizmetler</small></div>
+            <div><span>03</span><b>Yönünü bul</b><small>Doğru işlem adımı</small></div>
+          </div>
         </div>
         <div className="tc2-featured-calculator">
           <div className="tc2-panel-heading"><span className="tc2-panel-icon">+</span><h2>Mobil ödeme hesaplama</h2></div>
