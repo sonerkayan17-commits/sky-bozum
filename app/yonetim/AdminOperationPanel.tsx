@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { rateItems } from '../lib/rates';
 
 type OperationStatus = 'new' | 'awaiting_product' | 'checking' | 'awaiting_payment' | 'completed' | 'cancelled';
-type Operation = { id: string; customer: string; contact: string; service: string; amount: number; payout: number; status: OperationStatus; note: string; createdAt: Date | null; updatedAt: Date | null };
+type Operation = { id: string; memberId: string; customer: string; contact: string; service: string; amount: number; payout: number; status: OperationStatus; note: string; createdAt: Date | null; updatedAt: Date | null };
 const statusLabels: Record<OperationStatus, string> = { new: 'Yeni', awaiting_product: 'Ürün bekleniyor', checking: 'Kontrol ediliyor', awaiting_payment: 'Ödeme bekleniyor', completed: 'Tamamlandı', cancelled: 'İptal edildi' };
 const statuses = Object.keys(statusLabels) as OperationStatus[];
 
@@ -21,7 +21,7 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     return onSnapshot(collection(db, 'operations'), (snapshot) => {
       setOperations(snapshot.docs.map((entry) => {
         const data = entry.data();
-        return { id: entry.id, customer: String(data.customer || ''), contact: String(data.contact || ''), service: String(data.service || ''), amount: Number(data.amount) || 0, payout: Number(data.payout) || 0, status: statuses.includes(data.status) ? data.status as OperationStatus : 'new', note: String(data.note || ''), createdAt: data.createdAt?.toDate?.() ?? null, updatedAt: data.updatedAt?.toDate?.() ?? null };
+        return { id: entry.id, memberId: String(data.memberId || ''), customer: String(data.customer || ''), contact: String(data.contact || ''), service: String(data.service || ''), amount: Number(data.amount) || 0, payout: Number(data.payout) || 0, status: statuses.includes(data.status) ? data.status as OperationStatus : 'new', note: String(data.note || ''), createdAt: data.createdAt?.toDate?.() ?? null, updatedAt: data.updatedAt?.toDate?.() ?? null };
       }).sort((a, b) => (b.updatedAt?.getTime() || b.createdAt?.getTime() || 0) - (a.updatedAt?.getTime() || a.createdAt?.getTime() || 0)));
     }, () => setNotice('İşlem kayıtları okunamadı.'));
   }, [db]);
@@ -46,6 +46,17 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     if (!db) return;
     await updateDoc(doc(db, 'operations', operation.id), { status, updatedBy: actorId, updatedAt: serverTimestamp() });
     await addDoc(collection(db, 'contentAudit'), { action: `operation:${status}`, articleSlug: operation.id, actorId, createdAt: serverTimestamp() });
+    if (operation.memberId && operation.status !== status) {
+      await addDoc(collection(db, 'notifications'), {
+        senderId: actorId,
+        receiverId: operation.memberId,
+        type: 'operation_status',
+        text: `${operation.service} talebinizin durumu “${statusLabels[status]}” olarak güncellendi.`,
+        href: '/hesabim/talepler',
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+    }
     setNotice(`İşlem durumu “${statusLabels[status]}” olarak güncellendi.`);
   }
 

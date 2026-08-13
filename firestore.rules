@@ -329,7 +329,18 @@ service cloud.firestore {
 
     match /notifications/{notificationId} {
       allow read: if signedIn() && resource.data.receiverId == request.auth.uid;
-      allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
+      allow create: if signedIn()
+        && (isAdmin() || canOperate() || request.resource.data.senderId == request.auth.uid)
+        && request.resource.data.receiverId != request.auth.uid
+        && request.resource.data.receiverId is string
+        && request.resource.data.type is string
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 180
+        && request.resource.data.href is string
+        && request.resource.data.href.size() <= 180
+        && request.resource.data.read == false
+        && request.resource.data.createdAt == request.time;
       allow update: if signedIn() && resource.data.receiverId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["read"]);
       allow delete: if false;
     }
