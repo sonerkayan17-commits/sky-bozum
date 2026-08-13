@@ -56,6 +56,19 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const nextLevel = memberLevels.find((item) => item.min > totalPoints);
   const progress = nextLevel ? Math.min(100, Math.round(((totalPoints - level.min) / (nextLevel.min - level.min)) * 100)) : 100;
 
+  useEffect(() => {
+    const avatarElement = document.querySelector<HTMLElement>('.member-sidebar .member-avatar');
+    if (!avatarElement) return;
+    avatarElement.style.backgroundImage = avatar ? `url(${avatar})` : '';
+    avatarElement.style.backgroundSize = avatar ? 'cover' : '';
+    avatarElement.style.backgroundPosition = avatar ? 'center' : '';
+    avatarElement.style.cursor = 'pointer';
+    avatarElement.title = 'Profil fotoğrafını değiştir';
+    const openProfile = () => { window.location.href = '/hesabim/uyelik-bilgileri'; };
+    avatarElement.addEventListener('click', openProfile);
+    return () => avatarElement.removeEventListener('click', openProfile);
+  }, [avatar]);
+
   async function saveProfile(event: FormEvent) {
     event.preventDefault(); const { auth, db } = getFirebaseClient(); if (!auth?.currentUser || !db) return;
     await updateProfile(auth.currentUser, { displayName: name.trim() });
