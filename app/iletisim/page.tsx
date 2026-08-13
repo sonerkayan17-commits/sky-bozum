@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
 import { absoluteUrl, createMetadata, jsonLd, SITE_LANGUAGE, SITE_URL } from '../lib/seo';
 import './contact-redesign-v1.css';
+import './contact-polish-v1.css';
 
 export const metadata: Metadata = createMetadata({
   title: 'İletişim ve Destek Merkezi | Sky Bozum',

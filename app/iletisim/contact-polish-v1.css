@@ -1,0 +1,80 @@
+.contact-v1-channel-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.contact-v1-channel-card:hover {
+  transform: translateY(-3px);
+  border-color: #59626d;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .2);
+}
+
+.contact-v1-channel-card::before {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 16px;
+  border: 1px solid #3b4550;
+  border-radius: 10px;
+  color: #b9c2cb;
+  background: #171d25;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.contact-v1-channel-card:nth-child(1)::before { content: 'W'; color: #8bf0c1; border-color: #23684f; background: #10251e; }
+.contact-v1-channel-card:nth-child(2)::before { content: 'TEL'; color: #91d9ff; border-color: #275671; background: #10212b; }
+.contact-v1-channel-card:nth-child(3)::before { content: '@'; color: #f2a1af; border-color: #673440; background: #27141b; font-size: 20px; }
+
+.contact-v1-channel-card.is-primary {
+  border-color: #d04562;
+  background: linear-gradient(145deg, #21151d, #171018);
+  box-shadow: 0 18px 42px rgba(188, 40, 75, .12);
+}
+
+.contact-v1-channel-card.is-primary::after {
+  content: 'ÖNCELİKLİ KANAL';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 7px 11px;
+  border-radius: 0 8px 0 8px;
+  background: #d04562;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.contact-v1-channel-card.is-primary .contact-v1-card-actions a {
+  background: linear-gradient(100deg, #d92755, #f4864a);
+  box-shadow: 0 9px 22px rgba(216, 45, 83, .2);
+}
+
+.contact-v1-purpose-list {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #252d36;
+  border-radius: 8px;
+}
+
+.contact-v1-purpose-list a { transition: background .2s ease, padding .2s ease; }
+.contact-v1-purpose-list a:hover { background: linear-gradient(90deg, #151b23, #0e1319); padding-inline: 18px; }
+.contact-v1-purpose-list a::before { content: ''; width: 2px; height: 28px; opacity: 0; background: #e87587; transition: opacity .2s ease; }
+.contact-v1-purpose-list a:hover::before { opacity: 1; }
+
+.contact-v1-security-section { background: linear-gradient(135deg, #11151b 0%, #11151b 58%, #180f15 100%); }
+.contact-v1-security-grid > div:first-child { position: relative; }
+.contact-v1-security-grid > div:first-child::after { content: 'DATA DISCIPLINE'; display: block; margin-top: 30px; color: #6d7782; font-size: 9px; font-weight: 900; letter-spacing: .18em; }
+.contact-v1-never-share { box-shadow: inset 3px 0 0 #d04562; }
+.contact-v1-faqs details { transition: background .2s ease; }
+.contact-v1-faqs details:hover { background: #11161d; padding-inline: 12px; }
+.contact-v1-final { position: relative; overflow: hidden; }
+.contact-v1-final::after { content: 'SKY / SUPPORT'; position: absolute; right: 8%; bottom: 24px; color: rgba(239, 111, 132, .12); font-size: clamp(26px, 5vw, 72px); font-weight: 900; letter-spacing: .08em; pointer-events: none; }
+
+@media (max-width: 850px) {
+  .contact-v1-final::after { right: 12px; bottom: 12px; font-size: 26px; }
+}
