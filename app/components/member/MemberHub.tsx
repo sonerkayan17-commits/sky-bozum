@@ -10,7 +10,7 @@ import { getMemberLevel, memberLevels, subscribeToMemberActivities, type MemberA
 import './member-fixes.css';
 
 export type MemberView = 'overview' | 'account' | 'profile' | 'history' | 'tasks';
-type MemberData = { displayName: string; phone: string; email: string; status: string; balance: number; points: number };
+type MemberData = { displayName: string; phone: string; email: string; status: string; balance: number; points: number; avatar: string };
 type Ledger = { id: string; kind: string; amount: number; note: string; createdAt: Date | null };
 
 const navigation: Array<[MemberView, string, string]> = [
@@ -39,8 +39,8 @@ export default function MemberHub({ view }: { view: MemberView }) {
       setAvatar(window.localStorage.getItem(`sky-avatar:${nextUser.uid}`) || '');
       const stopMember = onSnapshot(doc(db, 'members', nextUser.uid), (snapshot) => {
         const data = snapshot.data(); if (!data) return;
-        const next = { displayName: String(data.displayName || nextUser.displayName || ''), phone: String(data.phone || ''), email: String(data.email || nextUser.email || ''), status: String(data.status || 'pending'), balance: Number(data.balance) || 0, points: Number(data.points) || 0 };
-        setMember(next); setName(next.displayName); setPhone(next.phone);
+        const next = { displayName: String(data.displayName || nextUser.displayName || ''), phone: String(data.phone || ''), email: String(data.email || nextUser.email || ''), status: String(data.status || 'pending'), balance: Number(data.balance) || 0, points: Number(data.points) || 0, avatar: String(data.avatar || '') };
+        setMember(next); setName(next.displayName); setPhone(next.phone); if (next.avatar) setAvatar(next.avatar);
       });
       const stopActivities = subscribeToMemberActivities(db, nextUser.uid, setActivities);
       const stopProfile = onSnapshot(doc(db, 'publicProfiles', nextUser.uid), (snapshot) => {
@@ -89,7 +89,15 @@ export default function MemberHub({ view }: { view: MemberView }) {
     event.preventDefault(); const { auth, db } = getFirebaseClient(); if (!auth?.currentUser || !db) return;
     try {
       await updateProfile(auth.currentUser, { displayName: name.trim() });
-      await updateDoc(doc(db, 'members', auth.currentUser.uid), { displayName: name.trim(), phone: phone.trim() });
+      const memberRef = doc(db, 'members', auth.currentUser.uid);
+      const memberSnapshot = await getDoc(memberRef);
+      if (memberSnapshot.exists()) {
+        await updateDoc(memberRef, { displayName: name.trim(), phone: phone.trim(), avatar });
+      } else {
+        const publicSnapshot = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
+        const referralCode = String(publicSnapshot.data()?.referralCode || `SKY-${auth.currentUser.uid.slice(0, 8).toUpperCase()}`);
+        await setDoc(memberRef, { displayName: name.trim(), avatar, phone: phone.trim(), email: auth.currentUser.email || '', role: 'member', status: 'pending', balance: 0, points: 0, permissions: [], referralCode, referredBy: null, createdAt: serverTimestamp() });
+      }
       const currentPublicProfile = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
       await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, referralCode: String(currentPublicProfile.data()?.referralCode || ''), createdAt: serverTimestamp() });
       window.localStorage.setItem(`sky-avatar:${auth.currentUser.uid}`, avatar);

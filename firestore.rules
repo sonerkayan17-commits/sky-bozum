@@ -145,12 +145,14 @@ service cloud.firestore {
       );
       allow update: if isAdmin() || (
         signedIn() && request.auth.uid == memberId
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["displayName", "phone"])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["displayName", "phone", "avatar"])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
         && request.resource.data.displayName.size() <= 80
         && request.resource.data.phone is string
         && request.resource.data.phone.size() <= 24
+        && request.resource.data.avatar is string
+        && request.resource.data.avatar.size() <= 30000
       );
       allow delete: if false;
     }
