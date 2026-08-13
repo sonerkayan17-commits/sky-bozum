@@ -23,7 +23,15 @@
 .tc2-featured-card:hover { border-color: #ed6376; transform: translateY(-3px); }
 .tc2-image { position: relative; aspect-ratio: 1.08; overflow: hidden; background: #151a21; }
 .tc2-image:after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(7, 9, 12, .7)); }
-.tc2-image img { object-fit: cover; }
+.tc2-atlas { background-image: url('/images/araclar/sky-tools-atlas-v1.png'); background-repeat: no-repeat; background-size: 400% 200%; }
+.tc2-atlas--mobil-odeme { background-position: 0 0; }
+.tc2-atlas--hedef-odeme { background-position: 33.333% 0; }
+.tc2-atlas--oran-karsilastirma { background-position: 66.666% 0; }
+.tc2-atlas--islem-sihirbazi { background-position: 100% 0; }
+.tc2-atlas--kod-adedi { background-position: 0 100%; }
+.tc2-atlas--gift-card { background-position: 33.333% 100%; }
+.tc2-atlas--sms { background-position: 66.666% 100%; }
+.tc2-atlas--cihaz-maliyeti { background-position: 100% 100%; }
 .tc2-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 88px; padding: 14px 16px; }
 .tc2-card-footer span { color: #f27682; font-size: 9px; font-weight: 800; text-transform: uppercase; }
 .tc2-card-footer h3 { margin-top: 6px; font-size: 15px; line-height: 1.15; }

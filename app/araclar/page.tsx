@@ -14,17 +14,6 @@ export const metadata: Metadata = {
 
 const featuredIds = ['mobil-odeme', 'hedef-odeme', 'oran-karsilastirma', 'islem-sihirbazi'] as const;
 const secondaryIds = ['kod-adedi', 'gift-card', 'sms', 'cihaz-maliyeti'] as const;
-const imageById: Record<string, string> = {
-  'mobil-odeme': '/images/araclar/tool-visuals-v21/mobil-odeme.webp',
-  'hedef-odeme': '/images/araclar/tool-visuals-v21/hedef-odeme.webp',
-  'oran-karsilastirma': '/images/araclar/tool-visuals-v21/oran-karsilastirma.webp',
-  'islem-sihirbazi': '/images/araclar/editorial-v6/islem-yonlendirme.webp',
-  'kod-adedi': '/images/araclar/tool-visuals-v21/kod-adedi.webp',
-  'gift-card': '/images/araclar/tool-visuals-v21/gift-card.webp',
-  sms: '/images/araclar/tool-visuals-v21/sms-onay.webp',
-  'cihaz-maliyeti': '/images/araclar/editorial-v6/vade-plani.webp',
-};
-
 const seoTools = [
   ['Metin düzeltici', 'Metin yazım ve noktalama kontrolü', 'text'],
   ['Meta önizleyici', 'Arama sonucu görünümünü kontrol et', 'meta'],
@@ -49,7 +38,7 @@ function getTool(id: string) {
 }
 
 function ToolImage({ id }: { id: string }) {
-  return <div className="tc2-image"><Image src={imageById[id]} alt="" fill sizes="(max-width: 720px) 100vw, 25vw" /></div>;
+  return <div className={`tc2-image tc2-atlas tc2-atlas--${id}`} role="img" aria-label={`${id} aracı görseli`} />;
 }
 
 export default function Page() {
