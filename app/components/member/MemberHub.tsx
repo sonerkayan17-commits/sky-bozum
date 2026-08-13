@@ -57,7 +57,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const progress = nextLevel ? Math.min(100, Math.round(((totalPoints - level.min) / (nextLevel.min - level.min)) * 100)) : 100;
 
   useEffect(() => {
-    const avatarElements = document.querySelectorAll<HTMLElement>('.member-sidebar .member-avatar');
+    const avatarElements = document.querySelectorAll<HTMLElement>('.member-sidebar .member-avatar, .member-avatar-preview');
     if (!avatarElements.length) return;
     const fallback = (member?.displayName || user.email || 'Ü').charAt(0).toUpperCase();
     const openProfile = () => { window.location.href = '/hesabim/uyelik-bilgileri'; };
