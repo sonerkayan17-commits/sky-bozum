@@ -20,6 +20,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [likes, setLikes] = useState(0);
   const [views, setViews] = useState(0);
   const [liked, setLiked] = useState(false);
+  const [likers, setLikers] = useState<string[]>([]);
   const [author, setAuthor] = useState('');
   const [message, setMessage] = useState('');
   const [notice, setNotice] = useState('');
@@ -37,7 +38,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     setLiked(localStorage.getItem(`sky-liked:${service}`) === '1');
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
     const stopComments = subscribeToApprovedComments(db, (items) => setComments(items.filter((item) => item.service === service)), () => undefined);
-    const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); }, () => undefined);
+    const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); setLikers(counts.likers[service] ?? []); }, () => undefined);
     return () => { stopComments(); stopCounts(); };
   }, [db, service]);
 
@@ -47,7 +48,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     if (!db || liked) return;
     setBusy(true);
     try {
-      await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
+      await registerEngagement(db, getOrCreateVisitorId(), 'like', service, user ? { id: user.uid, name: user.displayName || 'Bir üye' } : undefined);
       if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
       localStorage.setItem(`sky-liked:${service}`, '1');
       setLiked(true);
@@ -78,6 +79,13 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     } catch {}
   }
 
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setNotice('Konu bağlantısı panoya kopyalandı.');
+    } catch { setNotice('Bağlantı kopyalanamadı.'); }
+  }
+
   function quote(comment: PublicComment) {
     setMessage(`“${comment.message.slice(0, 180)}”\n\n`);
     setReplyTarget(comment);
@@ -94,11 +102,14 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
     <nav className="flex flex-wrap items-center gap-1 border-b border-white/10 bg-black/15 px-4 py-2" aria-label="Konu işlemleri">
       <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button>
+      <button type="button" onClick={copyLink} className={actionClass}>Kopyala</button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
       {user ? <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
       {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : null}
       <span className="ml-auto hidden text-[11px] font-bold text-slate-600 sm:inline">Beğeniler konuyu üste çıkarır</span>
     </nav>
+
+    {likers.length > 0 && <div className="border-b border-white/10 px-5 py-3 text-xs text-slate-400 sm:px-6"><strong className="text-slate-300">Beğenenler:</strong> {likers.slice(0, 12).join(', ')}{likers.length > 12 ? ` ve ${likers.length - 12} kişi daha` : ''}</div>}
 
     <div className="space-y-3 p-5 sm:p-6">
       <h3 className="text-sm font-black text-white">Yorumlar ({comments.length})</h3>

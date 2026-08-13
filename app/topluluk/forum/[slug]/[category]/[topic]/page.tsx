@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { findForumSection, forumStarterTopics, getForumStarterTopic } from '../../../../../lib/forumTaxonomy';
 import { forumRoutes } from '../../../../../lib/forumRoutes';
+import ContentEngagement from '../../../../../components/community/ContentEngagement';
 import ForumBreadcrumbs from '../../../../ForumBreadcrumbs';
 import './topic.css';
 
@@ -33,6 +34,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
     <ForumBreadcrumbs section={{ slug: section.slug, title: section.title }} category={{ slug: category, title: item.category }} topic={item.title} />
     <header><span>YÖNETİM YAYINI</span><h1>{item.title}</h1><p>{item.summary}</p><div><b>{item.author}</b><time>{date}</time></div></header>
     <div className="forum-topic-body">{item.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+    <ContentEngagement targetId={`forum-${item.sectionSlug}-${item.categorySlug}-${item.slug}`} title={item.title} kind="topic" />
     <footer><Link href={forumRoutes.category(slug, category)}>← {item.category} kategorisine dön</Link></footer>
     {related.length > 0 && <aside><h2>Aynı bölümden başlangıç konuları</h2><div>{related.map((entry) => <Link key={entry.slug} href={forumRoutes.topic(entry.sectionSlug, entry.categorySlug, entry.slug)}>{entry.title}</Link>)}</div></aside>}
   </article></main>;
