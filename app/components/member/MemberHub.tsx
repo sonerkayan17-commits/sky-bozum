@@ -24,7 +24,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const [member, setMember] = useState<MemberData | null>(null);
   const [activities, setActivities] = useState<MemberActivity[]>([]);
   const [ledger, setLedger] = useState<Ledger[]>([]);
-  const [giftPoints, setGiftPoints] = useState(0);
+  const [giftPoints, setGiftPoints] = useState(0); const [referralPoints, setReferralPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState(''); const [phone, setPhone] = useState('');
   const [avatar, setAvatar] = useState('');
@@ -48,14 +48,15 @@ export default function MemberHub({ view }: { view: MemberView }) {
         if (savedAvatar) setAvatar(savedAvatar);
       });
       const stopGifts = onSnapshot(query(collection(db, 'pointGifts'), where('receiverId', '==', nextUser.uid)), (snapshot) => setGiftPoints(snapshot.docs.reduce((sum, item) => sum + Number(item.data().amount || 0), 0)));
+      const stopReferralRewards = onSnapshot(query(collection(db, 'referralRewards'), where('referrerId', '==', nextUser.uid)), (snapshot) => setReferralPoints(snapshot.docs.reduce((sum, item) => sum + Number(item.data().rewardPoints || 0), 0)));
       const stopLedger = onSnapshot(query(collection(db, 'memberLedger'), where('memberId', '==', nextUser.uid)), (snapshot) => setLedger(snapshot.docs.map((item) => { const data = item.data(); return { id: item.id, kind: String(data.kind || ''), amount: Number(data.amount) || 0, note: String(data.note || ''), createdAt: data.createdAt?.toDate?.() ?? null }; }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))));
-      return () => { stopMember(); stopActivities(); stopGifts(); stopLedger(); stopProfile(); };
+      return () => { stopMember(); stopActivities(); stopGifts(); stopReferralRewards(); stopLedger(); stopProfile(); };
     });
   }, []);
 
   const counts = useMemo(() => ({ like: activities.filter((item) => item.type === 'like').length, comment: activities.filter((item) => item.type === 'comment').length, share: activities.filter((item) => item.type === 'share').length }), [activities]);
   const taskBonus = (counts.like >= 10 ? 50 : 0) + (counts.comment >= 5 ? 75 : 0) + (counts.share >= 1 ? 100 : 0);
-  const totalPoints = (member?.points || 0) + giftPoints + activities.reduce((sum, item) => sum + item.points, 0) + taskBonus;
+  const totalPoints = (member?.points || 0) + giftPoints + referralPoints + activities.reduce((sum, item) => sum + item.points, 0) + taskBonus;
   const level = getMemberLevel(totalPoints);
   const nextLevel = memberLevels.find((item) => item.min > totalPoints);
   const progress = nextLevel ? Math.min(100, Math.round(((totalPoints - level.min) / (nextLevel.min - level.min)) * 100)) : 100;
@@ -77,7 +78,8 @@ export default function MemberHub({ view }: { view: MemberView }) {
     try {
       await updateProfile(auth.currentUser, { displayName: name.trim() });
       await updateDoc(doc(db, 'members', auth.currentUser.uid), { displayName: name.trim(), phone: phone.trim() });
-      await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, createdAt: serverTimestamp() });
+      const currentPublicProfile = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
+      await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, referralCode: String(currentPublicProfile.data()?.referralCode || ''), createdAt: serverTimestamp() });
       window.localStorage.setItem(`sky-avatar:${auth.currentUser.uid}`, avatar);
       const saved = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
       if (String(saved.data()?.avatar || '') !== avatar) throw new Error('avatar-not-saved');

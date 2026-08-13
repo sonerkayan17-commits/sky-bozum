@@ -1,1 +1,10 @@
-import PublicMemberProfile from '../../components/member/PublicMemberProfile'; import './public-profile.css'; export const metadata={title:'Üye Profili',robots:{index:false,follow:false}}; export default async function Page({params}:{params:Promise<{id:string}>}){const {id}=await params;return <PublicMemberProfile memberId={id}/>}
+import PublicMemberProfile from '../../components/member/PublicMemberProfile';
+import './public-profile.css';
+import './public-profile-extra.css';
+
+export const metadata = { title: 'Üye Profili', robots: { index: false, follow: false } };
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <PublicMemberProfile memberId={id} />;
+}

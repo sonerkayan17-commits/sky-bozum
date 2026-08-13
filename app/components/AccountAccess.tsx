@@ -14,6 +14,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { getFirebaseClient } from '../lib/firebase';
+import { findReferrerId, getReferralCode } from '../lib/referrals';
 import './account-access.css';
 
 export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) {
@@ -25,11 +26,18 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => setReady(true), []);
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get('ref');
+    if (code) window.localStorage.setItem('sky-referral-code', code.trim().toUpperCase());
+    setReady(true);
+  }, []);
 
   async function saveMember(user: User, displayName: string, phoneNumber = '') {
     const { db } = getFirebaseClient();
     if (!db) throw new Error('database-unavailable');
+    const referralCode = window.localStorage.getItem('sky-referral-code') || '';
+    const referredBy = referralCode ? await findReferrerId(db, referralCode) : null;
+    const ownReferralCode = getReferralCode(user.uid);
     const memberRef = doc(db, 'members', user.uid);
     if ((await getDoc(memberRef)).exists()) return;
     await setDoc(memberRef, {
@@ -42,12 +50,26 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       balance: 0,
       points: 0,
       permissions: [],
+      referralCode: ownReferralCode,
+      referredBy,
       createdAt: serverTimestamp(),
     });
     await setDoc(doc(db, 'publicProfiles', user.uid), {
+      avatar: '',
+      referralCode: ownReferralCode,
       displayName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
       createdAt: serverTimestamp(),
     });
+    if (referredBy) {
+      await setDoc(doc(db, 'referralRelations', user.uid), {
+        referrerId: referredBy,
+        refereeId: user.uid,
+        refereeName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
+        referralCode,
+        createdAt: serverTimestamp(),
+      });
+      window.localStorage.removeItem('sky-referral-code');
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {

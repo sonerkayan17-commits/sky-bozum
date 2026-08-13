@@ -88,7 +88,7 @@ service cloud.firestore {
     }
 
     match /referenceEngagements/{engagementId} {
-      allow read: if true;
+      allow read: if signedIn() && resource.data.profileId == request.auth.uid;
       allow create: if request.resource.data.keys().hasOnly([
           "type", "targetId", "visitorId", "memberId", "memberName", "createdAt"
         ])
@@ -122,7 +122,7 @@ service cloud.firestore {
         signedIn()
         && request.auth.uid == memberId
         && request.resource.data.keys().hasOnly([
-          "displayName", "phone", "email", "role", "status", "balance", "points", "permissions", "createdAt"
+          "displayName", "avatar", "phone", "email", "role", "status", "balance", "points", "permissions", "referralCode", "referredBy", "createdAt"
         ])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
@@ -135,6 +135,12 @@ service cloud.firestore {
         && request.resource.data.balance == 0
         && request.resource.data.points == 0
         && request.resource.data.permissions.size() == 0
+        && request.resource.data.avatar is string
+        && request.resource.data.avatar.size() <= 30000
+        && request.resource.data.referralCode is string
+        && request.resource.data.referralCode.size() >= 8
+        && request.resource.data.referralCode.size() <= 20
+        && (request.resource.data.referredBy == null || request.resource.data.referredBy is string)
         && request.resource.data.createdAt == request.time
       );
       allow update: if isAdmin() || (
@@ -226,12 +232,59 @@ service cloud.firestore {
     match /publicProfiles/{memberId} {
       allow read: if true;
       allow create, update: if signedIn() && request.auth.uid == memberId
-        && request.resource.data.keys().hasOnly(["displayName", "avatar", "createdAt"])
+        && request.resource.data.keys().hasOnly(["displayName", "avatar", "referralCode", "createdAt"])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
         && request.resource.data.displayName.size() <= 80
         && request.resource.data.avatar is string
         && request.resource.data.avatar.size() <= 30000;
+      allow delete: if false;
+    }
+
+    match /referralRelations/{relationId} {
+      allow read: if signedIn() && (resource.data.referrerId == request.auth.uid || resource.data.refereeId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(["referrerId", "refereeId", "refereeName", "referralCode", "createdAt"])
+        && request.resource.data.refereeId == request.auth.uid
+        && request.resource.data.referrerId != request.auth.uid
+        && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.referredBy == request.resource.data.referrerId
+        && request.resource.data.refereeName is string
+        && request.resource.data.refereeName.size() >= 2
+        && request.resource.data.refereeName.size() <= 80
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /referralRewards/{rewardId} {
+      allow read: if signedIn() && (resource.data.referrerId == request.auth.uid || resource.data.refereeId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(["referrerId", "refereeId", "sourceTargetId", "sourcePoints", "rewardPoints", "createdAt"])
+        && request.resource.data.refereeId == request.auth.uid
+        && request.resource.data.referrerId == get(/databases/$(database)/documents/members/$(request.auth.uid)).data.referredBy
+        && (request.resource.data.sourcePoints == 1 || request.resource.data.sourcePoints == 2 || request.resource.data.sourcePoints == 3)
+        && request.resource.data.rewardPoints == request.resource.data.sourcePoints / 10
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /profileVisits/{visitId} {
+      allow read: if signedIn() && resource.data.profileId == request.auth.uid;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(["profileId", "visitorId", "visitorName", "visitorAvatar", "viewedAt"])
+        && request.resource.data.visitorId == request.auth.uid
+        && request.resource.data.profileId != request.auth.uid
+        && request.resource.data.visitorName is string
+        && request.resource.data.visitorName.size() >= 2
+        && request.resource.data.visitorName.size() <= 80
+        && request.resource.data.visitorAvatar is string
+        && request.resource.data.visitorAvatar.size() <= 30000
+        && request.resource.data.viewedAt == request.time;
+      allow update: if signedIn()
+        && resource.data.visitorId == request.auth.uid
+        && request.resource.data.profileId == resource.data.profileId
+        && request.resource.data.visitorId == resource.data.visitorId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["visitorName", "visitorAvatar", "viewedAt"])
+        && request.resource.data.viewedAt == request.time;
       allow delete: if false;
     }
 
