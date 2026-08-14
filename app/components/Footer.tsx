@@ -1,12 +1,12 @@
 "use client";
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
 import PrivacyControls from './personalization/PrivacyControls';
 import TawkChat from './TawkChat';
 import { siteFeatures } from '../lib/features';
 import { useSiteSettings } from './SiteSettingsProvider';
-import InlineEditableImage from './admin/InlineEditableImage';
 import InlineEditableText from './admin/InlineEditableText';
 
 const groups = [
@@ -30,9 +30,9 @@ export default function Footer() {
         <div className="grid gap-10 border-b border-white/8 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div className="max-w-sm">
             <Link href="/" className="focus-ring inline-flex items-center gap-3 rounded-lg">
-              <InlineEditableImage contentKey="brand-logo" defaultSrc="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme" className="size-12 rounded-2xl border border-[#e8c27a]/20 object-cover" />
+              <Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme" width={52} height={52} className="size-12 rounded-2xl border border-[#e8c27a]/20 object-cover" />
               <span>
-                <InlineEditableText as="strong" contentKey="footer-brand-name" defaultValue={settings.brandName} className="block font-[var(--font-display)] text-lg font-bold tracking-tight" />
+                <strong className="block font-[var(--font-display)] text-lg font-bold tracking-tight">{settings.brandName}</strong>
                 <span className="mt-0.5 block text-xs font-semibold text-slate-500">bozumcu.net</span>
               </span>
             </Link>
@@ -55,7 +55,7 @@ export default function Footer() {
                   <h3 className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-300">{title}</h3>
                   <ul className="mt-4 space-y-3">
                     {links.map(([label, href]) => (
-                      <li key={href}><Link href={href} className="text-sm text-slate-500 transition hover:text-[#f2c98a]"><InlineEditableText contentKey={`footer-link-${href.slice(1).replace(/\//g, '-') || 'home'}`} defaultValue={label} /></Link></li>
+                      <li key={href}><Link href={href} className="text-sm text-slate-500 transition hover:text-[#f2c98a]">{label}</Link></li>
                     ))}
                   </ul>
                 </div>

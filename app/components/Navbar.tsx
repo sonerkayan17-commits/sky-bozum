@@ -1,14 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getFirebaseClient } from '../lib/firebase';
 import SiteSearch from './SiteSearch';
 import MemberNotifications from './member/MemberNotifications';
-import InlineEditableImage from './admin/InlineEditableImage';
-import InlineEditableText from './admin/InlineEditableText';
 import { siteFeatures } from '../lib/features';
 import './member/member-notifications.css';
 
@@ -117,7 +116,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08090e]/88 text-white backdrop-blur-2xl">
       <div className="content-shell flex h-[68px] items-center justify-between gap-4">
         <Link href="/" className="group flex items-center gap-3" aria-label="Sky Bozum ana sayfa">
-          <span className="relative h-11 w-11 overflow-hidden rounded-xl border border-pink-500/20 shadow-[0_10px_28px_rgba(236,72,153,.18)]"><InlineEditableImage contentKey="brand-logo" defaultSrc="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme logosu" className="h-11 w-11 object-cover" /></span>
+          <span className="relative h-11 w-11 overflow-hidden rounded-xl border border-pink-500/20 shadow-[0_10px_28px_rgba(236,72,153,.18)]"><Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme logosu" fill sizes="44px" className="object-cover" priority /></span>
           <span className="leading-none">
             <span className="block text-[11px] font-black uppercase tracking-[.24em] text-[#f2c98a]">Sky</span>
             <span className="mt-1 block text-lg font-black tracking-[-.04em] text-white">BOZUM</span>
@@ -138,7 +137,7 @@ export default function Navbar() {
                   : 'text-slate-300 hover:bg-white/[.055] hover:text-white'
               }`}
             >
-              <InlineEditableText contentKey={`menu-${href === '/' ? 'home' : href.slice(1).replace(/\//g, '-')}`} defaultValue={label} />
+              {label}
               {active(href) && <span className="absolute inset-x-3 -bottom-[17px] h-0.5 rounded-full bg-gradient-to-r from-pink-500 to-[#e8c27a] shadow-[0_0_12px_rgba(236,72,153,.65)]" />}
             </Link>
           ))}

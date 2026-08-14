@@ -15,7 +15,7 @@ export default function FinalCta() {
 
       <div className="home-contact-band__actions">
         <a href={siteConfig.liveSupportHref} target="_blank" rel="noopener noreferrer" className="focus-ring">
-          <InlineEditableText contentKey="home-final-cta" defaultValue="WhatsApp’tan teklif alın" /> <b aria-hidden="true">↗</b>
+          WhatsApp’tan teklif alın <b aria-hidden="true">↗</b>
         </a>
         <nav aria-label="Destek bağlantıları">
           <Link href="/iletisim">Tüm iletişim kanalları <span aria-hidden="true">→</span></Link>
