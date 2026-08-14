@@ -442,7 +442,8 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly([
           "brandName", "brandTagline", "footerDescription", "phone", "email",
           "whatsapp", "liveSupportLabel", "supportHours", "defaultSeoTitle",
-          "defaultSeoDescription", "updatedBy", "updatedAt"
+          "defaultSeoDescription", "heroEyebrow", "heroTitle", "heroLead", "heroPrimaryCta",
+          "proofExperience", "proofTransactions", "updatedBy", "updatedAt"
         ])
         && request.resource.data.brandName is string && request.resource.data.brandName.size() >= 2 && request.resource.data.brandName.size() <= 80
         && request.resource.data.brandTagline is string && request.resource.data.brandTagline.size() <= 180
@@ -454,6 +455,12 @@ service cloud.firestore {
         && request.resource.data.supportHours is string && request.resource.data.supportHours.size() <= 80
         && request.resource.data.defaultSeoTitle is string && request.resource.data.defaultSeoTitle.size() <= 180
         && request.resource.data.defaultSeoDescription is string && request.resource.data.defaultSeoDescription.size() <= 300
+        && request.resource.data.heroEyebrow is string && request.resource.data.heroEyebrow.size() <= 140
+        && request.resource.data.heroTitle is string && request.resource.data.heroTitle.size() >= 5 && request.resource.data.heroTitle.size() <= 180
+        && request.resource.data.heroLead is string && request.resource.data.heroLead.size() <= 320
+        && request.resource.data.heroPrimaryCta is string && request.resource.data.heroPrimaryCta.size() <= 80
+        && request.resource.data.proofExperience is string && request.resource.data.proofExperience.size() <= 40
+        && request.resource.data.proofTransactions is string && request.resource.data.proofTransactions.size() <= 40
         && request.resource.data.updatedBy == request.auth.uid
         && request.resource.data.updatedAt == request.time;
       allow delete: if false;

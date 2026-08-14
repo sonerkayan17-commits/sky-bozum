@@ -12,6 +12,12 @@ export type SiteSettings = {
   supportHours: string;
   defaultSeoTitle: string;
   defaultSeoDescription: string;
+  heroEyebrow: string;
+  heroTitle: string;
+  heroLead: string;
+  heroPrimaryCta: string;
+  proofExperience: string;
+  proofTransactions: string;
   updatedBy?: string;
   updatedAt?: unknown;
 };
@@ -27,6 +33,12 @@ export const defaultSiteSettings: SiteSettings = {
   supportHours: 'Her gün 09:00 - 00:00',
   defaultSeoTitle: 'Sky Bozum - Mobil Ödeme ve Dijital Bakiye Bozum',
   defaultSeoDescription: 'Mobil ödeme, dijital kod ve bakiye işlemleri için güncel bilgi, hesaplama araçları ve yazılı destek.',
+  heroEyebrow: '10 yıl kurucu deneyimi · 7/24 destek',
+  heroTitle: 'Mobil ödeme ve dijital bakiyenizi güvenle bozdurun.',
+  heroLead: 'Vodafone, Turkcell, Türk Telekom, Paycell, Pokus ve dijital bakiyeleriniz için işlem öncesinde net oran, güvenli süreç ve hızlı ödeme.',
+  heroPrimaryCta: 'Güncel oranınızı öğrenin',
+  proofExperience: '10 yıl',
+  proofTransactions: '10.000+',
 };
 
 export const siteSettingsRef = (db: Firestore) => doc(db, 'siteSettings', 'global');

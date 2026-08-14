@@ -16,6 +16,12 @@ const editableFields: { key: keyof SiteSettings; label: string; hint: string; mu
   { key: 'supportHours', label: 'Destek saatleri', hint: 'Örn. Her gün 09:00 - 00:00' },
   { key: 'defaultSeoTitle', label: 'Varsayılan SEO başlığı', hint: 'Özel başlığı olmayan sayfalar için.' },
   { key: 'defaultSeoDescription', label: 'Varsayılan SEO açıklaması', hint: 'Özel açıklaması olmayan sayfalar için.', multiline: true },
+  { key: 'heroEyebrow', label: 'Ana sayfa üst bilgi', hint: 'İlk ekranda başlığın üzerinde görünür.' },
+  { key: 'heroTitle', label: 'Ana sayfa başlığı', hint: 'İlk ekranın ana mesajı.', multiline: true },
+  { key: 'heroLead', label: 'Ana sayfa açıklaması', hint: 'Başlığın altında görünen açıklama.', multiline: true },
+  { key: 'heroPrimaryCta', label: 'Ana sayfa ana düğmesi', hint: 'WhatsApp yönlendirme düğmesinin metni.' },
+  { key: 'proofExperience', label: 'Deneyim göstergesi', hint: 'Örn. 10 yıl' },
+  { key: 'proofTransactions', label: 'İşlem göstergesi', hint: 'Örn. 10.000+' },
 ];
 
 export default function SiteSettingsPanel({ db, actorId }: { db: Firestore | null; actorId: string }) {

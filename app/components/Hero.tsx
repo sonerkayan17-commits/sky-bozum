@@ -1,7 +1,10 @@
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { rateItems } from '../lib/rates';
 import { siteConfig } from '../lib/site';
+import { useSiteSettings } from './SiteSettingsProvider';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
 const featuredRates = featuredIds
@@ -20,6 +23,7 @@ const logos: Record<string, string> = {
 };
 
 export default function Hero() {
+  const settings = useSiteSettings();
   return (
     <section className="hero-pro" aria-labelledby="hero-title">
       <div className="hero-pro-grid" aria-hidden="true" />
@@ -28,12 +32,12 @@ export default function Hero() {
 
       <div className="content-shell hero-pro-shell">
         <div className="hero-pro-copy">
-          <p className="hero-pro-eyebrow"><span /> 3+ yıl aktif hizmet · 7/24 destek</p>
-          <h1 id="hero-title">Mobil ödeme ve dijital bakiyenizi<br /><em>güvenle bozdurun.</em></h1>
-          <p className="hero-pro-lead">Vodafone, Turkcell, Türk Telekom, Paycell, Pokus ve dijital bakiyeleriniz için işlem öncesinde net oran, güvenli süreç ve hızlı ödeme.</p>
+          <p className="hero-pro-eyebrow"><span /> {settings.heroEyebrow}</p>
+          <h1 id="hero-title">{settings.heroTitle}</h1>
+          <p className="hero-pro-lead">{settings.heroLead}</p>
 
           <div className="hero-pro-actions">
-            <a href={siteConfig.liveSupportHref} target="_blank" rel="noopener noreferrer" className="hero-pro-primary">Güncel oranınızı öğrenin <span>→</span></a>
+            <a href={settings.whatsapp} target="_blank" rel="noopener noreferrer" className="hero-pro-primary">{settings.heroPrimaryCta} <span>→</span></a>
             <Link href="/araclar#hesapla" className="hero-pro-secondary">Oran hesaplayın</Link>
           </div>
 
