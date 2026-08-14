@@ -254,6 +254,7 @@ service cloud.firestore {
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
+        && resource.data.locked != true
         && validForumDraft(request.resource.data)
         && request.resource.data.status == resource.data.status
         && request.resource.data.createdAt == resource.data.createdAt

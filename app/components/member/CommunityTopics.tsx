@@ -23,6 +23,7 @@ type Post = {
   categorySlug: string;
   status: string;
   visibility: string;
+  locked: boolean;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -85,6 +86,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
         categorySlug: String(data.categorySlug || ''),
         status: String(data.status || 'unknown'),
         visibility: String(data.visibility || 'unknown'),
+        locked: data.locked === true,
         createdAt: (data.createdAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
         updatedAt: (data.updatedAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
       };
@@ -161,6 +163,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       forumKey: `${selectedSection.slug}/${categorySlug}`,
       visibility: 'public' as const,
       status: currentPost?.status === 'published' ? 'published' as const : 'pending' as const,
+      locked: currentPost?.locked === true,
       updatedAt: serverTimestamp(),
     };
 
@@ -216,7 +219,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       <div className="topic-form-actions"><button>{editingId ? 'Değişiklikleri kaydet' : 'Konuyu yayınla'}</button>{editingId && <button type="button" className="topic-cancel" onClick={reset}>Vazgeç</button>}</div>
     </form>
     {notice && <b>{notice}</b>}
-    {user && <div className="my-topics"><h2>Konularım</h2>{posts.filter((post) => post.uid === user.uid).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.status === 'archived' ? 'Arşivlendi' : post.status === 'published' ? 'Yayında' : 'Moderasyon bekliyor'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><button type="button" onClick={() => edit(post)}>Düzenle</button></article>)}</div>}
+    {user && <div className="my-topics"><h2>Konularım</h2>{posts.filter((post) => post.uid === user.uid).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.locked ? 'Kilitli' : post.status === 'archived' ? 'Arşivlendi' : post.status === 'published' ? 'Yayında' : 'Moderasyon bekliyor'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><button type="button" disabled={post.locked} onClick={() => edit(post)}>{post.locked ? 'Kilitli' : 'Düzenle'}</button></article>)}</div>}
   </section></main>;
 
   if (!visiblePosts.length) return null;
