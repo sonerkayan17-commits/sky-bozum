@@ -24,6 +24,9 @@ export type AdminMember = {
   balance: number;
   points: number;
   permissions: string[];
+  banReason: string;
+  bannedBy: string;
+  bannedAt: Date | null;
   createdAt: Date | null;
 };
 
@@ -55,7 +58,7 @@ export type MemberLedgerEvent = {
   createdAt: Date | null;
 };
 
-type MemberDocument = Omit<AdminMember, 'id' | 'createdAt'> & { createdAt?: Timestamp };
+type MemberDocument = Omit<AdminMember, 'id' | 'createdAt' | 'bannedAt'> & { createdAt?: Timestamp; bannedAt?: Timestamp };
 type CommentDocument = Omit<AdminComment, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type ContentAuditDocument = Omit<ContentAuditEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type MemberLedgerDocument = Omit<MemberLedgerEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
@@ -70,6 +73,9 @@ function asMember(id: string, value: MemberDocument): AdminMember {
     balance: Number(value.balance) || 0,
     points: Number(value.points) || 0,
     permissions: Array.isArray(value.permissions) ? value.permissions : [],
+    banReason: value.banReason || '',
+    bannedBy: value.bannedBy || '',
+    bannedAt: value.bannedAt?.toDate() ?? null,
     createdAt: value.createdAt?.toDate() ?? null,
   };
 }
@@ -158,8 +164,25 @@ async function writeAdminAudit(firestore: Firestore, action: string, entityId: s
 }
 
 export async function setMemberStatus(firestore: Firestore, memberId: string, status: MemberStatus, actorId: string) {
-  await updateDoc(doc(firestore, 'members', memberId), { status, updatedAt: serverTimestamp() });
+  await updateDoc(doc(firestore, 'members', memberId), {
+    status,
+    banReason: status === 'banned' ? 'Yönetici kararıyla erişim engellendi.' : '',
+    bannedBy: status === 'banned' ? actorId : '',
+    bannedAt: status === 'banned' ? serverTimestamp() : null,
+    updatedAt: serverTimestamp(),
+  });
   await writeAdminAudit(firestore, `member-status:${status}`, memberId, actorId);
+}
+
+export async function banMember(firestore: Firestore, memberId: string, reason: string, actorId: string) {
+  await updateDoc(doc(firestore, 'members', memberId), {
+    status: 'banned',
+    banReason: reason.trim().slice(0, 240) || 'Yönetici kararıyla erişim engellendi.',
+    bannedBy: actorId,
+    bannedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  await writeAdminAudit(firestore, 'member-status:banned', memberId, actorId);
 }
 
 export async function setMemberAccess(

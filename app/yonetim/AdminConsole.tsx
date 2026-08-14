@@ -27,6 +27,7 @@ import {
 } from "../lib/contentAdmin";
 import {
   changeMemberValue,
+  banMember,
   moderateComment,
   removeComment,
   setMemberAccess,
@@ -96,6 +97,7 @@ export default function AdminConsole({
   const [amount, setAmount] = useState("");
   const [valueKind, setValueKind] = useState<"balance" | "points">("balance");
   const [note, setNote] = useState("");
+  const [banReason, setBanReason] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [clientReady, setClientReady] = useState(false);
@@ -650,7 +652,7 @@ export default function AdminConsole({
                       {member.points} puan
                     </b>
                     <small>{formatDate(member.createdAt)}</small>
-                    <button onClick={() => setSelectedMember(member)}>
+                    <button onClick={() => { setSelectedMember(member); setBanReason(member.banReason || ''); }}>
                       Yönet →
                     </button>
                   </article>
@@ -1024,6 +1026,7 @@ export default function AdminConsole({
             <span>ÜYE İŞLEMİ</span>
             <h2 id="member-title">{selectedMember.displayName}</h2>
             <p>{selectedMember.email}</p>
+            {selectedMember.status === "banned" && <p className="admin-status status-banned">Ban nedeni: {selectedMember.banReason || "Belirtilmedi"}{selectedMember.bannedAt ? ` · ${formatDate(selectedMember.bannedAt)}` : ""}</p>}
             <div className="admin-modal-actions">
               <button
                 onClick={() =>
@@ -1039,7 +1042,7 @@ export default function AdminConsole({
                 onClick={() =>
                   confirmAction(
                     `${selectedMember.displayName} adlı üyenin erişimi engellenecek. Devam edilsin mi?`,
-                    () => setMemberStatus(db!, selectedMember.id, "banned", user.uid),
+                    () => banMember(db!, selectedMember.id, banReason, user.uid),
                     "Üye banlandı.",
                   )
                 }
@@ -1047,6 +1050,10 @@ export default function AdminConsole({
                 Üyeyi banla
               </button>
             </div>
+            <label>
+              Ban gerekçesi
+              <textarea value={banReason} onChange={(event) => setBanReason(event.target.value)} maxLength={240} rows={3} placeholder="Örn. topluluk kurallarına aykırı tekrar eden içerik" />
+            </label>
             <form
               onSubmit={(event) => {
                 event.preventDefault();
