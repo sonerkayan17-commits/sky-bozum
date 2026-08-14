@@ -12,11 +12,13 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { getFirebaseClient } from "../lib/firebase";
 import "./content.css";
 import "./admin-tools.css";
+import "./site-settings.css";
 import RichArticleEditor from "./RichArticleEditor";
 import ForumArchivePanel from "./ForumArchivePanel";
 import AdminRatePanel from "./AdminRatePanel";
 import ForumModerationPanel from "./ForumModerationPanel";
 import AdminOperationPanel from "./AdminOperationPanel";
+import SiteSettingsPanel from "./SiteSettingsPanel";
 import { articles } from "../lib/site";
 import {
   removeManagedArticle,
@@ -43,7 +45,7 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations";
+type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -354,6 +356,7 @@ export default function AdminConsole({
           </div>
         </header>
         <nav className="admin-nav" aria-label="Yönetim bölümleri">
+          <button className={view === "settings" ? "is-active" : ""} onClick={() => setView("settings")}>Site ayarları</button>
           {(
             [
               ["overview", "Genel bakış"],
@@ -608,6 +611,7 @@ export default function AdminConsole({
             </div>
           </section>
         )}
+        {view === "settings" && <SiteSettingsPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}
         {view === "members" && (

@@ -435,6 +435,30 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    match /siteSettings/{settingId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && settingId == "global"
+        && request.resource.data.keys().hasOnly([
+          "brandName", "brandTagline", "footerDescription", "phone", "email",
+          "whatsapp", "liveSupportLabel", "supportHours", "defaultSeoTitle",
+          "defaultSeoDescription", "updatedBy", "updatedAt"
+        ])
+        && request.resource.data.brandName is string && request.resource.data.brandName.size() >= 2 && request.resource.data.brandName.size() <= 80
+        && request.resource.data.brandTagline is string && request.resource.data.brandTagline.size() <= 180
+        && request.resource.data.footerDescription is string && request.resource.data.footerDescription.size() <= 300
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
+        && request.resource.data.email is string && request.resource.data.email.size() <= 120
+        && request.resource.data.whatsapp is string && request.resource.data.whatsapp.size() <= 220
+        && request.resource.data.liveSupportLabel is string && request.resource.data.liveSupportLabel.size() <= 80
+        && request.resource.data.supportHours is string && request.resource.data.supportHours.size() <= 80
+        && request.resource.data.defaultSeoTitle is string && request.resource.data.defaultSeoTitle.size() <= 180
+        && request.resource.data.defaultSeoDescription is string && request.resource.data.defaultSeoDescription.size() <= 300
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+
     match /contentArticles/{articleId} {
       allow read: if resource.data.status == "published" || isAdmin();
       allow create, update: if canManageContent();

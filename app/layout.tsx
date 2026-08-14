@@ -3,6 +3,7 @@ import './globals.css';
 import './styles/site-search-fix.css';
 import Navbar from './components/NavbarV2';
 import Footer from './components/Footer';
+import { SiteSettingsProvider } from './components/SiteSettingsProvider';
 import VisitorExperienceProvider from './components/personalization/VisitorExperienceProvider';
 import { siteConfig } from './lib/site-config';
 import { DEFAULT_OG_IMAGE, SITE_LANGUAGE, SITE_LOCALE, SITE_NAME, SITE_URL, jsonLd } from './lib/seo';
@@ -51,4 +52,4 @@ const structuredData = {
     { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, url: SITE_URL, name: siteConfig.name, inLanguage: SITE_LANGUAGE, publisher: { '@id': `${SITE_URL}/#organization` }, potentialAction: { '@type': 'SearchAction', target: `${SITE_URL}/bilgi-merkezi?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
   ],
 };
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="tr" suppressHydrationWarning className=""><body className="min-h-screen bg-[#090b10] text-white antialiased"><div className="grain-overlay" aria-hidden="true"/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(structuredData)}}/><VisitorExperienceProvider><a href="#site-content" className="skip-link">Ana içeriğe geç</a><Navbar/><SiteBackButton/><div id="site-content" tabIndex={-1}>{children}</div><Footer/><QuickActionDock/></VisitorExperienceProvider></body></html>}
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="tr" suppressHydrationWarning className=""><body className="min-h-screen bg-[#090b10] text-white antialiased"><div className="grain-overlay" aria-hidden="true"/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(structuredData)}}/><SiteSettingsProvider><VisitorExperienceProvider><a href="#site-content" className="skip-link">Ana içeriğe geç</a><Navbar/><SiteBackButton/><div id="site-content" tabIndex={-1}>{children}</div><Footer/><QuickActionDock/></VisitorExperienceProvider></SiteSettingsProvider></body></html>}
