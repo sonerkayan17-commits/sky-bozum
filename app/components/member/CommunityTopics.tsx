@@ -21,6 +21,8 @@ type Post = {
   subCategory: string;
   sectionSlug: string;
   categorySlug: string;
+  status: string;
+  visibility: string;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -61,7 +63,31 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     const { auth, db } = getFirebaseClient();
     if (!auth || !db) return;
 
-    const stopAuth = onAuthStateChanged(auth, setUser);
+    let publicPosts: Post[] = [];
+    let ownPosts: Post[] = [];
+    const syncPosts = () => {
+      const merged = new Map<string, Post>();
+      [...publicPosts, ...ownPosts].forEach((post) => merged.set(post.id, post));
+      setPosts([...merged.values()].sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)));
+    };
+    const mapPost = (item: { id: string; data: () => Record<string, unknown> }) => {
+      const data = item.data();
+      return {
+        id: item.id,
+        uid: String(data.uid || ''),
+        author: String(data.author || 'Sky Bozum üyesi'),
+        title: String(data.title || 'Başlıksız konu'),
+        body: String(data.body || ''),
+        category: String(data.category || 'Genel'),
+        subCategory: String(data.subCategory || data.category || 'Genel'),
+        sectionSlug: String(data.sectionSlug || ''),
+        categorySlug: String(data.categorySlug || ''),
+        status: String(data.status || 'unknown'),
+        visibility: String(data.visibility || 'unknown'),
+        createdAt: (data.createdAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
+        updatedAt: (data.updatedAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
+      };
+    };
     const stopPosts = onSnapshot(
       query(
         collection(db, 'memberPosts'),
@@ -69,25 +95,21 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
         where('visibility', '==', 'public'),
         where('forumKey', 'in', publicForumKeys),
       ),
-      (snapshot) => setPosts(snapshot.docs.map((item) => {
-        const data = item.data();
-        return {
-          id: item.id,
-          uid: String(data.uid),
-          author: String(data.author),
-          title: String(data.title),
-          body: String(data.body),
-          category: String(data.category || 'Genel'),
-          subCategory: String(data.subCategory || data.category || 'Genel'),
-          sectionSlug: String(data.sectionSlug || ''),
-          categorySlug: String(data.categorySlug || ''),
-          createdAt: data.createdAt?.toDate?.() ?? null,
-          updatedAt: data.updatedAt?.toDate?.() ?? null,
-        };
-      }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))),
+      (snapshot) => { publicPosts = snapshot.docs.map(mapPost); syncPosts(); },
     );
 
-    return () => { stopAuth(); stopPosts(); };
+    let stopOwn = () => {};
+    const stopAuth = onAuthStateChanged(auth, (nextUser) => {
+      setUser(nextUser);
+      stopOwn();
+      ownPosts = [];
+      if (nextUser) {
+        stopOwn = onSnapshot(query(collection(db, 'memberPosts'), where('uid', '==', nextUser.uid)), (snapshot) => { ownPosts = snapshot.docs.map(mapPost); syncPosts(); });
+      }
+      syncPosts();
+    });
+
+    return () => { stopAuth(); stopPosts(); stopOwn(); };
   }, []);
 
   function reset() {
@@ -170,7 +192,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       <div className="topic-form-actions"><button>{editingId ? 'Değişiklikleri kaydet' : 'Konuyu yayınla'}</button>{editingId && <button type="button" className="topic-cancel" onClick={reset}>Vazgeç</button>}</div>
     </form>
     {notice && <b>{notice}</b>}
-    {user && <div className="my-topics"><h2>Konularım</h2>{posts.filter((post) => post.uid === user.uid).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.updatedAt ? 'Güncellendi' : 'Yayınlandı'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><button type="button" onClick={() => edit(post)}>Düzenle</button></article>)}</div>}
+    {user && <div className="my-topics"><h2>Konularım</h2>{posts.filter((post) => post.uid === user.uid).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.status === 'archived' ? 'Arşivlendi' : post.status === 'published' ? 'Yayında' : 'Moderasyon bekliyor'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><button type="button" onClick={() => edit(post)}>Düzenle</button></article>)}</div>}
   </section></main>;
 
   if (!visiblePosts.length) return null;

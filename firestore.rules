@@ -223,7 +223,8 @@ service cloud.firestore {
     }
 
     match /memberPosts/{postId} {
-      allow read: if canModerate() || validPublicForumPost(resource.data);
+      allow read: if canModerate() || validPublicForumPost(resource.data)
+        || (signedIn() && resource.data.uid == request.auth.uid);
       allow create: if signedIn()
         && request.resource.data.uid == request.auth.uid
         && validPublicForumPost(request.resource.data)
