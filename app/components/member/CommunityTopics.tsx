@@ -252,7 +252,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
 
   if (!visiblePosts.length) return null;
   return <section className="community-page community-page--scoped" aria-label="Üye konuları">
-    <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link></header>
+    <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href={user ? '/hesabim/yeni-konu' : '/giris'}>{user ? '+ Yeni konu aç' : 'Üye girişi yap'}</Link></header>
     <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{isAdmin ? <><button type="button" onClick={() => edit(post)}>Düzenle</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></> : user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
   </section>;
 }

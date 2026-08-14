@@ -39,16 +39,17 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   useEffect(() => {
     if (!db) return;
     const visitorId = getOrCreateVisitorId();
-    setLiked(localStorage.getItem(`sky-liked:${service}`) === '1');
+    setLiked(user ? localStorage.getItem(`sky-liked:${service}:${user.uid}`) === '1' : false);
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
     const stopComments = subscribeToApprovedComments(db, (items) => setComments(items.filter((item) => item.service === service)), () => undefined);
     const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); setLikers(counts.likers[service] ?? []); }, () => undefined);
     return () => { stopComments(); stopCounts(); };
-  }, [db, service]);
+  }, [db, service, user]);
 
   useEffect(() => db ? onSnapshot(collection(db, 'publicProfiles'), (snapshot) => { const next: Record<string,string> = {}; snapshot.docs.forEach((item) => { const avatar = String(item.data().avatar || ''); if (avatar) next[item.id] = avatar; }); setAvatars(next); }) : undefined, [db]);
 
   async function likeAndBump() {
+    if (!user) { window.location.assign('/giris'); return; }
     if (!db || liked) return;
     setBusy(true);
     try {
@@ -57,7 +58,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
         name: user.displayName || user.email || 'Sky Bozum üyesi',
       } : undefined);
       if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
-      localStorage.setItem(`sky-liked:${service}`, '1');
+      localStorage.setItem(`sky-liked:${service}:${user.uid}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
     } catch { setNotice('Beğeni kaydedilemedi. Lütfen tekrar deneyin.'); }
@@ -146,11 +147,11 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     </div>
 
     <nav className="flex flex-wrap items-center gap-1 border-b border-white/10 bg-black/15 px-4 py-2" aria-label="Konu işlemleri">
-      <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button>
+      {user ? <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button> : <Link href="/giris" className={actionClass}>♡ Beğen <span className="ml-1 text-slate-500">{likes}</span></Link>}
       <button type="button" onClick={copyLink} className={actionClass}>Kopyala</button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
       {user ? <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
-      {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : null}
+      {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : <Link href="/giris" className={actionClass}>⌁ Takip et</Link>}
       <span className="ml-auto hidden text-[11px] font-bold text-slate-600 sm:inline">Beğeniler konuyu üste çıkarır</span>
     </nav>
 
