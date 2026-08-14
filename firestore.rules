@@ -236,6 +236,27 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /memberBookmarks/{bookmarkId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if signedIn() && notBanned()
+        && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() >= 1
+        && request.resource.data.targetId.size() <= 120
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 1
+        && request.resource.data.title.size() <= 140
+        && request.resource.data.href is string
+        && request.resource.data.href.size() <= 180
+        && request.resource.data.createdAt == request.time;
+      allow update: if signedIn() && resource.data.uid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["title", "href"])
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.targetId == resource.data.targetId;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
     match /memberPosts/{postId} {
       allow read: if canModerate() || validPublicForumPost(resource.data)
         || (signedIn() && resource.data.uid == request.auth.uid);

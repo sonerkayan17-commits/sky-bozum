@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState, type FormEvent } from 'react';
 import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedComments, subscribeToEngagementCounts, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
+import { isBookmarked, removeBookmark, saveBookmark } from '../../lib/bookmarks';
 import { recordMemberActivity } from '../../lib/memberProgress';
 import { followContent, likeComment, notify } from '../../lib/social';
 import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -21,6 +22,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [likes, setLikes] = useState(0);
   const [views, setViews] = useState(0);
   const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
   const [likers, setLikers] = useState<string[]>([]);
   const [author, setAuthor] = useState('');
   const [message, setMessage] = useState('');
@@ -40,6 +42,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     if (!db) return;
     const visitorId = getOrCreateVisitorId();
     setLiked(user ? localStorage.getItem(`sky-liked:${service}:${user.uid}`) === '1' : false);
+    if (user) isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
     const stopComments = subscribeToApprovedComments(db, (items) => setComments(items.filter((item) => item.service === service)), () => undefined);
     const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); setLikers(counts.likers[service] ?? []); }, () => undefined);
@@ -93,6 +96,16 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       await navigator.clipboard.writeText(window.location.href);
       setNotice('Konu bağlantısı panoya kopyalandı.');
     } catch { setNotice('Bağlantı kopyalanamadı.'); }
+  }
+
+  async function toggleBookmark() {
+    if (!user || !db) { window.location.assign('/giris'); return; }
+    try {
+      if (bookmarked) await removeBookmark(db, user.uid, service);
+      else await saveBookmark(db, user.uid, service, title, window.location.pathname);
+      setBookmarked(!bookmarked);
+      setNotice(bookmarked ? 'İçerik kaydedilenlerden çıkarıldı.' : 'İçerik kişisel arşivinize kaydedildi.');
+    } catch { setNotice('Kaydetme işlemi tamamlanamadı.'); }
   }
 
   async function reportComment(comment: PublicComment) {
@@ -149,6 +162,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     <nav className="flex flex-wrap items-center gap-1 border-b border-white/10 bg-black/15 px-4 py-2" aria-label="Konu işlemleri">
       {user ? <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button> : <Link href="/giris" className={actionClass}>♡ Beğen <span className="ml-1 text-slate-500">{likes}</span></Link>}
       <button type="button" onClick={copyLink} className={actionClass}>Kopyala</button>
+      <button type="button" onClick={() => void toggleBookmark()} className={actionClass}>{bookmarked ? '★ Kaydedildi' : '☆ Kaydet'}</button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
       {user ? <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
       {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : <Link href="/giris" className={actionClass}>⌁ Takip et</Link>}
