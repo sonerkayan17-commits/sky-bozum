@@ -382,6 +382,18 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /forumPostRevisions/{revisionId} {
+      allow read: if canModerate();
+      allow create: if canModerate()
+        && request.resource.data.keys().hasOnly(["postId", "title", "body", "status", "visibility", "editedBy", "createdAt"])
+        && request.resource.data.postId is string
+        && request.resource.data.title is string
+        && request.resource.data.body is string
+        && request.resource.data.editedBy == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
     match /commentLikes/{likeId} {
       allow read: if true;
       allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
