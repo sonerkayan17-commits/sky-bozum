@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { rateItems } from '../lib/rates';
 import { siteConfig } from '../lib/site';
 import { useSiteSettings } from './SiteSettingsProvider';
+import { InlineEditableImage, InlineEditableText } from './admin/SiteInlineEditor';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
 const featuredRates = featuredIds
@@ -32,9 +33,9 @@ export default function Hero() {
 
       <div className="content-shell hero-pro-shell">
         <div className="hero-pro-copy">
-          <p className="hero-pro-eyebrow"><span /> {settings.heroEyebrow}</p>
-          <h1 id="hero-title">{settings.heroTitle}</h1>
-          <p className="hero-pro-lead">{settings.heroLead}</p>
+          <p className="hero-pro-eyebrow"><span /> <InlineEditableText contentKey="home.hero.eyebrow" defaultValue={settings.heroEyebrow} /></p>
+          <InlineEditableText contentKey="home.hero.title" defaultValue={settings.heroTitle} as="h1" id="hero-title" multiline />
+          <InlineEditableText contentKey="home.hero.lead" defaultValue={settings.heroLead} as="p" className="hero-pro-lead" multiline />
 
           <div className="hero-pro-actions">
             <a href={settings.whatsapp} target="_blank" rel="noopener noreferrer" className="hero-pro-primary">{settings.heroPrimaryCta} <span>→</span></a>
@@ -62,7 +63,7 @@ export default function Hero() {
               <div className="hero-pro-status"><span>09:41</span><span>● ◒ ▰</span></div>
 
               <div className="hero-pro-apphead">
-                <div className="hero-pro-appbrand"><Image src="/brand-logo.webp" alt="" width={38} height={38} priority fetchPriority="high" /><span><b>Sky Bozum</b><small>İşlem merkezi</small></span></div>
+                <div className="hero-pro-appbrand"><InlineEditableImage contentKey="home.hero.app-logo" defaultSrc="/brand-logo.webp" alt="Sky Bozum amblemi" width={38} height={38} /><span><b>Sky Bozum</b><small>İşlem merkezi</small></span></div>
                 <span className="hero-pro-appbadge">Yazılı teyit</span>
               </div>
 

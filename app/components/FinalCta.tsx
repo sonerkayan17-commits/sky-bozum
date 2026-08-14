@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
+import { InlineEditableText } from './admin/SiteInlineEditor';
 
 export default function FinalCta() {
   return (
@@ -7,7 +8,7 @@ export default function FinalCta() {
       <div className="home-contact-band__copy">
         <p><i aria-hidden="true" /> Sky Bozum resmî iletişim</p>
         <h2 id="support-card-title">Talebinizi iletin.<br /><em>Net teklifinizi görün.</em></h2>
-        <span>Hizmet ve tutarı paylaşın; oranı, tahmini ödemeyi ve işlem koşullarını karar vermeden önce yazılı alın.</span>
+        <InlineEditableText contentKey="home.final-cta.description" defaultValue="Hizmet ve tutarı paylaşın; oranı, tahmini ödemeyi ve işlem koşullarını karar vermeden önce yazılı alın." multiline />
       </div>
 
       <div className="home-contact-band__actions">

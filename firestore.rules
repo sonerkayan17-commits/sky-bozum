@@ -469,6 +469,38 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Site üzerindeki yönetici düzenleme alanları public sayfa içeriğidir.
+    // Yazma hakkı Firestore seviyesinde yalnızca admin claim'ine verilir.
+    match /siteContent/{contentId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(["type", "value", "alt", "style", "pagePath", "selector", "href", "updatedBy", "updatedAt"])
+        && request.resource.data.type in ["text", "image", "dom-text", "dom-image"]
+        && request.resource.data.value is string
+        && request.resource.data.value.size() >= 1
+        && request.resource.data.value.size() <= 1200
+        && request.resource.data.alt is string
+        && request.resource.data.alt.size() <= 160
+        && request.resource.data.pagePath is string
+        && request.resource.data.pagePath.size() <= 180
+        && request.resource.data.selector is string
+        && request.resource.data.selector.size() <= 1200
+        && request.resource.data.href is string
+        && request.resource.data.href.size() <= 500
+        && request.resource.data.style is map
+        && request.resource.data.style.keys().hasOnly(["fontFamily", "fontSize", "fontWeight", "textAlign"])
+        && request.resource.data.style.fontFamily in ["inherit", "Arial", "Georgia", "Tahoma", "Trebuchet MS", "Verdana"]
+        && request.resource.data.style.fontSize in [0, 12, 14, 16, 18, 20, 24, 28, 32, 36, 42, 48, 56, 64]
+        && request.resource.data.style.fontWeight in [0, 400, 500, 600, 700, 800, 900]
+        && request.resource.data.style.textAlign in ["left", "center", "right"]
+        && (request.resource.data.type != "image" && request.resource.data.type != "dom-image" || request.resource.data.value.matches("^(/|https://).*$"))
+        && (request.resource.data.type != "dom-text" || (request.resource.data.pagePath.size() > 0 && request.resource.data.selector.size() > 0))
+        && (request.resource.data.type != "dom-image" || (request.resource.data.pagePath.size() > 0 && request.resource.data.selector.size() > 0))
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isAdmin();
+    }
+
     match /contentArticles/{articleId} {
       allow read: if resource.data.status == "published" || isAdmin();
       allow create, update: if canManageContent();
