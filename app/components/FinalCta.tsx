@@ -1,16 +1,13 @@
-"use client";
-
 import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
-import InlineEditableText from './admin/InlineEditableText';
 
 export default function FinalCta() {
   return (
     <section className="home-contact-band" aria-labelledby="support-card-title">
       <div className="home-contact-band__copy">
-        <p><i aria-hidden="true" /> <InlineEditableText contentKey="home-final-eyebrow" defaultValue="Sky Bozum resmî iletişim" /></p>
-        <h2 id="support-card-title"><InlineEditableText contentKey="home-final-title" defaultValue="Talebinizi iletin. Net teklifinizi görün." /></h2>
-        <InlineEditableText contentKey="home-final-description" defaultValue="Hizmet ve tutarı paylaşın; oranı, tahmini ödemeyi ve işlem koşullarını karar vermeden önce yazılı alın." />
+        <p><i aria-hidden="true" /> Sky Bozum resmî iletişim</p>
+        <h2 id="support-card-title">Talebinizi iletin.<br /><em>Net teklifinizi görün.</em></h2>
+        <span>Hizmet ve tutarı paylaşın; oranı, tahmini ödemeyi ve işlem koşullarını karar vermeden önce yazılı alın.</span>
       </div>
 
       <div className="home-contact-band__actions">

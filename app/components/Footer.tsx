@@ -7,7 +7,6 @@ import PrivacyControls from './personalization/PrivacyControls';
 import TawkChat from './TawkChat';
 import { siteFeatures } from '../lib/features';
 import { useSiteSettings } from './SiteSettingsProvider';
-import InlineEditableText from './admin/InlineEditableText';
 
 const groups = [
   ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],
@@ -36,7 +35,7 @@ export default function Footer() {
                 <span className="mt-0.5 block text-xs font-semibold text-slate-500">bozumcu.net</span>
               </span>
             </Link>
-            <InlineEditableText as="p" contentKey="footer-description" defaultValue={settings.footerDescription} className="mt-5 text-sm leading-7 text-slate-400" />
+            <p className="mt-5 text-sm leading-7 text-slate-400">{settings.footerDescription}</p>
 
             <p className="mt-2 text-xs text-slate-500">{settings.brandTagline}</p>
             <div className="mt-6 flex gap-2.5">

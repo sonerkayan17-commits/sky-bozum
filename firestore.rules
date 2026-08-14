@@ -435,19 +435,6 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    match /siteContent/{contentId} {
-      allow read: if true;
-      allow create, update: if isAdmin()
-        && request.resource.data.keys().hasOnly(["type", "value", "updatedBy", "updatedAt"])
-        && (request.resource.data.type == "text" || request.resource.data.type == "image")
-        && request.resource.data.value is string
-        && request.resource.data.value.size() >= 1
-        && request.resource.data.value.size() <= 800
-        && request.resource.data.updatedBy == request.auth.uid
-        && request.resource.data.updatedAt == request.time;
-      allow delete: if isAdmin();
-    }
-
     match /siteSettings/{settingId} {
       allow read: if true;
       allow create, update: if isAdmin()

@@ -1,8 +1,5 @@
-"use client";
-
 import Link from 'next/link';
 import { siteConfig } from '../lib/site-config';
-import InlineEditableText from './admin/InlineEditableText';
 
 const standards = [
   ['01', 'Resmî kanaldan başlayın', 'Görüşme yalnızca bozumcu.net üzerindeki doğrulanmış bağlantılardan başlar.'],
@@ -16,9 +13,9 @@ export default function HomeTrust() {
       <div className="content-wide">
         <div className="home-trust-editorial__main">
           <div className="home-trust-editorial__copy">
-            <p className="home-trust-editorial__eyebrow"><i aria-hidden="true" /> <InlineEditableText contentKey="home-trust-eyebrow" defaultValue="Sky Bozum güven standardı" /></p>
-            <h2 id="home-trust-title"><InlineEditableText contentKey="home-trust-title" defaultValue="Güven, işlemden önce görünür olmalı." /></h2>
-            <InlineEditableText as="p" contentKey="home-trust-description" defaultValue="Ne paylaşacağınız, ne kadar alacağınız ve sürecin hangi kanaldan ilerleyeceği daha işlem başlamadan netleşir." />
+            <p className="home-trust-editorial__eyebrow"><i aria-hidden="true" /> Sky Bozum güven standardı</p>
+            <h2 id="home-trust-title">Güven, işlemden önce <em>görünür olmalı.</em></h2>
+            <p>Ne paylaşacağınız, ne kadar alacağınız ve sürecin hangi kanaldan ilerleyeceği daha işlem başlamadan netleşir.</p>
             <div>
               <Link href="/guven-merkezi" className="focus-ring">Güven Merkezini açın <span aria-hidden="true">→</span></Link>
               <Link href="/iletisim" className="focus-ring">Resmî kanallar</Link>
@@ -29,7 +26,7 @@ export default function HomeTrust() {
             {standards.map(([number, title, text]) => (
               <li key={number}>
                 <span>{number}</span>
-                <div><h3><InlineEditableText contentKey={`home-trust-${number}-title`} defaultValue={title} /></h3><InlineEditableText as="p" contentKey={`home-trust-${number}-description`} defaultValue={text} /></div>
+                <div><h3>{title}</h3><p>{text}</p></div>
                 <b aria-hidden="true">✓</b>
               </li>
             ))}
