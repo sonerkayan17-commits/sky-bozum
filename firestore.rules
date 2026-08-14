@@ -366,7 +366,7 @@ service cloud.firestore {
       allow read: if canModerate();
       allow create: if signedIn() && notBanned()
         && request.resource.data.keys().hasOnly(["targetType", "targetId", "reporterId", "reason", "status", "createdAt"])
-        && request.resource.data.targetType == "forum_post"
+        && (request.resource.data.targetType == "forum_post" || request.resource.data.targetType == "comment")
         && request.resource.data.targetId is string
         && request.resource.data.reporterId == request.auth.uid
         && request.resource.data.reason is string
