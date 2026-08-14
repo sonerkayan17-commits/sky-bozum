@@ -22,6 +22,8 @@ const editableFields: { key: keyof SiteSettings; label: string; hint: string; mu
   { key: 'heroPrimaryCta', label: 'Ana sayfa ana düğmesi', hint: 'WhatsApp yönlendirme düğmesinin metni.' },
   { key: 'proofExperience', label: 'Deneyim göstergesi', hint: 'Örn. 10 yıl' },
   { key: 'proofTransactions', label: 'İşlem göstergesi', hint: 'Örn. 10.000+' },
+  { key: 'announcementText', label: 'Duyuru metni', hint: 'Tüm sitede gösterilecek kısa duyuru.' },
+  { key: 'announcementHref', label: 'Duyuru bağlantısı', hint: 'Örn. /bilgi-merkezi veya tam bir HTTPS bağlantısı.' },
 ];
 
 export default function SiteSettingsPanel({ db, actorId }: { db: Firestore | null; actorId: string }) {
@@ -54,6 +56,7 @@ export default function SiteSettingsPanel({ db, actorId }: { db: Firestore | nul
       <p>Marka, iletişim, destek ve varsayılan SEO bilgileri tek merkezden güncellenir. Değişiklikler statik yedek değerleri bozmaz.</p>
     </div>
     <form className="admin-settings-form" onSubmit={submit}>
+      <label className="admin-settings-toggle"><input type="checkbox" checked={form.announcementEnabled} onChange={(event) => setForm((current) => ({ ...current, announcementEnabled: event.target.checked }))} /><span>Duyuru bandını yayınla</span><small>Metin boşsa veya kapalıysa ziyaretçiye gösterilmez.</small></label>
       {editableFields.map(({ key, label, hint, multiline }) => <label key={key}>
         <span>{label}</span>
         {multiline ? <textarea value={String(form[key] ?? '')} onChange={(event) => setForm((current) => ({ ...current, [key]: event.target.value }))} maxLength={300} rows={3} required /> : <input value={String(form[key] ?? '')} onChange={(event) => setForm((current) => ({ ...current, [key]: event.target.value }))} maxLength={180} required />}

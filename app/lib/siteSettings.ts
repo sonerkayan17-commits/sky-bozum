@@ -18,6 +18,9 @@ export type SiteSettings = {
   heroPrimaryCta: string;
   proofExperience: string;
   proofTransactions: string;
+  announcementEnabled: boolean;
+  announcementText: string;
+  announcementHref: string;
   updatedBy?: string;
   updatedAt?: unknown;
 };
@@ -39,6 +42,9 @@ export const defaultSiteSettings: SiteSettings = {
   heroPrimaryCta: 'Güncel oranınızı öğrenin',
   proofExperience: '10 yıl',
   proofTransactions: '10.000+',
+  announcementEnabled: false,
+  announcementText: '',
+  announcementHref: '/bilgi-merkezi',
 };
 
 export const siteSettingsRef = (db: Firestore) => doc(db, 'siteSettings', 'global');

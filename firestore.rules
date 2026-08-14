@@ -443,7 +443,7 @@ service cloud.firestore {
           "brandName", "brandTagline", "footerDescription", "phone", "email",
           "whatsapp", "liveSupportLabel", "supportHours", "defaultSeoTitle",
           "defaultSeoDescription", "heroEyebrow", "heroTitle", "heroLead", "heroPrimaryCta",
-          "proofExperience", "proofTransactions", "updatedBy", "updatedAt"
+          "proofExperience", "proofTransactions", "announcementEnabled", "announcementText", "announcementHref", "updatedBy", "updatedAt"
         ])
         && request.resource.data.brandName is string && request.resource.data.brandName.size() >= 2 && request.resource.data.brandName.size() <= 80
         && request.resource.data.brandTagline is string && request.resource.data.brandTagline.size() <= 180
@@ -461,6 +461,9 @@ service cloud.firestore {
         && request.resource.data.heroPrimaryCta is string && request.resource.data.heroPrimaryCta.size() <= 80
         && request.resource.data.proofExperience is string && request.resource.data.proofExperience.size() <= 40
         && request.resource.data.proofTransactions is string && request.resource.data.proofTransactions.size() <= 40
+        && request.resource.data.announcementEnabled is bool
+        && request.resource.data.announcementText is string && request.resource.data.announcementText.size() <= 180
+        && request.resource.data.announcementHref is string && request.resource.data.announcementHref.size() <= 220
         && request.resource.data.updatedBy == request.auth.uid
         && request.resource.data.updatedAt == request.time;
       allow delete: if false;
