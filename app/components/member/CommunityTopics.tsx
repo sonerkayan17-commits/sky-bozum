@@ -149,6 +149,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     }
 
     const categorySlug = slugifyForumCategory(subCategory);
+    const currentPost = editingId ? posts.find((post) => post.id === editingId) : null;
     const payload = {
       title: title.trim(),
       body: clean,
@@ -158,6 +159,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       categorySlug,
       forumKey: `${selectedSection.slug}/${categorySlug}`,
       visibility: 'public' as const,
+      status: currentPost?.status === 'published' ? 'published' as const : 'pending' as const,
       updatedAt: serverTimestamp(),
     };
 
@@ -169,10 +171,9 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
         ...payload,
         uid: user.uid,
         author: user.displayName || 'Sky Bozum üyesi',
-        status: 'published',
         createdAt: serverTimestamp(),
       });
-      setNotice('Konunuz doğru forum kategorisinde yayınlandı.');
+      setNotice('Konunuz moderasyon kuyruğuna alındı. Onay sonrası yayınlanacak.');
     }
     reset();
   }
