@@ -14,20 +14,37 @@ const firebaseConfig = {
 export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
 const canInitializeFirebase = typeof window !== 'undefined' && isFirebaseConfigured;
 
-export const firebaseApp = canInitializeFirebase
-  ? getApps().length
-    ? getApp()
-    : initializeApp(firebaseConfig)
-  : null;
+function getFirebaseApp() {
+  if (!canInitializeFirebase) return null;
+  try {
+    return getApps().length ? getApp() : initializeApp(firebaseConfig);
+  } catch {
+    return null;
+  }
+}
 
-export const db = firebaseApp ? getFirestore(firebaseApp) : null;
-export const auth = firebaseApp ? getAuth(firebaseApp) : null;
+function getFirebaseServices() {
+  const app = getFirebaseApp();
+  if (!app) return { auth: null, db: null };
+
+  try {
+    return { auth: getAuth(app), db: getFirestore(app) };
+  } catch {
+    // Firebase'in servis paketi henüz yüklenmediyse veya bağlantı geçici olarak
+    // kullanılamıyorsa sayfanın tamamını hata sınırına düşürmeyiz.
+    return { auth: null, db: null };
+  }
+}
+
+export const firebaseApp = getFirebaseApp();
+const initialServices = getFirebaseServices();
+export const db = initialServices.db;
+export const auth = initialServices.auth;
 
 export function getFirebaseClient() {
   if (typeof window === 'undefined' || !isFirebaseConfigured) {
     return { auth: null, db: null };
   }
 
-  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-  return { auth: getAuth(app), db: getFirestore(app) };
+  return getFirebaseServices();
 }
