@@ -2,6 +2,7 @@ import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import './styles/site-search-fix.css';
 import './styles/site-announcement.css';
+import './styles/inline-editor.css';
 import Navbar from './components/NavbarV2';
 import Footer from './components/Footer';
 import { SiteSettingsProvider } from './components/SiteSettingsProvider';
@@ -11,6 +12,8 @@ import { DEFAULT_OG_IMAGE, SITE_LANGUAGE, SITE_LOCALE, SITE_NAME, SITE_URL, json
 import QuickActionDock from './components/QuickActionDock';
 import SiteBackButton from './components/SiteBackButton';
 import SiteAnnouncement from './components/SiteAnnouncement';
+import { SiteEditorProvider } from './components/admin/SiteEditorProvider';
+import SiteAdminDock from './components/admin/SiteAdminDock';
 
 
 export const viewport: Viewport = {
@@ -54,4 +57,4 @@ const structuredData = {
     { '@type': 'WebSite', '@id': `${SITE_URL}/#website`, url: SITE_URL, name: siteConfig.name, inLanguage: SITE_LANGUAGE, publisher: { '@id': `${SITE_URL}/#organization` }, potentialAction: { '@type': 'SearchAction', target: `${SITE_URL}/bilgi-merkezi?q={search_term_string}`, 'query-input': 'required name=search_term_string' } },
   ],
 };
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="tr" suppressHydrationWarning className=""><body className="min-h-screen bg-[#090b10] text-white antialiased"><div className="grain-overlay" aria-hidden="true"/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(structuredData)}}/><SiteSettingsProvider><VisitorExperienceProvider><a href="#site-content" className="skip-link">Ana içeriğe geç</a><SiteAnnouncement/><Navbar/><SiteBackButton/><div id="site-content" tabIndex={-1}>{children}</div><Footer/><QuickActionDock/></VisitorExperienceProvider></SiteSettingsProvider></body></html>}
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="tr" suppressHydrationWarning className=""><body className="min-h-screen bg-[#090b10] text-white antialiased"><div className="grain-overlay" aria-hidden="true"/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(structuredData)}}/><SiteSettingsProvider><SiteEditorProvider><VisitorExperienceProvider><a href="#site-content" className="skip-link">Ana içeriğe geç</a><SiteAnnouncement/><Navbar/><SiteBackButton/><div id="site-content" tabIndex={-1}>{children}</div><Footer/><QuickActionDock/><SiteAdminDock/></VisitorExperienceProvider></SiteEditorProvider></SiteSettingsProvider></body></html>}
