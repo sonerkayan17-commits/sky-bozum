@@ -7,7 +7,7 @@ import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscri
 import { getFirebaseClient } from '../../lib/firebase';
 import { recordMemberActivity } from '../../lib/memberProgress';
 import { followContent, likeComment, notify } from '../../lib/social';
-import { addDoc, collection, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
@@ -16,6 +16,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const { auth, db } = client;
   const service = `${kind}:${targetId}`.slice(0, 100);
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [comments, setComments] = useState<PublicComment[]>([]);
   const [likes, setLikes] = useState(0);
   const [views, setViews] = useState(0);
@@ -28,10 +29,12 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [replyTarget, setReplyTarget] = useState<PublicComment | null>(null);
   const [avatars, setAvatars] = useState<Record<string, string>>({});
   const [reportedCommentIds, setReportedCommentIds] = useState<string[]>([]);
+  const [editingComment, setEditingComment] = useState<PublicComment | null>(null);
+  const [editCommentText, setEditCommentText] = useState('');
 
   useEffect(() => setClient(getFirebaseClient()), []);
 
-  useEffect(() => auth ? onAuthStateChanged(auth, (nextUser) => { setUser(nextUser); if (nextUser?.displayName) setAuthor(nextUser.displayName); }) : undefined, [auth]);
+  useEffect(() => auth ? onAuthStateChanged(auth, async (nextUser) => { setUser(nextUser); if (nextUser?.displayName) setAuthor(nextUser.displayName); if (nextUser) { const token = await nextUser.getIdTokenResult(); setIsAdmin(token.claims.admin === true || nextUser.email === 'sonerkayan17@gmail.com'); } else setIsAdmin(false); }) : undefined, [auth]);
 
   useEffect(() => {
     if (!db) return;
@@ -106,6 +109,26 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     } catch { setNotice('Yorum bildirilemedi.'); }
   }
 
+  function startCommentEdit(comment: PublicComment) {
+    setEditingComment(comment);
+    setEditCommentText(comment.message);
+  }
+
+  async function saveCommentEdit() {
+    if (!db || !isAdmin || !editingComment) return;
+    const messageText = editCommentText.trim();
+    if (messageText.length < 3 || messageText.length > 600) { setNotice('Yorum 3-600 karakter arasında olmalı.'); return; }
+    await updateDoc(doc(db, 'comments', editingComment.id), { message: messageText, editedBy: user?.uid, editedAt: serverTimestamp() });
+    setEditingComment(null);
+    setNotice('Yorum güncellendi.');
+  }
+
+  async function removeComment(comment: PublicComment) {
+    if (!db || !isAdmin) return;
+    await deleteDoc(doc(db, 'comments', comment.id));
+    setNotice('Yorum kaldırıldı.');
+  }
+
   function quote(comment: PublicComment) {
     setMessage(`“${comment.message.slice(0, 180)}”\n\n`);
     setReplyTarget(comment);
@@ -135,7 +158,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       <h3 className="text-sm font-black text-white">Yorumlar ({comments.length})</h3>
       {comments.length ? comments.map((comment, index) => <article key={comment.id} className="overflow-hidden rounded-xl border border-white/8 bg-white/[.025]">
         <header className="flex items-center gap-3 border-b border-white/8 bg-white/[.025] px-4 py-2">{comment.uid&&avatars[comment.uid]?<span className="h-8 w-8 rounded-full bg-cover bg-center" style={{backgroundImage:`url(${avatars[comment.uid]})`}}/>:<span className="grid h-8 w-8 place-items-center rounded-full bg-rose-500/15 text-[10px] font-black text-rose-300">{comment.author.charAt(0).toUpperCase()}</span>}{comment.uid ? <Link href={`/uyeler/${comment.uid}`} className="text-xs font-bold text-white hover:text-rose-300">{comment.author}</Link> : <strong className="text-xs text-white">{comment.author}</strong>}<time className="text-[10px] text-slate-600">{comment.createdAt?.toLocaleDateString('tr-TR') ?? 'Yeni'}</time><span className="ml-auto text-[10px] font-black text-slate-600">#{index + 1}</span></header>
-        <p className="px-4 py-4 text-sm leading-7 text-slate-300">{comment.message}</p>
+        <p className="px-4 py-4 text-sm leading-7 text-slate-300">{comment.message}</p>{isAdmin && <div className="flex justify-end gap-2 border-t border-white/8 px-3 py-2"><button type="button" onClick={() => startCommentEdit(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">Düzenle</button><button type="button" onClick={() => void removeComment(comment)} className="focus-ring rounded-md border border-rose-400/30 px-3 py-1.5 text-[11px] font-bold text-rose-300 hover:bg-rose-500/10">Kaldır</button></div>}
         <footer className="flex justify-end gap-2 border-t border-white/8 px-3 py-2">{user && comment.uid && comment.uid !== user.uid ? <button type="button" onClick={() => likeComment(db!, user.uid, comment.id, comment.uid!, user.displayName || 'Bir üye').then(()=>setNotice('Yorum beğenildi.')).catch(()=>setNotice('Bu yorumu daha önce beğendiniz.'))} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">♡ Beğen</button> : null}{user ? <button type="button" onClick={() => quote(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</button> : <Link href="/giris" className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</Link>}{user && comment.uid !== user.uid ? <button type="button" onClick={() => void reportComment(comment)} disabled={reportedCommentIds.includes(comment.id)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-500 hover:text-rose-300">{reportedCommentIds.includes(comment.id) ? 'Bildirildi' : 'Bildir'}</button> : null}</footer>
       </article>) : <p className="rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">İlk yorumu siz yazın.</p>}
     </div>
@@ -149,5 +172,6 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       <div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => { setMessage(''); setReplyTarget(null); }} className="focus-ring min-h-10 rounded-lg border border-white/10 px-4 text-xs font-bold text-slate-400">Temizle</button><button disabled={busy} className="focus-ring min-h-10 rounded-lg bg-rose-600 px-5 text-xs font-black text-white disabled:opacity-60">{busy ? 'Kaydediliyor…' : 'Yorumu gönder'}</button></div>
     </form> : null}
     {notice ? <p aria-live="polite" className="border-t border-white/10 px-5 py-3 text-xs text-rose-200">{notice}</p> : null}
+    {editingComment ? <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4"><section className="w-full max-w-lg rounded-2xl border border-white/15 bg-[#11131b] p-6" role="dialog" aria-modal="true" aria-label="Yorum düzenle"><h3 className="text-lg font-black text-white">Yorumu düzenle</h3><textarea value={editCommentText} onChange={(event) => setEditCommentText(event.target.value)} maxLength={600} rows={6} className="mt-4 w-full rounded-xl border border-white/10 bg-[#090b10] p-4 text-sm text-white outline-none focus:border-rose-400" /><div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => setEditingComment(null)} className="rounded-lg border border-white/10 px-4 py-2 text-xs font-bold text-slate-300">Vazgeç</button><button type="button" onClick={() => void saveCommentEdit()} className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-black text-white">Kaydet</button></div></section></div> : null}
   </section>;
 }

@@ -36,6 +36,7 @@ type Props = {
 
 export default function CommunityTopics({ compose = false, sectionSlug: scopedSectionSlug, categorySlug: scopedCategorySlug }: Props) {
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -67,9 +68,10 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
 
     let publicPosts: Post[] = [];
     let ownPosts: Post[] = [];
+    let adminPosts: Post[] = [];
     const syncPosts = () => {
       const merged = new Map<string, Post>();
-      [...publicPosts, ...ownPosts].forEach((post) => merged.set(post.id, post));
+      [...publicPosts, ...ownPosts, ...adminPosts].forEach((post) => merged.set(post.id, post));
       setPosts([...merged.values()].sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)));
     };
     const mapPost = (item: { id: string; data: () => Record<string, unknown> }) => {
@@ -102,17 +104,26 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     );
 
     let stopOwn = () => {};
-    const stopAuth = onAuthStateChanged(auth, (nextUser) => {
+    let stopAdmin = () => {};
+    const stopAuth = onAuthStateChanged(auth, async (nextUser) => {
       setUser(nextUser);
       stopOwn();
+      stopAdmin();
       ownPosts = [];
+      adminPosts = [];
       if (nextUser) {
         stopOwn = onSnapshot(query(collection(db, 'memberPosts'), where('uid', '==', nextUser.uid)), (snapshot) => { ownPosts = snapshot.docs.map(mapPost); syncPosts(); });
+        const token = await nextUser.getIdTokenResult();
+        const nextIsAdmin = token.claims.admin === true || nextUser.email === 'sonerkayan17@gmail.com';
+        setIsAdmin(nextIsAdmin);
+        if (nextIsAdmin) stopAdmin = onSnapshot(collection(db, 'memberPosts'), (snapshot) => { adminPosts = snapshot.docs.map(mapPost); syncPosts(); });
+      } else {
+        setIsAdmin(false);
       }
       syncPosts();
     });
 
-    return () => { stopAuth(); stopPosts(); stopOwn(); };
+    return () => { stopAuth(); stopPosts(); stopOwn(); stopAdmin(); };
   }, []);
 
   function reset() {
@@ -162,14 +173,14 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       categorySlug,
       forumKey: `${selectedSection.slug}/${categorySlug}`,
       visibility: 'public' as const,
-      status: currentPost?.status === 'published' ? 'pending' as const : 'pending' as const,
+      status: isAdmin ? (currentPost?.status === 'archived' ? 'archived' as const : 'published' as const) : 'pending' as const,
       locked: currentPost?.locked === true,
       updatedAt: serverTimestamp(),
     };
 
     if (editingId) {
       await updateDoc(doc(db, 'memberPosts', editingId), payload);
-      setNotice(currentPost?.status === 'published' ? 'Değişikliğiniz yeniden moderasyon kuyruğuna alındı.' : 'Konunuz güncellendi.');
+      setNotice(isAdmin ? 'Konu yönetici yetkisiyle güncellendi.' : currentPost?.status === 'published' ? 'Değişikliğiniz yeniden moderasyon kuyruğuna alındı.' : 'Konunuz güncellendi.');
     } else {
       await addDoc(collection(db, 'memberPosts'), {
         ...payload,
@@ -204,6 +215,23 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     }
   }
 
+  async function moderatePost(post: Post, action: 'publish' | 'archive' | 'lock' | 'unlock') {
+    const { db } = getFirebaseClient();
+    if (!db || !isAdmin || !user) return;
+    const locked = action === 'lock' ? true : action === 'unlock' ? false : post.locked;
+    const status = action === 'publish' ? 'published' : action === 'archive' ? 'archived' : post.status;
+    await updateDoc(doc(db, 'memberPosts', post.id), {
+      status,
+      visibility: status === 'published' ? 'public' : status === 'archived' ? 'archived' : post.visibility,
+      locked,
+      moderatedBy: user.uid,
+      moderatedAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    await addDoc(collection(db, 'contentAudit'), { action: `forum:inline-${action}`, articleSlug: post.id, actorId: user.uid, createdAt: serverTimestamp() });
+    setNotice('Konu işlemi kaydedildi.');
+  }
+
   if (compose) return <main className="utility-page"><section>
     <p>TOPLULUK</p>
     <h1>{editingId ? 'Konuyu düzenle' : 'Yeni konu aç'}</h1>
@@ -219,12 +247,12 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       <div className="topic-form-actions"><button>{editingId ? 'Değişiklikleri kaydet' : 'Konuyu yayınla'}</button>{editingId && <button type="button" className="topic-cancel" onClick={reset}>Vazgeç</button>}</div>
     </form>
     {notice && <b>{notice}</b>}
-    {user && <div className="my-topics"><h2>Konularım</h2>{posts.filter((post) => post.uid === user.uid).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.locked ? 'Kilitli' : post.status === 'archived' ? 'Arşivlendi' : post.status === 'published' ? 'Yayında' : 'Moderasyon bekliyor'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><button type="button" disabled={post.locked} onClick={() => edit(post)}>{post.locked ? 'Kilitli' : 'Düzenle'}</button></article>)}</div>}
+    {user && <div className="my-topics"><h2>{isAdmin ? 'Konu yönetimi' : 'Konularım'}</h2>{(isAdmin ? posts : posts.filter((post) => post.uid === user.uid)).map((post) => <article key={post.id}><div><span>{post.category} › {post.subCategory}</span><strong>{post.title}</strong><small>{post.locked ? 'Kilitli' : post.status === 'archived' ? 'Arşivlendi' : post.status === 'published' ? 'Yayında' : 'Moderasyon bekliyor'} · {post.updatedAt?.toLocaleDateString('tr-TR') || post.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></div><div><button type="button" disabled={post.locked && !isAdmin} onClick={() => edit(post)}>{post.locked && !isAdmin ? 'Kilitli' : 'Düzenle'}</button>{isAdmin && <><button type="button" onClick={() => void moderatePost(post, post.locked ? 'unlock' : 'lock')}>{post.locked ? 'Kilidi aç' : 'Kilitle'}</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></>}</div></article>)}</div>}
   </section></main>;
 
   if (!visiblePosts.length) return null;
   return <section className="community-page community-page--scoped" aria-label="Üye konuları">
     <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link></header>
-    <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
+    <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{isAdmin ? <><button type="button" onClick={() => edit(post)}>Düzenle</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></> : user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
   </section>;
 }
