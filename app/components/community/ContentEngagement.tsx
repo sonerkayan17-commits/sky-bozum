@@ -119,6 +119,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     const messageText = editCommentText.trim();
     if (messageText.length < 3 || messageText.length > 600) { setNotice('Yorum 3-600 karakter arasında olmalı.'); return; }
     await updateDoc(doc(db, 'comments', editingComment.id), { message: messageText, editedBy: user?.uid, editedAt: serverTimestamp() });
+    await addDoc(collection(db, 'contentAudit'), { action: 'comment:inline-edited', articleSlug: editingComment.id, actorId: user?.uid, createdAt: serverTimestamp() }).catch(() => undefined);
     setEditingComment(null);
     setNotice('Yorum güncellendi.');
   }
@@ -126,6 +127,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   async function removeComment(comment: PublicComment) {
     if (!db || !isAdmin) return;
     await deleteDoc(doc(db, 'comments', comment.id));
+    await addDoc(collection(db, 'contentAudit'), { action: 'comment:inline-removed', articleSlug: comment.id, actorId: user?.uid, createdAt: serverTimestamp() }).catch(() => undefined);
     setNotice('Yorum kaldırıldı.');
   }
 
