@@ -362,6 +362,26 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /contentReports/{reportId} {
+      allow read: if canModerate();
+      allow create: if signedIn() && notBanned()
+        && request.resource.data.keys().hasOnly(["targetType", "targetId", "reporterId", "reason", "status", "createdAt"])
+        && request.resource.data.targetType == "forum_post"
+        && request.resource.data.targetId is string
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.reason is string
+        && request.resource.data.reason.size() >= 3
+        && request.resource.data.reason.size() <= 240
+        && request.resource.data.status == "open"
+        && request.resource.data.createdAt == request.time;
+      allow update: if canModerate()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "resolvedBy", "resolvedAt"])
+        && request.resource.data.status == "resolved"
+        && request.resource.data.resolvedBy == request.auth.uid
+        && request.resource.data.resolvedAt == request.time;
+      allow delete: if false;
+    }
+
     match /commentLikes/{likeId} {
       allow read: if true;
       allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;

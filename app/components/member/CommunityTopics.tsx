@@ -42,6 +42,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
   const [subCategory, setSubCategory] = useState(forumSections[0].categories[0]);
   const [editingId, setEditingId] = useState('');
   const [notice, setNotice] = useState('');
+  const [reportedIds, setReportedIds] = useState<string[]>([]);
 
   const selectedSection = useMemo(
     () => forumSections.find((item) => item.slug === sectionSlug) || forumSections[0],
@@ -178,6 +179,28 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     reset();
   }
 
+  async function reportPost(post: Post) {
+    if (!user) {
+      location.assign('/giris');
+      return;
+    }
+    const { db } = getFirebaseClient();
+    if (!db || reportedIds.includes(post.id)) return;
+    try {
+      await addDoc(collection(db, 'contentReports'), {
+        targetType: 'forum_post',
+        targetId: post.id,
+        reporterId: user.uid,
+        reason: 'Topluluk kurallarına aykırı içerik bildirimi',
+        status: 'open',
+        createdAt: serverTimestamp(),
+      });
+      setReportedIds((ids) => [...ids, post.id]);
+    } catch {
+      // Rapor formu görünür akışı bozmaz; yetki hatası güvenlik kuralında tutulur.
+    }
+  }
+
   if (compose) return <main className="utility-page"><section>
     <p>TOPLULUK</p>
     <h1>{editingId ? 'Konuyu düzenle' : 'Yeni konu aç'}</h1>
@@ -199,6 +222,6 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
   if (!visiblePosts.length) return null;
   return <section className="community-page community-page--scoped" aria-label="Üye konuları">
     <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link></header>
-    <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time></footer></article>)}</div>
+    <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
   </section>;
 }
