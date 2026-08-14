@@ -2,9 +2,10 @@
 
 import { addDoc, collection, doc, getDocs, onSnapshot, query, serverTimestamp, updateDoc, where, type Firestore } from 'firebase/firestore';
 import { useEffect, useState, type FormEvent } from 'react';
+import { notify } from '../lib/social';
 import RichArticleEditor, { sanitizeArticleHtml } from './RichArticleEditor';
 
-type ForumPost = { id: string; title: string; author: string; body: string; status: string; visibility: string; locked: boolean; createdAt: Date | null };
+type ForumPost = { id: string; uid: string; title: string; author: string; body: string; status: string; visibility: string; locked: boolean; createdAt: Date | null };
 type ContentReport = { id: string; targetType: string; targetId: string; reason: string; status: string; createdAt: Date | null };
 type ForumRevision = { id: string; title: string; body: string; createdAt: Date | null };
 type ModeratedComment = { id: string; service: string; author: string; message: string };
@@ -25,7 +26,7 @@ export default function ForumModerationPanel({ db, actorId }: { db: Firestore | 
     return onSnapshot(collection(db, 'memberPosts'), (snapshot) => {
       setPosts(snapshot.docs.map((entry) => {
         const data = entry.data();
-        return { id: entry.id, title: String(data.title || 'Başlıksız konu'), author: String(data.author || 'Bilinmeyen'), body: String(data.body || ''), status: String(data.status || 'unknown'), visibility: String(data.visibility || 'unknown'), locked: data.locked === true, createdAt: data.createdAt?.toDate?.() ?? null };
+        return { id: entry.id, uid: String(data.uid || ''), title: String(data.title || 'Başlıksız konu'), author: String(data.author || 'Bilinmeyen'), body: String(data.body || ''), status: String(data.status || 'unknown'), visibility: String(data.visibility || 'unknown'), locked: data.locked === true, createdAt: data.createdAt?.toDate?.() ?? null };
       }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)));
     }, () => setNotice('Forum kayıtları okunamadı.'));
   }, [db]);
@@ -60,6 +61,7 @@ export default function ForumModerationPanel({ db, actorId }: { db: Firestore | 
     if (!db) return;
     await updateDoc(doc(db, 'memberPosts', post.id), { status, visibility: status === 'published' ? 'public' : 'archived', moderatedBy: actorId, moderatedAt: serverTimestamp() });
     await updateDoc(doc(db, 'memberPosts', post.id), { updatedAt: serverTimestamp() });
+    if (post.uid) await notify(db, actorId, post.uid, 'moderation', `“${post.title}” konunuz ${status === 'published' ? 'yayına alındı.' : 'arşivlendi.'}`, '/hesabim').catch(() => undefined);
     setNotice(`“${post.title}” ${status === 'published' ? 'yayına alındı' : 'arşivlendi'}.`);
   }
 
@@ -107,6 +109,7 @@ export default function ForumModerationPanel({ db, actorId }: { db: Firestore | 
     const locked = !post.locked;
     await updateDoc(doc(db, 'memberPosts', post.id), { locked, lockedBy: actorId, lockedAt: serverTimestamp() });
     await addDoc(collection(db, 'contentAudit'), { action: `forum:${locked ? 'locked' : 'unlocked'}`, articleSlug: post.id, actorId, createdAt: serverTimestamp() });
+    if (post.uid) await notify(db, actorId, post.uid, 'moderation', `“${post.title}” konunuz ${locked ? 'kilitlendi.' : 'kilidi açıldı.'}`, '/hesabim').catch(() => undefined);
     setNotice(`“${post.title}” ${locked ? 'kilitlendi' : 'kilidi açıldı'}.`);
   }
 

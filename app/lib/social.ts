@@ -1,6 +1,6 @@
 import { addDoc, collection, doc, serverTimestamp, setDoc, type Firestore } from 'firebase/firestore';
 
-export async function notify(db: Firestore, senderId: string, receiverId: string, type: 'profile_like'|'point_gift'|'comment_like'|'reply'|'message', text: string, href: string) {
+export async function notify(db: Firestore, senderId: string, receiverId: string, type: 'profile_like'|'point_gift'|'comment_like'|'reply'|'message'|'moderation', text: string, href: string) {
   if (!receiverId || receiverId === senderId) return;
   await addDoc(collection(db, 'notifications'), { senderId, receiverId, type, text: text.slice(0, 140), href: href.slice(0, 180), read: false, createdAt: serverTimestamp() });
 }
