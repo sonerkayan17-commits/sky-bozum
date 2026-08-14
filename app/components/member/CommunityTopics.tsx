@@ -162,14 +162,14 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       categorySlug,
       forumKey: `${selectedSection.slug}/${categorySlug}`,
       visibility: 'public' as const,
-      status: currentPost?.status === 'published' ? 'published' as const : 'pending' as const,
+      status: currentPost?.status === 'published' ? 'pending' as const : 'pending' as const,
       locked: currentPost?.locked === true,
       updatedAt: serverTimestamp(),
     };
 
     if (editingId) {
       await updateDoc(doc(db, 'memberPosts', editingId), payload);
-      setNotice('Konunuz güncellendi.');
+      setNotice(currentPost?.status === 'published' ? 'Değişikliğiniz yeniden moderasyon kuyruğuna alındı.' : 'Konunuz güncellendi.');
     } else {
       await addDoc(collection(db, 'memberPosts'), {
         ...payload,
