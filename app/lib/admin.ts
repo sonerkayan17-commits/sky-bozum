@@ -43,6 +43,8 @@ export type ContentAuditEvent = {
   id: string;
   action: string;
   articleSlug: string;
+  contentKey?: string;
+  contentType?: 'text' | 'image';
   actorId: string;
   createdAt: Date | null;
 };
@@ -95,7 +97,9 @@ function asContentAuditEvent(id: string, value: ContentAuditDocument): ContentAu
   return {
     id,
     action: value.action || 'updated',
-    articleSlug: value.articleSlug || 'unknown',
+    articleSlug: value.articleSlug || value.contentKey || 'unknown',
+    contentKey: value.contentKey,
+    contentType: value.contentType === 'image' ? 'image' : value.contentType === 'text' ? 'text' : undefined,
     actorId: value.actorId || 'unknown',
     createdAt: value.createdAt?.toDate() ?? null,
   };

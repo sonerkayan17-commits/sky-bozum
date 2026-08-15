@@ -76,6 +76,65 @@ function viewFromUrl(): View | null {
   return candidate && adminViews.includes(candidate as View) ? candidate as View : null;
 }
 
+function auditActionLabel(action: string) {
+  const labels: Record<string, string> = {
+    'site-inline-updated': 'Sayfa içeriği güncellendi',
+    'release-readiness:updated': 'Yayın kontrolü güncellendi',
+    'admin-backup:downloaded': 'Yönetim yedeği indirildi',
+    'edit-ready': 'Makale düzenlemeye açıldı',
+    saved: 'Makale kaydedildi',
+    published: 'Makale yayımlandı',
+    draft: 'Makale taslağa alındı',
+    archived: 'Makale arşivlendi',
+    restored: 'Önceki makale sürümü geri yüklendi',
+    'comment:inline-edited': 'Yorum güncellendi',
+    'comment:inline-removed': 'Yorum kaldırıldı',
+    'comment:approved': 'Yorum onaylandı',
+    'comment:rejected': 'Yorum reddedildi',
+    'comment:deleted': 'Yorum silindi',
+    'comment:removed-from-report': 'Raporlanan yorum kaldırıldı',
+    'forum:edited': 'Forum konusu güncellendi',
+    'forum:report-resolved': 'Forum raporu çözüldü',
+    'forum:restored': 'Forum konusu geri yüklendi',
+    'forum:locked': 'Forum konusu kilitlendi',
+    'forum:unlocked': 'Forum konusu yeniden açıldı',
+    'forum:inline-publish': 'Forum konusu yayımlandı',
+    'forum:inline-archive': 'Forum konusu arşivlendi',
+    'forum:inline-lock': 'Forum konusu kilitlendi',
+    'forum:inline-unlock': 'Forum konusu yeniden açıldı',
+    'operation:created': 'İşlem talebi oluşturuldu',
+    'operation:note': 'İşlem notu eklendi',
+  };
+  if (labels[action]) return labels[action];
+  if (action.startsWith('rate:')) return action.endsWith(':published') ? 'Oran yayımlandı' : 'Oran taslak olarak kaydedildi';
+  if (action.startsWith('member-status:')) return `Üye durumu güncellendi: ${action.split(':')[1]}`;
+  if (action.startsWith('member-access:')) return 'Üye yetkileri güncellendi';
+  if (action.startsWith('member-balance:')) return action.endsWith(':credit') ? 'Üye bakiyesine ekleme yapıldı' : 'Üye bakiyesinden düşüş yapıldı';
+  if (action.startsWith('member-points:')) return action.endsWith(':credit') ? 'Üye puanına ekleme yapıldı' : 'Üye puanından düşüş yapıldı';
+  if (action.startsWith('operation:priority:')) return 'İşlem önceliği güncellendi';
+  if (action.startsWith('operation:')) return 'İşlem durumu güncellendi';
+  return 'Yönetim kaydı güncellendi';
+}
+
+function auditTargetLabel(event: ContentAuditEvent, managedArticles: ManagedArticleRecord[], members: AdminMember[]) {
+  const member = members.find((item) => item.id === event.articleSlug);
+  if (member) return member.displayName;
+  const article = [...managedArticles, ...articles].find((item) => item.slug === event.articleSlug);
+  if (article) return article.title;
+  if (event.contentKey) return `Sayfa içeriği: ${event.contentKey}`;
+  if (event.articleSlug === 'global') return 'Yayın kontrolü';
+  if (event.articleSlug === 'unknown') return 'Genel yönetim';
+  if (event.action.startsWith('rate:')) return `Oran kaydı: ${event.articleSlug}`;
+  if (event.action.startsWith('operation:')) return `İşlem kaydı: ${event.articleSlug.slice(0, 8)}`;
+  if (event.action.startsWith('forum:') || event.action.startsWith('comment:')) return `Topluluk kaydı: ${event.articleSlug.slice(0, 8)}`;
+  return event.articleSlug.replace(/-/g, ' ');
+}
+
+function auditActorLabel(actorId: string, members: AdminMember[], currentUserId: string) {
+  if (actorId === currentUserId) return 'Siz';
+  return members.find((member) => member.id === actorId)?.displayName || 'Yönetici hesabı';
+}
+
 export default function AdminConsole({
   articleCount,
   rateCount,
@@ -457,7 +516,7 @@ export default function AdminConsole({
             </div>
             <section className="admin-activity" aria-label="İçerik işlem geçmişi">
               <div><span>İÇERİK HAREKETLERİ</span><h3>Son yayın kararları</h3></div>
-              {contentAudit.length === 0 ? <p>Henüz içerik işlemi kaydı yok.</p> : <ol>{contentAudit.map((event) => <li key={event.id}><b>{event.articleSlug}</b><span>{event.action}</span><small>{formatDate(event.createdAt)}</small></li>)}</ol>}
+              {contentAudit.length === 0 ? <p>Henüz içerik işlemi kaydı yok.</p> : <ol>{contentAudit.map((event) => <li key={event.id}><b>{auditTargetLabel(event, managedArticles, members)}</b><span>{auditActionLabel(event.action)}</span><small>{formatDate(event.createdAt)}</small></li>)}</ol>}
               <button onClick={() => setView("content")}>İçerik merkezine git →</button>
             </section>
           </section>
@@ -848,7 +907,7 @@ export default function AdminConsole({
               <section>
                 <header><h3>İçerik geçmişi</h3><span>{contentAudit.length} kayıt</span></header>
                 <div className="admin-audit-list">
-                  {contentAudit.length ? contentAudit.map((event) => <article key={event.id}><div><strong>{event.articleSlug}</strong><span>{event.action}</span></div><small>{formatDate(event.createdAt)}</small><code>{event.actorId}</code></article>) : <p className="admin-empty">İçerik hareketi bulunmuyor.</p>}
+                  {contentAudit.length ? contentAudit.map((event) => <article key={event.id}><div><strong>{auditTargetLabel(event, managedArticles, members)}</strong><span>{auditActionLabel(event.action)}</span></div><small>{formatDate(event.createdAt)}</small><code>{auditActorLabel(event.actorId, members, user.uid)}</code></article>) : <p className="admin-empty">İçerik hareketi bulunmuyor.</p>}
                 </div>
               </section>
               <section>
