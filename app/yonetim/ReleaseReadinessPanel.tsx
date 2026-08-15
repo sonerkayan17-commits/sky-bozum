@@ -62,11 +62,11 @@ export default function ReleaseReadinessPanel({ db, actorId }: { db: Firestore |
   }, [db]);
 
   const liveMetrics = useMemo<LiveMetric[]>(() => [
-    { id: 'members', value: memberPending, label: 'onay bekleyen üye', href: '/yonetim', tone: memberPending ? 'attention' : 'neutral' },
-    { id: 'comments', value: commentPending, label: 'bekleyen yorum', href: '/yonetim', tone: commentPending ? 'attention' : 'neutral' },
-    { id: 'reports', value: openReports, label: 'açık içerik raporu', href: '/yonetim', tone: openReports ? 'attention' : 'neutral' },
-    { id: 'operations', value: newOperations, label: 'yeni işlem talebi', href: '/yonetim', tone: newOperations ? 'attention' : 'neutral' },
-    { id: 'drafts', value: draftArticles, label: 'yayın kararı bekleyen taslak', href: '/yonetim', tone: draftArticles ? 'attention' : 'neutral' },
+    { id: 'members', value: memberPending, label: 'onay bekleyen üye', href: '/yonetim?view=members', tone: memberPending ? 'attention' : 'neutral' },
+    { id: 'comments', value: commentPending, label: 'bekleyen yorum', href: '/yonetim?view=moderation', tone: commentPending ? 'attention' : 'neutral' },
+    { id: 'reports', value: openReports, label: 'açık içerik raporu', href: '/yonetim?view=forum', tone: openReports ? 'attention' : 'neutral' },
+    { id: 'operations', value: newOperations, label: 'yeni işlem talebi', href: '/yonetim?view=operations', tone: newOperations ? 'attention' : 'neutral' },
+    { id: 'drafts', value: draftArticles, label: 'yayın kararı bekleyen taslak', href: '/yonetim?view=content', tone: draftArticles ? 'attention' : 'neutral' },
   ], [commentPending, draftArticles, memberPending, newOperations, openReports]);
   const completed = checklist.filter((item) => checks[item.id]).length;
 

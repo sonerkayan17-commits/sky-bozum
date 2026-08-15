@@ -51,6 +51,7 @@ import {
 
 type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
+const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "settings"];
 const permissions = [
   "Yorum paylaşımı",
   "İçerik taslağı",
@@ -67,6 +68,12 @@ function formatDate(date: Date | null) {
         year: "numeric",
       }).format(date)
     : "—";
+}
+
+function viewFromUrl(): View | null {
+  if (typeof window === "undefined") return null;
+  const candidate = new URLSearchParams(window.location.search).get("view");
+  return candidate && adminViews.includes(candidate as View) ? candidate as View : null;
 }
 
 export default function AdminConsole({
@@ -109,6 +116,11 @@ export default function AdminConsole({
   const [clientReady, setClientReady] = useState(false);
   const auth = firebaseClient.auth;
   const db = firebaseClient.db;
+
+  useEffect(() => {
+    const requestedView = viewFromUrl();
+    if (requestedView) setView(requestedView);
+  }, []);
 
   useEffect(() => {
     setClientReady(true);
