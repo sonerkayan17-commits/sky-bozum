@@ -46,7 +46,7 @@ body{background:#07090e;color:#f8fafc;text-rendering:optimizeLegibility}
 .knowledge-center-page>section:first-of-type{padding-block:clamp(2.4rem,4.2vw,3.8rem)!important}
 .knowledge-center-page>section:first-of-type h1{max-width:760px;font-size:clamp(2.35rem,4.3vw,3.9rem)!important;line-height:1!important;letter-spacing:-.05em!important;text-wrap:balance}
 .forum-directory{padding-top:clamp(2.6rem,5vw,4rem)!important}
-.forum-directory header h1{max-width:720px;font-size:clamp(2.35rem,4.8vw,3.9rem)!important;line-height:1!important}
+.forum-directory header h1{max-width:760px!important;font-size:clamp(2.15rem,3.25vw,2.85rem)!important;line-height:1.04!important;letter-spacing:-.048em!important;text-wrap:balance}
 .tc2-hero{padding-block:clamp(3rem,5.5vw,5rem)!important}
 .tc2-hero-copy h1{max-width:760px;text-wrap:balance}
 
