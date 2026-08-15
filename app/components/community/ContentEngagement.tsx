@@ -19,6 +19,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const service = `${kind}:${targetId}`.slice(0, 100);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [canPublishImmediately, setCanPublishImmediately] = useState(false);
   const [comments, setComments] = useState<PublicComment[]>([]);
   const [likes, setLikes] = useState(0);
   const [views, setViews] = useState(0);
@@ -41,7 +42,19 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
   useEffect(() => setClient(getFirebaseClient()), []);
 
-  useEffect(() => auth ? onAuthStateChanged(auth, async (nextUser) => { setUser(nextUser); if (nextUser?.displayName) setAuthor(nextUser.displayName); if (nextUser) { const token = await nextUser.getIdTokenResult(); setIsAdmin(token.claims.admin === true || nextUser.email === 'sonerkayan17@gmail.com'); } else setIsAdmin(false); }) : undefined, [auth]);
+  useEffect(() => auth ? onAuthStateChanged(auth, async (nextUser) => {
+    setUser(nextUser);
+    if (nextUser?.displayName) setAuthor(nextUser.displayName);
+    if (nextUser) {
+      const token = await nextUser.getIdTokenResult();
+      const admin = token.claims.admin === true || nextUser.email === 'sonerkayan17@gmail.com';
+      setIsAdmin(admin);
+      setCanPublishImmediately(nextUser.emailVerified || admin);
+    } else {
+      setIsAdmin(false);
+      setCanPublishImmediately(false);
+    }
+  }) : undefined, [auth]);
 
   useEffect(() => {
     if (!db) return;
@@ -94,12 +107,13 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     if (!db || author.trim().length < 2 || message.trim().length < 3) return;
     setBusy(true);
     try {
-      await createPendingComment(db, { parentId: replyTarget?.id ?? null, author: author.trim(), uid: user?.uid ?? null, service, message: message.trim(), status: user ? 'approved' : 'pending' });
-      if (user) await recordMemberActivity(db, user.uid, 'comment', service, title, window.location.pathname).catch(() => undefined);
-      if (user && replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
+      const status = canPublishImmediately ? 'approved' : 'pending';
+      await createPendingComment(db, { parentId: replyTarget?.id ?? null, author: author.trim(), uid: user?.uid ?? null, service, message: message.trim(), status });
+      if (user && canPublishImmediately) await recordMemberActivity(db, user.uid, 'comment', service, title, window.location.pathname).catch(() => undefined);
+      if (user && canPublishImmediately && replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
       setMessage('');
       setReplyTarget(null);
-      setNotice(user ? 'Yorumunuz yayınlandı.' : 'Yorumunuz yönetici onayına gönderildi.');
+      setNotice(status === 'approved' ? 'Yorumunuz yayınlandı.' : 'Yorumunuz yönetici onayına gönderildi.');
     } catch { setNotice('İşlem tamamlanamadı. Lütfen tekrar deneyin.'); }
     finally { setBusy(false); }
   }
@@ -227,7 +241,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     {!user ? <div className="border-t border-white/10 bg-black/10 p-5 text-center"><p className="text-sm font-bold text-slate-300">Misafir yorumları yönetici onayından sonra görünür. Üyeler ise doğrudan paylaşabilir.</p><div className="mt-4 flex justify-center gap-2"><Link href="/giris" className="focus-ring rounded-lg bg-rose-600 px-4 py-2 text-xs font-black text-white">Giriş yap</Link><Link href="/kayit" className="focus-ring rounded-lg border border-white/15 px-4 py-2 text-xs font-black text-slate-200">Üye ol</Link></div></div> : null}
 
     <form onSubmit={submit} className="border-t border-white/10 bg-black/10 p-6 sm:p-8">
-      <h3 className="text-lg font-black">Yorum ekle</h3><p className="mt-2 text-xs text-slate-500">{user ? 'Üye yorumunuz doğrudan yayınlanır.' : 'Misafir yorumunuz yönetici onayına gönderilir.'}</p>
+      <h3 className="text-lg font-black">Yorum ekle</h3><p className="mt-2 text-xs text-slate-500">{canPublishImmediately ? 'Doğrulanmış üye yorumunuz doğrudan yayınlanır.' : user ? 'E-posta doğrulaması tamamlanmadığı için yorumunuz yönetici onayına gönderilir.' : 'Misafir yorumunuz yönetici onayına gönderilir.'}</p>
       <label className="mt-5 block text-xs font-bold text-slate-300">Adınız<input required minLength={2} maxLength={40} value={author} onChange={(event) => setAuthor(event.target.value)} className="mt-2 min-h-11 w-full rounded-xl border border-white/10 bg-[#090b10] px-4 text-sm text-white outline-none focus:border-rose-400" /></label>
       <label className="mt-4 block text-xs font-bold text-slate-300">Yorumunuz<textarea id={`comment-${targetId}`} required minLength={3} maxLength={600} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-[#090b10] p-4 text-sm text-white outline-none focus:border-rose-400" /></label>
       <div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => { setMessage(''); setReplyTarget(null); }} className="focus-ring min-h-10 rounded-lg border border-white/10 px-4 text-xs font-bold text-slate-400">Temizle</button><button disabled={busy} className="focus-ring min-h-10 rounded-lg bg-rose-600 px-5 text-xs font-black text-white disabled:opacity-60">{busy ? 'Kaydediliyor…' : 'Yorumu gönder'}</button></div>

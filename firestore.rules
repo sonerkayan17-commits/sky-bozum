@@ -42,6 +42,14 @@ service cloud.firestore {
       return signedIn() && request.auth.token.email_verified == true && notBanned();
     }
 
+    // Yonetici hesabi, e-posta dogrulama kaydi eski bir oturumda henuz
+    // yenilenmemis olsa bile kendi icerigini yonetebilmelidir. Bu istisna
+    // yalniz mevcut isAdmin() kontrolunden gecen hesaplar icindir; normal
+    // uyeler icin e-posta dogrulama zorunlulugu aynen devam eder.
+    function verifiedMemberOrAdmin() {
+      return verifiedMember() || isAdmin();
+    }
+
     function validAuthor() {
       return request.resource.data.author is string
         && request.resource.data.author.size() >= 2
@@ -54,7 +62,7 @@ service cloud.firestore {
         ])
         && (
           request.resource.data.status == "pending"
-          || (verifiedMember() && request.resource.data.status == "approved")
+          || (verifiedMemberOrAdmin() && request.resource.data.status == "approved")
         )
         && request.resource.data.createdAt == request.time
         && (request.resource.data.uid == null || (signedIn() && request.resource.data.uid == request.auth.uid))
@@ -253,7 +261,7 @@ service cloud.firestore {
 
     match /memberActivities/{activityId} {
       allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
-      allow create: if verifiedMember()
+      allow create: if verifiedMemberOrAdmin()
         && request.resource.data.keys().hasOnly(["uid", "type", "targetId", "title", "href", "points", "createdAt"])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.targetId is string
@@ -286,7 +294,7 @@ service cloud.firestore {
 
     match /memberSubscriptions/{subscriptionId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
-      allow create: if verifiedMember()
+      allow create: if verifiedMemberOrAdmin()
         && subscriptionId == request.auth.uid + "_" + request.resource.data.targetId
         && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
         && request.resource.data.uid == request.auth.uid
@@ -312,7 +320,7 @@ service cloud.firestore {
 
     match /memberBookmarks/{bookmarkId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
-      allow create: if verifiedMember()
+      allow create: if verifiedMemberOrAdmin()
         && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.targetId is string
