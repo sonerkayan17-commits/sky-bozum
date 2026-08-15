@@ -50,6 +50,13 @@ service cloud.firestore {
       return verifiedMember() || isAdmin();
     }
 
+    // Kullaniciya ait deterministik belge anahtarlarinda ilk get istegi,
+    // belge henuz yokken de izinli olmalidir. Aksi halde istemci "var mi?"
+    // kontrolunu yapamaz ve yeni kaydi olusturmadan once hata alir.
+    function ownsScopedDocument(documentId) {
+      return signedIn() && documentId.matches("^" + request.auth.uid + "_.*");
+    }
+
     function validAuthor() {
       return request.resource.data.author is string
         && request.resource.data.author.size() >= 2
@@ -293,7 +300,8 @@ service cloud.firestore {
     }
 
     match /memberSubscriptions/{subscriptionId} {
-      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow get: if ownsScopedDocument(subscriptionId);
+      allow list: if signedIn() && resource.data.uid == request.auth.uid;
       allow create: if verifiedMemberOrAdmin()
         && subscriptionId == request.auth.uid + "_" + request.resource.data.targetId
         && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
@@ -319,7 +327,8 @@ service cloud.firestore {
     }
 
     match /memberBookmarks/{bookmarkId} {
-      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow get: if ownsScopedDocument(bookmarkId);
+      allow list: if signedIn() && resource.data.uid == request.auth.uid;
       allow create: if verifiedMemberOrAdmin()
         && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
         && request.resource.data.uid == request.auth.uid
