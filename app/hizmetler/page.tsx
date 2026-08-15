@@ -73,19 +73,15 @@ export default function ServicesPage() {
 
   return (
     <main className="services-directory-page min-h-screen bg-[#090b10] text-white">
-      <section className="services-directory-hero relative overflow-hidden border-b border-white/8 py-16 sm:py-20">
+      <section className="services-directory-hero relative overflow-hidden border-b border-white/8">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(244,63,94,.13),transparent_35%),radial-gradient(circle_at_90%_90%,rgba(249,115,22,.08),transparent_30%)]" />
-        <div className="content-shell relative">
-          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-rose-400">Sky Bozum hizmetleri</p>
-          <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl">
-            Dijital bakiyeniz için <span className="bg-gradient-to-r from-rose-400 to-orange-400 bg-clip-text text-transparent">doğru işlem sayfası.</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">Ne bozdurmak istediğinizi seçin; güncel oran aralığını, işlem adımlarını ve dikkat edilmesi gerekenleri tek sayfada görün.</p>
-          <div className="mt-8 flex flex-wrap gap-3 text-xs font-bold text-slate-300">
-            <span className="rounded-full border border-white/10 bg-white/[0.035] px-4 py-2">{services.length} hizmet sayfası</span>
-            <span className="rounded-full border border-white/10 bg-white/[0.035] px-4 py-2">İşlem öncesi oran teyidi</span>
-            <span className="rounded-full border border-white/10 bg-white/[0.035] px-4 py-2">Adım adım rehber</span>
+        <div className="services-directory-hero__inner content-shell relative">
+          <div className="services-directory-hero__title">
+            <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-rose-400">{services.length} Sky Bozum hizmeti</p>
+            <h1>Hizmetinizi seçin.</h1>
           </div>
+          <p className="services-directory-hero__summary">Dijital kod, mobil ödeme veya kart yönteminizi bulun; koşulları ve güncel oran aralığını tek sayfada inceleyin.</p>
+          <a href="#tum-hizmetler" className="services-directory-hero__action focus-ring">Hizmetleri görüntüle <span aria-hidden="true">↓</span></a>
         </div>
       </section>
 
