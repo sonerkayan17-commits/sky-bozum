@@ -351,10 +351,10 @@ service cloud.firestore {
     match /memberPosts/{postId} {
       allow read: if canModerate() || validPublicForumPost(resource.data)
         || (signedIn() && resource.data.uid == request.auth.uid);
-      allow create: if verifiedMember()
+      allow create: if verifiedMemberOrAdmin()
         && request.resource.data.uid == request.auth.uid
         && validForumDraft(request.resource.data)
-        && request.resource.data.status == "pending"
+        && (isAdmin() || request.resource.data.status == "pending")
         && request.resource.data.title is string
         && request.resource.data.title.size() >= 5
         && request.resource.data.title.size() <= 100

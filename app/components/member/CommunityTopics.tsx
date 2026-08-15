@@ -191,19 +191,23 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       updatedAt: serverTimestamp(),
     };
 
-    if (editingId) {
-      await updateDoc(doc(db, 'memberPosts', editingId), payload);
-      setNotice(isAdmin ? 'Konu yönetici yetkisiyle güncellendi.' : currentPost?.status === 'published' ? 'Değişikliğiniz yeniden moderasyon kuyruğuna alındı.' : 'Konunuz güncellendi.');
-    } else {
-      await addDoc(collection(db, 'memberPosts'), {
-        ...payload,
-        uid: user.uid,
-        author: user.displayName || 'Sky Bozum üyesi',
-        createdAt: serverTimestamp(),
-      });
-      setNotice('Konunuz moderasyon kuyruğuna alındı. Onay sonrası yayınlanacak.');
+    try {
+      if (editingId) {
+        await updateDoc(doc(db, 'memberPosts', editingId), payload);
+        setNotice(isAdmin ? 'Konu yönetici yetkisiyle güncellendi.' : currentPost?.status === 'published' ? 'Değişikliğiniz yeniden moderasyon kuyruğuna alındı.' : 'Konunuz güncellendi.');
+      } else {
+        await addDoc(collection(db, 'memberPosts'), {
+          ...payload,
+          uid: user.uid,
+          author: user.displayName || 'Sky Bozum üyesi',
+          createdAt: serverTimestamp(),
+        });
+        setNotice(isAdmin ? 'Konu yönetici yetkisiyle yayınlandı.' : 'Konunuz moderasyon kuyruğuna alındı. Onay sonrası yayınlanacak.');
+      }
+      reset();
+    } catch {
+      setNotice('Konu kaydedilemedi. Lütfen bağlantınızı ve yetkinizi kontrol ederek tekrar deneyin.');
     }
-    reset();
   }
 
   async function reportPost(post: Post) {
