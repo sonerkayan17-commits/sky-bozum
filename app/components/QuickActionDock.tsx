@@ -13,9 +13,9 @@ type DockAction = {
 };
 
 const actions: DockAction[] = [
-  { label: 'Hesapla', href: '/araclar#oran-hesapla', icon: '↗' },
-  { label: 'Araçlar', href: '/araclar', icon: '◇', activeRoutes: ['/araclar'] },
+  { label: 'Hesapla', href: '/araclar#oran-hesapla', icon: '↗', activeRoutes: ['/araclar'] },
   { label: 'Rehber', href: '/bilgi-merkezi', icon: '≡', activeRoutes: ['/bilgi-merkezi'] },
+  { label: 'S.S.S.', href: '/sss', icon: '?', activeRoutes: ['/sss'] },
   ...(siteFeatures.communityForum ? [{ label: 'Forum', href: '/topluluk', icon: '☵', activeRoutes: ['/topluluk'] }] : []),
 ];
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import TrustIncidentResolver from '../components/TrustIncidentResolver';
+import TrustQuickDock from '../components/TrustQuickDock';
 import SkyTrustCheck from '../components/SkyTrustCheck';
 import { buildWhatsAppUrl } from '../lib/conversion';
 import { siteConfig } from '../lib/site-config';
@@ -48,10 +49,11 @@ export default function TrustCenterPage() {
 
     <section className="trust-v1-section"><div className="trust-v1-shell"><div className="trust-v1-section-head"><div><p className="trust-v1-eyebrow">02 / TEKLİFİ DEĞERLENDİR</p><h2>Yüzdeye değil, sürece bakın.</h2></div><span>Güvenilir bir teklif net, yazılı ve doğrulanabilir olur.</span></div><div className="trust-v1-compare"><article><header><span>GÜVENİLİR TEKLİF</span><b>DEVAM ET</b></header><ul><li>Oran ve net ödeme birlikte açıklanır</li><li>Kesinti işlemden önce belirtilir</li><li>Aynı resmî kanalda devam edilir</li><li>Karar vermeniz için baskı kurulmaz</li></ul></article><article><header><span>ŞÜPHELİ TEKLİF</span><b>DURDUR</b></header><ul><li>Sadece yüksek yüzde söylenir</li><li>Sonradan masraf veya kesinti çıkar</li><li>Farklı numara ya da hesaba yönlendirir</li><li>Acele etmeniz için baskı kurar</li></ul></article></div></div></section>
 
-    <section className="trust-v1-section trust-v1-incident-section"><div className="trust-v1-shell"><div className="trust-v1-section-head"><div><p className="trust-v1-eyebrow">03 / ŞÜPHELİ DURUM</p><h2>Ne yaşadığınızı seçin.</h2></div><span>İşlemi durdurun, kayıtları koruyun ve doğru ilk adımı görün.</span></div><TrustIncidentResolver incidents={incidents} /></div></section>
+    <section id="sorun-cozucu" className="trust-v1-section trust-v1-incident-section"><div className="trust-v1-shell"><div className="trust-v1-section-head"><div><p className="trust-v1-eyebrow">03 / ŞÜPHELİ DURUM</p><h2>Ne yaşadığınızı seçin.</h2></div><span>İşlemi durdurun, kayıtları koruyun ve doğru ilk adımı görün.</span></div><TrustIncidentResolver incidents={incidents} /></div></section>
 
     <section className="trust-v1-section"><div className="trust-v1-shell"><div className="trust-v1-section-head"><div><p className="trust-v1-eyebrow">04 / DOĞRU YÖNLENDİRME</p><h2>Kontrolden sonra ilerleyin.</h2></div><Link href="/iletisim" className="trust-v1-inline-link">İletişim merkezini aç →</Link></div><div className="trust-v1-links"><Link href="/bilgi-merkezi/sky-bozum-iletisim-rehberi"><b>Resmî iletişimi doğrula</b><span>Doğru kanal ve paylaşım sınırlarını kontrol et →</span></Link><Link href="/bilgi-merkezi/sorun-cozme"><b>Sorun çözme merkezine git</b><span>Yaşadığınız duruma uygun adımları bulun →</span></Link><Link href="/referanslar"><b>Referansları incele</b><span>Kaynaklı kullanıcı kayıtlarını görüntüle →</span></Link></div></div></section>
 
     <section className="trust-v1-section trust-v1-faq-section"><div className="trust-v1-shell trust-v1-faq-shell"><div><p className="trust-v1-eyebrow">05 / SIK SORULANLAR</p><h2>Kısa cevaplar.</h2><p>Kararsız kaldığınızda önce bu üç kontrolü okuyun.</p></div><div className="trust-v1-faqs">{faqs.map(([question, answer]) => <details key={question}><summary>{question}<b>+</b></summary><p>{answer}</p></details>)}</div></div></section>
+    <TrustQuickDock />
   </main>;
 }

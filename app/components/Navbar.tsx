@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { getFirebaseClient } from '../lib/firebase';
 import SiteSearch from './SiteSearch';
@@ -56,6 +56,10 @@ export default function Navbar() {
     setOpen(false);
   }
 
+  const restoreMenuButtonFocus = useCallback(() => {
+    menuButtonRef.current?.focus();
+  }, []);
+
   useEffect(() => {
     if (!open && !searchOpen) return;
 
@@ -63,7 +67,6 @@ export default function Navbar() {
     document.body.style.overflow = 'hidden';
 
     const menu = open ? mobileMenuRef.current : mobileSearchRef.current;
-    const menuButton = menuButtonRef.current;
     const focusableSelector = [
       'a[href]',
       'button:not([disabled])',
@@ -107,9 +110,9 @@ export default function Navbar() {
       cancelAnimationFrame(focusFrame);
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
-      if (open) requestAnimationFrame(() => menuButton?.focus());
+      if (open) requestAnimationFrame(restoreMenuButtonFocus);
     };
-  }, [open, searchOpen]);
+  }, [open, searchOpen, restoreMenuButtonFocus]);
 
   const active = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
   const visibleItems = items.filter(([, href]) => href !== '/topluluk' || siteFeatures.communityForum);
