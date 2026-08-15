@@ -19,6 +19,7 @@ import AdminRatePanel from "./AdminRatePanel";
 import ForumModerationPanel from "./ForumModerationPanel";
 import AdminOperationPanel from "./AdminOperationPanel";
 import ArticleRevisionHistory from "./ArticleRevisionHistory";
+import ArticleCoverField from "./ArticleCoverField";
 import ReleaseReadinessPanel from "./ReleaseReadinessPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 import { articles } from "../lib/site";
@@ -951,16 +952,15 @@ export default function AdminConsole({
                 />
               </label>
               <label>
-                Kapak görsel yolu
-                <input
+                Kapak görseli
+                <ArticleCoverField
                   value={editingArticle.cover}
-                  onChange={(event) =>
+                  onChange={(cover) =>
                     setEditingArticle({
                       ...editingArticle,
-                      cover: event.target.value,
+                      cover,
                     })
                   }
-                  placeholder="/images/..."
                 />
               </label>
               <label>

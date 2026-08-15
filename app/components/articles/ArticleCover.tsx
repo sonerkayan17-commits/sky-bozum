@@ -42,11 +42,13 @@ export default function ArticleCover({ article, compact = false, dense = false, 
   const premiumCover = premiumArticleCovers[article.slug];
   const tone = coverTone(article);
   const visualMeta = getArticleVisualMeta(article.slug);
-  const cover = premiumCover ?? article.cover ?? fallbackCovers[tone] ?? fallbackCovers.default;
+  const uploadedCover = article.cover && (/^https:\/\//i.test(article.cover) || /^data:image\/(webp|jpeg|png);base64,/i.test(article.cover)) ? article.cover : '';
+  const cover = uploadedCover || (premiumCover ?? article.cover ?? fallbackCovers[tone] ?? fallbackCovers.default);
   if (cover) {
     const vectorCover = cover.toLowerCase().endsWith('.svg');
     return (
       <div className={`article-premium-cover article-premium-cover--${tone} ${vectorCover ? 'article-premium-cover--vector' : 'article-premium-cover--raster'} relative isolate overflow-hidden bg-[#0a0e17] ${dense ? 'article-cover--dense h-[64px] sm:h-[72px]' : compact ? 'article-cover--compact aspect-[16/9]' : 'article-cover--hero aspect-[16/9] min-h-[260px]'} ${className}`}>
+        {uploadedCover ? <div className={`article-cover-image ${vectorCover ? 'article-cover-image--vector' : ''} absolute inset-0 transition duration-700 ease-out group-hover:scale-[1.035]`} role="img" aria-label={article.coverAlt ?? `${article.title} rehber kapağı`} style={{ backgroundImage: `url("${uploadedCover.startsWith('https://') ? encodeURI(uploadedCover) : uploadedCover}")`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: vectorCover ? 'contain' : 'cover' }} /> : <>
         {vectorCover && <Image
           src={cover}
           alt=""
@@ -67,6 +69,7 @@ export default function ArticleCover({ article, compact = false, dense = false, 
           fetchPriority={priority ? 'high' : undefined}
           className={`article-cover-image ${vectorCover ? 'article-cover-image--vector object-contain' : 'object-cover'} transition duration-700 ease-out group-hover:scale-[1.035]`}
         />
+        </>}
         <div className="article-premium-cover__veil pointer-events-none absolute inset-0" />
         <div className="article-premium-cover__shine pointer-events-none absolute inset-0" />
         <div className="article-premium-cover__guide pointer-events-none absolute left-3 top-3 z-[3] flex items-center gap-2">

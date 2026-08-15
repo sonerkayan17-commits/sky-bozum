@@ -46,6 +46,8 @@ function articleFromSite(article: ArticleItem): ContentArticleDraft {
 }
 
 function cleanArticle(article: ContentArticleDraft): ContentArticleDraft {
+  const rawCover = article.cover.trim();
+  const cover = rawCover.startsWith('/') || /^https:\/\/\S+$/i.test(rawCover) || /^data:image\/(webp|jpeg|png);base64,[a-z0-9+/=]+$/i.test(rawCover) ? rawCover.slice(0, 26000) : '';
   return {
     ...article,
     slug: article.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''),
@@ -54,7 +56,7 @@ function cleanArticle(article: ContentArticleDraft): ContentArticleDraft {
     category: article.category.trim().slice(0, 80),
     seoTitle: article.seoTitle.trim().slice(0, 180),
     metaDescription: article.metaDescription.trim().slice(0, 320),
-    cover: article.cover.trim().slice(0, 500),
+    cover,
     body: article.body?.trim().slice(0, 24000) || '',
     keywords: (article.keywords || []).map((keyword) => keyword.trim().slice(0, 80)).filter(Boolean).slice(0, 20),
     serviceSlug: article.serviceSlug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 80) || '',
