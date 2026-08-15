@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 'use client';
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type GroupId = 'all' | 'trade' | 'media' | 'corporate' | 'feedback';
 type IconName = 'building' | 'coins' | 'briefcase' | 'globe' | 'megaphone' | 'handshake' | 'store' | 'office' | 'video' | 'document' | 'bulb';
@@ -179,6 +178,34 @@ export default function PartnershipHub({
 
   const draftKey = `sky-bozum-partnership-draft:${selected.id}`;
 
+  const saveDraft = useCallback((form: HTMLFormElement) => {
+    const data = new FormData(form);
+    const draft: Record<string, string | boolean> = {};
+    data.forEach((value, key) => {
+      if (key === 'website_url') return;
+      draft[key] = typeof value === 'string' ? value : value.name;
+    });
+    draft.consent = Boolean(data.get('consent'));
+    draft.dataSafety = Boolean(data.get('dataSafety'));
+    const envelope: DraftEnvelope = { version: 1, savedAt: Date.now(), data: draft };
+    window.sessionStorage.setItem(draftKey, JSON.stringify(envelope));
+    setDraftState('saved');
+  }, [draftKey]);
+
+  const updateCompletion = useCallback((form: HTMLFormElement) => {
+    const data = new FormData(form);
+    const requiredNames = ['fullName', 'phone', ...(contactPreference === 'email' ? ['email'] : []), ...selected.fields.map((field) => field.name), 'message', 'consent', ...(selected.id === 'complaint' ? ['dataSafety'] : [])];
+    const completed = requiredNames.filter((name) => {
+      if (name === 'consent' || name === 'dataSafety') return Boolean(data.get(name));
+      const value = String(data.get(name) ?? '').trim();
+      if (name === 'message') return value.length >= 40;
+      if (name === 'phone') return Boolean(normalizeTurkishMobile(value));
+      return value.length > 0;
+    }).length;
+    setCompletion(Math.round((completed / requiredNames.length) * 100));
+    setRemainingRequired(requiredNames.length - completed);
+  }, [contactPreference, selected]);
+
   useEffect(() => {
     setIsOnline(window.navigator.onLine);
     const handleOnline = () => setIsOnline(true);
@@ -240,7 +267,7 @@ export default function PartnershipHub({
     } catch {
       window.sessionStorage.removeItem(draftKey);
     }
-  }, [draftKey]);
+  }, [draftKey, updateCompletion]);
 
   useEffect(() => {
     const flushDraft = () => {
@@ -255,21 +282,7 @@ export default function PartnershipHub({
       window.removeEventListener('pagehide', flushDraft);
       if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
     };
-  }, [draftKey, submissionState]);
-
-  function saveDraft(form: HTMLFormElement) {
-    const data = new FormData(form);
-    const draft: Record<string, string | boolean> = {};
-    data.forEach((value, key) => {
-      if (key === 'website_url') return;
-      draft[key] = typeof value === 'string' ? value : value.name;
-    });
-    draft.consent = Boolean(data.get('consent'));
-    draft.dataSafety = Boolean(data.get('dataSafety'));
-    const envelope: DraftEnvelope = { version: 1, savedAt: Date.now(), data: draft };
-    window.sessionStorage.setItem(draftKey, JSON.stringify(envelope));
-    setDraftState('saved');
-  }
+  }, [draftKey, saveDraft, submissionState]);
 
 
   function scheduleDraftSave(form: HTMLFormElement) {
@@ -326,20 +339,6 @@ export default function PartnershipHub({
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       document.getElementById('basvuru-formu')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     });
-  }
-
-  function updateCompletion(form: HTMLFormElement) {
-    const data = new FormData(form);
-    const requiredNames = ['fullName', 'phone', ...(contactPreference === 'email' ? ['email'] : []), ...selected.fields.map((field) => field.name), 'message', 'consent', ...(selected.id === 'complaint' ? ['dataSafety'] : [])];
-    const completed = requiredNames.filter((name) => {
-      if (name === 'consent' || name === 'dataSafety') return Boolean(data.get(name));
-      const value = String(data.get(name) ?? '').trim();
-      if (name === 'message') return value.length >= 40;
-      if (name === 'phone') return Boolean(normalizeTurkishMobile(value));
-      return value.length > 0;
-    }).length;
-    setCompletion(Math.round((completed / requiredNames.length) * 100));
-    setRemainingRequired(requiredNames.length - completed);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {

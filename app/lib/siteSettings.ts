@@ -100,7 +100,7 @@ export function subscribeToSiteSettings(db: Firestore, callback: (settings: Site
 }
 
 export async function saveSiteSettings(db: Firestore, settings: SiteSettings, actorId: string) {
-  const { updatedAt: _updatedAt, updatedBy: _updatedBy, ...editable } = settings;
+  const editable = Object.fromEntries(Object.entries(settings).filter(([key]) => key !== 'updatedAt' && key !== 'updatedBy'));
   await setDoc(siteSettingsRef(db), {
     ...editable,
     updatedBy: actorId,

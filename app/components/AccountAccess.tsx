@@ -44,6 +44,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     const memberSnapshot = await getDoc(memberRef);
     const memberName = displayName.trim() || user.displayName || 'Sky Bozum üyesi';
     const isNewMember = !memberSnapshot.exists();
+    const recordedReferrer = isNewMember ? referredBy : String(memberSnapshot.data()?.referredBy || '') || null;
     if (isNewMember) await setDoc(memberRef, {
       displayName: memberName,
       avatar: '',
@@ -55,7 +56,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       points: 0,
       permissions: [],
       referralCode: ownReferralCode,
-      referredBy,
+      referredBy: recordedReferrer,
       createdAt: serverTimestamp(),
     });
     const profileRef = doc(db, 'publicProfiles', user.uid);
@@ -65,9 +66,10 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       displayName: memberName,
       createdAt: serverTimestamp(),
     });
-    if (isNewMember && referredBy) {
-      await setDoc(doc(db, 'referralRelations', user.uid), {
-        referrerId: referredBy,
+    if (user.emailVerified && recordedReferrer) {
+      const relationRef = doc(db, 'referralRelations', user.uid);
+      if (!(await getDoc(relationRef)).exists()) await setDoc(relationRef, {
+        referrerId: recordedReferrer,
         refereeId: user.uid,
         refereeName: memberName,
         referralCode,

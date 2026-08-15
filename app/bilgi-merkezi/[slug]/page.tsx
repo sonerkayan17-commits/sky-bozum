@@ -13,7 +13,7 @@ import { slugifyCategory } from '../../lib/articleCategories';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ShareButtons from '../../components/ShareButtons';
-import { articles, getArticle } from '../../lib/site';
+import { articles } from '../../lib/site';
 import { siteConfig } from '../../lib/site-config';
 import { articleImage, articleUrl, articleWordCount, jsonLd, publishedAt, updatedAt } from '../../lib/seo';
 import { relatedArticles } from '../../lib/internalLinks';

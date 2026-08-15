@@ -38,6 +38,10 @@ service cloud.firestore {
         || get(/databases/$(database)/documents/members/$(request.auth.uid)).data.status != "banned";
     }
 
+    function verifiedMember() {
+      return signedIn() && request.auth.token.email_verified == true && notBanned();
+    }
+
     function validAuthor() {
       return request.resource.data.author is string
         && request.resource.data.author.size() >= 2
@@ -50,7 +54,7 @@ service cloud.firestore {
         ])
         && (
           request.resource.data.status == "pending"
-          || (signedIn() && request.resource.data.status == "approved")
+          || (verifiedMember() && request.resource.data.status == "approved")
         )
         && request.resource.data.createdAt == request.time
         && (request.resource.data.uid == null || (signedIn() && request.resource.data.uid == request.auth.uid))
@@ -234,7 +238,7 @@ service cloud.firestore {
         && request.resource.data.createdAt == request.time
       );
       allow update: if isAdmin() || (
-        signedIn() && request.auth.uid == memberId
+        verifiedMember() && request.auth.uid == memberId
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["displayName", "phone", "avatar"])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
@@ -249,7 +253,7 @@ service cloud.firestore {
 
     match /memberActivities/{activityId} {
       allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.keys().hasOnly(["uid", "type", "targetId", "title", "href", "points", "createdAt"])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.targetId is string
@@ -266,7 +270,7 @@ service cloud.firestore {
 
     match /memberPrivate/{memberId} {
       allow read: if signedIn() && request.auth.uid == memberId;
-      allow create, update: if signedIn() && request.auth.uid == memberId
+      allow create, update: if verifiedMember() && request.auth.uid == memberId
         && request.resource.data.keys().hasOnly(["accountHolder", "bankName", "iban", "updatedAt"])
         && request.resource.data.accountHolder is string
         && request.resource.data.accountHolder.size() >= 2
@@ -282,7 +286,7 @@ service cloud.firestore {
 
     match /memberSubscriptions/{subscriptionId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && subscriptionId == request.auth.uid + "_" + request.resource.data.targetId
         && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
         && request.resource.data.uid == request.auth.uid
@@ -308,7 +312,7 @@ service cloud.firestore {
 
     match /memberBookmarks/{bookmarkId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.targetId is string
@@ -330,7 +334,7 @@ service cloud.firestore {
     match /memberPosts/{postId} {
       allow read: if canModerate() || validPublicForumPost(resource.data)
         || (signedIn() && resource.data.uid == request.auth.uid);
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.uid == request.auth.uid
         && validForumDraft(request.resource.data)
         && request.resource.data.status == "pending"
@@ -341,7 +345,7 @@ service cloud.firestore {
         && request.resource.data.body.size() >= 10
         && request.resource.data.body.size() <= 30000
         && request.resource.data.createdAt == request.time;
-      allow update: if canModerate() || (signedIn()
+      allow update: if canModerate() || (verifiedMember()
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
@@ -362,7 +366,14 @@ service cloud.firestore {
 
     match /publicProfiles/{memberId} {
       allow read: if true;
-      allow create, update: if signedIn() && request.auth.uid == memberId
+      allow create: if signedIn() && request.auth.uid == memberId
+        && request.resource.data.keys().hasOnly(["displayName", "avatar", "referralCode", "createdAt"])
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 80
+        && request.resource.data.avatar is string
+        && request.resource.data.avatar.size() <= 30000;
+      allow update: if verifiedMember() && request.auth.uid == memberId
         && request.resource.data.keys().hasOnly(["displayName", "avatar", "referralCode", "createdAt"])
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() >= 2
@@ -374,7 +385,7 @@ service cloud.firestore {
 
     match /referralRelations/{relationId} {
       allow read: if signedIn() && (resource.data.referrerId == request.auth.uid || resource.data.refereeId == request.auth.uid);
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.keys().hasOnly(["referrerId", "refereeId", "refereeName", "referralCode", "createdAt"])
         && request.resource.data.refereeId == request.auth.uid
         && request.resource.data.referrerId != request.auth.uid
@@ -388,7 +399,7 @@ service cloud.firestore {
 
     match /referralRewards/{rewardId} {
       allow read: if signedIn() && (resource.data.referrerId == request.auth.uid || resource.data.refereeId == request.auth.uid);
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.keys().hasOnly(["referrerId", "refereeId", "sourceTargetId", "sourcePoints", "rewardPoints", "createdAt"])
         && request.resource.data.refereeId == request.auth.uid
         && request.resource.data.referrerId == get(/databases/$(database)/documents/members/$(request.auth.uid)).data.referredBy
@@ -400,7 +411,7 @@ service cloud.firestore {
 
     match /profileVisits/{visitId} {
       allow read: if signedIn() && resource.data.profileId == request.auth.uid;
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.keys().hasOnly(["profileId", "visitorId", "visitorName", "visitorAvatar", "viewedAt"])
         && request.resource.data.visitorId == request.auth.uid
         && request.resource.data.profileId != request.auth.uid
@@ -421,25 +432,25 @@ service cloud.firestore {
 
     match /profileLikes/{likeId} {
       allow read: if true;
-      allow create: if signedIn() && notBanned() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
+      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 
     match /pointGifts/{giftId} {
       allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
-      allow create: if signedIn() && notBanned() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.amount == 5 && request.resource.data.createdAt == request.time;
+      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.amount == 5 && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 
     match /messages/{messageId} {
       allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
-      allow create: if signedIn() && notBanned() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && request.resource.data.createdAt == request.time;
+      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 
     match /notifications/{notificationId} {
       allow read: if signedIn() && resource.data.receiverId == request.auth.uid;
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && request.resource.data.senderId == request.auth.uid
         && request.resource.data.receiverId != request.auth.uid
         && request.resource.data.receiverId is string
@@ -458,7 +469,7 @@ service cloud.firestore {
     match /contentReports/{reportId} {
       allow get: if canModerate() || (signedIn() && resource.data.reporterId == request.auth.uid);
       allow list: if canModerate();
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && reportId == request.auth.uid + "_" + request.resource.data.targetType + "_" + request.resource.data.targetId
         && request.resource.data.keys().hasOnly(["targetType", "targetId", "reporterId", "reason", "status", "createdAt"])
         && (request.resource.data.targetType == "forum_post" || request.resource.data.targetType == "comment")
@@ -644,7 +655,7 @@ service cloud.firestore {
 
     match /operations/{operationId} {
       allow read: if canOperate() || (signedIn() && resource.data.memberId == request.auth.uid);
-      allow create: if signedIn() && notBanned()
+      allow create: if verifiedMember()
         && ((canOperate() && request.resource.data.createdBy == request.auth.uid)
           || (request.resource.data.memberId == request.auth.uid
             && request.resource.data.createdBy == request.auth.uid

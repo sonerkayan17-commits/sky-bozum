@@ -47,7 +47,7 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
           </div>
 
           <div className={sidebar ? 'grid min-h-0 flex-1 grid-rows-2 gap-3' : 'grid gap-3 md:grid-cols-2'}>
-            {cards.map((card, cardIndex) => (
+            {cards.map((card) => (
               <Link
                 key={card.slug}
                 href={`/bilgi-merkezi/${card.slug}`}

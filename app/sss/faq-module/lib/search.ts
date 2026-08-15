@@ -67,7 +67,7 @@ export function createFaqSearchIndex(items: readonly FaqItem[]): FaqSearchIndex 
 
 export function explainIndexedSearchScore(entry: FaqSearchIndexEntry, query: string): SearchScoreBreakdown {
   if (!query.trim()) return { total: 1, reasons: ["Boş sorgu"], matchedTokens: [] };
-  const { item, question, category, service, haystack, words } = entry;
+  const { question, category, service, haystack, words } = entry;
   const normalizedQuery = normalizeText(query);
   const tokens = queryTokens(query);
   const reasons: string[] = [];
@@ -109,4 +109,3 @@ export function rankFaqsWithIndex(index: FaqSearchIndex, query: string): FaqItem
 export function rankFaqs(items: readonly FaqItem[], query: string): FaqItem[] {
   return rankFaqsWithIndex(createFaqSearchIndex(items), query);
 }
-

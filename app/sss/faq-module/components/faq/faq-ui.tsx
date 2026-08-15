@@ -108,6 +108,7 @@ export function FaqCategoryDrawer({ active, categories, onSelect }: { active: Fa
     closeReasonRef.current = "dismiss";
     const lock = acquireBodyScrollLock(document);
     const previous = document.activeElement as HTMLElement | null;
+    const trigger = triggerRef.current;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -123,7 +124,7 @@ export function FaqCategoryDrawer({ active, categories, onSelect }: { active: Fa
       document.removeEventListener("keydown", onKey);
       lock.release();
       if (closeReasonRef.current === "dismiss") {
-        focusTaskRef.current?.schedule(() => (triggerRef.current ?? previous)?.focus());
+        focusTaskRef.current?.schedule(() => (trigger ?? previous)?.focus());
       }
     };
   }, [open]);

@@ -31,9 +31,7 @@ export default function ContactChannels({channels}:{channels:readonly ContactCha
   useEffect(()=>setPrepared(selected.prepare.map(()=>false)),[selected.id, selected.prepare]);
   const readyCount=prepared.filter(Boolean).length;
   const readyTotal=selected.prepare.length;
-  const readyPercent=readyTotal?Math.round((readyCount/readyTotal)*100):100;
   const readinessLabel = readyCount===readyTotal ? 'Hazır' : readyCount>0 ? 'Hazırlanıyor' : 'Başlangıç';
-  const readinessNote = readyCount===readyTotal ? 'Temel bilgiler tamamlandı' : readyCount>0 ? 'Bir adım daha kaldı' : 'İki kısa bilgi yeterli';
   const handoffLabel = readyCount===readyTotal ? 'DEVAMA HAZIR' : readyCount>0 ? 'HAZIRLIK SÜRÜYOR' : 'GÜVENLİ BAŞLANGIÇ';
   const handoffText = readyCount===readyTotal ? 'Başlangıç özeti tamamlandı. Önerilen kanala geçebilirsiniz.' : readyCount>0 ? `Son ${readyTotal-readyCount} kısa bilgiyi hazırladığınızda özet tamamlanır.` : 'Hazırlık zorunlu değil; iki kısa bilgi ilk teması hızlandırır.';
   const primary=channels.find(c=>c.primary)??channels[0];

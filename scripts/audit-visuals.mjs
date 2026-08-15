@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 const root=process.cwd();
 const files=[];
-function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);e.isDirectory()?walk(p):files.push(p)}}
+function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else files.push(p)}}
 walk(path.join(root,'public'));
 const visuals=files.filter(f=>/\.(svg|webp|png|jpe?g)$/i.test(f));
 const hashes=new Map();

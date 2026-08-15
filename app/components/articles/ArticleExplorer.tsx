@@ -141,7 +141,7 @@ function revealAndFocus(target: () => HTMLElement | null, block: ScrollLogicalPo
   });
 }
 
-function formatDate(value?: string) {
+export function formatDate(value?: string) {
   if (!value) return 'Düzenli güncellenir';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return 'Düzenli güncellenir';
@@ -188,7 +188,7 @@ function ArchiveArticleCard({ article }: { article: ArticleItem }) {
   </Link>;
 }
 
-function CompactArticleLink({ article, index }: { article: ArticleItem; index: number }) {
+export function CompactArticleLink({ article, index }: { article: ArticleItem; index: number }) {
   const titleId = `compact-article-title-${useId().replace(/:/g, '')}`;
   return <Link href={`/bilgi-merkezi/${article.slug}`} aria-labelledby={titleId} className="focus-ring group flex min-h-[84px] items-center gap-4 rounded-2xl border border-white/8 bg-white/[.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[.04]"><span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/[.05] text-sm font-black text-slate-400 group-hover:text-rose-300">{String(index + 1).padStart(2, '0')}</span><span className="min-w-0"><strong id={titleId} className="line-clamp-2 text-sm font-black leading-5 text-white">{article.title}</strong><span className="mt-1 block text-xs font-bold text-slate-500">{article.category} · {article.readTime}</span></span><span aria-hidden="true" className="ml-auto shrink-0 text-rose-400 transition group-hover:translate-x-1">→</span></Link>;
 }
