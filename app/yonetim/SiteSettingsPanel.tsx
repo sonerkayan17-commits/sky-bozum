@@ -42,25 +42,54 @@ const searchActions: Array<{
 
 export default function SiteSettingsPanel({ db, actorId }: { db: Firestore | null; actorId: string }) {
   const [form, setForm] = useState<SiteSettings>(defaultSiteSettings);
+  const [savedForm, setSavedForm] = useState<SiteSettings | null>(null);
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const hasUnsavedChanges = savedForm !== null && JSON.stringify(form) !== JSON.stringify(savedForm);
 
   useEffect(() => {
     if (!db) { setLoading(false); return; }
     getDoc(siteSettingsRef(db)).then((snapshot) => {
-      setForm({ ...defaultSiteSettings, ...(snapshot.data() as Partial<SiteSettings> | undefined) });
+      const next = { ...defaultSiteSettings, ...(snapshot.data() as Partial<SiteSettings> | undefined) };
+      setForm(next);
+      setSavedForm(next);
     }).finally(() => setLoading(false));
   }, [db]);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const warnBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    const warnBeforeAdminNavigation = (event: MouseEvent) => {
+      if (!(event.target instanceof Element) || !event.target.closest('.admin-nav button')) return;
+      if (window.confirm('Kaydedilmemiş site ayarları var. Kaydetmeden bu bölümden ayrılmak istiyor musunuz?')) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    window.addEventListener('beforeunload', warnBeforeUnload);
+    document.addEventListener('click', warnBeforeAdminNavigation, true);
+    return () => {
+      window.removeEventListener('beforeunload', warnBeforeUnload);
+      document.removeEventListener('click', warnBeforeAdminNavigation, true);
+    };
+  }, [hasUnsavedChanges]);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (!db) return;
+    setSaving(true);
     setStatus('Kaydediliyor...');
     try {
       await saveSiteSettings(db, form, actorId);
+      setSavedForm(form);
       setStatus('Site ayarları kaydedildi. Ortak alanlar yenilendiğinde güncel değerleri kullanır.');
     } catch {
       setStatus('Ayarlar kaydedilemedi. Yetki ve bağlantı durumunu kontrol edin.');
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -118,7 +147,8 @@ export default function SiteSettingsPanel({ db, actorId }: { db: Firestore | nul
         <p>Üye menüsündeki kayıtlı içerikler bağlantısının metnini güncelleyebilirsiniz.</p>
         <label><span>Kayıtlı içerikler bağlantısı</span><input value={form.savedItemsLabel} onChange={(event) => setForm((current) => ({ ...current, savedItemsLabel: event.target.value }))} maxLength={80} required /><small>Hem masaüstü hem mobil üye menüsünde görünür.</small></label>
       </fieldset>
-      <button className="admin-primary" type="submit" disabled={loading || !db}>Site ayarlarını kaydet <span>→</span></button>
+      {hasUnsavedChanges && <p className="admin-error admin-notice" role="status">Kaydedilmemiş değişiklikler var. Bölüm değiştirir veya sayfayı kapatırsanız önce onay istenir.</p>}
+      <button className="admin-primary" type="submit" disabled={loading || saving || !db}>{saving ? 'Kaydediliyor…' : <>Site ayarlarını kaydet <span>→</span></>}</button>
       {status && <p className="admin-success">{status}</p>}
     </form>
   </section>;
