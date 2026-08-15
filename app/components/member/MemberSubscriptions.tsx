@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
+import MemberUtilityShell from './MemberUtilityShell';
 
 type Item = { id: string; title: string; href: string };
 
@@ -23,5 +24,10 @@ export default function MemberSubscriptions() {
     return () => { stop(); unsubscribe(); };
   }, []);
 
-  return <main className="utility-page"><section><p>TAKİP MERKEZİ</p><h1>Aboneliklerim</h1><span>Takip ettiğiniz konu ve mesaj hareketlerine buradan dönün.</span><nav className="mt-6 flex gap-3 text-sm font-bold"><Link href="/hesabim/abonelikler" className="rounded-lg border border-rose-400/40 px-4 py-2 text-rose-300">Takip ettiklerim</Link><Link href="/hesabim/kaydedilenler" className="rounded-lg border border-white/10 px-4 py-2 text-slate-300">Kaydettiklerim</Link></nav><div className="utility-list">{items.length ? items.map((item) => <article key={item.id}><strong>{item.title}</strong><p>Yeni yanıtları ve yorumları takip edin.</p><Link href={item.href}>Konuya git →</Link></article>) : <article><strong>Henüz aboneliğiniz yok</strong><p>Bilgi Merkezi içeriklerinde “Takip et” düğmesini kullanın.</p><Link href="/bilgi-merkezi">İçerikleri keşfet →</Link></article>}</div></section></main>;
+  return <MemberUtilityShell eyebrow="TAKİP MERKEZİ" title="Aboneliklerim" description="Takip ettiğiniz konu ve içeriklerdeki yeni hareketlere kolayca geri dönün.">
+    <div className="member-utility-tabs" role="navigation" aria-label="Arşiv türü"><Link href="/hesabim/abonelikler" aria-current="page">Takip ettiklerim</Link><Link href="/hesabim/kaydedilenler">Kaydettiklerim</Link></div>
+    <div className="member-utility-list">{items.length ? items.map((item) => <article key={item.id}>
+      <div className="member-utility-list__mark" aria-hidden="true">↻</div><div><strong>{item.title}</strong><p>Yeni yanıtları ve yorumları takip edin.</p><Link href={item.href}>Konuya git →</Link></div>
+    </article>) : <div className="member-empty-premium"><span aria-hidden="true">↻</span><h2>Henüz aboneliğiniz yok</h2><p>Bilgi Merkezi veya topluluk içeriklerinde “Takip et” seçeneğini kullanarak güncellemeleri burada toplayın.</p><Link href="/bilgi-merkezi">İçerikleri keşfet →</Link></div>}</div>
+  </MemberUtilityShell>;
 }

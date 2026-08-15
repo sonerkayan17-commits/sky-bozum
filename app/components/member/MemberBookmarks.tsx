@@ -6,6 +6,7 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { removeBookmark } from '../../lib/bookmarks';
+import MemberUtilityShell from './MemberUtilityShell';
 
 type Bookmark = { id: string; targetId: string; title: string; href: string; createdAt: Date | null };
 
@@ -38,5 +39,10 @@ export default function MemberBookmarks() {
     setItems((current) => current.filter((entry) => entry.id !== item.id));
   }
 
-  return <main className="utility-page"><section><p>KİŞİSEL ARŞİV</p><h1>Kaydettiklerim</h1><span>Daha sonra dönmek istediğiniz konu, rehber ve içerikler burada tutulur.</span><div className="utility-list">{items.length ? items.map((item) => <article key={item.id}><strong>{item.title}</strong><p>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni kaydedildi'}</p><div><Link href={item.href}>İçeriğe git →</Link><button type="button" onClick={() => void remove(item)}>Kaldır</button></div></article>) : <article><strong>Henüz kaydedilen içerik yok</strong><p>Bir konu veya rehberde “Kaydet” düğmesine dokunarak kişisel arşivinize ekleyin.</p><Link href="/bilgi-merkezi">İçerikleri keşfet →</Link></article>}</div></section></main>;
+  return <MemberUtilityShell eyebrow="KİŞİSEL ARŞİV" title="Kaydettiklerim" description="Daha sonra dönmek istediğiniz konu, rehber ve içerikleri tek yerde yönetin.">
+    <div className="member-utility-list">{items.length ? items.map((item) => <article key={item.id}>
+      <div className="member-utility-list__mark" aria-hidden="true">◇</div>
+      <div><strong>{item.title}</strong><p>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni kaydedildi'}</p><div><Link href={item.href}>İçeriğe git →</Link><button type="button" onClick={() => void remove(item)}>Kaldır</button></div></div>
+    </article>) : <div className="member-empty-premium"><span aria-hidden="true">◇</span><h2>Henüz kaydedilen içerik yok</h2><p>Bir konu veya rehberde “Kaydet” düğmesine dokunarak kişisel arşivinizi oluşturmaya başlayın.</p><Link href="/bilgi-merkezi">İçerikleri keşfet →</Link></div>}</div>
+  </MemberUtilityShell>;
 }

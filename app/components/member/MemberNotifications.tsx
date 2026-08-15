@@ -50,15 +50,19 @@ export default function MemberNotifications() {
 
   if (!signedIn) return null;
 
-  return <div className="member-notification">
-    <button type="button" onClick={() => setOpen((value) => !value)} aria-label="Bildirimler" aria-expanded={open}>
-      ♢{unread > 0 && <b>{unread}</b>}
-    </button>
-    {open && <div>
-      <header><strong>Bildirimler</strong><Link href="/hesabim/mesajlar">Mesajlar</Link></header>
-      {items.length ? items.map((item) => <Link key={item.id} href={item.href} onClick={() => void mark(item)} className={item.read ? '' : 'unread'}>
-        {item.text}<small>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small>
-      </Link>) : <p className="member-notification-empty">Yeni bildiriminiz yok.</p>}
-    </div>}
-  </div>;
+  return (
+    <div className="member-notification">
+      <button type="button" onClick={() => setOpen((value) => !value)} aria-label="Bildirimler" aria-expanded={open}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8ZM10 21h4" /></svg>
+        {unread > 0 && <b>{unread}</b>}
+      </button>
+      {open && <div className="member-notification__panel">
+        <header><div><span>BİLDİRİM MERKEZİ</span><strong>Bildirimler</strong></div><Link href="/hesabim/mesajlar">Mesajlar →</Link></header>
+        {items.length ? <div className="member-notification__list">{items.map((item) => <Link key={item.id} href={item.href} onClick={() => void mark(item)} className={item.read ? '' : 'unread'}>
+          <i aria-hidden="true" />
+          <span>{item.text}<small>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</small></span>
+        </Link>)}</div> : <div className="member-notification-empty"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path strokeLinecap="round" strokeLinejoin="round" d="m8.5 12 2.2 2.2L16 9M12 3l7 3v5c0 4.5-2.8 7.8-7 10-4.2-2.2-7-5.5-7-10V6l7-3Z" /></svg></span><strong>Her şey güncel</strong><p>Yeni bildirim veya yanıt geldiğinde burada göreceksiniz.</p></div>}
+      </div>}
+    </div>
+  );
 }

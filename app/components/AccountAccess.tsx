@@ -144,5 +144,34 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     finally { setBusy(false); }
   }
 
-  return <main className="account-page"><section className="account-card"><span>SKY BOZUM / ÜYE HESABI</span><h1>{mode === 'login' ? 'Tekrar hoş geldin.' : 'Aramıza katıl.'}</h1><p>{mode === 'login' ? 'Forum, yorumlar ve ücretsiz içeriklere sınırsız erişim.' : 'Ücretsiz hesabınızı oluşturun; telefon doğrulaması istemiyoruz.'}</p><button type="button" className="account-google" onClick={googleLogin} disabled={!ready || busy}><b>G</b> {busy ? 'İşleniyor…' : 'Google ile devam et'}</button><div className="account-divider"><span>veya e-posta ile</span></div><form onSubmit={submit}>{mode === 'register' && <><label>Ad soyad<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" minLength={2} required disabled={busy} /></label><label>Telefon numarası<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" inputMode="tel" minLength={10} placeholder="05xx xxx xx xx" required disabled={busy} /><small>Numaranıza onay kodu gönderilmez.</small></label></>}<label>E-posta<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required disabled={busy} /></label><label>Parola<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength={6} required disabled={busy} /></label><button type="submit" disabled={!ready || busy}>{busy ? 'İşleniyor…' : mode === 'login' ? 'Giriş yap' : 'Kayıt ol ve e-postamı doğrula'} <span>→</span></button></form>{mode === 'login' && <div className="account-recovery"><button type="button" onClick={forgotPassword} disabled={busy}>Şifremi unuttum</button><button type="button" disabled={busy} onClick={() => setStatus('Sky Bozum hesabına kullanıcı adı yerine e-posta adresinle giriş yapabilirsin.')}>Kullanıcı adımı unuttum</button></div>}{error && <p className="account-error">{error}</p>}{status && <p className="account-success">{status}</p>}<div className="account-switch">{mode === 'login' ? <>Hesabın yok mu? <Link href="/kayit">Ücretsiz kayıt ol</Link></> : <>Zaten hesabın var mı? <Link href="/giris">Giriş yap</Link></>}</div></section></main>;
+  return <main className="account-page"><div className="account-shell">
+    <aside className="account-assurance">
+      <Link href="/" className="account-assurance__brand"><span>SKY</span><strong>BOZUM</strong></Link>
+      <p>ÜYE DENEYİMİ</p>
+      <h2>İçerik, topluluk ve hesabınız tek merkezde.</h2>
+      <span>Ücretsiz hesabınızla yalnızca size ait araçlara erişin; topluluk hareketlerinizi ve bildirimlerinizi düzenli biçimde takip edin.</span>
+      <ul>
+        <li><b>01</b><div><strong>Kişisel hesap merkezi</strong><small>Profil, görev, puan ve hareketlerinizi yönetin.</small></div></li>
+        <li><b>02</b><div><strong>Topluluk katılımı</strong><small>Yorum yapın, konuları takip edin ve içerik kaydedin.</small></div></li>
+        <li><b>03</b><div><strong>Kontrollü iletişim</strong><small>Bildirim ve mesajlarınıza tek alandan ulaşın.</small></div></li>
+      </ul>
+      <div className="account-assurance__trust"><i /> Telefonunuza kayıt onay kodu gönderilmez.</div>
+    </aside>
+    <section className="account-card">
+      <span>SKY BOZUM / ÜYE HESABI</span>
+      <h1>{mode === 'login' ? 'Tekrar hoş geldin.' : 'Aramıza katıl.'}</h1>
+      <p>{mode === 'login' ? 'Forum, yorumlar ve ücretsiz içeriklere sınırsız erişim.' : 'Ücretsiz hesabınızı oluşturun; telefon doğrulaması istemiyoruz.'}</p>
+      <button type="button" className="account-google" onClick={googleLogin} disabled={!ready || busy}><b>G</b> {busy ? 'İşleniyor…' : 'Google ile devam et'}</button>
+      <div className="account-divider"><span>veya e-posta ile</span></div>
+      <form onSubmit={submit}>
+        {mode === 'register' && <><label>Ad soyad<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" minLength={2} required disabled={busy} /></label><label>Telefon numarası<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" inputMode="tel" minLength={10} placeholder="05xx xxx xx xx" required disabled={busy} /><small>Numaranıza onay kodu gönderilmez.</small></label></>}
+        <label>E-posta<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required disabled={busy} /></label>
+        <label>Parola<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength={6} required disabled={busy} /></label>
+        <button type="submit" disabled={!ready || busy}>{busy ? 'İşleniyor…' : mode === 'login' ? 'Giriş yap' : 'Kayıt ol ve e-postamı doğrula'} <span>→</span></button>
+      </form>
+      {mode === 'login' && <div className="account-recovery"><button type="button" onClick={forgotPassword} disabled={busy}>Şifremi unuttum</button><button type="button" disabled={busy} onClick={() => setStatus('Sky Bozum hesabına kullanıcı adı yerine e-posta adresinle giriş yapabilirsin.')}>Kullanıcı adımı unuttum</button></div>}
+      {error && <p className="account-error" role="alert">{error}</p>}{status && <p className="account-success" role="status">{status}</p>}
+      <div className="account-switch">{mode === 'login' ? <>Hesabın yok mu? <Link href="/kayit">Ücretsiz kayıt ol</Link></> : <>Zaten hesabın var mı? <Link href="/giris">Giriş yap</Link></>}</div>
+    </section>
+  </div></main>;
 }
