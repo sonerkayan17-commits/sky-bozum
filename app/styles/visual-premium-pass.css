@@ -26,9 +26,9 @@ body{background:#07090e;color:#f8fafc;text-rendering:optimizeLegibility}
 .site-navbar__actions{gap:.5rem!important}
 
 /* 02 — Home hero: one visual focus at a time, then supporting rate content. */
-.home-page .hero-pro{padding-block:clamp(3.25rem,5.7vw,5.25rem)}
-.home-page .hero-pro-shell{grid-template-columns:minmax(0,1.08fr) minmax(300px,.7fr) minmax(325px,.78fr);gap:clamp(1.5rem,2.8vw,2.75rem);min-height:min(700px,calc(100vh - var(--site-header-height,68px)))}
-.home-page .hero-pro-copy h1{max-width:690px;font-size:clamp(3.15rem,4.55vw,5.1rem);line-height:.965;letter-spacing:-.058em;text-wrap:balance}
+.home-page .hero-pro{padding-block:clamp(2.65rem,4.4vw,4rem)}
+.home-page .hero-pro-shell{grid-template-columns:minmax(0,1.08fr) minmax(300px,.7fr) minmax(325px,.78fr);gap:clamp(1.35rem,2.4vw,2.25rem);min-height:min(620px,calc(100vh - var(--site-header-height,68px)))}
+.home-page .hero-pro-copy h1{max-width:640px;font-size:clamp(2.85rem,4.05vw,4.45rem);line-height:.98;letter-spacing:-.052em;text-wrap:balance}
 .home-page .hero-pro-lead{max-width:590px;color:#aeb8c5;line-height:1.72}
 .home-page .hero-pro-visual{min-height:590px}
 .home-page .hero-pro-phone{width:282px;height:575px;border-radius:54px}
@@ -43,8 +43,8 @@ body{background:#07090e;color:#f8fafc;text-rendering:optimizeLegibility}
 .services-directory-hero>div:last-child>div:last-child span{border-color:var(--visual-line)!important;background:rgba(255,255,255,.025)!important}
 .services-directory-groups{padding-block:clamp(3rem,5vw,4.8rem)!important}
 .services-directory-groups>div+div{margin-top:clamp(3.25rem,6vw,5rem)!important}
-.knowledge-center-page>section:first-of-type{padding-block:clamp(3.5rem,6vw,5.5rem)!important}
-.knowledge-center-page>section:first-of-type h1{max-width:850px;font-size:clamp(2.65rem,5.4vw,4.8rem)!important;line-height:.99!important;letter-spacing:-.055em!important;text-wrap:balance}
+.knowledge-center-page>section:first-of-type{padding-block:clamp(2.4rem,4.2vw,3.8rem)!important}
+.knowledge-center-page>section:first-of-type h1{max-width:760px;font-size:clamp(2.35rem,4.3vw,3.9rem)!important;line-height:1!important;letter-spacing:-.05em!important;text-wrap:balance}
 .forum-directory{padding-top:clamp(2.6rem,5vw,4rem)!important}
 .forum-directory header h1{max-width:720px;font-size:clamp(2.35rem,4.8vw,3.9rem)!important;line-height:1!important}
 .tc2-hero{padding-block:clamp(3rem,5.5vw,5rem)!important}
@@ -67,8 +67,8 @@ body{background:#07090e;color:#f8fafc;text-rendering:optimizeLegibility}
 .forum-jump a{border-color:var(--visual-line)!important;background:rgba(255,255,255,.025)!important;padding:.55rem .8rem!important;font-size:.66rem!important}
 
 /* 05 — Editorial reading: bold opening, comfortable body text. */
-.article-editorial-hero{padding-block:clamp(3.4rem,6vw,5.8rem)!important}
-.article-editorial-hero__title{max-width:850px!important;font-size:clamp(2.55rem,5.35vw,4.75rem)!important;line-height:.985!important;letter-spacing:-.058em!important;text-wrap:balance;overflow-wrap:anywhere}
+.article-editorial-hero{padding-block:clamp(2.5rem,4.4vw,4.1rem)!important}
+.article-editorial-hero__title{max-width:780px!important;font-size:clamp(2.2rem,4.25vw,3.85rem)!important;line-height:1!important;letter-spacing:-.052em!important;text-wrap:balance;overflow-wrap:anywhere}
 .article-editorial-hero__excerpt{max-width:720px!important;color:#aeb8c5!important;font-size:clamp(1rem,1.25vw,1.13rem)!important;line-height:1.75!important}
 .article-editorial-hero__meta{color:#9ba6b4!important}
 .article-content-section>.mt-5{max-width:76ch;color:#b8c1cc!important;font-size:1rem!important;line-height:1.9!important}
@@ -126,7 +126,7 @@ body{background:#07090e;color:#f8fafc;text-rendering:optimizeLegibility}
 @media(max-width:800px){
   .home-page .hero-pro{padding-block:2.8rem 3.5rem}
   .home-page .hero-pro-shell{gap:2.25rem}
-  .home-page .hero-pro-copy h1{font-size:clamp(2.65rem,12.3vw,3.9rem);line-height:.98}
+  .home-page .hero-pro-copy h1{font-size:clamp(2.3rem,10.8vw,3.25rem);line-height:1}
   .home-page .hero-pro-lead{font-size:.98rem;line-height:1.7}
   .home-page .hero-pro-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
   .home-page .hero-pro-actions>a{width:100%;padding-inline:1rem}

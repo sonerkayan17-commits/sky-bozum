@@ -45,7 +45,6 @@ const schema = { '@context': 'https://schema.org', '@graph': [
 export default function Page() {
   return <main className="contact-v1-page">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
-    <CredibilityBand compact />
     <section className="contact-v1-hero">
       <div className="contact-v1-shell">
         <nav className="contact-v1-breadcrumb"><Link href="/">Ana Sayfa</Link><span>/</span>İletişim</nav>
@@ -55,6 +54,7 @@ export default function Page() {
         </div>
       </div>
     </section>
+    <CredibilityBand compact />
 
     <section id="kanallar" className="contact-v1-section contact-v1-channel-section"><div className="contact-v1-shell"><div className="contact-v1-section-head"><div><p className="contact-v1-eyebrow">01 / RESMÎ KANALLAR</p><h2>İhtiyacına göre<br />iletişim kur.</h2></div><span>Üç kanalın tamamı bu sayfadan doğrulanabilir.</span></div><div className="contact-v1-channel-grid">{channels.map((channel, index) => <article key={channel.id} className={`contact-v1-channel-card ${channel.accent === 'primary' ? 'is-primary' : ''}`}><div className="contact-v1-channel-top"><span>0{index + 1} / {channel.label}</span><b>{channel.id === 'whatsapp' ? 'ÖNERİLEN' : 'DOĞRUDAN'}</b></div><h3>{channel.title}</h3><p>{channel.text}</p><strong>{channel.value}</strong><div className="contact-v1-card-actions"><a href={channel.href} target={channel.id === 'whatsapp' ? '_blank' : undefined} rel={channel.id === 'whatsapp' ? 'noopener noreferrer' : undefined}>{channel.cta} <span>↗</span></a><ContactCopyButton value={channel.value} /></div></article>)}</div></div></section>
 
