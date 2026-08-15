@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { calculatePayout, parseTurkishAmount, rateItems, validateAmount } from '../lib/rates';
+import { calculatePayout, parseTurkishAmount, validateAmount } from '../lib/rates';
 import { siteConfig } from '../lib/site-config';
 import useRememberedRate from './personalization/useRememberedRate';
+import usePublishedRates from './personalization/usePublishedRates';
 
 function formatAmountInput(value: string) {
   const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
@@ -40,8 +41,9 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
   const [amount, setAmount] = useState('5000');
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const publishedRates = usePublishedRates();
 
-  const selected = rateItems.find((item) => item.name === serviceName) ?? rateItems[0];
+  const selected = publishedRates.find((item) => item.name === serviceName) ?? publishedRates[0];
   const numericAmount = parseTurkishAmount(amount);
   const error = amount.trim() ? validateAmount(numericAmount, selected) : '';
   const net = useMemo(
@@ -102,7 +104,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                   </button>
                   {menuOpen && (
                     <div role="listbox" aria-labelledby="service-label" className="absolute left-0 right-0 top-[74px] z-50 max-h-[230px] overflow-y-auto rounded-[14px] border border-white/[0.13] bg-[#0b131d] p-1.5 shadow-[0_22px_55px_rgba(0,0,0,.58)]">
-                      {rateItems.map((item) => {
+                      {publishedRates.map((item) => {
                         const active = item.name === selected.name;
                         return (
                           <button

@@ -624,7 +624,17 @@ service cloud.firestore {
 
     match /rateOverrides/{rateId} {
       allow read: if resource.data.status == "published" || isAdmin();
-      allow create, update: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(["rate", "maxRate", "status", "updatedBy", "updatedAt"])
+        && request.resource.data.rate is number
+        && request.resource.data.rate >= 0
+        && request.resource.data.rate <= 100
+        && request.resource.data.maxRate is number
+        && request.resource.data.maxRate >= request.resource.data.rate
+        && request.resource.data.maxRate <= 100
+        && request.resource.data.status in ["draft", "published"]
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
       allow delete: if isAdmin();
     }
 

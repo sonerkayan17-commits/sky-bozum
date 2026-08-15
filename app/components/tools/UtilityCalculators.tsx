@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { calculatePayout, getRateByName, parseTurkishAmount, rateItems, validateAmount } from '../../lib/rates';
+import { calculatePayout, parseTurkishAmount, rateItems, validateAmount, type RateItem } from '../../lib/rates';
 import useRememberedRate from '../personalization/useRememberedRate';
+import usePublishedRates from '../personalization/usePublishedRates';
 
 const money = (value: number) => value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const quickAmounts = ['500', '1000', '2500', '5000'];
@@ -22,10 +23,10 @@ const serviceNotes: Record<string, { result: string; check: string }> = {
   'Kredi / Sanal Kart': { result: 'Kart işlemlerinde kart türü, işlem limiti ve doğrulama yöntemi birlikte değerlendirilir.', check: 'Kart bilgisi paylaşmayın; yalnızca yönlendirilen güvenli işlem adımını kullanın.' },
 };
 
-function amountError(value: string, serviceName?: string) {
+function amountError(value: string, serviceName?: string, rates: RateItem[] = rateItems) {
   if (!value.trim()) return 'Tutar alanını boş bırakmayın.';
   const numeric = parseTurkishAmount(value);
-  if (serviceName) return validateAmount(numeric, getRateByName(serviceName));
+  if (serviceName) return validateAmount(numeric, rates.find((item) => item.name === serviceName) ?? rates[0]);
   if (!Number.isFinite(numeric)) return 'Rakamlarla geçerli bir tutar girin.';
   if (numeric <= 0) return 'Tutar sıfırdan büyük olmalıdır.';
   if (numeric > 1_000_000) return 'En fazla 1.000.000 TL üzerinden hesaplama yapılabilir.';
@@ -48,19 +49,21 @@ function ContextNote({ serviceName }: { serviceName: string }) {
 export function TargetPayoutCalculator() {
   const [serviceName, setServiceName] = useRememberedRate();
   const [target, setTarget] = useState('1000');
-  const selected = getRateByName(serviceName);
+  const publishedRates = usePublishedRates();
+  const selected = publishedRates.find((item) => item.name === serviceName) ?? publishedRates[0];
   const numericTarget = parseTurkishAmount(target);
-  const error = amountError(target);
+  const error = amountError(target, serviceName, publishedRates);
   const requiredAtStart = error ? 0 : numericTarget * 100 / selected.rate;
   const requiredAtMax = error ? 0 : numericTarget * 100 / selected.maxRate;
-  return <div className="premium-card p-6 sm:p-8"><div className="grid gap-5 sm:grid-cols-2"><label htmlFor="target-service" className="text-xs font-bold text-slate-300">Hizmet<select id="target-service" value={serviceName} onChange={(event) => setServiceName(event.target.value)} className="field mt-2">{rateItems.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}</select></label><label htmlFor="target-payout" className="text-xs font-bold text-slate-300">Elinize geçmesini istediğiniz tutar<input id="target-payout" value={target} onChange={(event) => setTarget(event.target.value)} inputMode="decimal" maxLength={15} className="field mt-2" placeholder="1.000,00" aria-invalid={Boolean(error)} aria-describedby="target-payout-help" /></label></div><QuickAmounts onSelect={setTarget}/><FieldMessage id="target-payout-help" error={error}>Bu hesap, hedef tutara ulaşmak için yaklaşık ne kadar bakiye gerektiğini gösterir.</FieldMessage><div className="mt-5 grid gap-3 sm:grid-cols-2" role="status" aria-live="polite" aria-atomic="true"><ResultCard label={`%${selected.rate} oran kabul edilirse gereken bakiye`} value={`${money(requiredAtStart)} TL`} tone="rose"/><ResultCard label={`%${selected.maxRate} oran kabul edilirse gereken bakiye`} value={`${money(requiredAtMax)} TL`} tone="emerald"/></div><ContextNote serviceName={selected.name}/></div>;
+  return <div className="premium-card p-6 sm:p-8"><div className="grid gap-5 sm:grid-cols-2"><label htmlFor="target-service" className="text-xs font-bold text-slate-300">Hizmet<select id="target-service" value={serviceName} onChange={(event) => setServiceName(event.target.value)} className="field mt-2">{publishedRates.map((item) => <option key={item.id} value={item.name}>{item.name}</option>)}</select></label><label htmlFor="target-payout" className="text-xs font-bold text-slate-300">Elinize geçmesini istediğiniz tutar<input id="target-payout" value={target} onChange={(event) => setTarget(event.target.value)} inputMode="decimal" maxLength={15} className="field mt-2" placeholder="1.000,00" aria-invalid={Boolean(error)} aria-describedby="target-payout-help" /></label></div><QuickAmounts onSelect={setTarget}/><FieldMessage id="target-payout-help" error={error}>Bu hesap, hedef tutara ulaşmak için yaklaşık ne kadar bakiye gerektiğini gösterir.</FieldMessage><div className="mt-5 grid gap-3 sm:grid-cols-2" role="status" aria-live="polite" aria-atomic="true"><ResultCard label={`%${selected.rate} oran kabul edilirse gereken bakiye`} value={`${money(requiredAtStart)} TL`} tone="rose"/><ResultCard label={`%${selected.maxRate} oran kabul edilirse gereken bakiye`} value={`${money(requiredAtMax)} TL`} tone="emerald"/></div><ContextNote serviceName={selected.name}/></div>;
 }
 
 export function RateComparisonCalculator() {
   const [amount, setAmount] = useState('1000');
+  const publishedRates = usePublishedRates();
   const numericAmount = parseTurkishAmount(amount);
   const error = amountError(amount);
-  const rows = useMemo(() => rateItems.map(item => ({ item, low: error ? 0 : calculatePayout(numericAmount, item.rate), high: error ? 0 : calculatePayout(numericAmount, item.maxRate) })).sort((a,b)=>b.low-a.low), [numericAmount, error]);
+  const rows = useMemo(() => publishedRates.map(item => ({ item, low: error ? 0 : calculatePayout(numericAmount, item.rate), high: error ? 0 : calculatePayout(numericAmount, item.maxRate) })).sort((a,b)=>b.low-a.low), [numericAmount, error, publishedRates]);
   return <div className="premium-card p-6 sm:p-8"><label htmlFor="rate-comparison-amount" className="block text-xs font-bold text-slate-300">Karşılaştırılacak bakiye<input id="rate-comparison-amount" value={amount} onChange={(event) => setAmount(event.target.value)} inputMode="decimal" maxLength={15} className="field mt-2" placeholder="1.000,00" aria-invalid={Boolean(error)} aria-describedby="rate-comparison-help" /></label><QuickAmounts onSelect={setAmount}/><FieldMessage id="rate-comparison-help" error={error}>Liste, aynı tutarın farklı hizmetlerde oluşturabileceği yaklaşık karşılığı gösterir; hizmet seçimi yalnızca yüksek sonuca göre yapılmamalıdır.</FieldMessage><div className="mt-5 overflow-x-auto rounded-2xl border border-white/10" role="region" aria-live="polite" aria-atomic="true" aria-label="Hizmet oran karşılaştırma sonuçları" tabIndex={0}><div className="min-w-[560px]"><div className="grid grid-cols-[1fr_auto] gap-3 bg-white/[.05] px-4 py-3 text-[10px] font-black uppercase tracking-wider text-slate-500"><span>Hizmet</span><span>Tahmini ödeme</span></div>{rows.map(({item,low,high},index)=>{const fixed=item.rate===item.maxRate;return <div key={item.id} className="grid grid-cols-[1fr_auto] items-center gap-3 border-t border-white/8 px-4 py-4"><div><span className="mr-2 text-xs font-black text-rose-400">{String(index+1).padStart(2,'0')}</span><strong className="text-sm text-white">{item.name}</strong><p className="mt-1 text-[11px] text-slate-500">Bilgilendirme oranı {item.range}</p></div><span className="text-sm font-black text-emerald-300">{fixed ? `${money(low)} TL` : `${money(low)}–${money(high)} TL`}</span></div>})}</div></div><p className="mt-4 text-xs leading-6 text-slate-500">Tek oranlı hizmetlerde tek tutar, oran aralığı olan hizmetlerde alt ve üst tahmin birlikte gösterilir. Güncel işlem uygunluğu ayrıca kontrol edilir.</p></div>;
 }
 
@@ -86,12 +89,13 @@ export function CodeCountCalculator() {
 }
 
 export function CategoryPayoutCalculator({ category, title }: { category: 'Mobil Ödeme' | 'Kod'; title: string }) {
-  const options = rateItems.filter(item=>item.category===category);
+  const publishedRates = usePublishedRates();
+  const options = publishedRates.filter(item=>item.category===category);
   const [service, setService] = useState(options[0]?.name ?? rateItems[0].name);
   const [amount, setAmount] = useState('1000');
-  const item = getRateByName(service);
+  const item = publishedRates.find((entry) => entry.name === service) ?? publishedRates[0];
   const numeric = parseTurkishAmount(amount);
-  const error = amountError(amount, service);
+  const error = amountError(amount, service, publishedRates);
   const low = error ? 0 : calculatePayout(numeric,item.rate);
   const high = error ? 0 : calculatePayout(numeric,item.maxRate);
   const sameResult = item.rate === item.maxRate;

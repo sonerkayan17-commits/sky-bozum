@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { getRateByServiceSlug, parseTurkishAmount } from '../../lib/rates';
+import { parseTurkishAmount } from '../../lib/rates';
+import usePublishedRates from '../personalization/usePublishedRates';
 
 export default function ServiceMiniCalculator({ serviceSlug, serviceName }: { serviceSlug: string; serviceName: string }) {
   const [value, setValue] = useState('1000');
-  const rate = getRateByServiceSlug(serviceSlug);
+  const publishedRates = usePublishedRates();
+  const rate = publishedRates.find((item) => item.serviceSlug === serviceSlug);
   const amount = parseTurkishAmount(value);
 
   const result = useMemo(() => {
