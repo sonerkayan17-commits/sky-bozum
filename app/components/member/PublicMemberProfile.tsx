@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { useEffect, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { getReferralCode, getReferralLink } from '../../lib/referrals';
@@ -26,6 +26,7 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
   const [message, setMessage] = useState('');
   const [notice, setNotice] = useState('');
   const [copied, setCopied] = useState(false);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     const { auth, db } = getFirebaseClient();
@@ -33,19 +34,21 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
     let stopVisitors: (() => void) | undefined;
     let stopRelations: (() => void) | undefined;
     let stopRewards: (() => void) | undefined;
+    let stopLikes: (() => void) | undefined;
+    let stopGifts: (() => void) | undefined;
     const loadProfile = async (nextUser: User | null) => {
-      const [profile, likeDocs] = await Promise.all([
-        getDoc(doc(db, 'publicProfiles', memberId)),
-        getDocs(query(collection(db, 'profileLikes'), where('receiverId', '==', memberId))),
-      ]);
+      const profile = await getDoc(doc(db, 'publicProfiles', memberId));
       const profileData = profile.data() || {};
       const profileName = String(profileData.displayName || 'Sky Bozum üyesi');
       const profileAvatar = String(profileData.avatar || '');
       setName(profileName);
       setAvatar(profileAvatar);
       setReferralCode(String(profileData.referralCode || ''));
-      setLikes(likeDocs.size);
+      stopLikes = onSnapshot(query(collection(db, 'profileLikes'), where('receiverId', '==', memberId)), (snapshot) => setLikes(snapshot.size), () => setLikes(0));
       if (nextUser?.uid === memberId) {
+        stopGifts = onSnapshot(query(collection(db, 'pointGifts'), where('receiverId', '==', memberId)), (snapshot) => {
+          setGifts(snapshot.docs.reduce((total, item) => total + Number(item.data().amount || 0), 0));
+        }, () => setGifts(0));
         const ownMember = await getDoc(doc(db, 'members', memberId));
         const referredBy = String(ownMember.data()?.referredBy || '');
         if (referredBy) {
@@ -81,11 +84,12 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
       }
     };
     const stopAuth = onAuthStateChanged(auth, (nextUser) => { setUser(nextUser); void loadProfile(nextUser); });
-    return () => { stopAuth(); stopVisitors?.(); stopRelations?.(); stopRewards?.(); };
+    return () => { stopAuth(); stopVisitors?.(); stopRelations?.(); stopRewards?.(); stopLikes?.(); stopGifts?.(); };
   }, [memberId]);
 
   const senderName = user?.displayName || user?.email?.split('@')[0] || 'Bir üye';
   const referralLink = user?.uid === memberId && referralCode ? getReferralLink(memberId) : '';
+  const isOwnProfile = user?.uid === memberId;
 
   async function act(kind: 'like' | 'gift') {
     const { db } = getFirebaseClient();
@@ -100,9 +104,17 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
     event.preventDefault();
     const { db } = getFirebaseClient();
     if (!user || !db) { location.assign('/giris'); return; }
-    await sendMessage(db, user.uid, memberId, senderName, message);
-    setMessage('');
-    setNotice('Mesajınız gönderildi.');
+    if (sending) return;
+    setSending(true);
+    try {
+      await sendMessage(db, user.uid, memberId, senderName, message);
+      setMessage('');
+      setNotice('Mesajınız gönderildi.');
+    } catch {
+      setNotice('Mesaj gönderilemedi. Lütfen tekrar deneyin.');
+    } finally {
+      setSending(false);
+    }
   }
 
   async function copyReferralLink() {
@@ -115,13 +127,13 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
   return <main className="public-profile-page"><section className="public-profile-card">
     <div className="public-profile-avatar" style={avatar ? { backgroundImage: `url(${avatar})`, backgroundSize: 'cover' } : undefined}>{avatar ? null : name.charAt(0).toUpperCase()}</div>
     <p>TOPLULUK PROFİLİ</p><h1>{name}</h1>
-    <div className="public-profile-stats"><span><b>{likes}</b> profil beğenisi</span><span><b>{gifts}</b> gelen puan</span><span><b>{views}</b> profil görüntülenmesi</span></div>
+    <div className="public-profile-stats"><span><b>{likes}</b> profil beğenisi</span>{isOwnProfile && <span><b>{gifts}</b> gelen puan</span>}{isOwnProfile && <span><b>{views}</b> profil görüntülenmesi</span>}</div>
     <section className="public-profile-visitors"><h2>Son girenler</h2><div>{visitors.length ? visitors.map((visitor) => <Link key={visitor.id} href={`/uyeler/${visitor.id}`} title={visitor.viewedAt ? visitor.viewedAt.toLocaleString('tr-TR') : undefined}><span className="public-profile-visitor-avatar" style={visitor.avatar ? { backgroundImage: `url(${visitor.avatar})` } : undefined}>{visitor.avatar ? null : visitor.name.charAt(0).toUpperCase()}</span><span>{visitor.name}</span></Link>) : <small>Henüz görüntülenme bulunmuyor.</small>}</div></section>
-    {user?.uid === memberId ? <>
+    {isOwnProfile ? <>
       <Link href="/hesabim" className="public-profile-primary">Profilimi yönet</Link>
       <section className="public-profile-referral"><h2>Referans bağlantın</h2><p>Bu bağlantıyla katılan üyelerin topluluk puanlarının onda biri sana referans puanı olarak yazılır.</p><div><input readOnly value={referralLink} aria-label="Referans bağlantınız" /><button type="button" onClick={copyReferralLink}>{copied ? 'Kopyalandı' : 'Kopyala'}</button></div><small>{referrals.length} üye katıldı · {referralPoints.toLocaleString('tr-TR', { maximumFractionDigits: 1 })} referans puanı</small>{referrals.length ? <ul>{referrals.map((item) => <li key={item.id}><Link href={`/uyeler/${item.id}`}>{item.name}</Link></li>)}</ul> : null}</section>
       {referredByName ? <p className="public-profile-referrer">Sizi davet eden üye: <strong>{referredByName}</strong></p> : null}
-    </> : <><div className="public-profile-actions"><button onClick={() => act('like')}>♡ Profili beğen</button><button onClick={() => act('gift')}>✦ 5 puan gönder</button></div><form onSubmit={submit}><label>Özel mesaj<textarea value={message} onChange={(event) => setMessage(event.target.value)} minLength={1} maxLength={600} required placeholder="Kısa ve saygılı bir mesaj yazın…" /></label><button>Mesaj gönder</button></form></>}
+    </> : <><div className="public-profile-actions"><button onClick={() => act('like')}>♡ Profili beğen</button><button onClick={() => act('gift')}>✦ 5 puan gönder</button></div><form onSubmit={submit}><label>Özel mesaj<textarea value={message} onChange={(event) => setMessage(event.target.value)} minLength={1} maxLength={600} required placeholder="Kısa ve saygılı bir mesaj yazın…" /></label><button disabled={sending}>{sending ? 'Gönderiliyor…' : 'Mesaj gönder'}</button></form></>}
     {notice && <div className="public-profile-notice">{notice}</div>}
   </section></main>;
 }
