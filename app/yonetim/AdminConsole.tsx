@@ -51,6 +51,7 @@ import {
 
 type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
+type AuditFilter = 'all' | 'site' | 'content' | 'member' | 'community' | 'operation' | 'system';
 const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "settings"];
 const permissions = [
   "Yorum paylaşımı",
@@ -150,6 +151,15 @@ function auditActorLabel(actorId: string, members: AdminMember[], currentUserId:
   return members.find((member) => member.id === actorId)?.displayName || 'Yönetici hesabı';
 }
 
+function auditCategory(action: string): Exclude<AuditFilter, 'all'> {
+  if (action === 'site-inline-updated') return 'site';
+  if (action.startsWith('member-')) return 'member';
+  if (action.startsWith('comment:') || action.startsWith('forum:')) return 'community';
+  if (action.startsWith('operation:')) return 'operation';
+  if (action.startsWith('rate:') || action.startsWith('release-') || action.startsWith('admin-backup:')) return 'system';
+  return 'content';
+}
+
 export default function AdminConsole({
   articleCount,
   rateCount,
@@ -176,6 +186,8 @@ export default function AdminConsole({
   const [managedArticles, setManagedArticles] = useState<ManagedArticleRecord[]>([]);
   const [contentQuery, setContentQuery] = useState("");
   const [contentStatus, setContentStatus] = useState<"all" | ContentArticleDraft["status"]>("all");
+  const [auditFilter, setAuditFilter] = useState<AuditFilter>('all');
+  const [auditQuery, setAuditQuery] = useState('');
   const [selectedMember, setSelectedMember] = useState<AdminMember | null>(
     null,
   );
@@ -190,6 +202,21 @@ export default function AdminConsole({
   const [clientReady, setClientReady] = useState(false);
   const auth = firebaseClient.auth;
   const db = firebaseClient.db;
+  const visibleContentAudit = useMemo(() => {
+    const term = auditQuery.trim().toLocaleLowerCase('tr-TR');
+    return contentAudit.filter((event) => {
+      if (auditFilter !== 'all' && auditCategory(event.action) !== auditFilter) return false;
+      if (!term) return true;
+      return [auditTargetLabel(event, managedArticles, members), auditActionLabel(event.action), auditActorLabel(event.actorId, members, user?.uid || '')]
+        .some((value) => value.toLocaleLowerCase('tr-TR').includes(term));
+    });
+  }, [auditFilter, auditQuery, contentAudit, managedArticles, members, user?.uid]);
+  const visibleMemberLedger = useMemo(() => {
+    const term = auditQuery.trim().toLocaleLowerCase('tr-TR');
+    if (!term) return memberLedger;
+    return memberLedger.filter((event) => [members.find((member) => member.id === event.memberId)?.displayName || event.memberId, event.note, event.kind]
+      .some((value) => value.toLocaleLowerCase('tr-TR').includes(term)));
+  }, [auditQuery, memberLedger, members]);
 
   useEffect(() => {
     const requestedView = viewFromUrl();
@@ -918,20 +945,33 @@ export default function AdminConsole({
               <div><span>DENETİM MERKEZİ</span><h2>Değişiklik ve değer hareketleri</h2></div>
               <p>İçerik kararları ile bakiye ve puan işlemleri zaman damgası ve yönetici kimliğiyle izlenir.</p>
             </div>
+            <div className="admin-audit-filterbar" role="search" aria-label="İşlem geçmişinde ara">
+              <input value={auditQuery} onChange={(event) => setAuditQuery(event.target.value)} placeholder="İçerik, üye veya işlem ara..." />
+              <select value={auditFilter} onChange={(event) => setAuditFilter(event.target.value as AuditFilter)} aria-label="Kayıt türü">
+                <option value="all">Tüm kayıt türleri</option>
+                <option value="site">Sayfa düzenlemeleri</option>
+                <option value="content">Makale içerikleri</option>
+                <option value="member">Üye işlemleri</option>
+                <option value="community">Forum ve yorumlar</option>
+                <option value="operation">Bozum işlemleri</option>
+                <option value="system">Sistem ve yayın</option>
+              </select>
+              <span>{visibleContentAudit.length + visibleMemberLedger.length} kayıt gösteriliyor</span>
+            </div>
             <div className="admin-audit-grid">
               <section>
-                <header><h3>İçerik geçmişi</h3><span>{contentAudit.length} kayıt</span></header>
+                <header><h3>İçerik geçmişi</h3><span>{visibleContentAudit.length}/{contentAudit.length} kayıt</span></header>
                 <div className="admin-audit-list">
-                  {contentAudit.length ? contentAudit.map((event) => <article key={event.id}><div><strong>{auditTargetLabel(event, managedArticles, members)}</strong><span>{auditActionLabel(event.action)}</span></div><small>{formatDate(event.createdAt)}</small><code>{auditActorLabel(event.actorId, members, user.uid)}</code></article>) : <p className="admin-empty">İçerik hareketi bulunmuyor.</p>}
+                  {visibleContentAudit.length ? visibleContentAudit.map((event) => <article key={event.id}><div><strong>{auditTargetLabel(event, managedArticles, members)}</strong><span>{auditActionLabel(event.action)}</span></div><small>{formatDate(event.createdAt)}</small><code>{auditActorLabel(event.actorId, members, user.uid)}</code></article>) : <p className="admin-empty">Bu filtreyle eşleşen içerik hareketi bulunmuyor.</p>}
                 </div>
               </section>
               <section>
-                <header><h3>Bakiye ve puan defteri</h3><span>{memberLedger.length} kayıt</span></header>
+                <header><h3>Bakiye ve puan defteri</h3><span>{visibleMemberLedger.length}/{memberLedger.length} kayıt</span></header>
                 <div className="admin-audit-list">
-                  {memberLedger.length ? memberLedger.map((event) => {
+                  {visibleMemberLedger.length ? visibleMemberLedger.map((event) => {
                     const member = members.find((item) => item.id === event.memberId);
                     return <article key={event.id}><div><strong>{member?.displayName || event.memberId}</strong><span>{event.note}</span></div><b className={event.amount >= 0 ? "is-positive" : "is-negative"}>{event.amount >= 0 ? "+" : ""}{event.amount.toLocaleString("tr-TR")} {event.kind === "balance" ? "TL" : "puan"}</b><small>{formatDate(event.createdAt)}</small></article>;
-                  }) : <p className="admin-empty">Değer hareketi bulunmuyor.</p>}
+                  }) : <p className="admin-empty">Bu aramayla eşleşen değer hareketi bulunmuyor.</p>}
                 </div>
               </section>
             </div>
