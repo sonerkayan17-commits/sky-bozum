@@ -122,6 +122,85 @@ html[data-theme="light"] footer p,html[data-theme="light"] footer a{color:#52617
 html[data-theme="light"] .btn-primary,html[data-theme="light"] .member-primary-button,html[data-theme="light"] .admin-primary,html[data-theme="light"] [class*="bg-rose-6"],html[data-theme="light"] [class*="bg-blue-6"],html[data-theme="light"] [class*="bg-emerald-6"]{color:#fff!important}
 html[data-theme="light"] .tawk-compact-launcher{color:#fff!important}
 
+/* V2 — warm corporate light theme: layered ivory instead of flat white. */
+html[data-theme="light"]{
+  --background:#eeeae3;
+  --surface:#fffdf8;
+  --surface-raised:#f7f3ec;
+  --surface-soft:#e8e4dc;
+  --foreground:#19171a;
+  --text-secondary:#403c43;
+  --muted:#6e6870;
+  --muted-strong:#514b54;
+  --line:rgba(54,45,49,.14);
+  --line-strong:rgba(54,45,49,.23);
+  --visual-surface:#fffdf8;
+  --visual-surface-raised:#f6f1e9;
+  --visual-line:rgba(54,45,49,.14);
+  --visual-line-active:rgba(159,18,57,.34);
+  --visual-copy:#514b54;
+  --visual-copy-soft:#756e76;
+}
+html[data-theme="light"],html[data-theme="light"] body{background:#eeeae3!important;color:#19171a}
+html[data-theme="light"] body{background-image:radial-gradient(circle at 12% 0,rgba(166,111,50,.075),transparent 30rem),radial-gradient(circle at 92% 8%,rgba(190,18,60,.055),transparent 34rem)!important}
+html[data-theme="light"] .site-navbar{border-bottom-color:rgba(54,45,49,.14)!important;background:rgba(251,248,242,.94)!important;box-shadow:0 10px 34px rgba(57,45,36,.1)}
+html[data-theme="light"] .site-navbar::after{background:linear-gradient(90deg,transparent,rgba(159,18,57,.34),rgba(166,111,50,.26),transparent)}
+html[data-theme="light"] .theme-toggle{border-color:rgba(143,97,34,.24);background:linear-gradient(145deg,#f6ead0,#fff9ec);color:#81530d;box-shadow:0 8px 22px rgba(90,58,18,.1)}
+html[data-theme="light"] .account-entry{border-color:rgba(159,18,57,.22)!important;background:#f8e9ec!important;color:#9f1239!important}
+html[data-theme="light"] .site-back-button{border-color:rgba(54,45,49,.16);background:rgba(255,253,248,.95);color:#413a42;box-shadow:0 10px 28px rgba(57,45,36,.12)}
+
+html[data-theme="light"] .premium-card{border-color:rgba(54,45,49,.13)!important;background:linear-gradient(150deg,#fffdf8,#f7f2ea)!important;box-shadow:0 18px 48px rgba(57,45,36,.1),inset 0 1px rgba(255,255,255,.9)!important}
+html[data-theme="light"] .btn-secondary{border-color:rgba(54,45,49,.2);background:#fffaf2;color:#373139;box-shadow:0 9px 22px rgba(57,45,36,.07)}
+html[data-theme="light"] .field,html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]),html[data-theme="light"] select,html[data-theme="light"] textarea{border-color:rgba(54,45,49,.17)!important;background:#fffdf9!important;color:#19171a!important}
+
+/* Homepage alternates warm, cool and dark branded bands for depth. */
+html[data-theme="light"] .home-page{background:#eeeae3!important}
+html[data-theme="light"] .home-page .hero-pro{background:radial-gradient(circle at 16% 12%,rgba(190,18,60,.1),transparent 31rem),radial-gradient(circle at 83% 8%,rgba(166,111,50,.105),transparent 27rem),linear-gradient(135deg,#f7f1e9,#ebe7df)!important;border-bottom-color:rgba(54,45,49,.12)}
+html[data-theme="light"] .home-page .brand-strip{background:linear-gradient(180deg,#e8e4dc,#f1ede6)!important}
+html[data-theme="light"] .home-page #oran-teklifi{background:radial-gradient(circle at 78% 10%,rgba(159,18,57,.06),transparent 28rem),#f8f4ed!important}
+html[data-theme="light"] .home-page .experience-showcase{background:linear-gradient(145deg,#e7ebef,#f2eee8)!important}
+html[data-theme="light"] .home-page .home-services{background:linear-gradient(180deg,#f5f0e8,#e9e5de)!important}
+html[data-theme="light"] .home-page .process-steps{background:linear-gradient(180deg,#e6e1d9,#f2eee7)!important}
+html[data-theme="light"] .home-page .home-final-section{background:#f7f3ec!important}
+html[data-theme="light"] .home-trust-editorial{border-color:rgba(255,255,255,.08)!important;background:radial-gradient(circle at 88% 40%,rgba(143,37,65,.25),transparent 35rem),linear-gradient(135deg,#18171c,#252028)!important;color:#fff!important}
+html[data-theme="light"] .home-trust-editorial h2,html[data-theme="light"] .home-trust-editorial h3,html[data-theme="light"] .home-trust-editorial strong{color:#fff!important}
+html[data-theme="light"] .home-trust-editorial p{color:#b9b3bd!important}
+html[data-theme="light"] .home-trust-editorial__standards li{border-color:rgba(255,255,255,.09)!important;background:rgba(255,255,255,.045)!important;box-shadow:none!important}
+html[data-theme="light"] .home-page .hero-pro-rates,html[data-theme="light"] .home-page .calculator-panel,html[data-theme="light"] .home-page .process-panel,html[data-theme="light"] .home-page .brand-strip-card,html[data-theme="light"] .home-page .experience-card,html[data-theme="light"] .home-page .home-faq-card,html[data-theme="light"] .home-page .home-service-card,html[data-theme="light"] .home-page .process-step-card{border-color:rgba(54,45,49,.13)!important;background:linear-gradient(150deg,#fffdf8,#f5efe7)!important;box-shadow:0 18px 46px rgba(57,45,36,.105)!important}
+html[data-theme="light"] .home-page .hero-pro-rate{border-color:rgba(54,45,49,.11)!important;background:#f5f0e8!important}
+html[data-theme="light"] .home-page .hero-pro-secondary{border-color:rgba(54,45,49,.18)!important;background:#fffaf2!important;color:#3b343c!important}
+
+/* Public content areas use a stone canvas with tactile cream cards. */
+html[data-theme="light"] .services-directory-page,html[data-theme="light"] .knowledge-center-page,html[data-theme="light"] .knowledge-hub-page,html[data-theme="light"] .article-template,html[data-theme="light"] .tools-center,html[data-theme="light"] .seo-tools-page,html[data-theme="light"] .forum-directory,html[data-theme="light"] .forum-section-page,html[data-theme="light"] .forum-category-page,html[data-theme="light"] .forum-topic-page,html[data-theme="light"] .trust-v1-page,html[data-theme="light"] .contact-v1-page,html[data-theme="light"] .partnership-page,html[data-theme="light"] .public-profile-page{background:linear-gradient(145deg,#eeeae3,#e7ebef)!important;color:#19171a!important}
+html[data-theme="light"] .services-directory-page .services-directory-hero{border-bottom-color:rgba(54,45,49,.13)!important;background:linear-gradient(105deg,#f9f5ee,#ebe7df 63%,#f3dfe3)!important}
+html[data-theme="light"] .services-directory-page .interactive-card,html[data-theme="light"] .forum-groups article,html[data-theme="light"] .article-archive-card,html[data-theme="light"] .article-compact-link,html[data-theme="light"] .editorial-card,html[data-theme="light"] .tc2-featured-card,html[data-theme="light"] .tc2-list-row,html[data-theme="light"] .tc2-seo-list>a{border-color:rgba(54,45,49,.13)!important;background:linear-gradient(150deg,#fffdf8,#f6f1e9)!important;box-shadow:0 16px 42px rgba(57,45,36,.095)!important}
+html[data-theme="light"] .forum-directory{background:radial-gradient(circle at 88% 0,rgba(159,18,57,.06),transparent 30rem),linear-gradient(145deg,#ede8df,#e7ebef)!important}
+html[data-theme="light"] .forum-groups article:hover,html[data-theme="light"] .services-directory-page .interactive-card:hover{border-color:rgba(159,18,57,.3)!important;box-shadow:0 22px 52px rgba(57,45,36,.14)!important}
+html[data-theme="light"] .knowledge-center-page>section:first-of-type{background:radial-gradient(circle at 8% 15%,rgba(190,18,60,.08),transparent 27rem),linear-gradient(140deg,#f5eee7,#e9edf1)!important}
+
+/* FAQ is intentionally ivory, not an empty white sheet. */
+html[data-theme="light"] .bg-slate-950{background:#eeeae3!important}
+html[data-theme="light"] .bg-white{background-color:#fffdf8!important}
+html[data-theme="light"] .bg-slate-50{background-color:#f2ede5!important}
+html[data-theme="light"] [class*="bg-slate-50/"]{background-color:rgba(238,234,227,.8)!important}
+html[data-theme="light"] [class*="bg-sky-50/"]{background-color:rgba(219,234,242,.72)!important}
+
+/* Account pages gain a distinct canvas and warmer dashboard surfaces. */
+html[data-theme="light"] .member-page,html[data-theme="light"] .member-loading,html[data-theme="light"] .utility-page,html[data-theme="light"] .account-page,html[data-theme="light"] .experience-state{background:radial-gradient(circle at 88% 0,rgba(159,18,57,.075),transparent 30rem),linear-gradient(145deg,#e9e4dc,#e9edf1)!important;color:#19171a!important}
+html[data-theme="light"] .member-sidebar,html[data-theme="light"] .member-content,html[data-theme="light"] .member-utility-nav,html[data-theme="light"] .member-utility-content,html[data-theme="light"] .account-card{border-color:rgba(54,45,49,.13)!important;background:linear-gradient(155deg,#fffdf8,#f8f3eb)!important;box-shadow:0 20px 55px rgba(57,45,36,.11)!important}
+html[data-theme="light"] .member-stats article,html[data-theme="light"] .member-level-card,html[data-theme="light"] .member-quick a,html[data-theme="light"] .member-action-list article,html[data-theme="light"] .member-history article,html[data-theme="light"] .member-operation-list article,html[data-theme="light"] .member-utility-list article,html[data-theme="light"] .member-empty-state{border-color:rgba(54,45,49,.12)!important;background:#f1ede6!important}
+html[data-theme="light"] .member-sidebar nav a[aria-current="page"],html[data-theme="light"] .member-utility-nav a[aria-current="page"]{background:linear-gradient(90deg,#f5dfe4,#f8e9eb)!important;color:#9f1239!important}
+html[data-theme="light"] .member-loading>div{border-color:rgba(54,45,49,.14)!important;background:linear-gradient(150deg,#fffdf8,#f5efe7)!important;box-shadow:0 22px 58px rgba(57,45,36,.13)!important}
+html[data-theme="light"] .member-loading>div h1{color:#19171a!important}
+html[data-theme="light"] .member-loading>div p{color:#6e6870!important}
+html[data-theme="light"] .member-loading>div a{background:#be185d!important;color:#fff!important;box-shadow:0 12px 28px rgba(190,24,93,.18)}
+
+/* A dark footer anchors the bright layout and restores brand contrast. */
+html[data-theme="light"] footer{border-top-color:rgba(255,255,255,.08)!important;background:linear-gradient(145deg,#1a191e,#232026)!important;color:#d6d1d8!important}
+html[data-theme="light"] footer strong,html[data-theme="light"] footer h2,html[data-theme="light"] footer h3{color:#fff!important}
+html[data-theme="light"] footer p,html[data-theme="light"] footer a{color:#aaa4ae!important}
+html[data-theme="light"] footer a:hover{color:#f3cf91!important}
+
 @media(max-width:520px){.theme-toggle{width:40px;height:40px;flex-basis:40px}.theme-toggle svg{width:18px;height:18px}}
 @media(min-width:900px){html[data-theme="light"] .services-directory-page .services-directory-hero__inner{padding-left:clamp(76px,6vw,100px)}}
 @media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
