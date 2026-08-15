@@ -28,6 +28,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const [name, setName] = useState(''); const [phone, setPhone] = useState('');
   const [avatar, setAvatar] = useState('');
   const [notice, setNotice] = useState('');
+  const [accountAction, setAccountAction] = useState<'verify' | 'reset' | 'logout' | null>(null);
 
   useEffect(() => {
     const { auth, db } = getFirebaseClient();
@@ -112,11 +113,51 @@ export default function MemberHub({ view }: { view: MemberView }) {
     }
   }
 
+  async function resendVerification() {
+    if (accountAction) return;
+    setAccountAction('verify');
+    try {
+      user!.auth.languageCode = 'tr';
+      await sendEmailVerification(user!);
+      setNotice('Doğrulama e-postası gönderildi. Gelen kutunuzu ve spam klasörünü kontrol edin.');
+    } catch {
+      setNotice('Doğrulama e-postası şu anda gönderilemedi. Lütfen kısa süre sonra tekrar deneyin.');
+    } finally {
+      setAccountAction(null);
+    }
+  }
+
+  async function resetPassword() {
+    if (!user?.email || accountAction) return;
+    setAccountAction('reset');
+    try {
+      user.auth.languageCode = 'tr';
+      await sendPasswordResetEmail(user.auth, user.email);
+      setNotice('Parola yenileme bağlantısı e-posta adresinize gönderildi.');
+    } catch {
+      setNotice('Parola yenileme bağlantısı şu anda gönderilemedi. Lütfen e-posta adresinizi kontrol edip tekrar deneyin.');
+    } finally {
+      setAccountAction(null);
+    }
+  }
+
+  async function logout() {
+    if (accountAction) return;
+    setAccountAction('logout');
+    try {
+      await signOut(user!.auth);
+      location.assign('/');
+    } catch {
+      setNotice('Oturum kapatılamadı. Lütfen tekrar deneyin.');
+      setAccountAction(null);
+    }
+  }
+
   if (loading) return <main className="member-loading">Hesabınız hazırlanıyor…</main>;
   if (!user) return <main className="member-loading"><div><h1>Üye girişi gerekli</h1><p>Profilinizi görüntülemek için hesabınıza giriş yapın.</p><Link href="/giris">Giriş yap</Link></div></main>;
 
   return <main className="member-page"><div className="member-shell"><aside className="member-sidebar"><div className="member-avatar">{(member?.displayName || user.email || 'Ü').charAt(0).toUpperCase()}</div><h1>{member?.displayName || 'Sky Bozum üyesi'}</h1><p>{level.name} üye · {totalPoints} puan</p><nav>{navigation.map(([id,label,href]) => <Link key={id} href={href} aria-current={view === id ? 'page' : undefined}>{label}<span>›</span></Link>)}</nav></aside><section className="member-content">+    {view === 'overview' && <><header className="member-head"><span>ÜYE PROFİLİ</span><h2>Hesabınız tek bakışta.</h2><p>Seviyenizi, görevlerinizi ve hesap hareketlerinizi buradan takip edin.</p></header><div className="member-stats"><article><span>Seviye</span><strong>{level.name}</strong><small>{level.benefit}</small></article><article><span>Toplam puan</span><strong>{totalPoints}</strong><small>{nextLevel ? `${nextLevel.min - totalPoints} puan sonra ${nextLevel.name}` : 'En üst seviyedesiniz'}</small></article><article><span>Bakiye</span><strong>{(member?.balance || 0).toLocaleString('tr-TR')} TL</strong><small>Yönetici onaylı bakiye</small></article></div><section className="member-level-card"><div><span>SEVİYE İLERLEMESİ</span><h3>{level.name}{nextLevel ? ` → ${nextLevel.name}` : ''}</h3></div><b>{progress}%</b><div className="member-progress"><i style={{width:`${progress}%`}} /></div></section><div className="member-quick">{navigation.slice(1).map(([id,label,href]) => <Link key={id} href={href}><strong>{label}</strong><span>Alanı aç →</span></Link>)}</div></>}
-    {view === 'account' && <><header className="member-head"><span>HESAP İŞLEMLERİ</span><h2>Güvenlik ve erişim.</h2><p>E-posta doğrulama, parola yenileme ve oturum seçenekleri.</p></header><div className="member-action-list"><article><div><strong>E-posta doğrulama</strong><span>{user.emailVerified ? 'E-posta adresiniz doğrulandı.' : 'Doğrulama bekleniyor.'}</span></div>{!user.emailVerified && <button onClick={async()=>{user.auth.languageCode='tr';await sendEmailVerification(user);setNotice('Doğrulama e-postası gönderildi.');}}>Tekrar gönder</button>}</article><article><div><strong>Parolayı yenile</strong><span>Yenileme bağlantısı kayıtlı e-postanıza gider.</span></div><button onClick={async()=>{if(user.email){user.auth.languageCode='tr';await sendPasswordResetEmail(user.auth,user.email);setNotice('Parola yenileme e-postası gönderildi.');}}}>Bağlantı gönder</button></article><article><div><strong>Oturumu kapat</strong><span>Bu cihazdaki üyelik oturumunu güvenle sonlandırın.</span></div><button className="danger" onClick={async()=>{await signOut(user.auth);location.assign('/');}}>Çıkış yap</button></article></div></>}
+    {view === 'account' && <><header className="member-head"><span>HESAP İŞLEMLERİ</span><h2>Güvenlik ve erişim.</h2><p>E-posta doğrulama, parola yenileme ve oturum seçenekleri.</p></header><div className="member-action-list"><article><div><strong>E-posta doğrulama</strong><span>{user.emailVerified ? 'E-posta adresiniz doğrulandı.' : 'Doğrulama bekleniyor.'}</span></div>{!user.emailVerified && <button disabled={Boolean(accountAction)} onClick={() => void resendVerification()}>{accountAction === 'verify' ? 'Gönderiliyor…' : 'Tekrar gönder'}</button>}</article><article><div><strong>Parolayı yenile</strong><span>Yenileme bağlantısı kayıtlı e-postanıza gider.</span></div><button disabled={Boolean(accountAction)} onClick={() => void resetPassword()}>{accountAction === 'reset' ? 'Gönderiliyor…' : 'Bağlantı gönder'}</button></article><article><div><strong>Oturumu kapat</strong><span>Bu cihazdaki üyelik oturumunu güvenle sonlandırın.</span></div><button className="danger" disabled={Boolean(accountAction)} onClick={() => void logout()}>{accountAction === 'logout' ? 'Kapatılıyor…' : 'Çıkış yap'}</button></article></div></>}
     {view === 'profile' && <><header className="member-head"><span>ÜYELİK BİLGİLERİ</span><h2>Profilinizi güncelleyin.</h2><p>Forumda görünen adınızı, avatarınızı ve iletişim numaranızı yönetin.</p></header><form className="member-form" onSubmit={saveProfile}><fieldset className="member-avatar-field"><legend>Hazır avatar seçin</legend><p>Sky Bozum için hazırlanan 10 özgün karikatür avatardan birini seçebilirsiniz.</p><div className="member-avatar-grid">{presetAvatars.map((source,index)=><button key={source} type="button" className={avatar===source?'selected':''} aria-label={`Avatar ${index+1}`} aria-pressed={avatar===source} onClick={()=>setAvatar(source)}><span style={{backgroundImage:`url(${source})`}} /></button>)}</div></fieldset><label>Kendi profil fotoğrafınızı yükleyin<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event)=>resizeAvatar(event.target.files?.[0],setAvatar)} /><small>Fotoğraf otomatik olarak kare kırpılır ve 100×100 piksele küçültülür.</small></label>{avatar&&<div className="member-avatar-selection"><div className="member-avatar-preview" style={{backgroundImage:`url(${avatar})`}}/><span>Seçili profil görseli</span></div>}<label>Ad soyad<input value={name} onChange={(e)=>setName(e.target.value)} minLength={2} required /></label><label>Telefon numarası<input value={phone} onChange={(e)=>setPhone(e.target.value)} inputMode="tel" /></label><label>E-posta<input value={member?.email || user.email || ''} disabled /><small>E-posta değişikliği güvenlik nedeniyle destek üzerinden yapılır.</small></label><button>Bilgileri kaydet</button></form></>}
     {view === 'history' && <><header className="member-head"><span>İŞLEM GEÇMİŞİ</span><h2>Hesap ve puan hareketleriniz.</h2><p>Topluluk etkinlikleri ve yönetimce onaylanan puan hareketleri burada görünür.</p></header><div className="member-history">{activities.map((item)=><article key={item.id}><div><strong>{item.type==='like'?'Bir makaleyi beğendiniz':item.type==='comment'?'Bir gönderiye yorum yaptınız':'Bir içeriği paylaştınız'}</strong><Link href={item.href}>{item.title} →</Link><span>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</span></div><b>Etkinlik kaydı</b></article>)}{ledger.map((item)=><article key={item.id}><div><strong>{item.note || 'Hesap hareketi'}</strong><span>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</span></div><b>{item.amount>0?'+':''}{item.amount.toLocaleString('tr-TR')} {item.kind==='balance'?'TL':'puan'}</b></article>)}{!activities.length&&!ledger.length?<p>Henüz kayıtlı bir hesap hareketiniz bulunmuyor.</p>:null}</div></>}
     {view === 'tasks' && <><header className="member-head"><span>GÖREV MERKEZİ</span><h2>Katılımınızı takip edin.</h2><p>Görev ilerlemeniz kaydedilir; üyelik puanları yönetim doğrulamasından sonra hesabınıza işlenir.</p></header><div className="member-tasks"><Task title="10 makaleyi beğen" current={counts.like} target={10} points={50} href="/bilgi-merkezi"/><Task title="5 makaleye yorum yap" current={counts.comment} target={5} points={75} href="/bilgi-merkezi"/><Task title="1 makale veya durum paylaş" current={counts.share} target={1} points={100} href="/bilgi-merkezi"/></div><section className="member-levels"><h3>Üyelik seviyeleri</h3>{memberLevels.map((item)=><article key={item.name} className={level.name===item.name?'active':''}><strong>{item.name}</strong><span>{item.min} puan</span><p>{item.benefit}</p></article>)}</section></>}
