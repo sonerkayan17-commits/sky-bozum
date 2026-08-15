@@ -1,0 +1,127 @@
+/* Optional soft-light presentation. Dark remains the default Sky Bozum theme. */
+.theme-toggle{display:grid;width:42px;height:42px;flex:0 0 42px;place-items:center;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.045);color:#f6d38e;box-shadow:inset 0 1px rgba(255,255,255,.04);cursor:pointer;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .2s ease}
+.theme-toggle:hover{transform:translateY(-1px);border-color:rgba(232,194,122,.34);background:rgba(255,255,255,.085)}
+.theme-toggle svg{width:19px;height:19px}
+
+html[data-theme="light"]{
+  color-scheme:light;
+  --background:#f3f6fa;
+  --surface:#fff;
+  --surface-raised:#f8fafc;
+  --surface-soft:#eef2f7;
+  --foreground:#111827;
+  --text-secondary:#334155;
+  --muted:#64748b;
+  --muted-strong:#475569;
+  --line:rgba(15,23,42,.12);
+  --line-strong:rgba(15,23,42,.2);
+  --shadow-card:0 18px 48px rgba(15,23,42,.09);
+  --shadow-hover:0 24px 60px rgba(15,23,42,.14);
+  --visual-surface:#fff;
+  --visual-surface-raised:#f8fafc;
+  --visual-line:rgba(15,23,42,.12);
+  --visual-line-active:rgba(225,29,72,.27);
+  --visual-copy:#475569;
+  --visual-copy-soft:#64748b;
+  --visual-shadow:0 22px 55px rgba(15,23,42,.13);
+}
+html[data-theme="light"],html[data-theme="light"] body{background:#f3f6fa!important;color:#111827}
+html[data-theme="light"] body{background-image:radial-gradient(circle at 80% 0,rgba(244,63,94,.045),transparent 34rem)!important}
+html[data-theme="light"] .grain-overlay{opacity:.016;mix-blend-mode:multiply}
+html[data-theme="light"] input,html[data-theme="light"] select,html[data-theme="light"] textarea{color-scheme:light}
+html[data-theme="light"] *{scrollbar-color:rgba(225,29,72,.42) rgba(15,23,42,.06)}
+html[data-theme="light"] *::-webkit-scrollbar-track{background:rgba(15,23,42,.06)}
+html[data-theme="light"] *::-webkit-scrollbar-thumb{border-color:#f3f6fa}
+
+/* Navigation, menus and universal controls. */
+html[data-theme="light"] .site-navbar{border-bottom-color:rgba(15,23,42,.1)!important;background:rgba(255,255,255,.9)!important;box-shadow:0 10px 32px rgba(15,23,42,.07)}
+html[data-theme="light"] .site-navbar__brand>span:last-child>span:last-child{color:#111827!important}
+html[data-theme="light"] .site-navbar__links>a{color:#475569!important}
+html[data-theme="light"] .site-navbar__links>a:hover{background:rgba(15,23,42,.045)!important;color:#0f172a!important}
+html[data-theme="light"] .theme-toggle{border-color:rgba(15,23,42,.13);background:#f7f1e5;color:#9a5e05;box-shadow:0 7px 18px rgba(15,23,42,.07)}
+html[data-theme="light"] .theme-toggle:hover{border-color:rgba(217,119,6,.3);background:#fff7e7}
+html[data-theme="light"] .site-navbar__actions>button:not(.theme-toggle),html[data-theme="light"] .site-search-input{border-color:rgba(15,23,42,.12)!important;background:rgba(15,23,42,.035)!important;color:#334155!important}
+html[data-theme="light"] .member-menu__trigger{border-color:rgba(5,150,105,.2)!important;background:rgba(5,150,105,.08)!important;color:#047857!important}
+html[data-theme="light"] .account-entry{border-color:rgba(190,24,93,.18)!important;background:#fff1f4!important;color:#be123c!important}
+html[data-theme="light"] .account-entry:hover{border-color:rgba(190,24,93,.3)!important;background:#ffe4e9!important}
+html[data-theme="light"] .member-menu__panel,html[data-theme="light"] .member-notification__panel{border-color:rgba(15,23,42,.12)!important;background:rgba(255,255,255,.98)!important;box-shadow:0 22px 60px rgba(15,23,42,.16)!important}
+html[data-theme="light"] .member-menu__panel strong,html[data-theme="light"] .member-notification__panel strong{color:#111827!important}
+html[data-theme="light"] .member-menu__links{color:#475569!important}
+html[data-theme="light"] .member-menu__links a:hover,html[data-theme="light"] .member-menu__links button:hover{background:rgba(15,23,42,.05)!important}
+html[data-theme="light"] .site-back-button{border-color:rgba(15,23,42,.14);background:rgba(255,255,255,.93);color:#334155;box-shadow:0 9px 24px rgba(15,23,42,.1)}
+html[data-theme="light"] .site-back-button:hover{background:#fff1f3}
+
+/* Common Tailwind surfaces and typography used across public pages. */
+html[data-theme="light"] [class*="bg-[#090b10]"],html[data-theme="light"] [class*="bg-[#07090e]"],html[data-theme="light"] [class*="bg-[#080a0f]"],html[data-theme="light"] [class*="bg-[#0b0d12]"],html[data-theme="light"] [class*="bg-[#0d1016]"]{background-color:#f3f6fa!important}
+html[data-theme="light"] .bg-slate-950{background-color:#f3f6fa!important}
+html[data-theme="light"] .text-white{color:#111827!important}
+html[data-theme="light"] .text-slate-200{color:#334155!important}
+html[data-theme="light"] .text-slate-300{color:#475569!important}
+html[data-theme="light"] .text-slate-400{color:#64748b!important}
+html[data-theme="light"] .text-slate-500{color:#6b7280!important}
+html[data-theme="light"] .text-slate-600{color:#64748b!important}
+html[data-theme="light"] [class*="border-white/"]{border-color:rgba(15,23,42,.11)!important}
+html[data-theme="light"] [class*="bg-white/["]{background-color:rgba(15,23,42,.035)!important}
+html[data-theme="light"] .premium-card{border-color:rgba(15,23,42,.11)!important;background:linear-gradient(150deg,#fff,#f8fafc)!important;box-shadow:0 18px 48px rgba(15,23,42,.08),inset 0 1px #fff!important}
+html[data-theme="light"] .premium-card::before{opacity:.22}
+html[data-theme="light"] .btn-secondary{border-color:rgba(15,23,42,.16);background:rgba(255,255,255,.75);color:#334155}
+html[data-theme="light"] .btn-secondary:hover{background:#fff}
+html[data-theme="light"] .field,html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]),html[data-theme="light"] select,html[data-theme="light"] textarea{border-color:rgba(15,23,42,.14)!important;background:#fff!important;color:#111827!important;box-shadow:none}
+html[data-theme="light"] input::placeholder,html[data-theme="light"] textarea::placeholder{color:#94a3b8!important}
+html[data-theme="light"] input:-webkit-autofill{-webkit-text-fill-color:#111827;-webkit-box-shadow:0 0 0 1000px #fff inset}
+
+/* Homepage: soft editorial whites with dark premium product mockups retained. */
+html[data-theme="light"] .home-page,html[data-theme="light"] .hero-pro,html[data-theme="light"] .home-page .brand-strip,html[data-theme="light"] .home-page #oran-teklifi,html[data-theme="light"] .home-page .experience-showcase,html[data-theme="light"] .home-page .home-services,html[data-theme="light"] .home-page .process-steps,html[data-theme="light"] .home-page .home-final-section,html[data-theme="light"] .home-trust-editorial{background:linear-gradient(180deg,#f8fafc,#eef2f7)!important;color:#111827}
+html[data-theme="light"] .home-page .hero-pro-copy h1,html[data-theme="light"] .home-page h2,html[data-theme="light"] .home-page h3{color:#111827}
+html[data-theme="light"] .home-page .hero-pro-lead,html[data-theme="light"] .home-page .experience-intro,html[data-theme="light"] .home-page .home-services__head p:not(.eyebrow),html[data-theme="light"] .home-page .process-step-card__text{color:#526174!important}
+html[data-theme="light"] .home-page .hero-pro-rates,html[data-theme="light"] .home-page .calculator-panel,html[data-theme="light"] .home-page .process-panel,html[data-theme="light"] .home-page .brand-strip-card,html[data-theme="light"] .home-page .experience-card,html[data-theme="light"] .home-page .home-faq-card,html[data-theme="light"] .home-page .home-service-card,html[data-theme="light"] .home-page .process-step-card,html[data-theme="light"] .home-trust-editorial__standards li{border-color:rgba(15,23,42,.1)!important;background:linear-gradient(150deg,#fff,#f6f8fb)!important;box-shadow:0 16px 44px rgba(15,23,42,.08)!important}
+html[data-theme="light"] .home-page .hero-pro-rate{border-color:rgba(15,23,42,.09)!important;background:#f8fafc!important}
+html[data-theme="light"] .home-page .hero-pro-rate:hover{background:#fff!important}
+html[data-theme="light"] .home-page .hero-pro-rate span,html[data-theme="light"] .home-page .hero-pro-rate small{color:#64748b!important}
+html[data-theme="light"] .home-page .hero-pro-rate b,html[data-theme="light"] .home-page .hero-pro-rate h3,html[data-theme="light"] .home-page .home-faq-question{color:#172033!important}
+html[data-theme="light"] .home-page .hero-pro-secondary{border-color:rgba(15,23,42,.16)!important;background:#fff!important;color:#334155!important;box-shadow:0 10px 28px rgba(15,23,42,.08)}
+html[data-theme="light"] .home-page .hero-pro-secondary:hover{border-color:rgba(190,24,93,.26)!important;color:#be123c!important}
+html[data-theme="light"] .home-page .hero-pro-phone,html[data-theme="light"] .home-page .quote-visual__phone{color:#fff}
+html[data-theme="light"] .home-page .home-support-card,html[data-theme="light"] .home-page .home-contact-band{color:#fff!important}
+html[data-theme="light"] .home-page .home-support-card h2,html[data-theme="light"] .home-page .home-support-card h3,html[data-theme="light"] .home-page .home-support-card p,html[data-theme="light"] .home-page .home-contact-band h2,html[data-theme="light"] .home-page .home-contact-band p{color:#fff!important}
+
+/* Directories, services, reading, tools and forum surfaces. */
+html[data-theme="light"] .services-directory-page,html[data-theme="light"] .knowledge-center-page,html[data-theme="light"] .knowledge-hub-page,html[data-theme="light"] .article-template,html[data-theme="light"] .tools-center,html[data-theme="light"] .seo-tools-page,html[data-theme="light"] .forum-directory,html[data-theme="light"] .forum-section-page,html[data-theme="light"] .forum-category-page,html[data-theme="light"] .forum-topic-page,html[data-theme="light"] .trust-v1-page,html[data-theme="light"] .contact-v1-page,html[data-theme="light"] .partnership-page,html[data-theme="light"] .public-profile-page{background:#f3f6fa!important;color:#111827!important}
+html[data-theme="light"] .services-directory-page .services-directory-hero{background:linear-gradient(100deg,#fff,#f8fafc 60%,#fff1f3)!important}
+html[data-theme="light"] .services-directory-page .services-directory-hero__summary{color:#475569!important}
+html[data-theme="light"] .services-directory-page .services-directory-hero__action{border-color:#be123c!important;background:#be123c!important;color:#fff!important;box-shadow:0 10px 24px rgba(190,18,60,.15)}
+html[data-theme="light"] .services-directory-page .interactive-card{border-color:rgba(15,23,42,.11)!important;background:linear-gradient(155deg,#fff,#f7f9fc)!important;box-shadow:0 14px 38px rgba(15,23,42,.075)!important}
+html[data-theme="light"] .services-directory-page .interactive-card h3,html[data-theme="light"] .knowledge-center-page h1,html[data-theme="light"] .knowledge-center-page h2,html[data-theme="light"] .forum-directory h1,html[data-theme="light"] .forum-directory h2{color:#111827!important}
+html[data-theme="light"] .services-directory-page .interactive-card p{color:#64748b!important}
+html[data-theme="light"] .services-directory-page .interactive-card [title="Kesin oran işlem öncesinde teyit edilir"]{border-color:rgba(190,18,60,.15)!important;background:#fff1f3!important;color:#be123c!important}
+html[data-theme="light"] .services-directory-page .interactive-card>div:last-child>div:last-child span{border-color:rgba(190,18,60,.16)!important;background:#fff7f8!important;color:#be123c!important}
+html[data-theme="light"] .forum-groups article,html[data-theme="light"] .article-archive-card,html[data-theme="light"] .article-compact-link,html[data-theme="light"] .editorial-card,html[data-theme="light"] .tc2-featured-card,html[data-theme="light"] .tc2-list-row,html[data-theme="light"] .tc2-seo-list>a{border-color:rgba(15,23,42,.1)!important;background:linear-gradient(150deg,#fff,#f8fafc)!important;box-shadow:0 12px 32px rgba(15,23,42,.065)!important}
+html[data-theme="light"] .article-content-section>.mt-5,html[data-theme="light"] .article-editorial-hero__excerpt{color:#475569!important}
+
+/* Member and account experience. */
+html[data-theme="light"] .member-page,html[data-theme="light"] .member-loading,html[data-theme="light"] .utility-page,html[data-theme="light"] .account-page,html[data-theme="light"] .experience-state{background:radial-gradient(circle at 84% 0,rgba(244,63,94,.07),transparent 30rem),#f3f6fa!important;color:#111827!important}
+html[data-theme="light"] .member-sidebar,html[data-theme="light"] .member-content,html[data-theme="light"] .member-utility-nav,html[data-theme="light"] .member-utility-content,html[data-theme="light"] .account-card{border-color:rgba(15,23,42,.11)!important;background:rgba(255,255,255,.96)!important;box-shadow:0 18px 50px rgba(15,23,42,.085)!important}
+html[data-theme="light"] .member-sidebar h1,html[data-theme="light"] .member-head h2,html[data-theme="light"] .member-head h1,html[data-theme="light"] .member-content h2,html[data-theme="light"] .member-content h3,html[data-theme="light"] .member-utility-content h1,html[data-theme="light"] .account-card h1{color:#111827!important}
+html[data-theme="light"] .member-sidebar>p,html[data-theme="light"] .member-head p,html[data-theme="light"] .member-content p,html[data-theme="light"] .member-utility-content p,html[data-theme="light"] .account-card>p{color:#64748b!important}
+html[data-theme="light"] .member-sidebar nav a,html[data-theme="light"] .member-utility-nav a{color:#475569!important}
+html[data-theme="light"] .member-sidebar nav a:hover,html[data-theme="light"] .member-utility-nav a:hover,html[data-theme="light"] .member-sidebar nav a[aria-current="page"],html[data-theme="light"] .member-utility-nav a[aria-current="page"]{background:rgba(225,29,72,.07)!important;color:#be123c!important}
+html[data-theme="light"] .member-stats article,html[data-theme="light"] .member-level-card,html[data-theme="light"] .member-quick a,html[data-theme="light"] .member-action-list article,html[data-theme="light"] .member-history article,html[data-theme="light"] .member-operation-list article,html[data-theme="light"] .member-utility-list article,html[data-theme="light"] .member-empty-state{border-color:rgba(15,23,42,.1)!important;background:#f8fafc!important}
+html[data-theme="light"] .account-assurance{box-shadow:0 22px 55px rgba(78,18,39,.2)}
+html[data-theme="light"] .account-assurance h2,html[data-theme="light"] .account-assurance__brand strong,html[data-theme="light"] .account-assurance li strong{color:#fff!important}
+html[data-theme="light"] .account-assurance>span{color:#aeb8c5!important}
+html[data-theme="light"] .account-assurance li small{color:#929dad!important}
+html[data-theme="light"] .account-assurance__trust{color:#a6b4b1!important}
+html[data-theme="light"] .account-assurance li{border-color:rgba(255,255,255,.085)!important;background:rgba(255,255,255,.03)!important}
+
+/* Footer stays a stronger visual anchor while respecting the selected theme. */
+html[data-theme="light"] footer{border-top-color:rgba(15,23,42,.1)!important;background:#e9eef5!important;color:#334155!important}
+html[data-theme="light"] footer strong,html[data-theme="light"] footer h2,html[data-theme="light"] footer h3{color:#111827!important}
+html[data-theme="light"] footer p,html[data-theme="light"] footer a{color:#526174!important}
+
+/* Preserve contrast on deliberate branded dark/gradient actions. */
+html[data-theme="light"] .btn-primary,html[data-theme="light"] .member-primary-button,html[data-theme="light"] .admin-primary,html[data-theme="light"] [class*="bg-rose-6"],html[data-theme="light"] [class*="bg-blue-6"],html[data-theme="light"] [class*="bg-emerald-6"]{color:#fff!important}
+html[data-theme="light"] .tawk-compact-launcher{color:#fff!important}
+
+@media(max-width:520px){.theme-toggle{width:40px;height:40px;flex-basis:40px}.theme-toggle svg{width:18px;height:18px}}
+@media(min-width:900px){html[data-theme="light"] .services-directory-page .services-directory-hero__inner{padding-left:clamp(76px,6vw,100px)}}
+@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function SssPage() {
   return (
-    <main className="dark min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-slate-950 text-white">
       <SkyFaqModule
         stickyOffset={112}
         title="Sıkça Sorulan Sorular"
