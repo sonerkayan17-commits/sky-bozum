@@ -2,16 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { rateItems } from '../lib/rates';
 import { siteConfig } from '../lib/site';
 import { useSiteSettings } from './SiteSettingsProvider';
 import { InlineEditableImage, InlineEditableText } from './admin/SiteInlineEditor';
+import usePublishedRates from './personalization/usePublishedRates';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
-const featuredRates = featuredIds
-  .map((id) => rateItems.find((item) => item.id === id))
-  .filter((item): item is (typeof rateItems)[number] => Boolean(item));
-
 const logos: Record<string, string> = {
   vodafone: '/brands/vodafone/vodafone.svg',
   turkcell: '/brands/turkcell/turkcell.svg',
@@ -25,6 +21,11 @@ const logos: Record<string, string> = {
 
 export default function Hero() {
   const settings = useSiteSettings();
+  const publishedRates = usePublishedRates();
+  const featuredRates = featuredIds
+    .map((id) => publishedRates.find((item) => item.id === id))
+    .filter((item): item is (typeof publishedRates)[number] => Boolean(item));
+
   return (
     <section className="hero-pro" aria-labelledby="hero-title">
       <div className="hero-pro-grid" aria-hidden="true" />

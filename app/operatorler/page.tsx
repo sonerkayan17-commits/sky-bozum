@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getRateRange } from '../lib/rates';
 import { guidesForService } from '../lib/contentBridges';
+import PublishedRateLabel from '../components/services/PublishedRateLabel';
 
 export const metadata: Metadata = {
   keywords: ['Vodafone mobil odeme bozum', 'Turkcell mobil odeme bozum', 'Turk Telekom mobil odeme bozum', 'mobil odeme limiti', 'operator mobil odeme rehberi'],
@@ -61,7 +62,7 @@ export default function OperatorsPage() {
                 <Image src={operator.logo} alt={`${operator.name} logosu`} width={320} height={130} sizes="(max-width: 767px) 70vw, 24vw" className="max-h-24 w-[75%] object-contain transition duration-300 group-hover:scale-105" />
               </div>
               <div className="flex flex-1 flex-col p-2 pt-6">
-                <div className="flex items-center justify-between gap-4"><h2 className="text-2xl font-black">{operator.name}</h2><span className="rounded-lg border border-white/10 bg-black/20 px-3 py-1.5 text-sm font-black text-white">{operator.rate}</span></div>
+                <div className="flex items-center justify-between gap-4"><h2 className="text-2xl font-black">{operator.name}</h2><span className="rounded-lg border border-white/10 bg-black/20 px-3 py-1.5 text-sm font-black text-white"><PublishedRateLabel serviceSlug={operator.serviceSlug} fallback={operator.rate} /></span></div>
                 <p className="mt-3 text-sm leading-7 text-slate-300">{operator.text}</p>
                 <span className="mt-auto inline-flex pt-6 text-sm font-extrabold text-rose-300">Operatör rehberini aç <span className="ml-2 transition group-hover:translate-x-1" aria-hidden="true">→</span></span>
               </div>

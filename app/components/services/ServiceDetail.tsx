@@ -13,6 +13,7 @@ import DigitalCodePremiumSections from './DigitalCodePremiumSections';
 import CardSmsPremiumSections from './CardSmsPremiumSections';
 import ServiceSupportLink from './ServiceSupportLink';
 import ContentEngagement from '../community/ContentEngagement';
+import PublishedRateLabel from './PublishedRateLabel';
 
 const safetyChecks = [
   'Ürün veya kodu satın almadan önce hizmetin uygunluğunu yazılı olarak doğrulayın.',
@@ -52,7 +53,7 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
           <div className="premium-card relative flex min-h-72 items-center justify-center overflow-hidden p-10 sm:min-h-96">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(244,63,94,.13),transparent_58%)]" />
             <Image src={service.logo} alt={`${service.shortName} logosu`} width={560} height={240} sizes="(max-width: 1023px) 72vw, 38vw" priority className="relative z-10 max-h-52 w-[78%] object-contain drop-shadow-2xl" />
-            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-xl"><span className="text-xs font-bold text-slate-400">Güncel taban oran aralığı</span><strong className="text-xl text-rose-300">{service.rate}</strong></div>
+            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-xl"><span className="text-xs font-bold text-slate-400">Güncel taban oran aralığı</span><strong className="text-xl text-rose-300"><PublishedRateLabel serviceSlug={service.slug} fallback={service.rate} /></strong></div>
           </div>
         </div>
       </section>
@@ -152,7 +153,7 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
         </div>
       </section>
 
-      {alternatives.length > 0 && <section className="border-t border-white/8 bg-[#0d1016] py-14"><div className="content-shell"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Alternatif hizmetler</p><h2 className="mt-3 text-3xl font-black">Aynı kategoride devam edin</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{alternatives.map((item) => <Link key={item.slug} href={`/hizmetler/${item.slug}`} className="premium-card focus-ring flex items-center gap-4 p-5"><div className="flex h-14 w-20 items-center justify-center rounded-xl border border-white/8 bg-white"><Image src={item.logo} alt="" width={120} height={48} className="max-h-9 w-16 object-contain" /></div><div><h3 className="font-black">{item.shortName}</h3><p className="mt-1 text-xs text-slate-500">{item.rate} taban oran</p></div></Link>)}</div></div></section>}
+      {alternatives.length > 0 && <section className="border-t border-white/8 bg-[#0d1016] py-14"><div className="content-shell"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Alternatif hizmetler</p><h2 className="mt-3 text-3xl font-black">Aynı kategoride devam edin</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{alternatives.map((item) => <Link key={item.slug} href={`/hizmetler/${item.slug}`} className="premium-card focus-ring flex items-center gap-4 p-5"><div className="flex h-14 w-20 items-center justify-center rounded-xl border border-white/8 bg-white"><Image src={item.logo} alt="" width={120} height={48} className="max-h-9 w-16 object-contain" /></div><div><h3 className="font-black">{item.shortName}</h3><p className="mt-1 text-xs text-slate-500"><PublishedRateLabel serviceSlug={item.slug} fallback={item.rate} /> taban oran</p></div></Link>)}</div></div></section>}
 
       <section id="islem-baslat" className="service-section-anchor border-t border-white/8 py-16">
         <div className="content-shell">

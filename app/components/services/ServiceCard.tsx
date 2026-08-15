@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ServiceItem } from '../../lib/site';
+import PublishedRateLabel from './PublishedRateLabel';
 
 const tones = {
   emerald: 'from-emerald-500/20 to-emerald-950/10 border-emerald-400/20',
@@ -19,7 +20,7 @@ export default function ServiceCard({ service }: { service: ServiceItem }) {
         {service.popular && <span className="absolute left-3 top-3 rounded-full bg-black/45 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-white">Popüler</span>}
       </div>
       <div className="flex flex-1 flex-col pt-5">
-        <div className="flex items-center justify-between gap-3"><p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">{service.category}</p><span className="rounded-lg border border-white/8 bg-white/[0.035] px-2.5 py-1 text-xs font-black text-rose-300" title="Kesin oran işlem öncesinde teyit edilir">Aralık {service.rate}</span></div>
+        <div className="flex items-center justify-between gap-3"><p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">{service.category}</p><span className="rounded-lg border border-white/8 bg-white/[0.035] px-2.5 py-1 text-xs font-black text-rose-300" title="Kesin oran işlem öncesinde teyit edilir">Aralık <PublishedRateLabel serviceSlug={service.slug} fallback={service.rate} /></span></div>
         <h3 className="mt-3 text-xl font-black tracking-tight text-white">{service.shortName}</h3>
         <p className="mt-2 text-sm leading-6 text-slate-400">{service.description}</p>
         <div className="mt-auto pt-5"><span className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[.045] px-4 text-sm font-extrabold text-rose-300 transition group-hover:border-rose-300/30 group-hover:bg-rose-400/10 group-hover:text-orange-200">Hizmeti incele <span aria-hidden="true">→</span></span></div>
