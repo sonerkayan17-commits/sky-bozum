@@ -902,31 +902,29 @@ export default function AdminConsole({
                       <strong>{member.displayName}</strong>
                       <span>{member.email}</span>
                     </div>
-                    <select
-                      aria-label={`${member.displayName} rolü`}
-                      defaultValue={
-                        member.role === "admin" ? "moderator" : member.role
-                      }
-                      onChange={(event) =>
-                        run(
-                          () =>
-                            setMemberAccess(
-                              db!,
-                              member.id,
-                              event.target.value as MemberRole,
-                              member.permissions,
-                              user.uid,
-                            ),
-                          "Rol güncellendi.",
-                        )
-                      }
-                    >
-                      <option value="member">Üye</option>
-                      <option value="editor">İçerik editörü</option>
-                      <option value="publisher">Yayın yetkisi</option>
-                      <option value="moderator">Moderatör</option>
-                      <option value="operator">Operasyon ekibi</option>
-                    </select>
+                    {member.role === "admin" ? (
+                      <span className="admin-system-role">Sistem yöneticisi · Firebase yetkisi</span>
+                    ) : (
+                      <select
+                        aria-label={`${member.displayName} rolü`}
+                        value={member.role}
+                        onChange={(event) => {
+                          const nextRole = event.target.value as MemberRole;
+                          event.currentTarget.value = member.role;
+                          if (nextRole === member.role || !window.confirm(`${member.displayName} kullanıcısının rolü “${nextRole}” olarak değiştirilsin mi? Bu değişiklik yönetim günlüğüne kaydedilir.`)) return;
+                          run(
+                            () => setMemberAccess(db!, member.id, nextRole, member.permissions, user.uid),
+                            "Rol güncellendi.",
+                          );
+                        }}
+                      >
+                        <option value="member">Üye</option>
+                        <option value="editor">İçerik editörü</option>
+                        <option value="publisher">Yayın yetkisi</option>
+                        <option value="moderator">Moderatör</option>
+                        <option value="operator">Operasyon ekibi</option>
+                      </select>
+                    )}
                     <p>
                       {member.permissions.length
                         ? member.permissions.join(" · ")
