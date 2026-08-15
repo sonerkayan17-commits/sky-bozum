@@ -7,7 +7,7 @@ import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscri
 import { getFirebaseClient } from '../../lib/firebase';
 import { isBookmarked, removeBookmark, saveBookmark } from '../../lib/bookmarks';
 import { recordMemberActivity } from '../../lib/memberProgress';
-import { followContent, likeComment, notify } from '../../lib/social';
+import { followContent, isFollowingContent, likeComment, notify } from '../../lib/social';
 import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
@@ -23,6 +23,9 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [views, setViews] = useState(0);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarkBusy, setBookmarkBusy] = useState(false);
+  const [followed, setFollowed] = useState(false);
+  const [following, setFollowing] = useState(false);
   const [author, setAuthor] = useState('');
   const [message, setMessage] = useState('');
   const [notice, setNotice] = useState('');
@@ -46,7 +49,13 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     // anahtarı kullanmalı ki giriş sonrası ikinci kez kabul edilmiş görünmesin.
     const likeIdentity = visitorId;
     setLiked(localStorage.getItem(`sky-liked:${service}:${likeIdentity}`) === '1');
-    if (user) isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
+    if (user) {
+      isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
+      isFollowingContent(db, user.uid, service).then(setFollowed).catch(() => setFollowed(false));
+    } else {
+      setBookmarked(false);
+      setFollowed(false);
+    }
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
     const stopComments = subscribeToApprovedCommentsForService(db, service, setComments, () => undefined);
     const stopCounts = subscribeToEngagementCountsForTarget(db, service, (counts) => { setLikes(counts.likes); setViews(counts.views); }, () => undefined);
@@ -100,12 +109,29 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
   async function toggleBookmark() {
     if (!user || !db) { window.location.assign('/giris'); return; }
+    if (bookmarkBusy) return;
+    setBookmarkBusy(true);
     try {
       if (bookmarked) await removeBookmark(db, user.uid, service);
       else await saveBookmark(db, user.uid, service, title, window.location.pathname);
       setBookmarked(!bookmarked);
       setNotice(bookmarked ? 'İçerik kaydedilenlerden çıkarıldı.' : 'İçerik kişisel arşivinize kaydedildi.');
     } catch { setNotice('Kaydetme işlemi tamamlanamadı.'); }
+    finally { setBookmarkBusy(false); }
+  }
+
+  async function followCurrentContent() {
+    if (!user || !db || followed || following) return;
+    setFollowing(true);
+    try {
+      const created = await followContent(db, user.uid, service, title, window.location.pathname);
+      setFollowed(true);
+      setNotice(created ? 'Konu aboneliklerinize eklendi.' : 'Bu konuyu zaten takip ediyorsunuz.');
+    } catch {
+      setNotice('Takip kaydı oluşturulamadı.');
+    } finally {
+      setFollowing(false);
+    }
   }
 
   async function reportComment(comment: PublicComment) {
@@ -176,10 +202,10 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     <nav className="flex flex-wrap items-center gap-1 border-b border-white/10 bg-black/15 px-4 py-2" aria-label="Konu işlemleri">
       <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button>
       <button type="button" onClick={copyLink} className={actionClass}>Kopyala</button>
-      <button type="button" onClick={() => void toggleBookmark()} className={actionClass}>{bookmarked ? '★ Kaydedildi' : '☆ Kaydet'}</button>
+      <button type="button" onClick={() => void toggleBookmark()} disabled={bookmarkBusy} className={actionClass}>{bookmarkBusy ? 'Kaydediliyor…' : bookmarked ? '★ Kaydedildi' : '☆ Kaydet'}</button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
       <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button>
-      {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then((created) => setNotice(created ? 'Konu aboneliklerinize eklendi.' : 'Bu konuyu zaten takip ediyorsunuz.')).catch(() => setNotice('Takip kaydı oluşturulamadı.'))} className={actionClass}>⌁ Takip et</button> : <Link href="/giris" className={actionClass}>⌁ Takip et</Link>}
+      {user ? <button type="button" onClick={() => void followCurrentContent()} disabled={followed || following} className={actionClass}>{following ? 'Takip ediliyor…' : followed ? '✓ Takipte' : '⌁ Takip et'}</button> : <Link href="/giris" className={actionClass}>⌁ Takip et</Link>}
       <span className="ml-auto hidden text-[11px] font-bold text-slate-600 sm:inline">Beğeniler konuyu üste çıkarır</span>
     </nav>
 

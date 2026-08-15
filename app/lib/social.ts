@@ -43,3 +43,8 @@ export async function followContent(db: Firestore, uid: string, targetId: string
   await setDoc(subscriptionRef, { uid, targetId: safeTarget, title: title.slice(0, 120), href: href.slice(0, 180), createdAt: serverTimestamp() });
   return true;
 }
+
+export async function isFollowingContent(db: Firestore, uid: string, targetId: string) {
+  const safeTarget = targetId.replace(/[^a-zA-Z0-9:_-]/g, '-').slice(0, 100);
+  return (await getDoc(doc(db, 'memberSubscriptions', `${uid}_${safeTarget}`))).exists();
+}
