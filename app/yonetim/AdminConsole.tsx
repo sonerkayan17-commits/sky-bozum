@@ -21,6 +21,7 @@ import AdminOperationPanel from "./AdminOperationPanel";
 import ArticleRevisionHistory from "./ArticleRevisionHistory";
 import ArticleCoverField from "./ArticleCoverField";
 import ReleaseReadinessPanel from "./ReleaseReadinessPanel";
+import AdminBackupPanel from "./AdminBackupPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 import { articles } from "../lib/site";
 import {
@@ -48,7 +49,7 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "release" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
+type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -364,6 +365,7 @@ export default function AdminConsole({
             [
               ["overview", "Genel bakış"],
               ["release", "Yayın kontrolü"],
+              ["backup", "Yedek"],
               ["content", "İçerik"],
               ["rates", "Oranlar"],
               ["operations", "İşlemler"],
@@ -617,6 +619,7 @@ export default function AdminConsole({
         )}
         {view === "settings" && <SiteSettingsPanel db={db} actorId={user.uid} />}
         {view === "release" && <ReleaseReadinessPanel db={db} actorId={user.uid} />}
+        {view === "backup" && <AdminBackupPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}
         {view === "members" && (
