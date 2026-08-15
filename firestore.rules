@@ -114,6 +114,69 @@ service cloud.firestore {
         && isPublicForumKey(data.forumKey);
     }
 
+    function validSiteSettingsKeys(data) {
+      return data.keys().hasOnly([
+        "brandName", "brandTagline", "footerDescription", "phone", "email",
+        "whatsapp", "liveSupportLabel", "supportHours", "defaultSeoTitle",
+        "defaultSeoDescription", "heroEyebrow", "heroTitle", "heroLead", "heroPrimaryCta",
+        "proofExperience", "proofTransactions", "announcementEnabled", "announcementText", "announcementHref",
+        "searchPlaceholder", "searchQuickAccessTitle", "searchContinueTitle", "searchFeaturedTitle", "searchRecentEnabled",
+        "searchQuickActionRateEnabled", "searchQuickActionRateTitle", "searchQuickActionRateDescription", "searchQuickActionRateHref",
+        "searchQuickActionServicesEnabled", "searchQuickActionServicesTitle", "searchQuickActionServicesDescription", "searchQuickActionServicesHref",
+        "searchQuickActionTrustEnabled", "searchQuickActionTrustTitle", "searchQuickActionTrustDescription", "searchQuickActionTrustHref",
+        "searchQuickActionSupportEnabled", "searchQuickActionSupportTitle", "searchQuickActionSupportDescription", "searchQuickActionSupportHref",
+        "savedItemsLabel", "updatedBy", "updatedAt"
+      ]);
+    }
+
+    function validSiteSettingsCore(data) {
+      return data.brandName is string && data.brandName.size() >= 2 && data.brandName.size() <= 80
+        && data.brandTagline is string && data.brandTagline.size() <= 180
+        && data.footerDescription is string && data.footerDescription.size() <= 300
+        && data.phone is string && data.phone.size() <= 30
+        && data.email is string && data.email.size() <= 120
+        && data.whatsapp is string && data.whatsapp.size() <= 220
+        && data.liveSupportLabel is string && data.liveSupportLabel.size() <= 80
+        && data.supportHours is string && data.supportHours.size() <= 80
+        && data.defaultSeoTitle is string && data.defaultSeoTitle.size() <= 180
+        && data.defaultSeoDescription is string && data.defaultSeoDescription.size() <= 300
+        && data.heroEyebrow is string && data.heroEyebrow.size() <= 140
+        && data.heroTitle is string && data.heroTitle.size() >= 5 && data.heroTitle.size() <= 180
+        && data.heroLead is string && data.heroLead.size() <= 320
+        && data.heroPrimaryCta is string && data.heroPrimaryCta.size() <= 80
+        && data.proofExperience is string && data.proofExperience.size() <= 40
+        && data.proofTransactions is string && data.proofTransactions.size() <= 40
+        && data.announcementEnabled is bool
+        && data.announcementText is string && data.announcementText.size() <= 180
+        && data.announcementHref is string && data.announcementHref.size() <= 220;
+    }
+
+    function validSearchAction(data, enabledKey, titleKey, descriptionKey, hrefKey) {
+      return data[enabledKey] is bool
+        && data[titleKey] is string && data[titleKey].size() >= 2 && data[titleKey].size() <= 80
+        && data[descriptionKey] is string && data[descriptionKey].size() >= 4 && data[descriptionKey].size() <= 180
+        && data[hrefKey] is string && data[hrefKey].matches("^(/|https://).*$") && data[hrefKey].size() >= 1 && data[hrefKey].size() <= 220;
+    }
+
+    function validSiteSearchSettings(data) {
+      return data.searchPlaceholder is string && data.searchPlaceholder.size() >= 3 && data.searchPlaceholder.size() <= 120
+        && data.searchQuickAccessTitle is string && data.searchQuickAccessTitle.size() >= 2 && data.searchQuickAccessTitle.size() <= 80
+        && data.searchContinueTitle is string && data.searchContinueTitle.size() >= 2 && data.searchContinueTitle.size() <= 80
+        && data.searchFeaturedTitle is string && data.searchFeaturedTitle.size() >= 2 && data.searchFeaturedTitle.size() <= 80
+        && data.searchRecentEnabled is bool
+        && data.savedItemsLabel is string && data.savedItemsLabel.size() >= 2 && data.savedItemsLabel.size() <= 80
+        && validSearchAction(data, "searchQuickActionRateEnabled", "searchQuickActionRateTitle", "searchQuickActionRateDescription", "searchQuickActionRateHref")
+        && validSearchAction(data, "searchQuickActionServicesEnabled", "searchQuickActionServicesTitle", "searchQuickActionServicesDescription", "searchQuickActionServicesHref")
+        && validSearchAction(data, "searchQuickActionTrustEnabled", "searchQuickActionTrustTitle", "searchQuickActionTrustDescription", "searchQuickActionTrustHref")
+        && validSearchAction(data, "searchQuickActionSupportEnabled", "searchQuickActionSupportTitle", "searchQuickActionSupportDescription", "searchQuickActionSupportHref");
+    }
+
+    function validSiteSettings(data) {
+      return validSiteSettingsKeys(data)
+        && validSiteSettingsCore(data)
+        && validSiteSearchSettings(data);
+    }
+
     match /comments/{commentId} {
       allow read: if resource.data.status == "approved" || isAdmin();
       allow create: if validComment();
@@ -439,31 +502,7 @@ service cloud.firestore {
       allow read: if true;
       allow create, update: if isAdmin()
         && settingId == "global"
-        && request.resource.data.keys().hasOnly([
-          "brandName", "brandTagline", "footerDescription", "phone", "email",
-          "whatsapp", "liveSupportLabel", "supportHours", "defaultSeoTitle",
-          "defaultSeoDescription", "heroEyebrow", "heroTitle", "heroLead", "heroPrimaryCta",
-          "proofExperience", "proofTransactions", "announcementEnabled", "announcementText", "announcementHref", "updatedBy", "updatedAt"
-        ])
-        && request.resource.data.brandName is string && request.resource.data.brandName.size() >= 2 && request.resource.data.brandName.size() <= 80
-        && request.resource.data.brandTagline is string && request.resource.data.brandTagline.size() <= 180
-        && request.resource.data.footerDescription is string && request.resource.data.footerDescription.size() <= 300
-        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
-        && request.resource.data.email is string && request.resource.data.email.size() <= 120
-        && request.resource.data.whatsapp is string && request.resource.data.whatsapp.size() <= 220
-        && request.resource.data.liveSupportLabel is string && request.resource.data.liveSupportLabel.size() <= 80
-        && request.resource.data.supportHours is string && request.resource.data.supportHours.size() <= 80
-        && request.resource.data.defaultSeoTitle is string && request.resource.data.defaultSeoTitle.size() <= 180
-        && request.resource.data.defaultSeoDescription is string && request.resource.data.defaultSeoDescription.size() <= 300
-        && request.resource.data.heroEyebrow is string && request.resource.data.heroEyebrow.size() <= 140
-        && request.resource.data.heroTitle is string && request.resource.data.heroTitle.size() >= 5 && request.resource.data.heroTitle.size() <= 180
-        && request.resource.data.heroLead is string && request.resource.data.heroLead.size() <= 320
-        && request.resource.data.heroPrimaryCta is string && request.resource.data.heroPrimaryCta.size() <= 80
-        && request.resource.data.proofExperience is string && request.resource.data.proofExperience.size() <= 40
-        && request.resource.data.proofTransactions is string && request.resource.data.proofTransactions.size() <= 40
-        && request.resource.data.announcementEnabled is bool
-        && request.resource.data.announcementText is string && request.resource.data.announcementText.size() <= 180
-        && request.resource.data.announcementHref is string && request.resource.data.announcementHref.size() <= 220
+        && validSiteSettings(request.resource.data)
         && request.resource.data.updatedBy == request.auth.uid
         && request.resource.data.updatedAt == request.time;
       allow delete: if false;

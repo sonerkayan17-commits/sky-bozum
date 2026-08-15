@@ -9,6 +9,7 @@ import { getFirebaseClient } from '../lib/firebase';
 import SiteSearch from './SiteSearch';
 import MemberNotifications from './member/MemberNotifications';
 import { siteFeatures } from '../lib/features';
+import { useSiteSettings } from './SiteSettingsProvider';
 import './member/member-notifications.css';
 
 const items = [
@@ -26,6 +27,7 @@ const items = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const settings = useSiteSettings();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [memberName, setMemberName] = useState<string | null>(null);
@@ -150,7 +152,7 @@ export default function Navbar() {
             <div className="invisible absolute right-0 top-[calc(100%+.55rem)] z-50 w-72 translate-y-1 overflow-hidden rounded-2xl border border-white/10 bg-[#11141b]/98 opacity-0 shadow-[0_22px_70px_rgba(0,0,0,.55)] transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
               <div className="border-b border-white/10 p-4"><strong className="block truncate text-sm text-white">{memberName}</strong><span className="mt-1 block text-[10px] font-bold text-emerald-300">● Üye hesabı aktif</span><div className="mt-3 grid grid-cols-2 gap-2"><Link href="/hesabim/gorev-merkezi" className="rounded-lg bg-white/[.06] px-3 py-2 text-center text-[11px] font-black text-amber-300">Hesabı yükselt</Link><Link href="/hesabim/yeni-konu" className="rounded-lg bg-blue-600 px-3 py-2 text-center text-[11px] font-black text-white">+ Yeni konu aç</Link></div></div>
               <nav className="grid p-2 text-xs font-bold text-slate-300">
-                <Link href="/hesabim" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">◎ Profil sayfam</Link><Link href="/hesabim/uyelik-bilgileri" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">⚙ Üyelik bilgilerim</Link><Link href="/hesabim/banka-bilgileri" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">▤ Banka bilgilerim</Link><Link href="/hesabim/abonelikler" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">▱ Konu / mesaj abonelikleri</Link><Link href="/hesabim/kaydedilenler" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">★ Kaydettiklerim</Link><Link href="/hesabim/mesajlar" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">✉ Mesajlarım</Link><Link href="/hesabim/islem-gecmisi" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">◷ Geçmiş işlemlerim</Link><Link href="/hesabim/hesap-islemleri" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">♢ Hesap doğrulama</Link>
+                <Link href="/hesabim" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">◎ Profil sayfam</Link><Link href="/hesabim/uyelik-bilgileri" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">⚙ Üyelik bilgilerim</Link><Link href="/hesabim/banka-bilgileri" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">▤ Banka bilgilerim</Link><Link href="/hesabim/abonelikler" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">▱ Konu / mesaj abonelikleri</Link><Link href="/hesabim/kaydedilenler" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">{settings.savedItemsLabel}</Link><Link href="/hesabim/mesajlar" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">✉ Mesajlarım</Link><Link href="/hesabim/islem-gecmisi" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">◷ Geçmiş işlemlerim</Link><Link href="/hesabim/hesap-islemleri" className="rounded-lg px-3 py-2.5 hover:bg-white/[.06]">♢ Hesap doğrulama</Link>
                 <button type="button" onClick={logout} className="rounded-lg px-3 py-2.5 text-left text-rose-300 hover:bg-white/[.06]">⇥ Çıkış yap</button>
               </nav>
             </div>
@@ -225,7 +227,7 @@ export default function Navbar() {
                   <Link href="/hesabim" onClick={() => setOpen(false)} className="focus-ring flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-3 text-sm font-black text-white">Profilim</Link>
                   <button type="button" onClick={logout} className="focus-ring min-h-11 rounded-xl border border-white/15 px-3 text-sm font-black text-slate-100">Çıkış yap</button>
                 </div>
-                <Link href="/hesabim/kaydedilenler" onClick={() => setOpen(false)} className="focus-ring mt-2 flex min-h-10 items-center justify-center rounded-xl border border-white/10 px-3 text-xs font-black text-slate-200">★ Kaydettiklerim</Link>
+                <Link href="/hesabim/kaydedilenler" onClick={() => setOpen(false)} className="focus-ring mt-2 flex min-h-10 items-center justify-center rounded-xl border border-white/10 px-3 text-xs font-black text-slate-200">{settings.savedItemsLabel}</Link>
               </div> : <div className="mt-3 rounded-2xl border border-pink-400/20 bg-pink-500/[.07] p-3">
                 <p className="mb-2 text-center text-[11px] font-bold text-slate-400">Forum ve ücretsiz içeriklere sınırsız erişim</p>
                 <div className="grid grid-cols-2 gap-2">
