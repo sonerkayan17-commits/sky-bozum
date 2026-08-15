@@ -27,6 +27,15 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
   const [notice, setNotice] = useState('');
   const [copied, setCopied] = useState(false);
   const [sending, setSending] = useState(false);
+  const [profileAction, setProfileAction] = useState<'like' | 'gift' | null>(null);
+  const [likedProfile, setLikedProfile] = useState(false);
+  const [giftSent, setGiftSent] = useState(false);
+
+  useEffect(() => {
+    setProfileAction(null);
+    setLikedProfile(false);
+    setGiftSent(false);
+  }, [memberId]);
 
   useEffect(() => {
     const { auth, db } = getFirebaseClient();
@@ -94,10 +103,22 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
   async function act(kind: 'like' | 'gift') {
     const { db } = getFirebaseClient();
     if (!user || !db) { location.assign('/giris'); return; }
+    if (profileAction || (kind === 'like' && likedProfile) || (kind === 'gift' && giftSent)) return;
+    setProfileAction(kind);
     try {
-      if (kind === 'like') { await likeProfile(db, user.uid, memberId, senderName); setLikes((value) => value + 1); setNotice('Profil beğenildi.'); }
-      else { await sendPointGift(db, user.uid, memberId, senderName); setGifts((value) => value + 5); setNotice('5 topluluk puanı gönderildi.'); }
-    } catch { setNotice('Bu işlemi daha önce yaptınız.'); }
+      if (kind === 'like') {
+        const created = await likeProfile(db, user.uid, memberId, senderName);
+        setLikedProfile(true);
+        if (created) setLikes((value) => value + 1);
+        setNotice(created ? 'Profil beğenildi.' : 'Bu profili zaten beğendiniz.');
+      } else {
+        const created = await sendPointGift(db, user.uid, memberId, senderName);
+        setGiftSent(true);
+        if (created) setGifts((value) => value + 5);
+        setNotice(created ? '5 topluluk puanı gönderildi.' : 'Bu üyeye daha önce puan gönderdiniz.');
+      }
+    } catch { setNotice(kind === 'like' ? 'Profil beğenilemedi. Lütfen tekrar deneyin.' : 'Puan gönderilemedi. Lütfen tekrar deneyin.'); }
+    finally { setProfileAction(null); }
   }
 
   async function submit(event: FormEvent) {
@@ -133,7 +154,7 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
       <Link href="/hesabim" className="public-profile-primary">Profilimi yönet</Link>
       <section className="public-profile-referral"><h2>Referans bağlantın</h2><p>Bu bağlantıyla katılan üyelerin topluluk puanlarının onda biri sana referans puanı olarak yazılır.</p><div><input readOnly value={referralLink} aria-label="Referans bağlantınız" /><button type="button" onClick={copyReferralLink}>{copied ? 'Kopyalandı' : 'Kopyala'}</button></div><small>{referrals.length} üye katıldı · {referralPoints.toLocaleString('tr-TR', { maximumFractionDigits: 1 })} referans puanı</small>{referrals.length ? <ul>{referrals.map((item) => <li key={item.id}><Link href={`/uyeler/${item.id}`}>{item.name}</Link></li>)}</ul> : null}</section>
       {referredByName ? <p className="public-profile-referrer">Sizi davet eden üye: <strong>{referredByName}</strong></p> : null}
-    </> : <><div className="public-profile-actions"><button onClick={() => act('like')}>♡ Profili beğen</button><button onClick={() => act('gift')}>✦ 5 puan gönder</button></div><form onSubmit={submit}><label>Özel mesaj<textarea value={message} onChange={(event) => setMessage(event.target.value)} minLength={1} maxLength={600} required placeholder="Kısa ve saygılı bir mesaj yazın…" /></label><button disabled={sending}>{sending ? 'Gönderiliyor…' : 'Mesaj gönder'}</button></form></>}
+    </> : <><div className="public-profile-actions"><button type="button" onClick={() => void act('like')} disabled={Boolean(profileAction) || likedProfile}>{likedProfile ? '♥ Profil beğenildi' : profileAction === 'like' ? 'Beğeniliyor…' : '♡ Profili beğen'}</button><button type="button" onClick={() => void act('gift')} disabled={Boolean(profileAction) || giftSent}>{giftSent ? '✓ 5 puan gönderildi' : profileAction === 'gift' ? 'Gönderiliyor…' : '✦ 5 puan gönder'}</button></div><form onSubmit={submit}><label>Özel mesaj<textarea value={message} onChange={(event) => setMessage(event.target.value)} minLength={1} maxLength={600} required placeholder="Kısa ve saygılı bir mesaj yazın…" /></label><button disabled={sending}>{sending ? 'Gönderiliyor…' : 'Mesaj gönder'}</button></form></>}
     {notice && <div className="public-profile-notice">{notice}</div>}
   </section></main>;
 }

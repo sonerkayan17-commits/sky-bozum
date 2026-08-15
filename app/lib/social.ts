@@ -6,18 +6,24 @@ export async function notify(db: Firestore, senderId: string, receiverId: string
 }
 
 export async function likeProfile(db: Firestore, senderId: string, receiverId: string, senderName: string) {
-  await setDoc(doc(db, 'profileLikes', `${senderId}_${receiverId}`), { senderId, receiverId, createdAt: serverTimestamp() });
-  await notify(db, senderId, receiverId, 'profile_like', `${senderName} profilinizi beğendi.`, `/uyeler/${senderId}`);
+  const likeRef = doc(db, 'profileLikes', `${senderId}_${receiverId}`);
+  if ((await getDoc(likeRef)).exists()) return false;
+  await setDoc(likeRef, { senderId, receiverId, createdAt: serverTimestamp() });
+  await notify(db, senderId, receiverId, 'profile_like', `${senderName} profilinizi beğendi.`, `/uyeler/${senderId}`).catch(() => undefined);
+  return true;
 }
 
 export async function sendPointGift(db: Firestore, senderId: string, receiverId: string, senderName: string) {
-  await setDoc(doc(db, 'pointGifts', `${senderId}_${receiverId}`), { senderId, receiverId, amount: 5, createdAt: serverTimestamp() });
-  await notify(db, senderId, receiverId, 'point_gift', `${senderName} size 5 topluluk puanı gönderdi.`, `/uyeler/${senderId}`);
+  const giftRef = doc(db, 'pointGifts', `${senderId}_${receiverId}`);
+  if ((await getDoc(giftRef)).exists()) return false;
+  await setDoc(giftRef, { senderId, receiverId, amount: 5, createdAt: serverTimestamp() });
+  await notify(db, senderId, receiverId, 'point_gift', `${senderName} size 5 topluluk puanı gönderdi.`, `/uyeler/${senderId}`).catch(() => undefined);
+  return true;
 }
 
 export async function sendMessage(db: Firestore, senderId: string, receiverId: string, senderName: string, body: string) {
   await addDoc(collection(db, 'messages'), { senderId, receiverId, senderName: senderName.slice(0, 80), body: body.trim().slice(0, 600), createdAt: serverTimestamp() });
-  await notify(db, senderId, receiverId, 'message', `${senderName} size mesaj gönderdi.`, '/hesabim/mesajlar');
+  await notify(db, senderId, receiverId, 'message', `${senderName} size mesaj gönderdi.`, '/hesabim/mesajlar').catch(() => undefined);
 }
 
 export async function likeComment(db: Firestore, senderId: string, commentId: string, ownerId: string, senderName: string) {
