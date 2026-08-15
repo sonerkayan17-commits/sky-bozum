@@ -20,6 +20,7 @@
 
 .site-back-button{position:fixed;top:calc(var(--site-header-height,68px) + 16px);left:16px;z-index:45;display:inline-flex;min-height:38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:0 12px;background:rgba(10,12,17,.9);color:#f2edf0;box-shadow:0 10px 28px rgba(0,0,0,.28);font-size:12px;font-weight:800;transition:border-color .2s ease,background .2s ease,transform .2s ease}.site-back-button:hover{border-color:rgba(225,75,103,.55);background:rgba(91,17,34,.92);transform:translateX(2px)}.site-back-button>span:first-child{color:#ef7087;font-size:17px;line-height:1}@media(max-width:640px){.site-back-button{top:calc(var(--site-header-height,64px) + 12px);left:10px;min-height:34px;padding:0 10px}}
 @import "./styles/article-explorer-premium.css";
+@import "./styles/visual-premium-pass.css";
 
 /* Bilgi Merkezi UX gate markers; full rules live in imported V45 chunks. */
 .editorial-topic-scroll::-webkit-scrollbar{display:none}

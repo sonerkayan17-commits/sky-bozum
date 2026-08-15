@@ -72,8 +72,8 @@ export default function ServicesPage() {
   const groups = [...new Set(services.map((service) => service.category))];
 
   return (
-    <main className="min-h-screen bg-[#090b10] text-white">
-      <section className="relative overflow-hidden border-b border-white/8 py-16 sm:py-20">
+    <main className="services-directory-page min-h-screen bg-[#090b10] text-white">
+      <section className="services-directory-hero relative overflow-hidden border-b border-white/8 py-16 sm:py-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(244,63,94,.13),transparent_35%),radial-gradient(circle_at_90%_90%,rgba(249,115,22,.08),transparent_30%)]" />
         <div className="content-shell relative">
           <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-rose-400">Sky Bozum hizmetleri</p>
@@ -89,7 +89,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section id="tum-hizmetler" className="content-shell space-y-16 py-14 sm:py-20">
+      <section id="tum-hizmetler" className="services-directory-groups content-shell space-y-16 py-14 sm:py-20">
         {groups.map((group, index) => {
           const groupServices = services.filter((service) => service.category === group);
           return (

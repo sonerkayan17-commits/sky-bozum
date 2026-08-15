@@ -118,9 +118,9 @@ export default function Navbar() {
   const visibleItems = items.filter(([, href]) => href !== '/topluluk' || siteFeatures.communityForum);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08090e]/88 text-white backdrop-blur-2xl">
-      <div className="content-shell flex h-[68px] items-center justify-between gap-4">
-        <Link href="/" className="group flex items-center gap-3" aria-label="Sky Bozum ana sayfa">
+    <header className="site-navbar sticky top-0 z-50 border-b border-white/10 bg-[#08090e]/88 text-white backdrop-blur-2xl">
+      <div className="site-navbar__shell content-shell flex h-[68px] items-center justify-between gap-4">
+        <Link href="/" className="site-navbar__brand group flex items-center gap-3" aria-label="Sky Bozum ana sayfa">
           <span className="relative h-11 w-11 overflow-hidden rounded-xl border border-pink-500/20 shadow-[0_10px_28px_rgba(236,72,153,.18)]"><Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme logosu" fill sizes="44px" className="object-cover" priority /></span>
           <span className="leading-none">
             <span className="block text-[11px] font-black uppercase tracking-[.24em] text-[#f2c98a]">Sky</span>
@@ -130,7 +130,7 @@ export default function Navbar() {
 
         <SiteSearch mode="desktop" />
 
-        <nav className="hidden shrink-0 items-center gap-0.5 xl:flex" aria-label="Ana menü">
+        <nav className="site-navbar__links hidden shrink-0 items-center gap-0.5 xl:flex" aria-label="Ana menü">
           {visibleItems.map(([label, href]) => (
             <Link
               key={href}
@@ -148,7 +148,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2.5">
+        <div className="site-navbar__actions flex items-center gap-2.5">
           <MemberNotifications />
           {authReady && memberName ? <div className="group relative hidden sm:block">
             <Link href="/hesabim" className="focus-ring inline-flex min-h-10 max-w-40 items-center justify-center truncate rounded-lg border border-emerald-400/20 bg-emerald-500/[.08] px-3 text-[12px] font-bold text-emerald-200">{memberName}</Link>
