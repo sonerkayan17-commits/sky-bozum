@@ -18,6 +18,8 @@ import ForumArchivePanel from "./ForumArchivePanel";
 import AdminRatePanel from "./AdminRatePanel";
 import ForumModerationPanel from "./ForumModerationPanel";
 import AdminOperationPanel from "./AdminOperationPanel";
+import ArticleRevisionHistory from "./ArticleRevisionHistory";
+import ReleaseReadinessPanel from "./ReleaseReadinessPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 import { articles } from "../lib/site";
 import {
@@ -45,7 +47,7 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
+type View = "overview" | "release" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 const permissions = [
   "Yorum paylaşımı",
@@ -360,6 +362,7 @@ export default function AdminConsole({
           {(
             [
               ["overview", "Genel bakış"],
+              ["release", "Yayın kontrolü"],
               ["content", "İçerik"],
               ["rates", "Oranlar"],
               ["operations", "İşlemler"],
@@ -604,7 +607,7 @@ export default function AdminConsole({
                     </button>
                     <button className="admin-secondary compact" onClick={() => run(() => setArticleStatus(db!, article.slug, "draft", user.uid), "Makale taslağa alındı.")}>Taslak</button>
                     <button className="admin-secondary compact" onClick={() => run(() => setArticleStatus(db!, article.slug, "published", user.uid), "Makale yayına alındı.")}>Yayınla</button>
-                    <button className="admin-danger" onClick={() => confirmAction(`“${article.title}” kalıcı olarak silinecek. Devam edilsin mi?`, () => removeManagedArticle(db!, article.slug, user.uid), "Makale silindi.")}>Sil</button>
+                    <button className="admin-danger" onClick={() => confirmAction(`“${article.title}” yayından kaldırılıp arşive alınacak. Devam edilsin mi?`, () => removeManagedArticle(db!, article.slug, user.uid), "Makale arşive alındı; istediğiniz zaman yeniden yayınlayabilirsiniz.")}>Arşivle</button>
                   </div>
                 </article>
               ))}
@@ -612,6 +615,7 @@ export default function AdminConsole({
           </section>
         )}
         {view === "settings" && <SiteSettingsPanel db={db} actorId={user.uid} />}
+        {view === "release" && <ReleaseReadinessPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}
         {view === "members" && (
@@ -1005,6 +1009,12 @@ export default function AdminConsole({
                   <option value="archived">Arşiv</option>
                 </select>
               </label>
+              {editingArticle.slug && <ArticleRevisionHistory
+                db={db}
+                articleSlug={editingArticle.slug}
+                actorId={user.uid}
+                onRestore={(revision) => setEditingArticle(revision)}
+              />}
               <button className="admin-primary" type="submit">
                 İçeriği kaydet →
               </button>
