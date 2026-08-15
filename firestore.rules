@@ -656,6 +656,23 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    match /operationNotes/{noteId} {
+      allow read: if canOperate();
+      allow create: if canOperate()
+        && request.resource.data.keys().hasOnly(["operationId", "type", "body", "actorId", "createdAt"])
+        && request.resource.data.operationId is string
+        && request.resource.data.operationId.size() >= 1
+        && request.resource.data.operationId.size() <= 180
+        && request.resource.data.type in ["note", "status", "system"]
+        && request.resource.data.body is string
+        && request.resource.data.body.size() >= 1
+        && request.resource.data.body.size() <= 600
+        && request.resource.data.actorId == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
