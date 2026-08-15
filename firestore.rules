@@ -649,7 +649,13 @@ service cloud.firestore {
           || (request.resource.data.memberId == request.auth.uid
             && request.resource.data.createdBy == request.auth.uid
             && request.resource.data.status == "new"
-            && request.resource.data.payout == 0))
+            && request.resource.data.payout == 0
+            && request.resource.data.keys().hasOnly(["memberId", "customer", "contact", "service", "amount", "payout", "status", "note", "createdBy", "updatedBy", "createdAt", "updatedAt"])
+            && request.resource.data.updatedBy == request.auth.uid
+            && request.resource.data.note is string
+            && request.resource.data.note.size() <= 500
+            && request.resource.data.createdAt == request.time
+            && request.resource.data.updatedAt == request.time))
         && request.resource.data["customer"] is string
         && request.resource.data["customer"].size() >= 2
         && request.resource.data["customer"].size() <= 100
@@ -659,7 +665,8 @@ service cloud.firestore {
         && request.resource.data["service"] is string
         && request.resource.data["service"].size() >= 2
         && request.resource.data["amount"] is number
-        && request.resource.data["amount"] > 0;
+        && request.resource.data["amount"] > 0
+        && request.resource.data["amount"] <= 1000000;
       allow update: if canOperate()
         && request.resource.data["customer"] is string
         && request.resource.data["customer"].size() >= 2
