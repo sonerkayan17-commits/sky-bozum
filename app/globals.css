@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
 :root{--site-header-height:68px;--trust-section-nav-height:76px;--service-section-nav-height:58px}
 @source "./sss/faq-module/components/*.tsx";
 @source "./sss/faq-module/components/faq/*.tsx";
@@ -23,7 +22,6 @@
 @import "./styles/article-explorer-premium.css";
 @import "./styles/visual-premium-pass.css";
 @import "./styles/experience-premium-pass.css";
-@import "./styles/soft-light-theme.css";
 
 /* Bilgi Merkezi UX gate markers; full rules live in imported V45 chunks. */
 .editorial-topic-scroll::-webkit-scrollbar{display:none}
