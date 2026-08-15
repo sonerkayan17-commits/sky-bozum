@@ -121,7 +121,22 @@ function auditTargetLabel(event: ContentAuditEvent, managedArticles: ManagedArti
   if (member) return member.displayName;
   const article = [...managedArticles, ...articles].find((item) => item.slug === event.articleSlug);
   if (article) return article.title;
-  if (event.contentKey) return `Sayfa içeriği: ${event.contentKey}`;
+  if (event.targetLabel) return event.targetLabel;
+  if (event.contentKey) {
+    const labels: Record<string, string> = {
+      'home.hero.eyebrow': 'Ana Sayfa · üst başlık',
+      'home.hero.title': 'Ana Sayfa · ana başlık',
+      'home.hero.lead': 'Ana Sayfa · açıklama',
+      'home.hero.app-logo': 'Ana Sayfa · uygulama logosu',
+      'home.final-cta.description': 'Ana Sayfa · alt çağrı metni',
+      'site.footer.description': 'Alt bilgi · açıklama',
+      'site.footer.tagline': 'Alt bilgi · slogan',
+      'home.trust.description': 'Ana Sayfa · güven açıklaması',
+    };
+    if (labels[event.contentKey]) return labels[event.contentKey];
+    if (event.contentKey.startsWith('page-')) return 'Sayfa içi düzenleme';
+    return `Site içeriği: ${event.contentKey.replace(/\./g, ' · ')}`;
+  }
   if (event.articleSlug === 'global') return 'Yayın kontrolü';
   if (event.articleSlug === 'unknown') return 'Genel yönetim';
   if (event.action.startsWith('rate:')) return `Oran kaydı: ${event.articleSlug}`;

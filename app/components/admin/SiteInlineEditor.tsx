@@ -139,7 +139,7 @@ function TypeControls({ style, setStyle }: { style: TextStyle; setStyle: (style:
   );
 }
 
-async function writeAudit(contentKey: string, uid: string, type: 'text' | 'image') {
+async function writeAudit(contentKey: string, uid: string, type: 'text' | 'image', targetLabel?: string, pagePath?: string) {
   const { db } = getFirebaseClient();
   if (!db) return;
   try {
@@ -147,6 +147,7 @@ async function writeAudit(contentKey: string, uid: string, type: 'text' | 'image
       action: 'site-inline-updated',
       contentKey,
       contentType: type,
+      ...(targetLabel ? { targetLabel: targetLabel.slice(0, 180), pagePath: pagePath || '' } : {}),
       actorId: uid,
       createdAt: serverTimestamp(),
     });
@@ -351,6 +352,27 @@ function shortHash(value: string) {
   return (hash >>> 0).toString(36);
 }
 
+function pageLabel(pathname: string) {
+  const labels: Record<string, string> = {
+    '/': 'Ana Sayfa',
+    '/hizmetler': 'Hizmetler',
+    '/operatorler': 'Operatörler',
+    '/araclar': 'Araçlar',
+    '/bilgi-merkezi': 'Bilgi Merkezi',
+    '/topluluk': 'Forum',
+    '/iletisim': 'İletişim',
+    '/guven-merkezi': 'Güven Merkezi',
+    '/sss': 'Sık Sorulan Sorular',
+  };
+  return labels[pathname] || 'Site sayfası';
+}
+
+function pageTargetLabel(pathname: string, target: PageTarget) {
+  const kind = target.kind === 'dom-image' ? 'Görsel' : 'Metin';
+  const summary = (target.kind === 'dom-image' ? target.alt : target.value).replace(/\s+/g, ' ').trim().slice(0, 76);
+  return summary ? `${pageLabel(pathname)} · ${kind}: ${summary}` : `${pageLabel(pathname)} · ${kind}`;
+}
+
 function editableElement(target: EventTarget | null) {
   if (!(target instanceof Element)) return null;
   const candidate = target.closest('img, h1, h2, h3, h4, p, li, strong, small, button, a');
@@ -458,7 +480,7 @@ export function SitePageEditor() {
         updatedAt: serverTimestamp(),
       });
       applyPageContent({ type: target.kind, value: nextValue, alt: draft.alt, style, selector: target.selector, href: draft.href });
-      void writeAudit(contentId, uid, target.kind === 'dom-image' ? 'image' : 'text');
+      void writeAudit(contentId, uid, target.kind === 'dom-image' ? 'image' : 'text', pageTargetLabel(pathname, target), pathname);
       setTarget(null);
       setDraft(null);
     } catch {
