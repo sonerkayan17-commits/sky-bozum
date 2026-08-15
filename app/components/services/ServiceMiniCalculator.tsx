@@ -23,7 +23,7 @@ export default function ServiceMiniCalculator({ serviceSlug, serviceName }: { se
         <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-rose-400">Hızlı hesaplama</p>
         <h2 className="mt-3 text-2xl font-black">Yaklaşık ödemenizi görün</h2>
         <p className="mt-3 text-sm leading-7 text-slate-400">Bu hizmet için oran işlem öncesinde teyit edilir.</p>
-        <Link href="/araclar#hesapla" className="btn-secondary focus-ring mt-5">Oran hesaplama aracını aç</Link>
+        <Link href="/araclar#oran-hesapla" className="btn-secondary focus-ring mt-5">Oran hesaplama aracını aç</Link>
       </div>
     );
   }

@@ -48,8 +48,6 @@ type CreateCommentInput = {
 type EngagementDocument = {
   type?: 'like' | 'view';
   targetId?: string;
-  memberId?: string;
-  memberName?: string;
 };
 
 export function subscribeToApprovedComments(
@@ -129,20 +127,14 @@ export async function registerEngagement(
   visitorId: string,
   type: 'like' | 'view',
   targetId: string,
-  member?: { id: string; name: string },
 ) {
   if (!visitorId || !targetId) return;
   const safeTarget = targetId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 100);
   const safeVisitor = visitorId.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80);
-  const safeMember = member?.id.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80);
-  const identity = safeMember ? `${safeVisitor}_${safeMember}` : safeVisitor;
-  await setDoc(doc(firestore, 'referenceEngagements', `${type}_${safeTarget}_${identity}`), {
+  await setDoc(doc(firestore, 'referenceEngagements', `${type}_${safeTarget}_${safeVisitor}`), {
     type,
     targetId,
     visitorId,
-    ...(type === 'like' && member
-      ? { memberId: member.id, memberName: member.name.slice(0, 80) }
-      : {}),
     createdAt: serverTimestamp(),
   });
 }
@@ -157,18 +149,14 @@ export function subscribeToEngagementCounts(
     (snapshot) => {
       const likes: EngagementCounts = {};
       const views: EngagementCounts = {};
-      const likers: Record<string, string[]> = {};
       snapshot.docs.forEach((document) => {
         const data = document.data() as EngagementDocument;
         if (!data.targetId) return;
         if (data.type !== 'like' && data.type !== 'view') return;
         const target = data.type === 'view' ? views : likes;
         target[data.targetId] = (target[data.targetId] ?? 0) + 1;
-        if (data.type === 'like' && data.memberId && data.memberName) {
-          likers[data.targetId] = [...(likers[data.targetId] ?? []), data.memberName];
-        }
       });
-      onChange({ likes, views, likers });
+      onChange({ likes, views, likers: {} });
     },
     onError,
   );

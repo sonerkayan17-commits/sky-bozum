@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, serverTimestamp, setDoc, type Firestore } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where, type Firestore } from 'firebase/firestore';
 
 export async function notify(db: Firestore, senderId: string, receiverId: string, type: 'profile_like'|'point_gift'|'comment_like'|'reply'|'message'|'moderation', text: string, href: string) {
   if (!receiverId || receiverId === senderId) return;
@@ -27,5 +27,10 @@ export async function likeComment(db: Firestore, senderId: string, commentId: st
 
 export async function followContent(db: Firestore, uid: string, targetId: string, title: string, href: string) {
   const safeTarget = targetId.replace(/[^a-zA-Z0-9:_-]/g, '-').slice(0, 100);
-  await addDoc(collection(db, 'memberSubscriptions'), { uid, targetId: safeTarget, title: title.slice(0, 120), href: href.slice(0, 180), createdAt: serverTimestamp() });
+  const subscriptionRef = doc(db, 'memberSubscriptions', `${uid}_${safeTarget}`);
+  if ((await getDoc(subscriptionRef)).exists()) return false;
+  const legacyMatches = await getDocs(query(collection(db, 'memberSubscriptions'), where('uid', '==', uid), where('targetId', '==', safeTarget)));
+  if (!legacyMatches.empty) return false;
+  await setDoc(subscriptionRef, { uid, targetId: safeTarget, title: title.slice(0, 120), href: href.slice(0, 180), createdAt: serverTimestamp() });
+  return true;
 }

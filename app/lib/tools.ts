@@ -71,7 +71,7 @@ const definitions: Record<ToolId, ToolDefinition> = {
       { title: 'Hesaplama nasıl yapılır?', text: 'Hedef ödeme, seçilen oran yüzdesine bölünür. Örneğin yüzde 50 oranında 1.000 TL hedef için yaklaşık 2.000 TL bakiye gerekir.' },
       { title: 'Planlama sonucu olarak değerlendirin', text: 'Hizmet türü, ürün uygunluğu ve güncel koşullar oranı değiştirebilir. Sonucu bütçe planı için kullanın; satın alma öncesinde oranı yeniden teyit edin.' },
     ],
-    action: { href: '/araclar#hesapla', label: 'Ana oran hesaplayıcıya dön' },
+    action: { href: '/araclar#oran-hesapla', label: 'Ana oran hesaplayıcıya dön' },
     related: ['oran-karsilastirma', 'mobil-odeme', 'gift-card'],
   },
   'oran-karsilastirma': {
@@ -89,7 +89,7 @@ const definitions: Record<ToolId, ToolDefinition> = {
       { title: 'Oran tek başına karar ölçütü değildir', text: 'En yüksek görünen sonuç, elinizdeki bakiye türünün o hizmete uygun olduğu anlamına gelmez. Ürün, bölge ve kullanılabilirlik koşullarını birlikte değerlendirin.' },
       { title: 'Tablo hangi veriyi kullanır?', text: 'Karşılaştırma, sitedeki ortak oran kaynağını kullanır. Güncel işlem oranı ancak ürün ve işlem koşulları kontrol edildiğinde kesinleşir.' },
     ],
-    action: { href: '/araclar#hesapla', label: 'Ana oran hesaplayıcıya dön' },
+    action: { href: '/araclar#oran-hesapla', label: 'Ana oran hesaplayıcıya dön' },
     related: ['hedef-odeme', 'mobil-odeme', 'gift-card'],
   },
   'kod-adedi': {
@@ -107,7 +107,7 @@ const definitions: Record<ToolId, ToolDefinition> = {
       { title: 'Dağılım nasıl oluşturulur?', text: 'Araç en yüksek kod değerinden başlayarak toplam tutarı tam kodlara ayırır; hiçbir değere sığmayan bakiye kalan tutar olarak gösterilir.' },
       { title: 'Satın almadan önce ürün bilgisini doğrulayın', text: 'Kod değeri kadar bölge, para birimi ve ürün türü de önemlidir. Dağılımı hazırladıktan sonra hangi kodların kabul edildiğini ayrıca kontrol edin.' },
     ],
-    action: { href: '/araclar#hesapla', label: 'Ana oran hesaplayıcıya dön' },
+    action: { href: '/araclar#oran-hesapla', label: 'Ana oran hesaplayıcıya dön' },
     related: ['gift-card', 'hedef-odeme', 'oran-karsilastirma'],
   },
   'gift-card': {

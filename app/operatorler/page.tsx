@@ -92,7 +92,7 @@ export default function OperatorsPage() {
 
         <div className="premium-card mt-8 grid gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
           <div><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-rose-400">Önemli bilgi</p><h2 className="mt-2 text-2xl font-black">Limitiniz doğrudan nakit bakiye değildir.</h2><p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">Mobil ödeme limiti, desteklenen dijital ürün satın alımında kullanılabilen operatör limitidir. Limit, komisyon, ürün uygunluğu ve işlem yöntemi kişiye göre değişebilir. Destek ekibinden yazılı onay almadan ürün satın almayın.</p></div>
-          <Link href="/araclar#hesapla" className="btn-primary focus-ring">Yaklaşık hesapla</Link>
+          <Link href="/araclar#oran-hesapla" className="btn-primary focus-ring">Yaklaşık hesapla</Link>
         </div>
       </section>
     </main>

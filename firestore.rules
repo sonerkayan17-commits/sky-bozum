@@ -184,9 +184,11 @@ service cloud.firestore {
     }
 
     match /referenceEngagements/{engagementId} {
-      allow read: if signedIn() && resource.data.profileId == request.auth.uid;
+      // Yalnız içerik sayaçları tutulur; kullanıcı adı/e-posta tutulmaz.
+      // Bu yüzden herkese açık sayaçların gerçek zamanlı okunması güvenlidir.
+      allow read: if true;
       allow create: if notBanned() && request.resource.data.keys().hasOnly([
-          "type", "targetId", "visitorId", "memberId", "memberName", "createdAt"
+          "type", "targetId", "visitorId", "createdAt"
         ])
         && (request.resource.data.type == "like" || request.resource.data.type == "view")
         && request.resource.data.targetId is string
@@ -195,20 +197,12 @@ service cloud.firestore {
         && request.resource.data.visitorId is string
         && request.resource.data.visitorId.size() >= 8
         && request.resource.data.visitorId.size() <= 80
-        && (request.resource.data.type == "view"
-          || !request.resource.data.keys().hasAny(["memberId", "memberName"])
-          || (signedIn()
-            && request.resource.data.memberId == request.auth.uid
-            && request.resource.data.memberName is string
-            && request.resource.data.memberName.size() >= 2
-            && request.resource.data.memberName.size() <= 80))
         && request.resource.data.createdAt == request.time;
       allow update: if request.resource.data.visitorId == resource.data.visitorId
         && request.resource.data.type == resource.data.type
         && request.resource.data.targetId == resource.data.targetId
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["memberId", "memberName", "createdAt"])
-        && (resource.data.type == "view"
-          || (signedIn() && resource.data.memberId == request.auth.uid && request.resource.data.memberId == request.auth.uid));
+        && request.resource.data.keys().hasOnly(["type", "targetId", "visitorId", "createdAt"])
+        && request.resource.data.createdAt == request.time;
       allow delete: if false;
     }
 
@@ -288,7 +282,20 @@ service cloud.firestore {
 
     match /memberSubscriptions/{subscriptionId} {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
-      allow create: if signedIn() && notBanned() && request.resource.data.uid == request.auth.uid && request.resource.data.createdAt == request.time;
+      allow create: if signedIn() && notBanned()
+        && subscriptionId == request.auth.uid + "_" + request.resource.data.targetId
+        && request.resource.data.keys().hasOnly(["uid", "targetId", "title", "href", "createdAt"])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() >= 1
+        && request.resource.data.targetId.size() <= 100
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 1
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.href is string
+        && request.resource.data.href.size() >= 1
+        && request.resource.data.href.size() <= 180
+        && request.resource.data.createdAt == request.time;
       allow update: if signedIn()
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid

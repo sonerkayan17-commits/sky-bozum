@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function OranHesaplaPage() {
-  permanentRedirect('/araclar#hesapla');
+  permanentRedirect('/araclar#oran-hesapla');
 }

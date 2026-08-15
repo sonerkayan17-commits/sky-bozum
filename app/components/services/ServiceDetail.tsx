@@ -22,7 +22,7 @@ const safetyChecks = [
 ];
 
 const journeyLinks = [
-  { label: 'Güncel oranları hesapla', href: '/araclar#hesapla', description: 'Tutarınızı girip yaklaşık ödeme aralığını görün.' },
+  { label: 'Güncel oranları hesapla', href: '/araclar#oran-hesapla', description: 'Tutarınızı girip yaklaşık ödeme aralığını görün.' },
   { label: 'Sorun çözme merkezine git', href: '/bilgi-merkezi/sorun-cozme', description: 'Limit, kart, SMS veya kod sorunlarını adım adım kontrol edin.' },
   { label: 'Tüm rehberleri keşfet', href: '/bilgi-merkezi', description: 'Mobil ödeme, dijital kod ve kart rehberlerine ulaşın.' },
 ];

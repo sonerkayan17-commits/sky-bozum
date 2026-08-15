@@ -23,7 +23,6 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [views, setViews] = useState(0);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const [likers, setLikers] = useState<string[]>([]);
   const [author, setAuthor] = useState('');
   const [message, setMessage] = useState('');
   const [notice, setNotice] = useState('');
@@ -41,27 +40,24 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   useEffect(() => {
     if (!db) return;
     const visitorId = getOrCreateVisitorId();
-    setLiked(user ? localStorage.getItem(`sky-liked:${service}:${user.uid}`) === '1' : false);
+    const likeIdentity = user?.uid || 'guest';
+    setLiked(localStorage.getItem(`sky-liked:${service}:${likeIdentity}`) === '1');
     if (user) isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
     const stopComments = subscribeToApprovedComments(db, (items) => setComments(items.filter((item) => item.service === service)), () => undefined);
-    const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); setLikers(counts.likers[service] ?? []); }, () => undefined);
+    const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); }, () => undefined);
     return () => { stopComments(); stopCounts(); };
   }, [db, service, user]);
 
   useEffect(() => db ? onSnapshot(collection(db, 'publicProfiles'), (snapshot) => { const next: Record<string,string> = {}; snapshot.docs.forEach((item) => { const avatar = String(item.data().avatar || ''); if (avatar) next[item.id] = avatar; }); setAvatars(next); }) : undefined, [db]);
 
   async function likeAndBump() {
-    if (!user) { window.location.assign('/giris'); return; }
     if (!db || liked) return;
     setBusy(true);
     try {
-      await registerEngagement(db, getOrCreateVisitorId(), 'like', service, user ? {
-        id: user.uid,
-        name: user.displayName || user.email || 'Sky Bozum üyesi',
-      } : undefined);
+      await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
       if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
-      localStorage.setItem(`sky-liked:${service}:${user.uid}`, '1');
+      localStorage.setItem(`sky-liked:${service}:${user?.uid || 'guest'}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
     } catch { setNotice('Beğeni kaydedilemedi. Lütfen tekrar deneyin.'); }
@@ -70,15 +66,15 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!user || !db || author.trim().length < 2 || message.trim().length < 3) return;
+    if (!db || author.trim().length < 2 || message.trim().length < 3) return;
     setBusy(true);
     try {
-      await createPendingComment(db, { parentId: replyTarget?.id ?? null, author: author.trim(), uid: user.uid, service, message: message.trim(), status: 'approved' });
-      await recordMemberActivity(db, user.uid, 'comment', service, title, window.location.pathname).catch(() => undefined);
-      if (replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
+      await createPendingComment(db, { parentId: replyTarget?.id ?? null, author: author.trim(), uid: user?.uid ?? null, service, message: message.trim(), status: user ? 'approved' : 'pending' });
+      if (user) await recordMemberActivity(db, user.uid, 'comment', service, title, window.location.pathname).catch(() => undefined);
+      if (user && replyTarget?.uid) await notify(db, user.uid, replyTarget.uid, 'reply', `${author.trim()} yorumunuza yanıt verdi.`, window.location.pathname).catch(() => undefined);
       setMessage('');
       setReplyTarget(null);
-      setNotice('Yorumunuz yayınlandı.');
+      setNotice(user ? 'Yorumunuz yayınlandı.' : 'Yorumunuz yönetici onayına gönderildi.');
     } catch { setNotice('İşlem tamamlanamadı. Lütfen tekrar deneyin.'); }
     finally { setBusy(false); }
   }
@@ -160,16 +156,14 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     </div>
 
     <nav className="flex flex-wrap items-center gap-1 border-b border-white/10 bg-black/15 px-4 py-2" aria-label="Konu işlemleri">
-      {user ? <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button> : <Link href="/giris" className={actionClass}>♡ Beğen <span className="ml-1 text-slate-500">{likes}</span></Link>}
+      <button type="button" onClick={likeAndBump} disabled={busy || liked} aria-pressed={liked} className={`${actionClass} disabled:text-rose-400`}>{liked ? '♥ Beğenildi' : '♡ Beğen'} <span className="ml-1 text-slate-500">{likes}</span></button>
       <button type="button" onClick={copyLink} className={actionClass}>Kopyala</button>
       <button type="button" onClick={() => void toggleBookmark()} className={actionClass}>{bookmarked ? '★ Kaydedildi' : '☆ Kaydet'}</button>
       <button type="button" onClick={shareContent} className={actionClass}>↗ Paylaş</button>
-      {user ? <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button> : <Link href="/giris" className={actionClass}>✎ Yorum yap</Link>}
-      {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then(() => setNotice('Konu aboneliklerinize eklendi.')).catch(() => setNotice('Konu zaten takip listenizde.'))} className={actionClass}>⌁ Takip et</button> : <Link href="/giris" className={actionClass}>⌁ Takip et</Link>}
+      <button type="button" onClick={() => document.getElementById(`comment-${targetId}`)?.focus()} className={actionClass}>✎ Yorum yap</button>
+      {user ? <button type="button" onClick={() => followContent(db!, user.uid, service, title, window.location.pathname).then((created) => setNotice(created ? 'Konu aboneliklerinize eklendi.' : 'Bu konuyu zaten takip ediyorsunuz.')).catch(() => setNotice('Takip kaydı oluşturulamadı.'))} className={actionClass}>⌁ Takip et</button> : <Link href="/giris" className={actionClass}>⌁ Takip et</Link>}
       <span className="ml-auto hidden text-[11px] font-bold text-slate-600 sm:inline">Beğeniler konuyu üste çıkarır</span>
     </nav>
-
-    {likers.length > 0 && <div className="border-b border-white/10 px-5 py-3 text-xs text-slate-400 sm:px-6"><strong className="text-slate-300">Beğenenler:</strong> {likers.slice(0, 12).join(', ')}{likers.length > 12 ? ` ve ${likers.length - 12} kişi daha` : ''}</div>}
 
     <div className="space-y-3 p-5 sm:p-6">
       <h3 className="text-sm font-black text-white">Yorumlar ({comments.length})</h3>
@@ -180,14 +174,14 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       </article>) : <p className="rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">İlk yorumu siz yazın.</p>}
     </div>
 
-    {!user ? <div className="border-t border-white/10 bg-black/10 p-5 text-center"><p className="text-sm font-bold text-slate-300">Yorum yapmak veya alıntılamak için üye hesabınızı kullanın.</p><div className="mt-4 flex justify-center gap-2"><Link href="/giris" className="focus-ring rounded-lg bg-rose-600 px-4 py-2 text-xs font-black text-white">Giriş yap</Link><Link href="/kayit" className="focus-ring rounded-lg border border-white/15 px-4 py-2 text-xs font-black text-slate-200">Üye ol</Link></div></div> : null}
+    {!user ? <div className="border-t border-white/10 bg-black/10 p-5 text-center"><p className="text-sm font-bold text-slate-300">Misafir yorumları yönetici onayından sonra görünür. Üyeler ise doğrudan paylaşabilir.</p><div className="mt-4 flex justify-center gap-2"><Link href="/giris" className="focus-ring rounded-lg bg-rose-600 px-4 py-2 text-xs font-black text-white">Giriş yap</Link><Link href="/kayit" className="focus-ring rounded-lg border border-white/15 px-4 py-2 text-xs font-black text-slate-200">Üye ol</Link></div></div> : null}
 
-    {user ? <form onSubmit={submit} className="border-t border-white/10 bg-black/10 p-6 sm:p-8">
-      <h3 className="text-lg font-black">Yorum ekle</h3><p className="mt-2 text-xs text-slate-500">Üye yorumunuz doğrudan yayınlanır.</p>
+    <form onSubmit={submit} className="border-t border-white/10 bg-black/10 p-6 sm:p-8">
+      <h3 className="text-lg font-black">Yorum ekle</h3><p className="mt-2 text-xs text-slate-500">{user ? 'Üye yorumunuz doğrudan yayınlanır.' : 'Misafir yorumunuz yönetici onayına gönderilir.'}</p>
       <label className="mt-5 block text-xs font-bold text-slate-300">Adınız<input required minLength={2} maxLength={40} value={author} onChange={(event) => setAuthor(event.target.value)} className="mt-2 min-h-11 w-full rounded-xl border border-white/10 bg-[#090b10] px-4 text-sm text-white outline-none focus:border-rose-400" /></label>
       <label className="mt-4 block text-xs font-bold text-slate-300">Yorumunuz<textarea id={`comment-${targetId}`} required minLength={3} maxLength={600} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-[#090b10] p-4 text-sm text-white outline-none focus:border-rose-400" /></label>
       <div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => { setMessage(''); setReplyTarget(null); }} className="focus-ring min-h-10 rounded-lg border border-white/10 px-4 text-xs font-bold text-slate-400">Temizle</button><button disabled={busy} className="focus-ring min-h-10 rounded-lg bg-rose-600 px-5 text-xs font-black text-white disabled:opacity-60">{busy ? 'Kaydediliyor…' : 'Yorumu gönder'}</button></div>
-    </form> : null}
+    </form>
     {notice ? <p aria-live="polite" className="border-t border-white/10 px-5 py-3 text-xs text-rose-200">{notice}</p> : null}
     {editingComment ? <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4"><section className="w-full max-w-lg rounded-2xl border border-white/15 bg-[#11131b] p-6" role="dialog" aria-modal="true" aria-label="Yorum düzenle"><h3 className="text-lg font-black text-white">Yorumu düzenle</h3><textarea value={editCommentText} onChange={(event) => setEditCommentText(event.target.value)} maxLength={600} rows={6} className="mt-4 w-full rounded-xl border border-white/10 bg-[#090b10] p-4 text-sm text-white outline-none focus:border-rose-400" /><div className="mt-4 flex justify-end gap-2"><button type="button" onClick={() => setEditingComment(null)} className="rounded-lg border border-white/10 px-4 py-2 text-xs font-bold text-slate-300">Vazgeç</button><button type="button" onClick={() => void saveCommentEdit()} className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-black text-white">Kaydet</button></div></section></div> : null}
   </section>;

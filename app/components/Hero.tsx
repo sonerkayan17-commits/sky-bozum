@@ -39,7 +39,7 @@ export default function Hero() {
 
           <div className="hero-pro-actions">
             <a href={settings.whatsapp} target="_blank" rel="noopener noreferrer" className="hero-pro-primary">{settings.heroPrimaryCta} <span>→</span></a>
-            <Link href="/araclar#hesapla" className="hero-pro-secondary">Oran hesaplayın</Link>
+            <Link href="/araclar#oran-hesapla" className="hero-pro-secondary">Oran hesaplayın</Link>
           </div>
 
           <div className="hero-pro-trust" aria-label="Hizmet avantajları">

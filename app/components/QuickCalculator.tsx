@@ -159,7 +159,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
               </div>
 
               <a
-                href={`${siteConfig.whatsapp}?text=${message}`}
+                href={`${siteConfig.whatsapp.split('?')[0]}?text=${message}`}
                 target="_blank"
                 rel="noreferrer"
                 className="relative mt-3 flex min-h-[48px] w-full items-center justify-center gap-2 overflow-hidden rounded-[14px] bg-[linear-gradient(100deg,#f4ae24_0%,#ffd44f_52%,#f2b62d_100%)] px-4 text-[13px] font-black text-[#17120a] shadow-[0_12px_28px_rgba(245,190,54,.16),inset_0_1px_0_rgba(255,255,255,.38)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f3bf31]/25"
