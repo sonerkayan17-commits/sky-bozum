@@ -67,7 +67,7 @@ export default function Page() {
             <div><span>03</span><b>Yönünü bul</b><small>Doğru işlem adımı</small></div>
           </div>
         </div>
-        <div className="tc2-featured-calculator">
+        <div id="oran-hesapla" className="tc2-featured-calculator scroll-mt-24">
           <div className="tc2-panel-heading"><span className="tc2-panel-icon">+</span><h2>Mobil ödeme hesaplama</h2></div>
           <Calculator embedded />
         </div>
