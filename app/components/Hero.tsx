@@ -33,9 +33,9 @@ export default function Hero() {
 
       <div className="content-shell hero-pro-shell">
         <div className="hero-pro-copy">
-          <p className="hero-pro-eyebrow"><span /> <InlineEditableText contentKey="home.hero.eyebrow" defaultValue={settings.heroEyebrow} /></p>
           <InlineEditableText contentKey="home.hero.title" defaultValue={settings.heroTitle} as="h1" id="hero-title" multiline />
           <InlineEditableText contentKey="home.hero.lead" defaultValue={settings.heroLead} as="p" className="hero-pro-lead" multiline />
+          <p className="hero-pro-assurance">10 yıllık kurucu deneyimi ve 7/24 yazılı destek.</p>
 
           <div className="hero-pro-actions">
             <a href={settings.whatsapp} target="_blank" rel="noopener noreferrer" className="hero-pro-primary">{settings.heroPrimaryCta} <span>→</span></a>
