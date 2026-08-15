@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   addPathSignal,
+  clearRecentPaths,
   CONSENT_STORAGE_KEY,
   createVisitorProfile,
   parseVisitorProfile,
@@ -23,6 +24,7 @@ type VisitorExperienceContextValue = {
   openPreferences: () => void;
   closePreferences: () => void;
   resetProfile: () => void;
+  clearRecentHistory: () => void;
 };
 
 const VisitorExperienceContext = createContext<VisitorExperienceContextValue | null>(null);
@@ -103,6 +105,16 @@ export default function VisitorExperienceProvider({ children }: { children: Reac
     setProfile(next);
   }, [consent]);
 
+  const clearRecentHistory = useCallback(() => {
+    if (consent !== 'accepted') return;
+    setProfile((current) => {
+      if (!current) return current;
+      const next = clearRecentPaths(current);
+      writeStorage(PROFILE_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, [consent]);
+
   const value = useMemo<VisitorExperienceContextValue>(() => ({
     consent,
     profile,
@@ -112,7 +124,8 @@ export default function VisitorExperienceProvider({ children }: { children: Reac
     openPreferences: () => setPreferencesOpen(true),
     closePreferences: () => setPreferencesOpen(false),
     resetProfile,
-  }), [acceptPersonalization, consent, preferencesOpen, profile, rejectPersonalization, resetProfile]);
+    clearRecentHistory,
+  }), [acceptPersonalization, clearRecentHistory, consent, preferencesOpen, profile, rejectPersonalization, resetProfile]);
 
   return (
     <VisitorExperienceContext.Provider value={value}>

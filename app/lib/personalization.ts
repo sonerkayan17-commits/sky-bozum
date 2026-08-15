@@ -100,6 +100,15 @@ export function addPathSignal(profile: VisitorProfile, pathname: string, now = D
   };
 }
 
+export function clearRecentPaths(profile: VisitorProfile, now = Date.now()): VisitorProfile {
+  return {
+    ...profile,
+    recentPaths: [],
+    lastSeenAt: now,
+    expiresAt: now + PROFILE_LIFETIME_MS,
+  };
+}
+
 export function getTopInterest(profile: VisitorProfile | null): InterestKey | null {
   if (!profile) return null;
   const ranked = Object.entries(profile.interests) as Array<[InterestKey, number]>;

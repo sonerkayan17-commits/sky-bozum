@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { featuredSearchItems, searchContent, searchItems, type SearchItem } from '../lib/search';
+import { useVisitorExperience } from './personalization/VisitorExperienceProvider';
 
 type Props = { mode?: 'desktop' | 'mobile'; onNavigate?: () => void; autoFocus?: boolean };
 
@@ -24,6 +26,13 @@ const typeStyles: Record<SearchItem['type'], string> = {
   Sayfa: 'border-violet-300/20 bg-violet-300/10 text-violet-200',
 };
 
+const quickSearchItems: SearchItem[] = [
+  { title: 'Oran hesapla', description: 'İşlem tutarını ve tahmini sonucu hızlıca hesaplayın.', href: '/araclar#oran-hesapla', type: 'Araç', keywords: ['oran', 'hesapla', 'hesap makinesi'] },
+  { title: 'Tüm hizmetler', description: 'Mobil ödeme, dijital kod ve cüzdan seçeneklerini inceleyin.', href: '/hizmetler', type: 'Sayfa', keywords: ['hizmet', 'bozum'] },
+  { title: 'Güvenlik kontrolü', description: 'İşlem öncesi resmi kanalları ve güvenlik notlarını kontrol edin.', href: '/guven-merkezi', type: 'Sayfa', keywords: ['güven', 'dolandırıcılık', 'kontrol'] },
+  { title: 'Destek ve iletişim', description: 'Resmi iletişim kanallarına ve destek seçeneklerine ulaşın.', href: '/iletisim', type: 'Sayfa', keywords: ['destek', 'iletişim', 'yardım'] },
+];
+
 function dynamicSearch(items: SearchItem[], query: string, limit = 14) {
   const normalized = query.trim().toLocaleLowerCase('tr-TR');
   const tokens = normalized.split(/\s+/).filter(Boolean);
@@ -40,6 +49,8 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [managedArticles, setManagedArticles] = useState<SearchItem[] | null>(null);
+  const pathname = usePathname();
+  const { consent, profile, clearRecentHistory } = useVisitorExperience();
   useEffect(() => {
     let alive = true;
     fetch('/api/search').then((response) => response.ok ? response.json() : []).then((items: SearchItem[]) => {
@@ -52,16 +63,44 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
     const managedHrefs = new Set(managedArticles.map((item) => item.href));
     return [...searchItems.filter((item) => item.type !== 'Makale' || !managedHrefs.has(item.href)), ...managedArticles];
   }, [managedArticles]);
+  const recentItems = useMemo(() => {
+    if (consent !== 'accepted' || !profile?.recentPaths.length) return [];
+    const itemByHref = new Map(availableItems.map((item) => [item.href, item]));
+    return profile.recentPaths
+      .filter((href) => href !== pathname)
+      .map((href) => itemByHref.get(href))
+      .filter((item): item is SearchItem => Boolean(item));
+  }, [availableItems, consent, pathname, profile]);
+  const defaultResults = useMemo(() => {
+    const seen = new Set<string>();
+    return [...recentItems, ...quickSearchItems, ...featuredSearchItems].filter((item) => {
+      if (seen.has(item.href)) return false;
+      seen.add(item.href);
+      return true;
+    });
+  }, [recentItems]);
+  const hasQuery = Boolean(query.trim());
   const results = useMemo<SearchItem[]>(
-    () => query.trim() ? (managedArticles ? dynamicSearch(availableItems, query, 14) : searchContent(query, 14)) : featuredSearchItems,
-    [availableItems, managedArticles, query],
+    () => hasQuery ? (managedArticles ? dynamicSearch(availableItems, query, 14) : searchContent(query, 14)) : defaultResults,
+    [availableItems, defaultResults, hasQuery, managedArticles, query],
   );
-  const groups = useMemo<SearchGroup[]>(() => groupOrder.map((type) => ({
-    label: groupLabels[type],
-    items: results
-      .map((item, index) => ({ item, index }))
-      .filter(({ item }) => item.type === type),
-  })).filter((group) => group.items.length), [results]);
+  const groups = useMemo<SearchGroup[]>(() => {
+    const toGroup = (label: string, items: SearchItem[]) => ({
+      label,
+      items: items
+        .map((item) => ({ item, index: results.indexOf(item) }))
+        .filter(({ index }) => index >= 0),
+    });
+    if (!hasQuery) {
+      const highlightedItems = featuredSearchItems.filter((item) => !recentItems.some((recent) => recent.href === item.href) && !quickSearchItems.some((quick) => quick.href === item.href));
+      return [
+        toGroup('Kaldığınız yerden devam edin', recentItems),
+        toGroup('Hızlı işlemler', quickSearchItems),
+        toGroup('Öne çıkan rehberler', highlightedItems),
+      ].filter((group) => group.items.length);
+    }
+    return groupOrder.map((type) => toGroup(groupLabels[type], results.filter((item) => item.type === type))).filter((group) => group.items.length);
+  }, [hasQuery, recentItems, results]);
   const router = useRouter();
   const root = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -146,8 +185,6 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
     }
   }
 
-  const hasQuery = Boolean(query.trim());
-
   return (
     <div ref={root} className={`site-search-root ${mode === 'desktop' ? 'site-search-root--desktop hidden lg:block' : 'site-search-root--mobile block w-full'}`}>
       <label className="relative block">
@@ -190,17 +227,22 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
         <div
           id={listId}
           role="listbox"
-          aria-label={hasQuery ? 'Arama sonuçları' : 'Popüler aramalar'}
+          aria-label={hasQuery ? 'Arama sonuçları' : 'Hızlı erişim ve son bakılanlar'}
           className={`z-[60] max-h-[min(560px,68dvh)] overflow-y-auto rounded-2xl border border-white/10 bg-[#10131a]/[.98] p-2 shadow-2xl shadow-black/60 backdrop-blur-2xl ${mode === 'desktop' ? 'absolute left-1/2 top-[calc(100%+10px)] w-[min(680px,calc(100vw-32px))] -translate-x-1/2' : 'relative mt-2'}`}
         >
           <div className="flex items-center justify-between gap-4 px-3 pb-2 pt-1">
-            <p className="text-[10px] font-black uppercase tracking-[.18em] text-slate-500">{hasQuery ? `“${query.trim()}” için sonuçlar` : 'Popüler ve hızlı erişim'}</p>
-            {!hasQuery && <span className="text-[10px] font-bold text-slate-600">Yazmaya başlayın</span>}
+            <p className="text-[10px] font-black uppercase tracking-[.18em] text-slate-500">{hasQuery ? `“${query.trim()}” için sonuçlar` : 'Hızlı erişim ve rehberler'}</p>
+            {!hasQuery && <span className="text-[10px] font-bold text-slate-600">{recentItems.length ? 'Bu cihazda kaydedilir' : 'Yazmaya başlayın'}</span>}
           </div>
 
           {results.length ? groups.map((group) => (
             <section key={group.label} className="mb-1 last:mb-0" aria-label={group.label}>
-              <p className="px-3 pb-1 pt-2 text-[10px] font-black uppercase tracking-[.16em] text-slate-600">{group.label}</p>
+              <div className="flex items-center justify-between gap-3 px-3 pb-1 pt-2">
+                <p className="text-[10px] font-black uppercase tracking-[.16em] text-slate-600">{group.label}</p>
+                {!hasQuery && group.label === 'Kaldığınız yerden devam edin' && (
+                  <button type="button" onClick={clearRecentHistory} className="focus-ring rounded-md px-1.5 py-1 text-[10px] font-black text-slate-500 transition hover:bg-white/[.06] hover:text-rose-200">Geçmişi temizle</button>
+                )}
+              </div>
               {group.items.map(({ item, index }) => (
                 <Link
                   ref={(node) => { optionRefs.current[index] = node; }}
