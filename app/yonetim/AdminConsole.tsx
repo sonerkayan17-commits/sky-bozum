@@ -23,7 +23,7 @@ import ArticleCoverField from "./ArticleCoverField";
 import ReleaseReadinessPanel from "./ReleaseReadinessPanel";
 import AdminBackupPanel from "./AdminBackupPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
-import { articles } from "../lib/site";
+import type { ArticleItem } from "../lib/site";
 import {
   removeManagedArticle,
   saveManagedArticle,
@@ -117,10 +117,10 @@ function auditActionLabel(action: string) {
   return 'Yönetim kaydı güncellendi';
 }
 
-function auditTargetLabel(event: ContentAuditEvent, managedArticles: ManagedArticleRecord[], members: AdminMember[]) {
+function auditTargetLabel(event: ContentAuditEvent, managedArticles: ManagedArticleRecord[], baseArticles: ArticleItem[], members: AdminMember[]) {
   const member = members.find((item) => item.id === event.articleSlug);
   if (member) return member.displayName;
-  const article = [...managedArticles, ...articles].find((item) => item.slug === event.articleSlug);
+  const article = [...managedArticles, ...baseArticles].find((item) => item.slug === event.articleSlug);
   if (article) return article.title;
   if (event.targetLabel) return event.targetLabel;
   if (event.contentKey) {
@@ -184,6 +184,7 @@ export default function AdminConsole({
   const [memberStatusFilter, setMemberStatusFilter] = useState<"all" | AdminMember["status"]>("all");
   const [commentStatusFilter, setCommentStatusFilter] = useState<"all" | AdminComment["status"]>("all");
   const [managedArticles, setManagedArticles] = useState<ManagedArticleRecord[]>([]);
+  const [baseArticles, setBaseArticles] = useState<ArticleItem[]>([]);
   const [contentQuery, setContentQuery] = useState("");
   const [contentStatus, setContentStatus] = useState<"all" | ContentArticleDraft["status"]>("all");
   const [auditFilter, setAuditFilter] = useState<AuditFilter>('all');
@@ -207,10 +208,10 @@ export default function AdminConsole({
     return contentAudit.filter((event) => {
       if (auditFilter !== 'all' && auditCategory(event.action) !== auditFilter) return false;
       if (!term) return true;
-      return [auditTargetLabel(event, managedArticles, members), auditActionLabel(event.action), auditActorLabel(event.actorId, members, user?.uid || '')]
+      return [auditTargetLabel(event, managedArticles, baseArticles, members), auditActionLabel(event.action), auditActorLabel(event.actorId, members, user?.uid || '')]
         .some((value) => value.toLocaleLowerCase('tr-TR').includes(term));
     });
-  }, [auditFilter, auditQuery, contentAudit, managedArticles, members, user?.uid]);
+  }, [auditFilter, auditQuery, baseArticles, contentAudit, managedArticles, members, user?.uid]);
   const visibleMemberLedger = useMemo(() => {
     const term = auditQuery.trim().toLocaleLowerCase('tr-TR');
     if (!term) return memberLedger;
@@ -301,6 +302,17 @@ export default function AdminConsole({
     );
   }, [db, isAdmin]);
 
+  useEffect(() => {
+    if (!isAdmin || baseArticles.length) return;
+    let active = true;
+    void import("../lib/site").then(({ articles: nextArticles }) => {
+      if (active) setBaseArticles(nextArticles);
+    });
+    return () => {
+      active = false;
+    };
+  }, [baseArticles.length, isAdmin]);
+
   const pendingComments = useMemo(
     () => comments.filter((comment) => comment.status === "pending"),
     [comments],
@@ -325,9 +337,9 @@ export default function AdminConsole({
   const customArticles = useMemo(
     () =>
       managedArticles.filter(
-        (article) => !articles.some((siteArticle) => siteArticle.slug === article.slug),
+        (article) => !baseArticles.some((siteArticle) => siteArticle.slug === article.slug),
       ),
-    [managedArticles],
+    [baseArticles, managedArticles],
   );
 
   const contentMatches = (article: Pick<ContentArticleDraft, "title" | "excerpt" | "category" | "status">) => {
@@ -558,7 +570,7 @@ export default function AdminConsole({
             </div>
             <section className="admin-activity" aria-label="İçerik işlem geçmişi">
               <div><span>İÇERİK HAREKETLERİ</span><h3>Son yayın kararları</h3></div>
-              {contentAudit.length === 0 ? <p>Henüz içerik işlemi kaydı yok.</p> : <ol>{contentAudit.map((event) => <li key={event.id}><b>{auditTargetLabel(event, managedArticles, members)}</b><span>{auditActionLabel(event.action)}</span><small>{formatDate(event.createdAt)}</small></li>)}</ol>}
+              {contentAudit.length === 0 ? <p>Henüz içerik işlemi kaydı yok.</p> : <ol>{contentAudit.map((event) => <li key={event.id}><b>{auditTargetLabel(event, managedArticles, baseArticles, members)}</b><span>{auditActionLabel(event.action)}</span><small>{formatDate(event.createdAt)}</small></li>)}</ol>}
               <button onClick={() => setView("content")}>İçerik merkezine git →</button>
             </section>
           </section>
@@ -603,10 +615,10 @@ export default function AdminConsole({
                 <option value="draft">Taslak</option>
                 <option value="archived">Arşiv</option>
               </select>
-              <span>{articles.length + customArticles.length} içerik kaydı</span>
+              <span>{baseArticles.length + customArticles.length} içerik kaydı</span>
             </div>
             <div className="admin-content-list">
-              {articles.filter((article) => {
+              {baseArticles.filter((article) => {
                 const managed = managedArticles.find((entry) => entry.slug === article.slug);
                 return contentMatches({ title: article.title, excerpt: article.excerpt, category: article.category, status: managed?.status || "published" });
               }).map((article) => (
@@ -961,7 +973,7 @@ export default function AdminConsole({
               <section>
                 <header><h3>İçerik geçmişi</h3><span>{visibleContentAudit.length}/{contentAudit.length} kayıt</span></header>
                 <div className="admin-audit-list">
-                  {visibleContentAudit.length ? visibleContentAudit.map((event) => <article key={event.id}><div><strong>{auditTargetLabel(event, managedArticles, members)}</strong><span>{auditActionLabel(event.action)}</span></div><small>{formatDate(event.createdAt)}</small><code>{auditActorLabel(event.actorId, members, user.uid)}</code></article>) : <p className="admin-empty">Bu filtreyle eşleşen içerik hareketi bulunmuyor.</p>}
+                  {visibleContentAudit.length ? visibleContentAudit.map((event) => <article key={event.id}><div><strong>{auditTargetLabel(event, managedArticles, baseArticles, members)}</strong><span>{auditActionLabel(event.action)}</span></div><small>{formatDate(event.createdAt)}</small><code>{auditActorLabel(event.actorId, members, user.uid)}</code></article>) : <p className="admin-empty">Bu filtreyle eşleşen içerik hareketi bulunmuyor.</p>}
                 </div>
               </section>
               <section>

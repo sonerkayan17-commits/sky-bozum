@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { siteConfig } from '../lib/site';
 import { useSiteSettings } from './SiteSettingsProvider';
 import { InlineEditableImage, InlineEditableText } from './admin/SiteInlineEditor';
 import usePublishedRates from './personalization/usePublishedRates';
@@ -98,7 +97,7 @@ export default function Hero() {
                 <div><i>3</i><span><b>Ödemenizi alın</b><small>Kontrol sonrası aktarım</small></span></div>
               </div>
 
-              <a href={siteConfig.liveSupportHref} target="_blank" rel="noopener noreferrer" className="hero-pro-phone-cta">İşleme başlayın <span>→</span></a>
+              <a href={settings.whatsapp} target="_blank" rel="noopener noreferrer" className="hero-pro-phone-cta">İşleme başlayın <span>→</span></a>
               <div className="hero-pro-homebar" aria-hidden="true" />
             </div>
           </div>

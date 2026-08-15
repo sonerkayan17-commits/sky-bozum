@@ -1,5 +1,7 @@
 "use client";
 
+// performance-audit: allow-dynamic-img — yönetici tarafından değiştirilen HTTPS ve site içi görsel URL'leri sabit alan adı listesine sığmaz.
+
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import { addDoc, collection, doc, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { usePathname } from 'next/navigation';

@@ -14,6 +14,7 @@ const visualMap: Record<string, ArticleVisualMeta> = {
   'pokus-limit-bakiye-farki': { family: 'wallet', label: 'Pokus Kontrol', accent: '#ff7a1a', priority: true },
   'mobil-odeme-limiti-var-islem-reddediliyor': { family: 'operator', label: 'Hata Çözümü', accent: '#ef4765', priority: true },
   'razer-gold-kodu-calismiyor': { family: 'digital-code', label: 'Kod Kontrolü', accent: '#44d62c', priority: true },
+  'apple-gift-card-nedir': { family: 'digital-code', label: 'Apple Gift Card', accent: '#64748b', priority: true },
   'vodafone-mobil-odeme-nedir': { family: 'operator', label: 'Vodafone', accent: '#e60000', priority: true },
   'turkcell-mobil-odeme-nasil-kullanilir': { family: 'operator', label: 'Turkcell', accent: '#ffc900', priority: true },
   'turk-telekom-mobil-odeme-rehberi': { family: 'operator', label: 'Türk Telekom', accent: '#00a7e8', priority: true },

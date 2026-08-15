@@ -16,12 +16,12 @@ const serviceGuideSelections = [
   {
     slug: 'vodafone-mobil-odeme-nedir',
     displayTitle: 'Vodafone Mobil Ödeme Nedir?',
-    cover: '/images/hizmetler/rehber-vitrini/vodafone-mobil-odeme.webp',
+    cover: '/images/bilgi-merkezi/premium-reference-v1/vodafone-mobil-odeme-nedir/vodafone-mobil-odeme-nedir-cover.webp',
   },
   {
     slug: 'mobil-odeme-guvenli-mi',
     displayTitle: 'Mobil Ödeme Güvenli mi?',
-    cover: '/images/hizmetler/rehber-vitrini/mobil-odeme-guvenli.webp',
+    cover: '/images/bilgi-merkezi/premium-reference-v1/mobil-odeme-guvenli-mi/mobil-odeme-guvenli-mi-cover.webp',
   },
   {
     slug: 'razer-gold-kodu-nasil-satilir',
@@ -41,7 +41,7 @@ const serviceGuideSelections = [
   {
     slug: 'turkcell-mobil-odeme-nasil-kullanilir',
     displayTitle: 'Turkcell Mobil Ödeme Nasıl Kullanılır?',
-    cover: '/images/hizmetler/rehber-vitrini/turkcell-mobil-odeme.webp',
+    cover: '/images/bilgi-merkezi/premium-reference-v1/turkcell-mobil-odeme-nasil-kullanilir/turkcell-mobil-odeme-nasil-kullanilir-cover.webp',
   },
 ] as const;
 

@@ -442,12 +442,12 @@ export default function SkyReferencesSection({ references }: Props) {
     if (!showAll || archivePageCount <= 1 || archiveAutoPaused) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const timer = window.setInterval(() => {
+    const timer = window.setTimeout(() => {
       setArchivePage((page) => (page >= archivePageCount ? 1 : page + 1));
     }, ARCHIVE_AUTO_ADVANCE_MS);
 
-    return () => window.clearInterval(timer);
-  }, [archiveAutoPaused, archivePageCount, showAll]);
+    return () => window.clearTimeout(timer);
+  }, [archiveAutoPaused, archivePageCount, archivePage, showAll]);
 
   function selectArchivePage(page: number) {
     setArchivePage(Math.min(Math.max(page, 1), archivePageCount));

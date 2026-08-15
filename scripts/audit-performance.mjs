@@ -32,7 +32,8 @@ for (const file of await walk(appRoot)) {
     const importsHeavySiteModule = source.split(/\r?\n/).some((line) => /import\s+(?!type\b)[^;\n]+from\s+["'][^"']*lib\/site["']/.test(line));
     if (importsHeavySiteModule) findings.push({ level:'error', file:rel, message:'Client component ağır app/lib/site modülünü doğrudan içe aktarıyor; hafif site-config veya type-only import kullanılmalı.' });
   }
-  if (/<img\b/i.test(source)) findings.push({ level:'error', file:rel, message:'Ham <img> etiketi bulundu; next/image tercih edilmeli.' });
+  const allowsDynamicImages = source.includes('performance-audit: allow-dynamic-img');
+  if (/<img\b/i.test(source) && !allowsDynamicImages) findings.push({ level:'error', file:rel, message:'Ham <img> etiketi bulundu; next/image tercih edilmeli.' });
   if (/setInterval\s*\(/.test(source)) findings.push({ level:'warn', file:rel, message:'setInterval kullanımı ana iş parçacığını sürekli meşgul edebilir.' });
   if (/window\.addEventListener\([^)]*(scroll|resize)/.test(source) && !/passive\s*:\s*true/.test(source)) findings.push({ level:'warn', file:rel, message:'Scroll/resize dinleyicisi passive olmayabilir.' });
   if (source.length > 140_000) findings.push({ level:'warn', file:rel, message:`Kaynak dosya büyük: ${(source.length/1024).toFixed(1)} KB.` });

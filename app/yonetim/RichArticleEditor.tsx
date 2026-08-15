@@ -1,4 +1,5 @@
 'use client';
+// performance-audit: allow-dynamic-img — zengin metin editörü, yayın sırasında güvenli hâle getirilen kullanıcı görsel HTML'ini üretir.
 import{useEffect,useRef,useState,type ChangeEvent}from'react';import'./editor-v2.css';
 type Props={value:string;onChange:(value:string)=>void;placeholder?:string;rows?:number};
 const allowedTags=new Set(['P','DIV','BR','SPAN','FONT','STRONG','B','EM','I','U','S','H1','H2','H3','UL','OL','LI','BLOCKQUOTE','A','IMG']);const safeFonts=new Set(['Arial','Georgia','Tahoma','Trebuchet MS','Verdana']);const safeSizes=new Set(['6px','10px','12px','18px','24px','36px']);

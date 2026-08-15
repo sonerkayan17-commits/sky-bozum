@@ -14,15 +14,15 @@ function walk(dir) {
 
 const sourceFiles = walk(path.join(root, 'app')).filter((file) => sourceExtensions.has(path.extname(file)));
 const componentFiles = walk(componentsDir).filter((file) => sourceExtensions.has(path.extname(file)));
-const allSource = sourceFiles.map((file) => fs.readFileSync(file, 'utf8')).join('\n');
 const unused = [];
 
 for (const file of componentFiles) {
   const name = path.basename(file, path.extname(file));
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const references = allSource.match(new RegExp(`\\b${escaped}\\b`, 'g'))?.length ?? 0;
-  // Bir eşleşme bileşenin kendi bildirimi/import adı olabilir; gerçek kullanım için en az iki gerekir.
-  if (references < 2) unused.push(path.relative(root, file));
+  const referencedElsewhere = sourceFiles
+    .filter((sourceFile) => sourceFile !== file)
+    .some((sourceFile) => new RegExp(`\\b${escaped}\\b`).test(fs.readFileSync(sourceFile, 'utf8')));
+  if (!referencedElsewhere) unused.push(path.relative(root, file));
 }
 
 if (unused.length) {

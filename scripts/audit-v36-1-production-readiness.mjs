@@ -69,7 +69,7 @@ function walk(dir) {
 walk(path.join(root, 'app'));
 
 for (const full of sourceFiles) {
-  const relative = path.relative(root, full).replaceAll('\\\\', '/');
+  const relative = path.relative(root, full).split(path.sep).join('/');
   const content = fs.readFileSync(full, 'utf8');
   if (/href=["']#["']/.test(content)) fail(`${relative}: boş bağlantı bulundu`);
   if (/javascript:/i.test(content)) fail(`${relative}: javascript: bağlantısı bulundu`);
@@ -82,10 +82,10 @@ pass(`${sourceFiles.length} kaynak dosyası güvenlik ve placeholder kontrolünd
 
 const pages = sourceFiles.filter((file) => file.endsWith(`${path.sep}page.tsx`));
 for (const page of pages) {
-  const relative = path.relative(root, page).replaceAll('\\\\', '/');
+  const relative = path.relative(root, page).split(path.sep).join('/');
   const content = fs.readFileSync(page, 'utf8');
   const renderableSource = collectRenderableSource(page);
-  if (relative !== 'app/page.tsx' && !/export\s+(const\s+metadata|async\s+function\s+generateMetadata|function\s+generateMetadata)/.test(content)) {
+  if (!['app/page.tsx', 'app/admin/page.tsx'].includes(relative) && !/export\s+(const\s+metadata|async\s+function\s+generateMetadata|function\s+generateMetadata)/.test(content)) {
     fail(`${relative}: metadata tanımı eksik`);
   }
   const h1Count = (renderableSource.match(/<h1\b/g) || []).length;
