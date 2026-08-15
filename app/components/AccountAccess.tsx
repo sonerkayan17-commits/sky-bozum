@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   sendEmailVerification,
   sendPasswordResetEmail,
+  signOut,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
@@ -25,6 +26,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get('ref');
@@ -39,9 +41,11 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     const referredBy = referralCode ? await findReferrerId(db, referralCode) : null;
     const ownReferralCode = getReferralCode(user.uid);
     const memberRef = doc(db, 'members', user.uid);
-    if ((await getDoc(memberRef)).exists()) return;
-    await setDoc(memberRef, {
-      displayName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
+    const memberSnapshot = await getDoc(memberRef);
+    const memberName = displayName.trim() || user.displayName || 'Sky Bozum üyesi';
+    const isNewMember = !memberSnapshot.exists();
+    if (isNewMember) await setDoc(memberRef, {
+      displayName: memberName,
       avatar: '',
       phone: phoneNumber.trim(),
       email: user.email || email.trim(),
@@ -54,17 +58,18 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       referredBy,
       createdAt: serverTimestamp(),
     });
-    await setDoc(doc(db, 'publicProfiles', user.uid), {
+    const profileRef = doc(db, 'publicProfiles', user.uid);
+    if (!(await getDoc(profileRef)).exists()) await setDoc(profileRef, {
       avatar: '',
       referralCode: ownReferralCode,
-      displayName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
+      displayName: memberName,
       createdAt: serverTimestamp(),
     });
-    if (referredBy) {
+    if (isNewMember && referredBy) {
       await setDoc(doc(db, 'referralRelations', user.uid), {
         referrerId: referredBy,
         refereeId: user.uid,
-        refereeName: displayName.trim() || user.displayName || 'Sky Bozum üyesi',
+        refereeName: memberName,
         referralCode,
         createdAt: serverTimestamp(),
       });
@@ -74,14 +79,24 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy) return;
     setError(''); setStatus('');
     const { auth } = getFirebaseClient();
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı. Sayfayı yenileyin.'); return; }
     auth.languageCode = 'tr';
+    setBusy(true);
 
     try {
       if (mode === 'login') {
-        await signInWithEmailAndPassword(auth, email.trim(), password);
+        const result = await signInWithEmailAndPassword(auth, email.trim(), password);
+        await result.user.reload();
+        if (!result.user.emailVerified) {
+          await sendEmailVerification(result.user).catch(() => undefined);
+          await signOut(auth);
+          setStatus('E-posta doğrulamanız bekleniyor. Gelen kutunuzu kontrol edin; yeni doğrulama bağlantısı da gönderildi.');
+          return;
+        }
+        await saveMember(result.user, result.user.displayName || email.trim().split('@')[0]);
         window.location.assign('/bilgi-merkezi');
         return;
       }
@@ -90,35 +105,42 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       await updateProfile(result.user, { displayName: name.trim() });
       await saveMember(result.user, name, phone);
       await sendEmailVerification(result.user);
-      setStatus('Kaydınız alındı. E-posta adresinize doğrulama bağlantısı gönderdik; hesabınızı bu bağlantıyla onaylayın. Telefonunuza kod gönderilmez.');
+      await signOut(auth);
+      setStatus('Kaydınız alındı. E-posta adresinize doğrulama bağlantısı gönderdik. Bağlantıyı onayladıktan sonra giriş yapabilirsiniz; telefonunuza kod gönderilmez.');
       setName(''); setPhone(''); setEmail(''); setPassword('');
     } catch (nextError) {
       const code = typeof nextError === 'object' && nextError && 'code' in nextError ? String(nextError.code) : '';
-      setError(code.includes('email-already-in-use') ? 'Bu e-posta ile kayıtlı bir hesap var.' : code.includes('weak-password') ? 'Parola en az 6 karakter olmalı.' : 'İşlem tamamlanamadı. Bilgileri kontrol edip tekrar deneyin.');
-    }
+      setError(code.includes('email-already-in-use') ? 'Bu e-posta ile kayıtlı bir hesap var.' : code.includes('weak-password') ? 'Parola en az 6 karakter olmalı.' : code.includes('invalid-credential') || code.includes('wrong-password') ? 'E-posta veya parola doğru değil.' : code.includes('too-many-requests') ? 'Çok fazla deneme yapıldı. Lütfen kısa süre sonra tekrar deneyin.' : code.includes('network-request-failed') ? 'Bağlantı kurulamadı. İnternetinizi kontrol edip tekrar deneyin.' : 'İşlem tamamlanamadı. Bilgileri kontrol edip tekrar deneyin.');
+    } finally { setBusy(false); }
   }
 
   async function googleLogin() {
+    if (busy) return;
     setError(''); setStatus('');
     const { auth } = getFirebaseClient();
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
     auth.languageCode = 'tr';
+    setBusy(true);
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       await saveMember(result.user, result.user.displayName || 'Google kullanıcısı');
       window.location.assign('/bilgi-merkezi');
     } catch { setError('Google ile giriş tamamlanamadı. Açılır pencereye izin verip tekrar deneyin.'); }
+    finally { setBusy(false); }
   }
 
   async function forgotPassword() {
+    if (busy) return;
     setError(''); setStatus('');
     if (!email.trim()) { setError('Önce e-posta adresinizi yazın.'); return; }
     const { auth } = getFirebaseClient();
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
     auth.languageCode = 'tr';
+    setBusy(true);
     try { await sendPasswordResetEmail(auth, email.trim()); setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.'); }
     catch { setError('Parola yenileme e-postası gönderilemedi. Adresi kontrol edin.'); }
+    finally { setBusy(false); }
   }
 
-  return <main className="account-page"><section className="account-card"><span>SKY BOZUM / ÜYE HESABI</span><h1>{mode === 'login' ? 'Tekrar hoş geldin.' : 'Aramıza katıl.'}</h1><p>{mode === 'login' ? 'Forum, yorumlar ve ücretsiz içeriklere sınırsız erişim.' : 'Ücretsiz hesabınızı oluşturun; telefon doğrulaması istemiyoruz.'}</p><button type="button" className="account-google" onClick={googleLogin} disabled={!ready}><b>G</b> Google ile devam et</button><div className="account-divider"><span>veya e-posta ile</span></div><form onSubmit={submit}>{mode === 'register' && <><label>Ad soyad<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" minLength={2} required /></label><label>Telefon numarası<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" inputMode="tel" minLength={10} placeholder="05xx xxx xx xx" required /><small>Numaranıza onay kodu gönderilmez.</small></label></>}<label>E-posta<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required /></label><label>Parola<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength={6} required /></label><button type="submit" disabled={!ready}>{mode === 'login' ? 'Giriş yap' : 'Kayıt ol ve e-postamı doğrula'} <span>→</span></button></form>{mode === 'login' && <div className="account-recovery"><button type="button" onClick={forgotPassword}>Şifremi unuttum</button><button type="button" onClick={() => setStatus('Sky Bozum hesabına kullanıcı adı yerine e-posta adresinle giriş yapabilirsin.')}>Kullanıcı adımı unuttum</button></div>}{error && <p className="account-error">{error}</p>}{status && <p className="account-success">{status}</p>}<div className="account-switch">{mode === 'login' ? <>Hesabın yok mu? <Link href="/kayit">Ücretsiz kayıt ol</Link></> : <>Zaten hesabın var mı? <Link href="/giris">Giriş yap</Link></>}</div></section></main>;
+  return <main className="account-page"><section className="account-card"><span>SKY BOZUM / ÜYE HESABI</span><h1>{mode === 'login' ? 'Tekrar hoş geldin.' : 'Aramıza katıl.'}</h1><p>{mode === 'login' ? 'Forum, yorumlar ve ücretsiz içeriklere sınırsız erişim.' : 'Ücretsiz hesabınızı oluşturun; telefon doğrulaması istemiyoruz.'}</p><button type="button" className="account-google" onClick={googleLogin} disabled={!ready || busy}><b>G</b> {busy ? 'İşleniyor…' : 'Google ile devam et'}</button><div className="account-divider"><span>veya e-posta ile</span></div><form onSubmit={submit}>{mode === 'register' && <><label>Ad soyad<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" minLength={2} required disabled={busy} /></label><label>Telefon numarası<input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" inputMode="tel" minLength={10} placeholder="05xx xxx xx xx" required disabled={busy} /><small>Numaranıza onay kodu gönderilmez.</small></label></>}<label>E-posta<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required disabled={busy} /></label><label>Parola<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength={6} required disabled={busy} /></label><button type="submit" disabled={!ready || busy}>{busy ? 'İşleniyor…' : mode === 'login' ? 'Giriş yap' : 'Kayıt ol ve e-postamı doğrula'} <span>→</span></button></form>{mode === 'login' && <div className="account-recovery"><button type="button" onClick={forgotPassword} disabled={busy}>Şifremi unuttum</button><button type="button" disabled={busy} onClick={() => setStatus('Sky Bozum hesabına kullanıcı adı yerine e-posta adresinle giriş yapabilirsin.')}>Kullanıcı adımı unuttum</button></div>}{error && <p className="account-error">{error}</p>}{status && <p className="account-success">{status}</p>}<div className="account-switch">{mode === 'login' ? <>Hesabın yok mu? <Link href="/kayit">Ücretsiz kayıt ol</Link></> : <>Zaten hesabın var mı? <Link href="/giris">Giriş yap</Link></>}</div></section></main>;
 }
