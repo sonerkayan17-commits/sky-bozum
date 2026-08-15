@@ -896,13 +896,14 @@ export default function AdminConsole({
                   Yetki verilecek kayıtlı üye bulunmuyor.
                 </p>
               ) : (
-                members.map((member) => (
-                  <article key={member.id}>
+                members.map((member) => {
+                  const systemAdmin = member.id === user.uid || member.role === "admin";
+                  return <article key={member.id}>
                     <div>
                       <strong>{member.displayName}</strong>
                       <span>{member.email}</span>
                     </div>
-                    {member.role === "admin" ? (
+                    {systemAdmin ? (
                       <span className="admin-system-role">Sistem yöneticisi · Firebase yetkisi</span>
                     ) : (
                       <select
@@ -930,8 +931,8 @@ export default function AdminConsole({
                         ? member.permissions.join(" · ")
                         : "Ek paylaşım yetkisi yok"}
                     </p>
-                  </article>
-                ))
+                  </article>;
+                })
               )}
             </div>
           </section>
