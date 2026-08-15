@@ -30,6 +30,8 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   const [replyTarget, setReplyTarget] = useState<PublicComment | null>(null);
   const [avatars, setAvatars] = useState<Record<string, string>>({});
   const [reportedCommentIds, setReportedCommentIds] = useState<string[]>([]);
+  const [likedCommentIds, setLikedCommentIds] = useState<string[]>([]);
+  const [likingCommentIds, setLikingCommentIds] = useState<string[]>([]);
   const [editingComment, setEditingComment] = useState<PublicComment | null>(null);
   const [editCommentText, setEditCommentText] = useState('');
 
@@ -119,6 +121,20 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     } catch { setNotice('Yorum bildirilemedi.'); }
   }
 
+  async function likeMemberComment(comment: PublicComment) {
+    if (!user || !db || !comment.uid || comment.uid === user.uid || likedCommentIds.includes(comment.id) || likingCommentIds.includes(comment.id)) return;
+    setLikingCommentIds((ids) => [...ids, comment.id]);
+    try {
+      const created = await likeComment(db, user.uid, comment.id, comment.uid, user.displayName || 'Bir üye');
+      setLikedCommentIds((ids) => ids.includes(comment.id) ? ids : [...ids, comment.id]);
+      setNotice(created ? 'Yorum beğenildi.' : 'Bu yorumu zaten beğendiniz.');
+    } catch {
+      setNotice('Yorum beğenilemedi. Lütfen tekrar deneyin.');
+    } finally {
+      setLikingCommentIds((ids) => ids.filter((id) => id !== comment.id));
+    }
+  }
+
   function startCommentEdit(comment: PublicComment) {
     setEditingComment(comment);
     setEditCommentText(comment.message);
@@ -170,7 +186,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
       {comments.length ? comments.map((comment, index) => <article key={comment.id} className="overflow-hidden rounded-xl border border-white/8 bg-white/[.025]">
         <header className="flex items-center gap-3 border-b border-white/8 bg-white/[.025] px-4 py-2">{comment.uid&&avatars[comment.uid]?<span className="h-8 w-8 rounded-full bg-cover bg-center" style={{backgroundImage:`url(${avatars[comment.uid]})`}}/>:<span className="grid h-8 w-8 place-items-center rounded-full bg-rose-500/15 text-[10px] font-black text-rose-300">{comment.author.charAt(0).toUpperCase()}</span>}{comment.uid ? <Link href={`/uyeler/${comment.uid}`} className="text-xs font-bold text-white hover:text-rose-300">{comment.author}</Link> : <strong className="text-xs text-white">{comment.author}</strong>}<time className="text-[10px] text-slate-600">{comment.createdAt?.toLocaleDateString('tr-TR') ?? 'Yeni'}</time><span className="ml-auto text-[10px] font-black text-slate-600">#{index + 1}</span></header>
         <p className="px-4 py-4 text-sm leading-7 text-slate-300">{comment.message}</p>{isAdmin && <div className="flex justify-end gap-2 border-t border-white/8 px-3 py-2"><button type="button" onClick={() => startCommentEdit(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">Düzenle</button><button type="button" onClick={() => void removeComment(comment)} className="focus-ring rounded-md border border-rose-400/30 px-3 py-1.5 text-[11px] font-bold text-rose-300 hover:bg-rose-500/10">Kaldır</button></div>}
-        <footer className="flex justify-end gap-2 border-t border-white/8 px-3 py-2">{user && comment.uid && comment.uid !== user.uid ? <button type="button" onClick={() => likeComment(db!, user.uid, comment.id, comment.uid!, user.displayName || 'Bir üye').then(()=>setNotice('Yorum beğenildi.')).catch(()=>setNotice('Bu yorumu daha önce beğendiniz.'))} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">♡ Beğen</button> : null}{user ? <button type="button" onClick={() => quote(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</button> : <Link href="/giris" className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</Link>}{user && comment.uid !== user.uid ? <button type="button" onClick={() => void reportComment(comment)} disabled={reportedCommentIds.includes(comment.id)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-500 hover:text-rose-300">{reportedCommentIds.includes(comment.id) ? 'Bildirildi' : 'Bildir'}</button> : null}</footer>
+        <footer className="flex justify-end gap-2 border-t border-white/8 px-3 py-2">{user && comment.uid && comment.uid !== user.uid ? <button type="button" onClick={() => void likeMemberComment(comment)} disabled={likedCommentIds.includes(comment.id) || likingCommentIds.includes(comment.id)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300 disabled:text-rose-300">{likedCommentIds.includes(comment.id) ? '♥ Beğenildi' : likingCommentIds.includes(comment.id) ? 'Beğeniliyor…' : '♡ Beğen'}</button> : null}{user ? <button type="button" onClick={() => quote(comment)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</button> : <Link href="/giris" className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-400 hover:text-rose-300">❝ Alıntıla</Link>}{user && comment.uid !== user.uid ? <button type="button" onClick={() => void reportComment(comment)} disabled={reportedCommentIds.includes(comment.id)} className="focus-ring rounded-md border border-white/10 px-3 py-1.5 text-[11px] font-bold text-slate-500 hover:text-rose-300">{reportedCommentIds.includes(comment.id) ? 'Bildirildi' : 'Bildir'}</button> : null}</footer>
       </article>) : <p className="rounded-xl border border-dashed border-white/10 p-5 text-sm text-slate-500">İlk yorumu siz yazın.</p>}
     </div>
 

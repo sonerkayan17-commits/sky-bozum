@@ -21,8 +21,11 @@ export async function sendMessage(db: Firestore, senderId: string, receiverId: s
 }
 
 export async function likeComment(db: Firestore, senderId: string, commentId: string, ownerId: string, senderName: string) {
-  await setDoc(doc(db, 'commentLikes', `${senderId}_${commentId}`), { senderId, receiverId: ownerId, commentId, createdAt: serverTimestamp() });
-  await notify(db, senderId, ownerId, 'comment_like', `${senderName} yorumunuzu beğendi.`, '#community');
+  const likeRef = doc(db, 'commentLikes', `${senderId}_${commentId}`);
+  if ((await getDoc(likeRef)).exists()) return false;
+  await setDoc(likeRef, { senderId, receiverId: ownerId, commentId, createdAt: serverTimestamp() });
+  await notify(db, senderId, ownerId, 'comment_like', `${senderName} yorumunuzu beğendi.`, '#community').catch(() => undefined);
+  return true;
 }
 
 export async function followContent(db: Firestore, uid: string, targetId: string, title: string, href: string) {
