@@ -42,7 +42,9 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   useEffect(() => {
     if (!db) return;
     const visitorId = getOrCreateVisitorId();
-    const likeIdentity = user?.uid || 'guest';
+    // Beğeni kaydı sunucuda ziyaretçi kimliğiyle tekilleşir; arayüz de aynı
+    // anahtarı kullanmalı ki giriş sonrası ikinci kez kabul edilmiş görünmesin.
+    const likeIdentity = visitorId;
     setLiked(localStorage.getItem(`sky-liked:${service}:${likeIdentity}`) === '1');
     if (user) isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
@@ -59,7 +61,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     try {
       await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
       if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
-      localStorage.setItem(`sky-liked:${service}:${user?.uid || 'guest'}`, '1');
+      localStorage.setItem(`sky-liked:${service}:${getOrCreateVisitorId()}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
     } catch { setNotice('Beğeni kaydedilemedi. Lütfen tekrar deneyin.'); }
