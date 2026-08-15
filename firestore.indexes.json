@@ -8,6 +8,14 @@
         { "fieldPath": "visibility", "order": "ASCENDING" },
         { "fieldPath": "forumKey", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "comments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "service", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

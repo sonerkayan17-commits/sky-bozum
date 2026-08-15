@@ -94,6 +94,37 @@ export function subscribeToApprovedComments(
   );
 }
 
+export function subscribeToApprovedCommentsForService(
+  firestore: Firestore,
+  service: string,
+  onChange: (comments: PublicComment[]) => void,
+  onError: () => void,
+) {
+  return onSnapshot(
+    query(collection(firestore, 'comments'), where('status', '==', 'approved'), where('service', '==', service)),
+    (snapshot) => {
+      const comments = snapshot.docs
+        .map((document) => {
+          const data = document.data() as CommentDocument;
+          return {
+            id: document.id,
+            parentId: data.parentId ?? null,
+            author: data.author ?? 'Ziyaretçi',
+            uid: data.uid ?? null,
+            service: data.service ?? service,
+            message: data.message ?? '',
+            rating: typeof data.rating === 'number' && data.rating >= 1 && data.rating <= 5 ? data.rating : null,
+            createdAt: data.createdAt?.toDate() ?? null,
+          } satisfies PublicComment;
+        })
+        .filter((comment) => comment.message)
+        .sort((first, second) => (second.createdAt?.getTime() ?? 0) - (first.createdAt?.getTime() ?? 0));
+      onChange(comments);
+    },
+    onError,
+  );
+}
+
 export async function createPendingComment(
   firestore: Firestore,
   input: CreateCommentInput,
@@ -157,6 +188,28 @@ export function subscribeToEngagementCounts(
         target[data.targetId] = (target[data.targetId] ?? 0) + 1;
       });
       onChange({ likes, views, likers: {} });
+    },
+    onError,
+  );
+}
+
+export function subscribeToEngagementCountsForTarget(
+  firestore: Firestore,
+  targetId: string,
+  onChange: (counts: { likes: number; views: number }) => void,
+  onError: () => void,
+) {
+  return onSnapshot(
+    query(collection(firestore, 'referenceEngagements'), where('targetId', '==', targetId)),
+    (snapshot) => {
+      let likes = 0;
+      let views = 0;
+      snapshot.docs.forEach((document) => {
+        const type = (document.data() as EngagementDocument).type;
+        if (type === 'like') likes += 1;
+        if (type === 'view') views += 1;
+      });
+      onChange({ likes, views });
     },
     onError,
   );

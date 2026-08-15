@@ -3,7 +3,7 @@
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import Link from 'next/link';
 import { useEffect, useState, type FormEvent } from 'react';
-import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedComments, subscribeToEngagementCounts, type PublicComment } from '../../lib/comments';
+import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedCommentsForService, subscribeToEngagementCountsForTarget, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
 import { isBookmarked, removeBookmark, saveBookmark } from '../../lib/bookmarks';
 import { recordMemberActivity } from '../../lib/memberProgress';
@@ -44,8 +44,8 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
     setLiked(localStorage.getItem(`sky-liked:${service}:${likeIdentity}`) === '1');
     if (user) isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
     registerEngagement(db, visitorId, 'view', service).catch(() => undefined);
-    const stopComments = subscribeToApprovedComments(db, (items) => setComments(items.filter((item) => item.service === service)), () => undefined);
-    const stopCounts = subscribeToEngagementCounts(db, (counts) => { setLikes(counts.likes[service] ?? 0); setViews(counts.views[service] ?? 0); }, () => undefined);
+    const stopComments = subscribeToApprovedCommentsForService(db, service, setComments, () => undefined);
+    const stopCounts = subscribeToEngagementCountsForTarget(db, service, (counts) => { setLikes(counts.likes); setViews(counts.views); }, () => undefined);
     return () => { stopComments(); stopCounts(); };
   }, [db, service, user]);
 
