@@ -7,6 +7,7 @@ import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscri
 import { getFirebaseClient } from '../../lib/firebase';
 import { isBookmarked, removeBookmark, saveBookmark } from '../../lib/bookmarks';
 import { recordMemberActivity } from '../../lib/memberProgress';
+import { hasReportedContent, reportContent } from '../../lib/reports';
 import { followContent, isFollowingContent, likeComment, notify } from '../../lib/social';
 import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, updateDoc } from 'firebase/firestore';
 
@@ -63,6 +64,17 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   }, [db, service, user]);
 
   useEffect(() => db ? onSnapshot(collection(db, 'publicProfiles'), (snapshot) => { const next: Record<string,string> = {}; snapshot.docs.forEach((item) => { const avatar = String(item.data().avatar || ''); if (avatar) next[item.id] = avatar; }); setAvatars(next); }) : undefined, [db]);
+
+  useEffect(() => {
+    if (!db || !user || !comments.length) return;
+    let active = true;
+    Promise.all(comments.map(async (comment) => (
+      comment.uid === user.uid || !(await hasReportedContent(db, user.uid, 'comment', comment.id)) ? null : comment.id
+    ))).then((ids) => {
+      if (active) setReportedCommentIds(ids.filter((id): id is string => Boolean(id)));
+    }).catch(() => undefined);
+    return () => { active = false; };
+  }, [comments, db, user]);
 
   async function likeAndBump() {
     if (!db || liked) return;
@@ -137,15 +149,9 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   async function reportComment(comment: PublicComment) {
     if (!user || !db || reportedCommentIds.includes(comment.id)) return;
     try {
-      await addDoc(collection(db, 'contentReports'), {
-        targetType: 'comment',
-        targetId: comment.id,
-        reporterId: user.uid,
-        reason: 'Topluluk kurallarına aykırı yorum bildirimi',
-        status: 'open',
-        createdAt: serverTimestamp(),
-      });
-      setReportedCommentIds((ids) => [...ids, comment.id]);
+      const created = await reportContent(db, user.uid, 'comment', comment.id, 'Topluluk kurallarına aykırı yorum bildirimi');
+      setReportedCommentIds((ids) => ids.includes(comment.id) ? ids : [...ids, comment.id]);
+      setNotice(created ? 'Yorum yönetime bildirildi.' : 'Bu yorumu zaten bildirdiniz.');
     } catch { setNotice('Yorum bildirilemedi.'); }
   }
 

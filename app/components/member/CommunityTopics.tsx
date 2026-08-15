@@ -6,6 +6,7 @@ import { addDoc, collection, doc, onSnapshot, query, serverTimestamp, updateDoc,
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { forumSections, publicForumKeys, slugifyForumCategory } from '../../lib/forumTaxonomy';
+import { hasReportedContent, reportContent } from '../../lib/reports';
 import RichArticleEditor, { sanitizeArticleHtml } from '../../yonetim/RichArticleEditor';
 import '../../yonetim/content.css';
 import './community-editor.css';
@@ -126,6 +127,18 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     return () => { stopAuth(); stopPosts(); stopOwn(); stopAdmin(); };
   }, []);
 
+  useEffect(() => {
+    const { db } = getFirebaseClient();
+    if (!db || !user || !posts.length) return;
+    let active = true;
+    Promise.all(posts.map(async (post) => (
+      post.uid === user.uid || !(await hasReportedContent(db, user.uid, 'forum_post', post.id)) ? null : post.id
+    ))).then((ids) => {
+      if (active) setReportedIds(ids.filter((id): id is string => Boolean(id)));
+    }).catch(() => undefined);
+    return () => { active = false; };
+  }, [posts, user]);
+
   function reset() {
     setTitle('');
     setBody('');
@@ -201,15 +214,9 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     const { db } = getFirebaseClient();
     if (!db || reportedIds.includes(post.id)) return;
     try {
-      await addDoc(collection(db, 'contentReports'), {
-        targetType: 'forum_post',
-        targetId: post.id,
-        reporterId: user.uid,
-        reason: 'Topluluk kurallarına aykırı içerik bildirimi',
-        status: 'open',
-        createdAt: serverTimestamp(),
-      });
-      setReportedIds((ids) => [...ids, post.id]);
+      const created = await reportContent(db, user.uid, 'forum_post', post.id, 'Topluluk kurallarına aykırı içerik bildirimi');
+      setReportedIds((ids) => ids.includes(post.id) ? ids : [...ids, post.id]);
+      if (!created) setNotice('Bu konuyu zaten bildirdiniz.');
     } catch {
       // Rapor formu görünür akışı bozmaz; yetki hatası güvenlik kuralında tutulur.
     }

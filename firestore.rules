@@ -456,11 +456,15 @@ service cloud.firestore {
     }
 
     match /contentReports/{reportId} {
-      allow read: if canModerate();
+      allow get: if canModerate() || (signedIn() && resource.data.reporterId == request.auth.uid);
+      allow list: if canModerate();
       allow create: if signedIn() && notBanned()
+        && reportId == request.auth.uid + "_" + request.resource.data.targetType + "_" + request.resource.data.targetId
         && request.resource.data.keys().hasOnly(["targetType", "targetId", "reporterId", "reason", "status", "createdAt"])
         && (request.resource.data.targetType == "forum_post" || request.resource.data.targetType == "comment")
         && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() >= 1
+        && request.resource.data.targetId.size() <= 100
         && request.resource.data.reporterId == request.auth.uid
         && request.resource.data.reason is string
         && request.resource.data.reason.size() >= 3
