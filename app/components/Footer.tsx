@@ -48,7 +48,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-4">
             <nav aria-label="Alt menü" className="contents">
               {groups.map(([title, links]) => (
                 <div key={title}>
