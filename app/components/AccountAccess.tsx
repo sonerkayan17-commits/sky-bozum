@@ -16,6 +16,7 @@ import {
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { getFirebaseClient } from '../lib/firebase';
 import { findReferrerId, getReferralCode } from '../lib/referrals';
+import { trackConversion } from '../lib/conversion';
 import './account-access.css';
 
 export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) {
@@ -90,6 +91,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
 
     try {
       if (mode === 'login') {
+        trackConversion('account_login_attempted', { method: 'email' });
         const result = await signInWithEmailAndPassword(auth, email.trim(), password);
         await result.user.reload();
         if (!result.user.emailVerified) {
@@ -103,6 +105,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
         return;
       }
 
+      trackConversion('account_register_attempted', { method: 'email' });
       const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(result.user, { displayName: name.trim() });
       await saveMember(result.user, name, phone);
@@ -124,6 +127,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     auth.languageCode = 'tr';
     setBusy(true);
     try {
+      trackConversion(mode === 'login' ? 'account_login_attempted' : 'account_register_attempted', { method: 'google' });
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       await saveMember(result.user, result.user.displayName || 'Google kullanıcısı');
       window.location.assign('/bilgi-merkezi');
@@ -139,7 +143,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
     auth.languageCode = 'tr';
     setBusy(true);
-    try { await sendPasswordResetEmail(auth, email.trim()); setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.'); }
+    try { trackConversion('password_reset_requested', { method: 'email' }); await sendPasswordResetEmail(auth, email.trim()); setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.'); }
     catch { setError('Parola yenileme e-postası gönderilemedi. Adresi kontrol edin.'); }
     finally { setBusy(false); }
   }

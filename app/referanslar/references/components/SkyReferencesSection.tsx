@@ -11,6 +11,7 @@ import {
   type PublicComment,
 } from '../../../lib/comments';
 import { db, isFirebaseConfigured } from '../../../lib/firebase';
+import { prefersReducedMotion } from '../../../lib/motion';
 import type { SkyReference } from '../data/skyReferences.types';
 import { exampleSiteReviews } from '../data/referenceReviews.data';
 import styles from './SkyReferencesSection.module.css';
@@ -378,7 +379,8 @@ export default function SkyReferencesSection({ references }: Props) {
     () => remainingReferences.slice(0, 9),
     [remainingReferences],
   );
-  const movingExampleReviews = useMemo(() => exampleSiteReviews, []);
+  // Keep the duplicated marquee layer comfortably below common GPU texture limits.
+  const movingExampleReviews = useMemo(() => exampleSiteReviews.slice(0, 6), []);
   const movingUsesSiteComments = visibleCommunityComments.length > 0;
   const exampleServiceFilters = useMemo(() => {
     const preferredOrder = ['Vodafone Mobil Ödeme', 'Mobil Ödeme', 'Razer Gold', 'Paycell', 'Apple / iTunes', 'Turkcell Mobil Ödeme', 'Türk Telekom Mobil Ödeme', 'Pokus', 'Steam'];
@@ -440,7 +442,7 @@ export default function SkyReferencesSection({ references }: Props) {
 
   useEffect(() => {
     if (!showAll || archivePageCount <= 1 || archiveAutoPaused) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (prefersReducedMotion()) return;
 
     const timer = window.setTimeout(() => {
       setArchivePage((page) => (page >= archivePageCount ? 1 : page + 1));

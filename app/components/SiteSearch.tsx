@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { featuredSearchItems, searchContent, searchItems, type SearchItem } from '../lib/search';
+import type { SearchItem } from '../lib/search';
 import { useVisitorExperience } from './personalization/VisitorExperienceProvider';
 import { useSiteSettings } from './SiteSettingsProvider';
 
@@ -47,22 +47,36 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [staticItems, setStaticItems] = useState<SearchItem[] | null>(null);
+  const [featuredItems, setFeaturedItems] = useState<SearchItem[]>([]);
+  const [searcher, setSearcher] = useState<((query: string, limit?: number) => SearchItem[]) | null>(null);
   const [managedArticles, setManagedArticles] = useState<SearchItem[] | null>(null);
+  const [searchDataRequested, setSearchDataRequested] = useState(false);
   const pathname = usePathname();
   const { consent, profile, clearRecentHistory } = useVisitorExperience();
   const settings = useSiteSettings();
   useEffect(() => {
+    if (!searchDataRequested) return;
     let alive = true;
-    fetch('/api/search').then((response) => response.ok ? response.json() : []).then((items: SearchItem[]) => {
-      if (alive && Array.isArray(items)) setManagedArticles(items);
+    Promise.all([
+      import('../lib/search'),
+      fetch('/api/search').then((response) => response.ok ? response.json() : []).catch(() => []),
+    ]).then(([searchModule, items]) => {
+      if (!alive) return;
+      setStaticItems(searchModule.searchItems);
+      setFeaturedItems(searchModule.featuredSearchItems);
+      setSearcher(() => searchModule.searchContent);
+      if (Array.isArray(items)) setManagedArticles(items);
     }).catch(() => undefined);
     return () => { alive = false; };
-  }, []);
+  }, [searchDataRequested]);
+  const requestSearchData = () => setSearchDataRequested(true);
   const availableItems = useMemo(() => {
+    const searchItems = staticItems ?? [];
     if (!managedArticles) return searchItems;
     const managedHrefs = new Set(managedArticles.map((item) => item.href));
     return [...searchItems.filter((item) => item.type !== 'Makale' || !managedHrefs.has(item.href)), ...managedArticles];
-  }, [managedArticles]);
+  }, [managedArticles, staticItems]);
   const recentItems = useMemo(() => {
     if (!settings.searchRecentEnabled || consent !== 'accepted' || !profile?.recentPaths.length) return [];
     const itemByHref = new Map(availableItems.map((item) => [item.href, item]));
@@ -79,16 +93,17 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
   ].filter((item): item is SearchItem => Boolean(item)), [settings]);
   const defaultResults = useMemo(() => {
     const seen = new Set<string>();
-    return [...recentItems, ...quickSearchItems, ...featuredSearchItems].filter((item) => {
+    return [...recentItems, ...quickSearchItems, ...featuredItems].filter((item) => {
       if (seen.has(item.href)) return false;
       seen.add(item.href);
       return true;
     });
-  }, [quickSearchItems, recentItems]);
+  }, [featuredItems, quickSearchItems, recentItems]);
   const hasQuery = Boolean(query.trim());
+  const searchIsLoading = searchDataRequested && !searcher;
   const results = useMemo<SearchItem[]>(
-    () => hasQuery ? (managedArticles ? dynamicSearch(availableItems, query, 14) : searchContent(query, 14)) : defaultResults,
-    [availableItems, defaultResults, hasQuery, managedArticles, query],
+    () => hasQuery ? (managedArticles ? dynamicSearch(availableItems, query, 14) : searcher?.(query, 14) ?? []) : defaultResults,
+    [availableItems, defaultResults, hasQuery, managedArticles, query, searcher],
   );
   const groups = useMemo<SearchGroup[]>(() => {
     const toGroup = (id: string, label: string, items: SearchItem[]) => ({
@@ -99,7 +114,7 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
         .filter(({ index }) => index >= 0),
     });
     if (!hasQuery) {
-      const highlightedItems = featuredSearchItems.filter((item) => !recentItems.some((recent) => recent.href === item.href) && !quickSearchItems.some((quick) => quick.href === item.href));
+      const highlightedItems = featuredItems.filter((item) => !recentItems.some((recent) => recent.href === item.href) && !quickSearchItems.some((quick) => quick.href === item.href));
       return [
         toGroup('recent', settings.searchContinueTitle, recentItems),
         toGroup('quick', settings.searchQuickAccessTitle, quickSearchItems),
@@ -107,7 +122,7 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
       ].filter((group) => group.items.length);
     }
     return groupOrder.map((type) => toGroup(type, groupLabels[type], results.filter((item) => item.type === type))).filter((group) => group.items.length);
-  }, [hasQuery, quickSearchItems, recentItems, results, settings]);
+  }, [featuredItems, hasQuery, quickSearchItems, recentItems, results, settings]);
   const router = useRouter();
   const root = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -132,6 +147,7 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
       if (event.defaultPrevented || event.isComposing) return;
       if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.key.toLocaleLowerCase('tr-TR') !== 'k') return;
       event.preventDefault();
+      requestSearchData();
       setOpen(true);
       requestAnimationFrame(() => inputRef.current?.focus());
     };
@@ -210,8 +226,9 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
           aria-keyshortcuts={mode === 'desktop' ? 'Control+K Meta+K' : undefined}
           value={query}
           onKeyDown={handleKeyDown}
-          onFocus={() => setOpen(true)}
+          onFocus={() => { requestSearchData(); setOpen(true); }}
           onChange={(event) => {
+            requestSearchData();
             setQuery(event.target.value.slice(0, 100));
             setOpen(true);
             setActiveIndex(-1);
@@ -227,7 +244,7 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
       </label>
 
       <span id={statusId} className="sr-only" aria-live="polite">
-        {open ? (results.length ? `${results.length} sonuç gösteriliyor.` : 'Sonuç bulunamadı.') : ''}
+        {open ? (searchIsLoading ? 'Arama hazırlanıyor.' : results.length ? `${results.length} sonuç gösteriliyor.` : 'Sonuç bulunamadı.') : ''}
       </span>
 
       {open && (
@@ -242,7 +259,12 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
             {!hasQuery && <span className="text-[10px] font-bold text-slate-600">{recentItems.length ? 'Bu cihazda kaydedilir' : 'Yazmaya başlayın'}</span>}
           </div>
 
-          {results.length ? groups.map((group) => (
+          {searchIsLoading ? (
+            <div className="px-5 py-9 text-center" role="status">
+              <p className="text-sm font-black text-white">Arama hazırlanıyor.</p>
+              <p className="mt-2 text-xs leading-5 text-slate-400">Sonuçlar birkaç saniye içinde gösterilecek.</p>
+            </div>
+          ) : results.length ? groups.map((group) => (
             <section key={group.id} className="mb-1 last:mb-0" aria-label={group.label}>
               <div className="flex items-center justify-between gap-3 px-3 pb-1 pt-2">
                 <p className="text-[10px] font-black uppercase tracking-[.16em] text-slate-600">{group.label}</p>

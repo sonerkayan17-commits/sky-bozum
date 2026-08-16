@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "./lib/seo";
+import { ALLOW_INDEXING, SITE_URL } from "./lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/admin/", "/api/"] },
+    rules: ALLOW_INDEXING
+      ? { userAgent: "*", allow: "/", disallow: ["/admin", "/admin/", "/api/"] }
+      : { userAgent: "*", disallow: "/" },
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
   };

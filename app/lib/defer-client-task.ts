@@ -1,7 +1,22 @@
 type DeferredTask = () => void | Promise<void>;
+type DeferClientTaskOptions = {
+  delay?: number;
+  eager?: boolean;
+  intentEvents?: boolean;
+};
 
 /** Defers non-critical integrations until user intent or a safe fallback delay. */
-export function deferClientTask(task: DeferredTask, delay = 30_000, eager = false) {
+export function deferClientTask(
+  task: DeferredTask,
+  delayOrOptions: number | DeferClientTaskOptions = 30_000,
+  eagerOverride = false,
+) {
+  const options = typeof delayOrOptions === 'number'
+    ? { delay: delayOrOptions, eager: eagerOverride, intentEvents: true }
+    : delayOrOptions;
+  const delay = options.delay ?? 30_000;
+  const eager = options.eager ?? false;
+  const intentEvents = options.intentEvents ?? true;
   let started = false;
   let timer = 0;
   const cleanup = () => {
@@ -20,7 +35,7 @@ export function deferClientTask(task: DeferredTask, delay = 30_000, eager = fals
   };
 
   timer = window.setTimeout(run, eager ? 0 : delay);
-  if (!eager) {
+  if (!eager && intentEvents) {
     window.addEventListener('click', run, { passive: true, once: true });
     window.addEventListener('keydown', runFromKeyboard);
   }

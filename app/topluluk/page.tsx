@@ -2,7 +2,7 @@ import ForumDirectory from './ForumDirectory';
 import Link from 'next/link';
 import './community.css';
 
-export const metadata = { title: 'Sky Bozum Topluluğu' };
+export const metadata = { title: 'Sky Bozum Toplulugu', alternates: { canonical: '/topluluk' } };
 
 export default function Page() {
   return <>

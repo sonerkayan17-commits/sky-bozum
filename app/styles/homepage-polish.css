@@ -549,6 +549,7 @@ linear-gradient(180deg,#090b10 0%,#080a0f 100%);padding:clamp(74px,8vw,124px) 0}
 @media(max-width:900px){.process-steps{padding:58px 0}.process-steps__header{align-items:flex-start;flex-direction:column;gap:18px}.process-steps__grid{grid-template-columns:1fr}.process-steps__line{display:none}.process-step-card{min-height:250px}.process-steps__footer{align-items:flex-start;flex-direction:column}}
 @media(max-width:600px){.process-steps{padding:46px 0}.process-step-card{padding:22px}.process-step-card__note{left:22px;right:22px}.process-steps__footer{padding:14px}}
 @media(prefers-reduced-motion:reduce){.process-steps__line span{animation:none}.process-step-card,.process-steps__link{transition:none!important}.process-step-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){html[data-motion-preview=true] .quote-visual__phone{animation:quote-phone-float 6s ease-in-out infinite!important}html[data-motion-preview=true] .quote-visual__float--rate{animation:quote-float-left 5.5s ease-in-out infinite!important}html[data-motion-preview=true] .quote-visual__float--shield{animation:quote-float-right 6.2s ease-in-out infinite!important}html[data-motion-preview=true] .process-steps__line span{animation:process-line-flow 5.5s ease-in-out infinite!important}}
 
 /* V10.6 — homepage-only visual refinement */
 .home-page{--home-gold:#e8c27a;--home-rose:#f43f72;--home-surface:#0d1017;--home-muted:#a6afbd;background:#07090e}
@@ -576,6 +577,33 @@ linear-gradient(180deg,#090b10 0%,#080a0f 100%);padding:clamp(74px,8vw,124px) 0}
 @media(max-width:1200px){.home-page .brand-strip-card{grid-template-columns:70px minmax(0,1fr) 18px;padding:18px}.home-page .brand-strip-logo{width:70px;height:62px}.home-page .brand-strip-logo-image{max-width:56px!important}.home-page .brand-strip-copy strong{font-size:14px}}
 @media(max-width:900px){.home-page .brand-strip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-page .brand-strip-card{border-bottom:1px solid rgba(255,255,255,.07)}.home-page .brand-strip-card:nth-child(odd){border-right:1px solid rgba(255,255,255,.07)}.home-page .home-faq-card,.home-page .home-support-card{min-height:auto}}
 @media(max-width:640px){.home-page .brand-strip{padding:44px 0 48px}.home-page .brand-strip-grid{grid-template-columns:1fr}.home-page .brand-strip-card{grid-template-columns:72px minmax(0,1fr) 18px;min-height:100px}.home-page .brand-strip-logo{width:72px;height:62px}.home-page .brand-strip-logo-image{max-width:58px!important}.home-page #oran-teklifi{padding-block:52px}.home-page .quote-visual__canvas{min-height:330px}.home-page .quote-visual__phone{width:76%}.home-page .quote-visual__float{width:148px}.home-page .experience-showcase{padding:64px 0}.home-page .experience-card{min-height:auto}}
+
+/* Carousel motion refinement: adjacent slides move as a continuous loop. */
+.hero-reference-slide {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+  transition: opacity .22s ease, transform .58s cubic-bezier(.22, .8, .24, 1);
+  will-change: opacity, transform;
+}
+
+.hero-reference-slide.is-active {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.hero-reference-slide.is-prev {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
+
+.hero-reference-slide.is-next {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reference-slide { transition: none; }
+}
 
 /* V10.7 homepage 100-point refinement */
 .home-page .content-wide.rhythm-md>.grid{gap:28px;align-items:stretch}

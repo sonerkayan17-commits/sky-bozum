@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { calculatePayout, parseTurkishAmount, validateAmount } from '../lib/rates';
 import { siteConfig } from '../lib/site-config';
 import useRememberedRate from './personalization/useRememberedRate';
@@ -40,6 +40,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
   const [serviceName, setServiceName] = useRememberedRate();
   const [amount, setAmount] = useState('5000');
   const [menuOpen, setMenuOpen] = useState(false);
+  const amountHelpId = useId();
   const menuRef = useRef<HTMLDivElement>(null);
   const publishedRates = usePublishedRates();
 
@@ -130,6 +131,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                       onChange={(event) => setAmount(formatAmountInput(event.target.value))}
                       inputMode="numeric"
                       aria-invalid={Boolean(error)}
+                      aria-describedby={amountHelpId}
                       className="h-[48px] w-full rounded-[14px] border border-white/[0.11] bg-black/[0.16] px-3.5 pr-11 text-[16px] font-black text-white outline-none transition placeholder:text-white/25 hover:border-white/[0.2] focus:border-[#e8b84f]/65 focus:ring-4 focus:ring-[#e8b84f]/[0.08]"
                       placeholder="5.000"
                     />
@@ -138,7 +140,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                 </label>
               </div>
 
-              <p aria-live="polite" className={`mt-2 min-h-4 text-[11px] font-semibold ${error ? 'text-rose-400' : 'text-white/46'}`}>
+              <p id={amountHelpId} aria-live="polite" className={`mt-2 min-h-4 text-[11px] font-semibold ${error ? 'text-rose-400' : 'text-white/46'}`}>
                 {error || <>Güncel oran aralığı: <span className="text-[#f3bf31]">{selected.range}</span></>}
               </p>
 

@@ -12,7 +12,18 @@ export type RateItem = {
   maxAmount: number;
 };
 
-export const RATE_UPDATED_AT = '17 Temmuz 2026';
+export const RATE_UPDATED_AT = '2026-07-17';
+export const RATE_UPDATED_LABEL = '17 Temmuz 2026';
+export const RATE_MAX_AGE_DAYS = 14;
+
+export function rateDataAgeDays(now = new Date()) {
+  const updated = new Date(`${RATE_UPDATED_AT}T12:00:00+03:00`);
+  return Math.max(0, Math.floor((now.getTime() - updated.getTime()) / 86_400_000));
+}
+
+export function isRateDataStale(now = new Date()) {
+  return rateDataAgeDays(now) > RATE_MAX_AGE_DAYS;
+}
 
 export const rateItems: RateItem[] = [
   { id:'razer-tl', serviceSlug:'razer-gold-tl', name:'Razer Gold TL', rate:60, maxRate:70, range:'%60 – %70', category:'Kod', minAmount:1, maxAmount:1_000_000 },
@@ -59,4 +70,8 @@ export function validateAmount(amount: number, item: RateItem) {
   return '';
 }
 
-export const rateDisclaimer = `Oranlar ${RATE_UPDATED_AT} tarihinde güncellenmiştir. Gösterilen tutar tahminidir; kesin oran, stok ve işlem koşulları kontrol edildikten sonra yazılı olarak bildirilir.`;
+export const rateFreshnessNotice = isRateDataStale()
+  ? `Oran tarihi ${RATE_MAX_AGE_DAYS} günlük yayın eşiğini aştı; işlemden önce WhatsApp üzerinden güncel oran teyidi alın.`
+  : '';
+
+export const rateDisclaimer = `Oranlar ${RATE_UPDATED_LABEL} tarihinde güncellenmiştir. Gösterilen tutar tahminidir; kesin oran, stok ve işlem koşulları kontrol edildikten sonra yazılı olarak bildirilir.${rateFreshnessNotice ? ` ${rateFreshnessNotice}` : ''}`;

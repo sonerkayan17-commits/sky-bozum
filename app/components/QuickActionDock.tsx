@@ -4,6 +4,7 @@ import Link from './DeferredLink';
 import { usePathname } from 'next/navigation';
 import { siteConfig } from '../lib/site-config';
 import { siteFeatures } from '../lib/features';
+import { trackConversion } from '../lib/conversion';
 
 type DockAction = {
   label: string;
@@ -52,6 +53,7 @@ export default function QuickActionDock() {
       })}
       <a
         href={siteConfig.liveSupportHref}
+        onClick={() => trackConversion('whatsapp_clicked', { source: 'quick_dock' })}
         target="_blank"
         rel="noopener noreferrer"
         className="quick-dock-primary"

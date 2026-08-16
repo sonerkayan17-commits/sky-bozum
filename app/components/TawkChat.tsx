@@ -56,7 +56,7 @@ export default function TawkChat() {
     document.head.appendChild(script);
   }, [configureApi]);
 
-  useEffect(() => deferClientTask(loadChat, 30_000), [loadChat]);
+  useEffect(() => deferClientTask(loadChat, { delay: 90_000, intentEvents: false }), [loadChat]);
 
   useEffect(() => {
     setIsOpen(false);
