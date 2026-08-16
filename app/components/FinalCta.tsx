@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from './DeferredLink';
 import { siteConfig } from '../lib/site-config';
 import { InlineEditableText } from './admin/SiteInlineEditor';
 

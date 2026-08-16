@@ -3,9 +3,8 @@
 // performance-audit: allow-dynamic-img — yönetici tarafından değiştirilen HTTPS ve site içi görsel URL'leri sabit alan adı listesine sığmaz.
 
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
-import { addDoc, collection, doc, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { usePathname } from 'next/navigation';
-import { getFirebaseClient } from '../../lib/firebase';
+import { deferClientTask } from '../../lib/defer-client-task';
 import { useSiteEditor } from './SiteEditorProvider';
 
 type EditableTag = 'span' | 'p' | 'h1' | 'h2' | 'h3' | 'strong' | 'small';
@@ -68,18 +67,34 @@ function toCss(style: TextStyle): CSSProperties {
   };
 }
 
-function useStoredContent(contentKey: string, fallback: StoredContent, expectedType: 'text' | 'image') {
+async function loadFirebaseTools() {
+  const [client, firestore] = await Promise.all([
+    import('../../lib/firebase'),
+    import('firebase/firestore'),
+  ]);
+  return { ...client, ...firestore };
+}
+
+function useStoredContent(contentKey: string, fallback: StoredContent, expectedType: 'text' | 'image', eager = false) {
   const [content, setContent] = useState<StoredContent>(fallback);
 
   useEffect(() => {
-    const { db } = getFirebaseClient();
-    if (!db) return;
-    return onSnapshot(doc(db, 'siteContent', contentKey), (snapshot) => {
-      const next = snapshot.data() as StoredContent | undefined;
-      if (!next || next.type !== expectedType || typeof next.value !== 'string' || !next.value.trim()) return;
-      setContent({ ...fallback, ...next, style: normalizeStyle(next.style) });
-    });
-  }, [contentKey, expectedType, fallback]);
+    let active = true;
+    let unsubscribe: () => void = () => undefined;
+    const cancel = deferClientTask(async () => {
+      const { getFirebaseClient, doc, onSnapshot } = await loadFirebaseTools();
+      if (!active) return;
+      const { db } = getFirebaseClient();
+      if (!db) return;
+      unsubscribe = onSnapshot(doc(db, 'siteContent', contentKey), (snapshot) => {
+        const next = snapshot.data() as StoredContent | undefined;
+        if (!next || next.type !== expectedType || typeof next.value !== 'string' || !next.value.trim()) return;
+        const resolved = { ...fallback, ...next, style: normalizeStyle(next.style) };
+        setContent((current) => JSON.stringify(current) === JSON.stringify(resolved) ? current : resolved);
+      });
+    }, 30_000, eager);
+    return () => { active = false; cancel(); unsubscribe(); };
+  }, [contentKey, eager, expectedType, fallback]);
 
   return [content, setContent] as const;
 }
@@ -142,6 +157,7 @@ function TypeControls({ style, setStyle }: { style: TextStyle; setStyle: (style:
 }
 
 async function writeAudit(contentKey: string, uid: string, type: 'text' | 'image', targetLabel?: string, pagePath?: string) {
+  const { getFirebaseClient, addDoc, collection, serverTimestamp } = await loadFirebaseTools();
   const { db } = getFirebaseClient();
   if (!db) return;
   try {
@@ -175,7 +191,7 @@ export function InlineEditableText({
 }) {
   const { isAdmin, isEditMode, uid } = useSiteEditor();
   const fallback = useMemo<StoredContent>(() => ({ type: 'text', value: defaultValue, alt: '', style: defaultTextStyle }), [defaultValue]);
-  const [stored, setStored] = useStoredContent(contentKey, fallback, 'text');
+  const [stored, setStored] = useStoredContent(contentKey, fallback, 'text', isAdmin);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(defaultValue);
   const [draftStyle, setDraftStyle] = useState(defaultTextStyle);
@@ -196,6 +212,7 @@ export function InlineEditableText({
       setStatus('Metin boş bırakılamaz.');
       return;
     }
+    const { getFirebaseClient, doc, serverTimestamp, setDoc } = await loadFirebaseTools();
     const { db } = getFirebaseClient();
     if (!db || !uid) {
       setStatus('Yönetici oturumu doğrulanamadı. Sayfayı yenileyip tekrar deneyin.');
@@ -255,7 +272,7 @@ export function InlineEditableImage({
 }) {
   const { isAdmin, isEditMode, uid } = useSiteEditor();
   const fallback = useMemo<StoredContent>(() => ({ type: 'image', value: defaultSrc, alt, style: defaultTextStyle }), [alt, defaultSrc]);
-  const [stored, setStored] = useStoredContent(contentKey, fallback, 'image');
+  const [stored, setStored] = useStoredContent(contentKey, fallback, 'image', isAdmin);
   const [open, setOpen] = useState(false);
   const [draftSrc, setDraftSrc] = useState(defaultSrc);
   const [draftAlt, setDraftAlt] = useState(alt);
@@ -277,6 +294,7 @@ export function InlineEditableImage({
       setStatus('Yalnızca https:// ile başlayan güvenli bir görsel bağlantısı veya / ile başlayan site içi yol kullanılabilir.');
       return;
     }
+    const { getFirebaseClient, doc, serverTimestamp, setDoc } = await loadFirebaseTools();
     const { db } = getFirebaseClient();
     if (!db || !uid) {
       setStatus('Yönetici oturumu doğrulanamadı. Sayfayı yenileyip tekrar deneyin.');
@@ -406,12 +424,19 @@ export function SitePageEditor() {
   const [status, setStatus] = useState('');
 
   useEffect(() => {
-    const { db } = getFirebaseClient();
-    if (!db) return;
-    return onSnapshot(query(collection(db, 'siteContent'), where('pagePath', '==', pathname)), (snapshot) => {
-      snapshot.docs.forEach((entry) => applyPageContent(entry.data() as StoredContent));
-    });
-  }, [pathname]);
+    let active = true;
+    let unsubscribe: () => void = () => undefined;
+    const cancel = deferClientTask(async () => {
+      const { getFirebaseClient, collection, onSnapshot, query, where } = await loadFirebaseTools();
+      if (!active) return;
+      const { db } = getFirebaseClient();
+      if (!db) return;
+      unsubscribe = onSnapshot(query(collection(db, 'siteContent'), where('pagePath', '==', pathname)), (snapshot) => {
+        snapshot.docs.forEach((entry) => applyPageContent(entry.data() as StoredContent));
+      });
+    }, 30_000, isAdmin || pathname !== '/');
+    return () => { active = false; cancel(); unsubscribe(); };
+  }, [isAdmin, pathname]);
 
   useEffect(() => {
     if (!isAdmin || !isEditMode) return;
@@ -461,6 +486,7 @@ export function SitePageEditor() {
       setStatus('Bağlantı /, https://, mailto: veya tel: ile başlamalıdır.');
       return;
     }
+    const { getFirebaseClient, doc, serverTimestamp, setDoc } = await loadFirebaseTools();
     const { db } = getFirebaseClient();
     if (!db) {
       setStatus('Bağlantı kurulamadı. Sayfayı yenileyip tekrar deneyin.');

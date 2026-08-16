@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from './DeferredLink';
 import { siteConfig } from '../lib/site-config';
 import PrivacyControls from './personalization/PrivacyControls';
 import TawkChat from './TawkChat';

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from './DeferredLink';
 import { usePathname } from 'next/navigation';
 import { siteConfig } from '../lib/site-config';
 import { siteFeatures } from '../lib/features';

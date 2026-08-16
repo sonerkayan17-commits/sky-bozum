@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import Link from './components/DeferredLink';
 import Hero from './components/Hero';
 import BrandStrip from './components/BrandStrip';
 import HomeTrust from './components/HomeTrust';
 import HomeServices from './components/HomeServices';
-import QuickCalculator from './components/QuickCalculator';
+import DeferredQuickCalculator from './components/home/DeferredQuickCalculator';
 import HomeBlog from './components/HomeBlog';
 import HomeTestimonials from './components/HomeTestimonials';
 import HomeFaq from './components/HomeFaq';
@@ -28,7 +28,7 @@ export default function Home() {
       <section className="render-later bg-[#05090f] py-7 sm:py-8" aria-label="Hesaplama ve bilgi merkezi">
         <div className="content-wide">
           <div className="grid items-stretch gap-4 lg:grid-cols-2">
-            <QuickCalculator compact />
+            <DeferredQuickCalculator />
             <HomeBlog compact sidebar />
           </div>
         </div>

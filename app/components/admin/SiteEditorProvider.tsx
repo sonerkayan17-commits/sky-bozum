@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { getFirebaseClient } from '../../lib/firebase';
+import { usePathname } from 'next/navigation';
+import { deferClientTask } from '../../lib/defer-client-task';
 
 type SiteEditorContextValue = {
   isAdmin: boolean;
@@ -20,35 +20,44 @@ const SiteEditorContext = createContext<SiteEditorContextValue>({
 });
 
 export function SiteEditorProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
   const [uid, setUid] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
-    const { auth } = getFirebaseClient();
-    if (!auth) return;
-
-    return onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        setIsAdmin(false);
-        setUid(null);
-        setIsEditMode(false);
-        return;
-      }
-
-      try {
-        const token = await user.getIdTokenResult();
-        const allowed = token.claims.admin === true || user.email === bootstrapAdminEmail;
-        setIsAdmin(allowed);
-        setUid(allowed ? user.uid : null);
-        if (!allowed) setIsEditMode(false);
-      } catch {
-        setIsAdmin(false);
-        setUid(null);
-        setIsEditMode(false);
-      }
-    });
-  }, []);
+    let active = true;
+    let unsubscribe: () => void = () => undefined;
+    const accountRoute = /^\/(yonetim|admin|hesabim|giris|kayit|uyeler)(\/|$)/.test(pathname);
+    const knownAdmin = typeof window !== 'undefined' && window.localStorage.getItem('sky-bozum-admin-session') === '1';
+    const cancel = deferClientTask(async () => {
+      const [{ getFirebaseClient }, { onAuthStateChanged }] = await Promise.all([
+        import('../../lib/firebase'),
+        import('firebase/auth'),
+      ]);
+      if (!active) return;
+      const { auth } = getFirebaseClient();
+      if (!auth) return;
+      unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          window.localStorage.removeItem('sky-bozum-admin-session');
+          setIsAdmin(false); setUid(null); setIsEditMode(false);
+          return;
+        }
+        try {
+          const token = await user.getIdTokenResult();
+          const allowed = token.claims.admin === true || user.email === bootstrapAdminEmail;
+          if (allowed) window.localStorage.setItem('sky-bozum-admin-session', '1');
+          else window.localStorage.removeItem('sky-bozum-admin-session');
+          setIsAdmin(allowed); setUid(allowed ? user.uid : null);
+          if (!allowed) setIsEditMode(false);
+        } catch {
+          setIsAdmin(false); setUid(null); setIsEditMode(false);
+        }
+      });
+    }, 30_000, accountRoute || knownAdmin);
+    return () => { active = false; cancel(); unsubscribe(); };
+  }, [pathname]);
 
   const value = useMemo<SiteEditorContextValue>(() => ({
     isAdmin,

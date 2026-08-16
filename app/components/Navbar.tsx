@@ -1,16 +1,16 @@
 'use client';
 
-import Link from 'next/link';
+import Link from './DeferredLink';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { getFirebaseClient } from '../lib/firebase';
-import SiteSearch from './SiteSearch';
-import MemberNotifications from './member/MemberNotifications';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { siteFeatures } from '../lib/features';
 import { useSiteSettings } from './SiteSettingsProvider';
+import { deferClientTask } from '../lib/defer-client-task';
 import './member/member-notifications.css';
+
+const MemberNotifications = lazy(() => import('./member/MemberNotifications'));
+const SiteSearch = lazy(() => import('./SiteSearch'));
 
 const items = [
   ['Ana Sayfa', '/'],
@@ -30,8 +30,9 @@ export default function Navbar() {
   const settings = useSiteSettings();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [desktopSearchReady, setDesktopSearchReady] = useState(false);
   const [memberName, setMemberName] = useState<string | null>(null);
-  const [authReady, setAuthReady] = useState(false);
+  const [authReady, setAuthReady] = useState(true);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
@@ -42,17 +43,48 @@ export default function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    const { auth } = getFirebaseClient();
-    if (!auth) { setAuthReady(true); return; }
-    return onAuthStateChanged(auth, (user) => {
-      setMemberName(user ? (user.displayName?.trim() || user.email?.split('@')[0] || 'Hesabım') : null);
-      setAuthReady(true);
-    });
+    const handleSearchShortcut = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'k') return;
+      event.preventDefault();
+      setDesktopSearchReady(true);
+      setOpen(false);
+    };
+
+    window.addEventListener('keydown', handleSearchShortcut);
+    return () => window.removeEventListener('keydown', handleSearchShortcut);
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    let unsubscribe: () => void = () => undefined;
+    const accountRoute = /^\/(yonetim|admin|hesabim|giris|kayit|uyeler)(\/|$)/.test(pathname);
+    const knownSession = typeof window !== 'undefined' && window.localStorage.getItem('sky-bozum-member-session') === '1';
+    const cancel = deferClientTask(async () => {
+      const [{ getFirebaseClient }, { onAuthStateChanged }] = await Promise.all([
+        import('../lib/firebase'),
+        import('firebase/auth'),
+      ]);
+      if (!active) return;
+      const { auth } = getFirebaseClient();
+      if (!auth) return;
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) window.localStorage.setItem('sky-bozum-member-session', '1');
+        else window.localStorage.removeItem('sky-bozum-member-session');
+        setMemberName(user ? (user.displayName?.trim() || user.email?.split('@')[0] || 'Hesabım') : null);
+        setAuthReady(true);
+      });
+    }, 30_000, accountRoute || knownSession);
+    return () => { active = false; cancel(); unsubscribe(); };
+  }, [pathname]);
+
   async function logout() {
+    const [{ getFirebaseClient }, { signOut }] = await Promise.all([
+      import('../lib/firebase'),
+      import('firebase/auth'),
+    ]);
     const { auth } = getFirebaseClient();
     if (auth) await signOut(auth);
+    window.localStorage.removeItem('sky-bozum-member-session');
     setOpen(false);
   }
 
@@ -128,7 +160,15 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <SiteSearch mode="desktop" />
+        {desktopSearchReady ? <Suspense fallback={null}><SiteSearch mode="desktop" autoFocus /></Suspense> : (
+          <div className="site-search-root site-search-root--desktop hidden lg:block">
+            <button type="button" onClick={() => setDesktopSearchReady(true)} className="site-search-input site-search-input--desktop field focus-ring relative block w-full bg-white/[.045] text-left text-sm font-semibold text-slate-500" aria-label="Site genelinde aramayı aç">
+              <svg className="site-search-icon pointer-events-none absolute size-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+              <span>{settings.searchPlaceholder}</span>
+              <kbd className="site-search-shortcut pointer-events-none absolute rounded-md border border-white/10 bg-white/[.045] px-2 py-1 text-[10px] font-black text-slate-500">Ctrl K</kbd>
+            </button>
+          </div>
+        )}
 
         <nav className="site-navbar__links hidden shrink-0 items-center gap-0.5 xl:flex" aria-label="Ana menü">
           {visibleItems.map(([label, href]) => (
@@ -149,7 +189,7 @@ export default function Navbar() {
         </nav>
 
         <div className="site-navbar__actions flex items-center gap-2.5">
-          <MemberNotifications />
+          {memberName ? <Suspense fallback={null}><MemberNotifications /></Suspense> : null}
           {authReady && memberName ? <div className="member-menu group relative hidden sm:block">
             <Link href="/hesabim" className="member-menu__trigger focus-ring inline-flex min-h-10 max-w-44 items-center justify-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-500/[.08] px-2.5 text-[12px] font-bold text-emerald-200"><span className="member-menu__avatar" aria-hidden="true">{memberName.charAt(0).toUpperCase()}</span><span className="truncate">{memberName}</span><span className="member-menu__chevron" aria-hidden="true">⌄</span></Link>
             <div className="member-menu__panel invisible absolute right-0 top-[calc(100%+.55rem)] z-50 w-72 translate-y-1 overflow-hidden rounded-2xl border border-white/10 bg-[#11141b]/98 opacity-0 shadow-[0_22px_70px_rgba(0,0,0,.55)] transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
@@ -197,7 +237,7 @@ export default function Navbar() {
         <>
           <button type="button" className="fixed inset-x-0 bottom-0 top-[68px] z-40 bg-black/55 backdrop-blur-[2px] lg:hidden" aria-label="Aramayı kapat" onClick={() => setSearchOpen(false)} />
           <div ref={mobileSearchRef} id="mobile-site-search" role="dialog" aria-modal="true" aria-label="Site araması" className="absolute inset-x-0 top-full z-50 border-t border-white/10 bg-[#0b0d12]/98 shadow-[0_24px_70px_rgba(0,0,0,.55)] lg:hidden">
-            <div className="content-shell py-4"><SiteSearch mode="mobile" autoFocus onNavigate={() => setSearchOpen(false)} /></div>
+            <div className="content-shell py-4"><Suspense fallback={<div className="h-12 rounded-xl border border-white/10 bg-white/[.04]" />}><SiteSearch mode="mobile" autoFocus onNavigate={() => setSearchOpen(false)} /></Suspense></div>
           </div>
         </>
       )}

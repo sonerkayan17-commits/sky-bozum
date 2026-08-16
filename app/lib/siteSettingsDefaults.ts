@@ -1,0 +1,39 @@
+import { siteConfig } from './site-config';
+
+export type SiteSettings = {
+  brandName: string; brandTagline: string; footerDescription: string; phone: string; email: string; whatsapp: string;
+  liveSupportLabel: string; supportHours: string; defaultSeoTitle: string; defaultSeoDescription: string;
+  heroEyebrow: string; heroTitle: string; heroLead: string; heroPrimaryCta: string; proofExperience: string; proofTransactions: string;
+  announcementEnabled: boolean; announcementText: string; announcementHref: string; searchPlaceholder: string;
+  searchQuickAccessTitle: string; searchContinueTitle: string; searchFeaturedTitle: string; searchRecentEnabled: boolean;
+  searchQuickActionRateEnabled: boolean; searchQuickActionRateTitle: string; searchQuickActionRateDescription: string; searchQuickActionRateHref: string;
+  searchQuickActionServicesEnabled: boolean; searchQuickActionServicesTitle: string; searchQuickActionServicesDescription: string; searchQuickActionServicesHref: string;
+  searchQuickActionTrustEnabled: boolean; searchQuickActionTrustTitle: string; searchQuickActionTrustDescription: string; searchQuickActionTrustHref: string;
+  searchQuickActionSupportEnabled: boolean; searchQuickActionSupportTitle: string; searchQuickActionSupportDescription: string; searchQuickActionSupportHref: string;
+  savedItemsLabel: string; updatedBy?: string; updatedAt?: unknown;
+};
+
+export const defaultSiteSettings: SiteSettings = {
+  brandName: siteConfig.name,
+  brandTagline: 'Dijital bakiyeniz için açık oran ve kontrollü işlem akışı.',
+  footerDescription: 'Mobil ödeme ve dijital bakiyeler için açık oran bilgisi, kontrollü işlem akışı ve yazılı destek.',
+  phone: siteConfig.phone, email: siteConfig.email, whatsapp: siteConfig.whatsapp,
+  liveSupportLabel: siteConfig.liveSupportLabel, supportHours: 'Her gün 09:00 - 00:00',
+  defaultSeoTitle: 'Sky Bozum - Mobil Ödeme ve Dijital Bakiye Bozum',
+  defaultSeoDescription: 'Mobil ödeme, dijital kod ve bakiye işlemleri için güncel bilgi, hesaplama araçları ve yazılı destek.',
+  heroEyebrow: '10 yıl kurucu deneyimi · 7/24 destek', heroTitle: 'Mobil ödeme ve dijital bakiyenizi güvenle bozdurun.',
+  heroLead: 'Vodafone, Turkcell, Türk Telekom, Paycell, Pokus ve dijital bakiyeleriniz için işlem öncesinde net oran, güvenli süreç ve hızlı ödeme.',
+  heroPrimaryCta: 'Güncel oranınızı öğrenin', proofExperience: '10 yıl', proofTransactions: '10.000+',
+  announcementEnabled: false, announcementText: '', announcementHref: '/bilgi-merkezi',
+  searchPlaceholder: 'Hizmet, operatör, rehber veya araç ara...', searchQuickAccessTitle: 'Hızlı erişim ve rehberler',
+  searchContinueTitle: 'Kaldığınız yerden devam edin', searchFeaturedTitle: 'Öne çıkan rehberler', searchRecentEnabled: true,
+  searchQuickActionRateEnabled: true, searchQuickActionRateTitle: 'Oran hesapla',
+  searchQuickActionRateDescription: 'İşlem tutarını ve tahmini sonucu hızlıca hesaplayın.', searchQuickActionRateHref: '/araclar#oran-hesapla',
+  searchQuickActionServicesEnabled: true, searchQuickActionServicesTitle: 'Tüm hizmetler',
+  searchQuickActionServicesDescription: 'Mobil ödeme, dijital kod ve cüzdan seçeneklerini inceleyin.', searchQuickActionServicesHref: '/hizmetler',
+  searchQuickActionTrustEnabled: true, searchQuickActionTrustTitle: 'Güvenlik kontrolü',
+  searchQuickActionTrustDescription: 'İşlem öncesi resmi kanalları ve güvenlik notlarını kontrol edin.', searchQuickActionTrustHref: '/guven-merkezi',
+  searchQuickActionSupportEnabled: true, searchQuickActionSupportTitle: 'Destek ve iletişim',
+  searchQuickActionSupportDescription: 'Resmi iletişim kanallarına ve destek seçeneklerine ulaşın.', searchQuickActionSupportHref: '/iletisim',
+  savedItemsLabel: '★ Kaydettiklerim',
+};

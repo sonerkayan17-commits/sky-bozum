@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from './DeferredLink';
 import Image from 'next/image';
 
 type ArtworkItem = {

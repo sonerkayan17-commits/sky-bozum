@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from './DeferredLink';
 
 const brands = [
   { name: 'Vodafone', sub: 'Mobil ödeme bozum', logo: '/brands/vodafone/vodafone.svg', href: '/hizmetler/vodafone-mobil-odeme', tone: 'brand-vodafone' },
