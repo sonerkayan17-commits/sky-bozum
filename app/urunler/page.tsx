@@ -42,13 +42,24 @@ export default function ProductsPage() {
     <main className="products-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <section className="products-hero">
-        <div className="products-shell products-hero__inner">
-          <p className="products-kicker">Sky Bozum ürün kataloğu</p>
-          <h1>Oyun bakiyenizi <em>tek ekranda</em> seçin.</h1>
-          <p>Oyun ve dijital kod ürünlerini paket, bölge ve teslim bilgileriyle karşılaştırın. Her ürünün stok durumu ve kullanım koşulu ürün sayfasında açıkça gösterilir.</p>
-          <div className="products-hero__chips" aria-label="Ürün kategorileri">
-            <span>5 ürün grubu</span><span>Güncel katalog</span><span>Stok durumu açık</span>
+        <div className="products-shell products-hero__layout">
+          <div className="products-hero__inner">
+            <p className="products-kicker">Sky Bozum ürün kataloğu</p>
+            <h1>Oyun bakiyenizi <em>tek ekranda</em> seçin.</h1>
+            <p>Oyun ve dijital kod ürünlerini paket, bölge ve teslim bilgileriyle karşılaştırın. Her ürünün stok durumu ve kullanım koşulu ürün sayfasında açıkça gösterilir.</p>
+            <div className="products-hero__chips" aria-label="Ürün kategorileri">
+              <span>5 ürün grubu</span><span>Güncel katalog</span><span>Stok durumu açık</span>
+            </div>
           </div>
+          <aside className="products-hero__aside" aria-label="Ürün kataloğunu kullanma adımları">
+            <p className="products-kicker">Kataloğu kullanın</p>
+            <h2>Karar vermeden önce üç kısa kontrol.</h2>
+            <ol>
+              <li><span>01</span><div><strong>Ürünü seçin</strong><small>Oyun veya dijital bakiye grubunu açın.</small></div></li>
+              <li><span>02</span><div><strong>Paket ve bölgeyi okuyun</strong><small>Tutar, para birimi ve kullanım şartını karşılaştırın.</small></div></li>
+              <li><span>03</span><div><strong>Stok durumunu teyit edin</strong><small>Stok açılmadan satın alma yapmayın.</small></div></li>
+            </ol>
+          </aside>
         </div>
       </section>
 
