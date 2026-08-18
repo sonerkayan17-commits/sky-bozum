@@ -1,7 +1,7 @@
 /* The CTA occupies half of the homepage grid, so its internal layout stays single-column. */
 .home-page .home-contact-band {
   grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-rows: auto auto auto !important;
+  grid-template-rows: auto auto auto 1fr !important;
   gap: 1.15rem !important;
   min-height: 470px !important;
   padding: 1.7rem !important;
@@ -9,7 +9,8 @@
 
 .home-page .home-contact-band__copy,
 .home-page .home-contact-band__actions,
-.home-page .home-contact-band__facts {
+.home-page .home-contact-band__facts,
+.home-page .home-contact-band__guides {
   grid-column: 1 !important;
   width: 100% !important;
   min-width: 0 !important;
@@ -43,9 +44,65 @@
   margin-top: auto !important;
 }
 
+.home-page .home-contact-band__guides {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-column: 1 !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-self: end;
+  min-width: 0;
+  border-top: 1px solid rgba(255,255,255,.065);
+  padding-top: .9rem;
+}
+
+.home-page .home-contact-band__guides > a {
+  display: grid;
+  min-width: 0;
+  grid-template-rows: auto 1fr;
+  gap: .6rem;
+  padding: 0 .65rem;
+  color: #d8dce3;
+  transition: color .2s ease;
+}
+
+.home-page .home-contact-band__guides > a:first-child { padding-left: 0; }
+.home-page .home-contact-band__guides > a:last-child { padding-right: 0; }
+.home-page .home-contact-band__guides > a + a { border-left: 1px solid rgba(255,255,255,.055); }
+.home-page .home-contact-band__guides > a:hover { color: #fff; }
+.home-contact-band__guide-cover { position: relative; display: block; width: 100%; aspect-ratio: 16 / 8.5; overflow: hidden; border-radius: 7px; background: #080b11; }
+.home-contact-band__guide-cover img { object-fit: cover; transition: transform .3s ease; }
+.home-contact-band__guides > a:hover .home-contact-band__guide-cover img { transform: scale(1.035); }
+.home-contact-band__guide-copy { display: flex; min-width: 0; flex-direction: column; }
+.home-contact-band__guide-copy small { color: #bd5268; font-size: .43rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.home-contact-band__guide-copy strong { margin-top: .3rem; font-size: .57rem; line-height: 1.35; letter-spacing: 0; }
+.home-contact-band__guide-copy b { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-top: .45rem; color: #747d89; font-size: .43rem; }
+.home-contact-band__guide-copy b i { color: #c84b62; font-style: normal; }
+
 @media (max-width: 640px) {
   .home-page .home-contact-band {
     min-height: 0 !important;
     padding: 1.25rem !important;
   }
+
+  .home-page .home-contact-band__guides {
+    grid-template-columns: 1fr;
+    gap: .7rem;
+  }
+
+  .home-page .home-contact-band__guides > a {
+    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-items: center;
+    padding: .7rem 0 0;
+  }
+
+  .home-page .home-contact-band__guides > a + a { border-top: 1px solid rgba(255,255,255,.055); border-left: 0; }
+  .home-contact-band__guide-cover { aspect-ratio: 16 / 10; }
+  .home-contact-band__guide-copy strong { font-size: .68rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-contact-band__guide-cover img { transition: none; }
+  .home-contact-band__guides > a:hover .home-contact-band__guide-cover img { transform: none; }
 }

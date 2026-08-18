@@ -1,6 +1,31 @@
+import Image from 'next/image';
 import Link from './DeferredLink';
 import { siteConfig } from '../lib/site-config';
 import { InlineEditableText } from './admin/SiteInlineEditor';
+
+const walletGuides = [
+  {
+    href: '/bilgi-merkezi/paycell-nedir-nasil-kullanilir',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/dijital-cuzdan-konu-merkezi.webp',
+    alt: 'Paycell bakiye ve kullanım rehberi kapağı',
+    label: 'Paycell',
+    title: 'Bakiye ve kullanım nasıl çalışır?',
+  },
+  {
+    href: '/bilgi-merkezi/razer-gold-kodu-nasil-satilir',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/razer-gold-kodu-satis-v2.webp',
+    alt: 'Razer Gold kodunu doğrudan satma rehberi kapağı',
+    label: 'Razer Gold',
+    title: '14 haneli kodu nasıl satılır?',
+  },
+  {
+    href: '/bilgi-merkezi/apple-gift-card-nedir',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/apple-gift-card-bolge-bozum.webp',
+    alt: 'Apple ve iTunes 500 TL kod satışı rehberi kapağı',
+    label: 'Apple / iTunes',
+    title: 'Apple hediye kartında bölge kontrolü',
+  },
+] as const;
 
 export default function FinalCta() {
   return (
@@ -25,6 +50,21 @@ export default function FinalCta() {
         <p><span>01</span><strong>Yazılı teklif</strong><small>Oran ve net ödeme görünür</small></p>
         <p><span>02</span><strong>Kontrollü süreç</strong><small>Karar yalnızca size ait</small></p>
         <p><span>03</span><strong>Güvenli sınır</strong><small>Şifre ve SMS kodu istenmez</small></p>
+      </div>
+
+      <div className="home-contact-band__guides" aria-label="Cüzdan ve doğrudan kod satışı rehberleri">
+        {walletGuides.map((guide) => (
+          <Link href={guide.href} key={guide.href} className="focus-ring">
+            <span className="home-contact-band__guide-cover">
+              <Image src={guide.image} alt={guide.alt} fill loading="lazy" sizes="(max-width: 640px) 112px, 190px" />
+            </span>
+            <span className="home-contact-band__guide-copy">
+              <small>{guide.label}</small>
+              <strong>{guide.title}</strong>
+              <b>Rehberi okuyun <i aria-hidden="true">→</i></b>
+            </span>
+          </Link>
+        ))}
       </div>
     </section>
   );
