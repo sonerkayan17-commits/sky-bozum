@@ -67,6 +67,17 @@ const highlights = [
       { src: '/brands/mastercard/mastercard.svg', label: 'Mastercard' },
     ],
   },
+  {
+    service: 'Steam Cüzdan Kodu',
+    tag: 'Dijital oyun kodu',
+    quote: 'Steam kodunun bölgesi, para birimi ve kullanılmamış olma durumu işlem öncesinde kontrol edilir.',
+    accent: 'blue',
+    href: '/hizmetler/steam',
+    visual: 'steam',
+    artwork: [
+      { src: '/brands/steam/steam.svg', label: 'Steam', className: 'experience-logo--steam' },
+    ],
+  },
 ] as const;
 
 function ShieldCheck() {
@@ -93,7 +104,7 @@ function ServiceArtwork({ items, visual }: { items: readonly ArtworkItem[]; visu
         ))}
       </div>
       <span className="experience-artwork-status"><i /> DOĞRULANDI</span>
-      <span className="experience-artwork-code">{visual === 'cards' ? 'FAST / 3D SECURE' : visual === 'operators' ? '3 OPERATÖR' : visual === 'wallets' ? 'ANLIK BAKİYE' : visual === 'apple' ? 'GIFT CARD' : 'KOD KONTROL'}</span>
+      <span className="experience-artwork-code">{visual === 'cards' ? 'FAST / 3D SECURE' : visual === 'operators' ? '3 OPERATÖR' : visual === 'wallets' ? 'ANLIK BAKİYE' : visual === 'apple' ? 'GIFT CARD' : visual === 'steam' ? 'STEAM KODU' : 'KOD KONTROL'}</span>
     </div>
   );
 }
