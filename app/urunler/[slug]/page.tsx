@@ -45,10 +45,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <section className="product-info" aria-labelledby="product-info-title">
           <div className="product-info__grid">
             <div className="product-info__about">
-              <p className="product-kicker">Ürün hakkında</p>
-              <h2 id="product-info-title">{product.shortName} kullanmadan önce</h2>
+              <p className="product-kicker">Adım adım rehber</p>
+              <h2 id="product-info-title">{product.guide.title}</h2>
+              <p>{product.guide.text}</p>
               <p>{product.intro}</p>
-              <p>Ürün stokta olmadığında satın alma ve sepet işlemleri kapalı tutulur. Stok açıldığında bu sayfadaki paket ve seçim alanı güncellenir.</p>
+              <a className="product-info__source" href={product.guide.sourceUrl} target="_blank" rel="noreferrer">{product.guide.sourceLabel} ↗</a>
             </div>
             <div className="product-info__steps" aria-label={`${product.shortName} kullanım kontrolleri`}>
               {product.howTo.map((item, index) => <article key={item.title} className="product-step"><span>0{index + 1}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}
