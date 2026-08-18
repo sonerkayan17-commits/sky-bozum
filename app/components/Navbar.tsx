@@ -15,6 +15,7 @@ const SiteSearch = lazy(() => import('./SiteSearch'));
 const items = [
   ['Ana Sayfa', '/'],
   ['Hizmetlerimiz', '/hizmetler'],
+  ['Ürünler', '/urunler'],
   ['Araçlar', '/araclar'],
   ['Operatörler', '/operatorler'],
   ['Rehber', '/bilgi-merkezi'],

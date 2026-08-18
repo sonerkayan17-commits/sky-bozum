@@ -3,10 +3,12 @@ import {toolPages} from './tools';
 import {getArticleCategories} from './articleCategories';
 import {getTopicHubs} from './topicHubs';
 import {troubleshootingGuides} from './troubleshooting';
+import {products} from './products';
 export type SearchItem={title:string;description:string;href:string;type:'Hizmet'|'Makale'|'Araç'|'Sayfa';keywords:string[]};
 const pages:SearchItem[]=[
   {title:'Ana Sayfa',description:'Sky Bozum hizmet vitrini, operatörler ve güncel işlem bilgileri.',href:'/',type:'Sayfa',keywords:['ana sayfa','sky bozum','bozumcu']},
   {title:'Tüm Hizmetler',description:'Mobil ödeme, dijital kod, cüzdan ve kart hizmetleri.',href:'/hizmetler',type:'Sayfa',keywords:['hizmetler','bozum','dijital bakiye']},
+  {title:'Ürünler',description:'PUBG Mobile UC, Valorant VP, League of Legends RP, Metin2 Ejder Parası ve Razer Gold ürünleri.',href:'/urunler',type:'Sayfa',keywords:['ürünler','oyun bakiyesi','uc','vp','rp','ejder parası','razer gold']},
   {title:'Ücretsiz Hesaplama Araçları',description:'Hedef ödeme, oran karşılaştırma ve kod adedi araçları.',href:'/araclar',type:'Sayfa',keywords:['araçlar','hesap makineleri','ücretsiz hesaplama']},
   ...toolPages.map(tool=>({title:tool.title,description:tool.description,href:tool.href,type:'Araç' as const,keywords:[...tool.keywords]})),
   {title:'Operatörler',description:'Vodafone, Turkcell ve Türk Telekom mobil ödeme rehberleri.',href:'/operatorler',type:'Sayfa',keywords:['hat','operatör','mobil ödeme']},
@@ -21,6 +23,7 @@ const pages:SearchItem[]=[
   {title:'Hakkımızda',description:'Sky Bozum hizmet yaklaşımı ve işlem ilkeleri.',href:'/hakkimizda',type:'Sayfa',keywords:['kurumsal','hakkımızda','3 yıl']},
 ];
 export const searchItems:SearchItem[]=[
+  ...products.map(product=>({title:product.name,description:product.description,href:`/urunler/${product.slug}`,type:'Sayfa' as const,keywords:[product.shortName,product.category,product.eyebrow,...product.packs.map(pack=>pack.label)]})),
   ...services.map(service=>({title:service.name,description:service.description,href:`/hizmetler/${service.slug}`,type:'Hizmet' as const,keywords:[service.shortName,service.category,...service.highlights]})),
   ...articles.map(article=>({title:article.title,description:article.excerpt,href:`/bilgi-merkezi/${article.slug}`,type:'Makale' as const,keywords:[article.category,article.serviceSlug??'',...(article.keywords??[]),...article.sections.map(section=>section.title),...(article.sections.flatMap(section=>section.subsections?.map(item=>item.title)??[]))]})),
   ...troubleshootingGuides.map(guide=>({title:guide.title,description:guide.summary,href:`/bilgi-merkezi/sorun-cozme/${guide.slug}`,type:'Makale' as const,keywords:[guide.product,guide.category,...guide.keywords,...guide.symptoms,...guide.causes]})),

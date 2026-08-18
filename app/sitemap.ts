@@ -8,6 +8,7 @@ import { troubleshootingGuides } from './lib/troubleshooting';
 import { STATIC_ROUTES, routePath } from './lib/routes';
 import { forumSections, forumStarterTopics, slugifyForumCategory } from './lib/forumTaxonomy';
 import { siteFeatures } from './lib/features';
+import { products } from './lib/products';
 
 const updated = new Date(DEFAULT_UPDATED_AT);
 
@@ -16,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...STATIC_ROUTES.map((route) => ({ url: `${SITE_URL}${route.path}`, lastModified: updated, changeFrequency: route.changeFrequency, priority: route.priority })),
     ...toolPages.map((tool) => ({ url: `${SITE_URL}${tool.href}`, lastModified: updated, changeFrequency: 'monthly' as const, priority: .72 })),
     ...services.map((service) => ({ url: `${SITE_URL}${routePath.service(service.slug)}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .85 })),
+    { url: `${SITE_URL}/urunler`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .82 },
+    ...products.map((product) => ({ url: `${SITE_URL}/urunler/${product.slug}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .78 })),
     ...troubleshootingGuides.map((guide) => ({ url: `${SITE_URL}${routePath.troubleshooting(guide.slug)}`, lastModified: updated, changeFrequency: 'monthly' as const, priority: .78 })),
     ...getTopicHubs().map((hub) => ({ url: `${SITE_URL}${routePath.topicHub(hub.slug)}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .8 })),
     ...getArticleCategories(articles).map((category) => ({ url: `${SITE_URL}${routePath.articleCategory(category.slug)}`, lastModified: updated, changeFrequency: 'weekly' as const, priority: .75 })),
