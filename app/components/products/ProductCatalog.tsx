@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from '../DeferredLink';
 import { useMemo, useState } from 'react';
 import type { ProductItem } from '../../lib/products';
 import ProductCover from './ProductCover';

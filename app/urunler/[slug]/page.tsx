@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '../../components/DeferredLink';
 import { notFound } from 'next/navigation';
 import ProductCover from '../../components/products/ProductCover';
 import ProductCatalog from '../../components/products/ProductCatalog';
 import { getProduct, products } from '../../lib/products';
 import { absoluteUrl, breadcrumbSchema, createMetadata, jsonLd } from '../../lib/seo';
+import '../../styles/products-performance.css';
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));

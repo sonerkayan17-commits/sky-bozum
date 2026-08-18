@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '../components/DeferredLink';
 import ProductCover from '../components/products/ProductCover';
 import { products } from '../lib/products';
 import { absoluteUrl, createMetadata, jsonLd } from '../lib/seo';
+import '../styles/products-performance.css';
 
 export const metadata: Metadata = createMetadata({
   title: 'Oyun ve dijital ürünler',
@@ -70,7 +71,7 @@ export default function ProductsPage() {
         </div>
         <div className="products-grid">
           {products.map((product) => (
-            <Link key={product.slug} href={`/urunler/${product.slug}`} className="product-directory-card" aria-label={`${product.name} ürün sayfasını aç`}>
+            <Link key={product.slug} href={`/urunler/${product.slug}`} prefetch={false} className="product-directory-card" aria-label={`${product.name} ürün sayfasını aç`}>
               <div className="product-directory-card__cover"><ProductCover product={product} /></div>
               <div className="product-directory-card__body">
                 <p className="product-kicker">{product.eyebrow}</p>
