@@ -785,6 +785,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
+  contain: paint;
   padding: 3px 0 13px;
   outline: none;
   mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
@@ -808,7 +809,9 @@
 .movingReviewsTrack {
   display: flex;
   width: max-content;
-  animation: movingReviewsFlow 120s linear infinite;
+  animation: movingReviewsFlow 68s linear infinite;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   will-change: transform;
 }
 
@@ -939,7 +942,7 @@
   .movingReviewsControls { width: 100%; max-width: none; align-items: center; justify-content: space-between; }
   .movingReviewsHeading p { max-width: none; text-align: left; }
   .movingReviewCard { width: 270px; flex-basis: 270px; }
-  .movingReviewsTrack { animation-duration: 105s; }
+  .movingReviewsTrack { animation-duration: 64s; }
 }
 
 @media (max-width: 620px) {
@@ -949,7 +952,7 @@
   .movingReviewsToggle { min-height: 38px; }
   .movingReviewsViewport { margin-inline: -12px; width: calc(100% + 24px); }
   .movingReviewCard { width: 252px; min-height: 150px; flex-basis: 252px; padding: 14px; }
-  .movingReviewsTrack { animation-duration: 92s; }
+  .movingReviewsTrack { animation-duration: 60s; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -963,6 +966,20 @@
   .movingReviewsViewport::after { display: none; }
   .movingReviewsTrack { animation: none; }
   .movingReviewsGroup[aria-hidden='true'] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html[data-motion-preview='true']) .movingReviewsViewport {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  }
+  :global(html[data-motion-preview='true']) .movingReviewsViewport::before,
+  :global(html[data-motion-preview='true']) .movingReviewsViewport::after { display: block; }
+  :global(html[data-motion-preview='true']) .movingReviewsTrack {
+    animation: movingReviewsFlow 68s linear infinite !important;
+  }
+  :global(html[data-motion-preview='true']) .movingReviewsGroup[aria-hidden='true'] { display: flex; }
 }
 
 /* V45.195 — Referanslar: şeffaf örnek/gerçek yorum ayrımı */

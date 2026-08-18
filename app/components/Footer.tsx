@@ -1,13 +1,15 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from './DeferredLink';
 import { siteConfig } from '../lib/site-config';
-import PrivacyControls from './personalization/PrivacyControls';
-import TawkChat from './TawkChat';
 import { siteFeatures } from '../lib/features';
 import { useSiteSettings } from './SiteSettingsProvider';
 import { InlineEditableText } from './admin/SiteInlineEditor';
+
+const PrivacyControls = dynamic(() => import('./personalization/PrivacyControls'), { ssr: false });
+const TawkChat = dynamic(() => import('./TawkChat'), { ssr: false });
 
 const groups = [
   ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],

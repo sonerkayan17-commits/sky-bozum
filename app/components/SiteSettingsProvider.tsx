@@ -23,7 +23,7 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
       unsubscribe = subscribeToSiteSettings(db, (next) => {
         setSettings((current) => JSON.stringify(current) === JSON.stringify(next) ? current : next);
       });
-    });
+    }, { delay: 60_000, intentEvents: false });
     return () => { active = false; cancel(); unsubscribe(); };
   }, []);
 

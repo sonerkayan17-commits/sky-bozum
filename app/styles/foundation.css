@@ -94,6 +94,7 @@ summary::-webkit-details-marker{display:none}
 :where(a,button,input,select,textarea,summary):focus-visible{outline:2px solid var(--pink);outline-offset:3px}
 .reveal{animation:rise .55s ease-out both}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.animate-float,.activity-track{animation:none!important}}
+@media(prefers-reduced-motion:reduce){html[data-motion-preview=true] .animate-float{animation:float 6s ease-in-out infinite!important}html[data-motion-preview=true] .activity-track{animation:marquee 28s linear infinite!important}html[data-motion-preview=true] .reveal{animation:rise .55s ease-out both!important}}
 
 section{scroll-margin-top:96px}
 *{scrollbar-width:thin;scrollbar-color:rgba(244,63,94,.55) rgba(255,255,255,.04)}

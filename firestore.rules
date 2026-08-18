@@ -50,6 +50,12 @@ service cloud.firestore {
       return verifiedMember() || isAdmin();
     }
 
+    function freshCreateTimestamp(value) {
+      return value == request.time
+        && value > request.time - duration.value(2, "m")
+        && value < request.time + duration.value(1, "m");
+    }
+
     // Kullaniciya ait deterministik belge anahtarlarinda ilk get istegi,
     // belge henuz yokken de izinli olmalidir. Aksi halde istemci "var mi?"
     // kontrolunu yapamaz ve yeni kaydi olusturmadan once hata alir.
@@ -71,7 +77,7 @@ service cloud.firestore {
           request.resource.data.status == "pending"
           || (verifiedMemberOrAdmin() && request.resource.data.status == "approved")
         )
-        && request.resource.data.createdAt == request.time
+        && freshCreateTimestamp(request.resource.data.createdAt)
         && (request.resource.data.uid == null || (signedIn() && request.resource.data.uid == request.auth.uid))
         && validAuthor()
         && notBanned()
@@ -154,7 +160,7 @@ service cloud.firestore {
         && data.footerDescription is string && data.footerDescription.size() <= 300
         && data.phone is string && data.phone.size() <= 30
         && data.email is string && data.email.size() <= 120
-        && data.whatsapp is string && data.whatsapp.size() <= 220
+        && data.whatsapp is string && data.whatsapp.matches("^https://wa[.]me/[0-9]{8,15}([?].*)?$") && data.whatsapp.size() <= 220
         && data.liveSupportLabel is string && data.liveSupportLabel.size() <= 80
         && data.supportHours is string && data.supportHours.size() <= 80
         && data.defaultSeoTitle is string && data.defaultSeoTitle.size() <= 180
@@ -216,7 +222,7 @@ service cloud.firestore {
         && request.resource.data.visitorId is string
         && request.resource.data.visitorId.size() >= 8
         && request.resource.data.visitorId.size() <= 80
-        && request.resource.data.createdAt == request.time;
+        && freshCreateTimestamp(request.resource.data.createdAt);
       allow update: if request.resource.data.visitorId == resource.data.visitorId
         && request.resource.data.type == resource.data.type
         && request.resource.data.targetId == resource.data.targetId
@@ -250,7 +256,7 @@ service cloud.firestore {
         && request.resource.data.referralCode.size() >= 8
         && request.resource.data.referralCode.size() <= 20
         && (request.resource.data.referredBy == null || request.resource.data.referredBy is string)
-        && request.resource.data.createdAt == request.time
+        && freshCreateTimestamp(request.resource.data.createdAt)
       );
       allow update: if isAdmin() || (
         verifiedMember() && request.auth.uid == memberId
@@ -315,7 +321,7 @@ service cloud.firestore {
         && request.resource.data.href is string
         && request.resource.data.href.size() >= 1
         && request.resource.data.href.size() <= 180
-        && request.resource.data.createdAt == request.time;
+        && freshCreateTimestamp(request.resource.data.createdAt);
       allow update: if signedIn()
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
@@ -461,7 +467,7 @@ service cloud.firestore {
 
     match /messages/{messageId} {
       allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
-      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && request.resource.data.createdAt == request.time;
+      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && freshCreateTimestamp(request.resource.data.createdAt);
       allow update, delete: if false;
     }
 
@@ -682,7 +688,7 @@ service cloud.firestore {
             && request.resource.data.updatedBy == request.auth.uid
             && request.resource.data.note is string
             && request.resource.data.note.size() <= 500
-            && request.resource.data.createdAt == request.time
+            && freshCreateTimestamp(request.resource.data.createdAt)
             && request.resource.data.updatedAt == request.time))
         && request.resource.data["customer"] is string
         && request.resource.data["customer"].size() >= 2

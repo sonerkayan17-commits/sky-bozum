@@ -35,7 +35,7 @@ export default function usePublishedRates() {
         });
         setOverrides((current) => JSON.stringify(current) === JSON.stringify(next) ? current : next);
       }, () => setOverrides({}));
-    }, 30_000, pathname !== '/');
+    }, { delay: 60_000, eager: pathname !== '/', intentEvents: pathname !== '/' });
     return () => { active = false; cancel(); unsubscribe(); };
   }, [pathname]);
 

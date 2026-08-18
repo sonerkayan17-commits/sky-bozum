@@ -1,7 +1,20 @@
 import type { Metadata } from 'next';
 import type { ArticleItem, ServiceItem } from './site';
 
-export const SITE_URL = 'https://bozumcu.net';
+export const PRODUCTION_SITE_URL = 'https://bozumcu.net';
+function normalizeSiteUrl(value?: string) {
+  try {
+    const parsed = new URL(value || PRODUCTION_SITE_URL);
+    if (parsed.protocol !== 'https:') return PRODUCTION_SITE_URL;
+    return parsed.origin.replace(/\/$/, '');
+  } catch {
+    return PRODUCTION_SITE_URL;
+  }
+}
+
+export const SITE_URL = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+export const IS_VERCEL_PREVIEW = process.env.VERCEL_ENV === 'preview' || process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
+export const ALLOW_INDEXING = SITE_URL === PRODUCTION_SITE_URL && !IS_VERCEL_PREVIEW;
 export const SITE_NAME = 'Sky Bozum';
 export const SITE_LOCALE = 'tr_TR';
 export const SITE_LANGUAGE = 'tr-TR';
@@ -58,7 +71,7 @@ export function createMetadata({
       description,
       images: [socialImage],
     },
-    robots: noIndex
+    robots: noIndex || !ALLOW_INDEXING
       ? { index: false, follow: false }
       : {
           index: true,

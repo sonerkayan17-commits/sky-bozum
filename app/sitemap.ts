@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { articles, services } from './lib/site';
 import { toolPages } from './lib/tools';
 import { getArticleCategories } from './lib/articleCategories';
-import { SITE_URL, DEFAULT_UPDATED_AT, updatedAt } from './lib/seo';
+import { ALLOW_INDEXING, SITE_URL, DEFAULT_UPDATED_AT, updatedAt } from './lib/seo';
 import { getTopicHubs } from './lib/topicHubs';
 import { troubleshootingGuides } from './lib/troubleshooting';
 import { STATIC_ROUTES, routePath } from './lib/routes';
@@ -13,6 +13,7 @@ import { products } from './lib/products';
 const updated = new Date(DEFAULT_UPDATED_AT);
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  if (!ALLOW_INDEXING) return [];
   return [
     ...STATIC_ROUTES.map((route) => ({ url: `${SITE_URL}${route.path}`, lastModified: updated, changeFrequency: route.changeFrequency, priority: route.priority })),
     ...toolPages.map((tool) => ({ url: `${SITE_URL}${tool.href}`, lastModified: updated, changeFrequency: 'monthly' as const, priority: .72 })),
