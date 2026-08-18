@@ -15,7 +15,7 @@ import { notFound } from 'next/navigation';
 import ShareButtons from '../../components/ShareButtons';
 import { articles } from '../../lib/site';
 import { siteConfig } from '../../lib/site-config';
-import { articleImage, articleUrl, articleWordCount, jsonLd, publishedAt, updatedAt } from '../../lib/seo';
+import { articleImage, articleUrl, articleWordCount, indexableRobots, jsonLd, publishedAt, updatedAt } from '../../lib/seo';
 import { relatedArticles } from '../../lib/internalLinks';
 import { getArticleEditorialLabels, getArticleEditorialTemplate } from '../../lib/articleEditorialTemplate';
 import { serviceForArticle } from '../../lib/contentBridges';
@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       images: [{ url: image, width: 1200, height: 630, alt: article.coverAlt ?? article.title }],
     },
     twitter: { card: 'summary_large_image', title, description, images: [image] },
-    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
+    robots: indexableRobots(),
   };
 }
 

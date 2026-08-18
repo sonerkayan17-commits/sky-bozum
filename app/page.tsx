@@ -45,6 +45,7 @@ export default function Home() {
           <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmetler</Link>
           <Link href="/araclar" className="transition hover:text-rose-300">Araçlar Merkezi</Link>
           <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">Bilgi Merkezi</Link>
+          <Link href="/urunler" className="transition hover:text-rose-300">Ürünler</Link>
           <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk</Link>
           <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven Merkezi</Link>
         </nav>

@@ -22,6 +22,21 @@ export const DEFAULT_PUBLISHED_AT = '2026-07-20T09:00:00+03:00';
 export const DEFAULT_UPDATED_AT = '2026-07-28T09:00:00+03:00';
 export const DEFAULT_OG_IMAGE = '/hero-customer.webp';
 
+export function indexableRobots(noIndex = false): NonNullable<Metadata['robots']> {
+  if (noIndex || !ALLOW_INDEXING) return { index: false, follow: false };
+  return {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  };
+}
+
 export type SeoMetadataInput = {
   title: string;
   description: string;
@@ -71,19 +86,7 @@ export function createMetadata({
       description,
       images: [socialImage],
     },
-    robots: noIndex || !ALLOW_INDEXING
-      ? { index: false, follow: false }
-      : {
-          index: true,
-          follow: true,
-          googleBot: {
-            index: true,
-            follow: true,
-            'max-image-preview': 'large',
-            'max-snippet': -1,
-            'max-video-preview': -1,
-          },
-        },
+    robots: indexableRobots(noIndex),
   };
 }
 

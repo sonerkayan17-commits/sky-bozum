@@ -2,17 +2,45 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import ProductCover from '../components/products/ProductCover';
 import { products } from '../lib/products';
+import { absoluteUrl, createMetadata, jsonLd } from '../lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createMetadata({
   title: 'Oyun ve dijital ürünler',
-  description: 'PUBG Mobile UC, Valorant VP, League of Legends RP, Metin2 Ejder Parası ve Razer Gold ürünlerini inceleyin.',
+  description: 'PUBG Mobile UC, Valorant VP, League of Legends RP, Metin2 Ejder Parası ve Razer Gold ürünlerini paket, bölge ve stok bilgileriyle inceleyin.',
+  path: '/urunler',
   keywords: ['PUBG Mobile UC', 'Valorant VP', 'League of Legends RP', 'Metin2 Ejder Parası', 'Razer Gold'],
-  alternates: { canonical: '/urunler' },
-};
+});
 
 export default function ProductsPage() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${absoluteUrl('/urunler')}#catalog`,
+        name: 'Sky Bozum oyun ve dijital ürün kataloğu',
+        description: 'Oyun bakiyesi ve dijital kod ürünleri için paket, bölge ve kullanım koşulları kataloğu.',
+        url: absoluteUrl('/urunler'),
+        inLanguage: 'tr-TR',
+        isPartOf: { '@id': `${absoluteUrl('/')}#website` },
+        mainEntity: { '@id': `${absoluteUrl('/urunler')}#product-list` },
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${absoluteUrl('/urunler')}#product-list`,
+        itemListElement: products.map((product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: product.name,
+          url: absoluteUrl(`/urunler/${product.slug}`),
+        })),
+      },
+    ],
+  };
+
   return (
     <main className="products-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <section className="products-hero">
         <div className="products-shell products-hero__inner">
           <p className="products-kicker">Sky Bozum ürün kataloğu</p>
@@ -44,6 +72,13 @@ export default function ProductsPage() {
           ))}
         </div>
       </section>
+
+      <nav className="products-crosslinks products-shell" aria-label="Ürün kataloğu bağlantıları">
+        <span>İşlem öncesi</span>
+        <Link href="/hizmetler">Hizmetleri ve oranları inceleyin <b aria-hidden="true">→</b></Link>
+        <Link href="/araclar#oran-hesapla">Yaklaşık ödeme hesaplayın <b aria-hidden="true">→</b></Link>
+        <Link href="/bilgi-merkezi">Kullanım ve güvenlik rehberlerini okuyun <b aria-hidden="true">→</b></Link>
+      </nav>
     </main>
   );
 }
