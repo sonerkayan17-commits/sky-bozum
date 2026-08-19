@@ -199,11 +199,3 @@ main:has(.service-section-anchor)>section.service-section-anchor.border-y{paddin
 .products-page .products-crosslinks a:hover{color:#ffb07d}
 .products-page .product-journey__links a:hover{border-color:rgba(244,63,94,.42);background:rgba(244,63,94,.06)}
 .products-page .product-journey__links b{color:#f4c98d}
-
-/* Keep below-the-fold homepage sections out of the first mobile layout pass. */
-@media(max-width:640px){
-  .home-page>.render-later{
-    content-visibility:auto;
-    contain-intrinsic-size:auto 760px;
-  }
-}
