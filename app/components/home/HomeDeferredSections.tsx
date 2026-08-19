@@ -1,36 +1,28 @@
 'use client';
 
-import { useEffect, useRef, useState, type ComponentType } from 'react';
+import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import Link from '../DeferredLink';
 
-type DeferredComponent = ComponentType<Record<string, never>>;
-
-const loadBrandStrip = () => import('../BrandStrip');
-const loadCredibilityBand = () => import('../CredibilityBand');
-const loadHomeServices = () => import('../HomeServices');
-const loadHomeTrust = () => import('../HomeTrust');
-const loadHomeToolsAndBlog = () => import('./HomeToolsAndBlog');
-const loadHomeTestimonials = () => import('../HomeTestimonials');
-const loadHomeFaqCta = () => import('./HomeFaqCta');
+const BrandStrip = dynamic(() => import('../BrandStrip'));
+const CredibilityBand = dynamic(() => import('../CredibilityBand'));
+const HomeServices = dynamic(() => import('../HomeServices'));
+const HomeTrust = dynamic(() => import('../HomeTrust'));
+const DeferredQuickCalculator = dynamic(() => import('./DeferredQuickCalculator'));
+const HomeBlog = dynamic(() => import('../HomeBlog'));
+const HomeTestimonials = dynamic(() => import('../HomeTestimonials'));
+const HomeFaq = dynamic(() => import('../HomeFaq'));
+const FinalCta = dynamic(() => import('../FinalCta'));
 
 type DeferredSlotProps = {
-  load: () => Promise<{ default: DeferredComponent }>;
+  children: ReactNode;
   minHeight: string;
   label: string;
 };
 
-function DeferredSlot({ load, minHeight, label }: DeferredSlotProps) {
+function DeferredSlot({ children, minHeight, label }: DeferredSlotProps) {
   const slotRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
-  const [LoadedComponent, setLoadedComponent] = useState<DeferredComponent | null>(null);
-
-  useEffect(() => {
-    if (!ready) return;
-    let active = true;
-    void load().then(({ default: Component }) => {
-      if (active) setLoadedComponent(() => Component);
-    });
-    return () => { active = false; };
-  }, [load, ready]);
 
   useEffect(() => {
     const element = slotRef.current;
@@ -55,10 +47,10 @@ function DeferredSlot({ load, minHeight, label }: DeferredSlotProps) {
       ref={slotRef}
       className="home-deferred-slot"
       style={{ minHeight }}
-      aria-label={LoadedComponent ? undefined : label}
-      aria-busy={!LoadedComponent}
+      aria-label={ready ? undefined : label}
+      aria-busy={!ready}
     >
-      {LoadedComponent ? <LoadedComponent /> : null}
+      {ready ? children : null}
     </div>
   );
 }
@@ -66,13 +58,51 @@ function DeferredSlot({ load, minHeight, label }: DeferredSlotProps) {
 export default function HomeDeferredSections() {
   return (
     <>
-      <DeferredSlot load={loadBrandStrip} minHeight="760px" label="Desteklenen hizmetler yükleniyor" />
-      <DeferredSlot load={loadCredibilityBand} minHeight="300px" label="Sky Bozum deneyim bilgileri yükleniyor" />
-      <DeferredSlot load={loadHomeServices} minHeight="900px" label="Hizmet seçenekleri yükleniyor" />
-      <DeferredSlot load={loadHomeTrust} minHeight="720px" label="Güven standardı yükleniyor" />
-      <DeferredSlot load={loadHomeToolsAndBlog} minHeight="1080px" label="Hesaplama ve bilgi merkezi yükleniyor" />
-      <DeferredSlot load={loadHomeTestimonials} minHeight="820px" label="Hizmet deneyimleri yükleniyor" />
-      <DeferredSlot load={loadHomeFaqCta} minHeight="980px" label="Sık sorulan sorular yükleniyor" />
+      <DeferredSlot minHeight="760px" label="Desteklenen hizmetler yükleniyor">
+        <BrandStrip />
+      </DeferredSlot>
+      <DeferredSlot minHeight="300px" label="Sky Bozum deneyim bilgileri yükleniyor">
+        <CredibilityBand />
+      </DeferredSlot>
+      <DeferredSlot minHeight="900px" label="Hizmet seçenekleri yükleniyor">
+        <HomeServices />
+      </DeferredSlot>
+      <DeferredSlot minHeight="720px" label="Güven standardı yükleniyor">
+        <HomeTrust />
+      </DeferredSlot>
+
+      <DeferredSlot minHeight="1080px" label="Hesaplama ve bilgi merkezi yükleniyor">
+        <section className="render-later bg-[#05090f] py-7 sm:py-8" aria-label="Hesaplama ve bilgi merkezi">
+          <div className="content-wide">
+            <div className="grid items-stretch gap-4 lg:grid-cols-2">
+              <DeferredQuickCalculator />
+              <HomeBlog compact sidebar />
+            </div>
+          </div>
+        </section>
+      </DeferredSlot>
+
+      <DeferredSlot minHeight="820px" label="Hizmet deneyimleri yükleniyor">
+        <HomeTestimonials />
+      </DeferredSlot>
+
+      <DeferredSlot minHeight="980px" label="Sık sorulan sorular yükleniyor">
+        <section className="render-later home-final-section content-wide rhythm-md">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <HomeFaq />
+            <FinalCta />
+          </div>
+          <nav className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-sm font-bold text-slate-400" aria-label="Önemli site bölümleri">
+            <span className="text-xs uppercase tracking-[0.16em] text-slate-600">Devam edin</span>
+            <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmetler</Link>
+            <Link href="/araclar" className="transition hover:text-rose-300">Araçlar Merkezi</Link>
+            <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">Bilgi Merkezi</Link>
+            <Link href="/urunler" className="transition hover:text-rose-300">Ürünler</Link>
+            <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk</Link>
+            <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven Merkezi</Link>
+          </nav>
+        </section>
+      </DeferredSlot>
     </>
   );
 }
