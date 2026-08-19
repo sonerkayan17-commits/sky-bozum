@@ -162,6 +162,16 @@ main:has(.service-section-anchor)>section.service-section-anchor.border-y{paddin
   .forum-section-page,.forum-category-page,.forum-topic-page{padding-top:1.5rem;padding-bottom:2.8rem}
 }
 
+/* Keep the first mobile paint focused on readable copy; translucent blur layers
+   are restored on larger screens where the device can afford them. */
+@media(max-width:760px){
+  .grain-overlay{display:none}
+  .site-navbar,.hero-pro-note,.hero-pro-rates,.btn-secondary{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}
+
 /* V45.280 — site-wide visual language: graphite surfaces, coral action, warm gold guidance. */
 .products-page{
   --catalog-accent:var(--pink);
