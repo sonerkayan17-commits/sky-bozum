@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 const accountLinks = [
   ['Hesap özeti', '/hesabim'],
   ['Talepler', '/hesabim/talepler'],
+  ['Siparişler', '/hesabim/siparisler'],
   ['Banka', '/hesabim/banka-bilgileri'],
   ['Abonelikler', '/hesabim/abonelikler'],
   ['Kaydedilenler', '/hesabim/kaydedilenler'],

@@ -43,12 +43,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         category: product.category,
         brand: { '@type': 'Brand', name: product.shortName },
         url: canonical,
-        offers: {
-          '@type': 'Offer',
-          url: canonical,
-          availability: 'https://schema.org/OutOfStock',
-          itemCondition: 'https://schema.org/NewCondition',
-        },
       },
       breadcrumbSchema([
         { name: 'Ana Sayfa', path: '/' },

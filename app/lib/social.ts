@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where, type Firestore } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, increment, query, serverTimestamp, setDoc, where, writeBatch, type Firestore } from 'firebase/firestore';
 
 export async function notify(db: Firestore, senderId: string, receiverId: string, type: 'profile_like'|'point_gift'|'comment_like'|'reply'|'message'|'moderation', text: string, href: string) {
   if (!receiverId || receiverId === senderId) return;
@@ -14,10 +14,27 @@ export async function likeProfile(db: Firestore, senderId: string, receiverId: s
 }
 
 export async function sendPointGift(db: Firestore, senderId: string, receiverId: string, senderName: string) {
-  const giftRef = doc(db, 'pointGifts', `${senderId}_${receiverId}`);
-  if ((await getDoc(giftRef)).exists()) return false;
-  await setDoc(giftRef, { senderId, receiverId, amount: 5, createdAt: serverTimestamp() });
-  await notify(db, senderId, receiverId, 'point_gift', `${senderName} size 5 topluluk puanı gönderdi.`, `/uyeler/${senderId}`).catch(() => undefined);
+  const giftId = `${senderId}_${receiverId}`;
+  const giftRef = doc(db, 'pointGifts', giftId);
+  const senderRef = doc(db, 'members', senderId);
+  const receiverRef = doc(db, 'members', receiverId);
+  const senderLedgerRef = doc(db, 'memberLedger', `gift-${giftId}-sender`);
+  const receiverLedgerRef = doc(db, 'memberLedger', `gift-${giftId}-receiver`);
+  const notificationRef = doc(collection(db, 'notifications'));
+  const [gift, sender] = await Promise.all([getDoc(giftRef), getDoc(senderRef)]);
+  if (gift.exists()) return false;
+  if (!sender.exists() || sender.data().status !== 'active') throw new Error('Aktif üye kaydı bulunamadı.');
+  const senderPoints = Math.max(0, Math.trunc(Number(sender.data().points) || 0));
+  if (senderPoints < 5) throw new Error('Puan göndermek için en az 5 puanınız olmalı.');
+  const timestamp = serverTimestamp();
+  const batch = writeBatch(db);
+  batch.update(senderRef, { points: senderPoints - 5, lastPointGiftId: giftId, updatedAt: timestamp });
+  batch.update(receiverRef, { points: increment(5), lastPointGiftId: giftId, updatedAt: timestamp });
+  batch.set(giftRef, { senderId, receiverId, amount: 5, createdAt: timestamp });
+  batch.set(senderLedgerRef, { memberId: senderId, kind: 'points', amount: -5, balanceAfter: senderPoints - 5, note: 'Bir üyeye topluluk puanı gönderildi', performedBy: senderId, giftId, createdAt: timestamp });
+  batch.set(receiverLedgerRef, { memberId: receiverId, kind: 'points', amount: 5, note: `${senderName} size topluluk puanı gönderdi`, performedBy: senderId, giftId, createdAt: timestamp });
+  batch.set(notificationRef, { senderId, receiverId, type: 'point_gift', text: `${senderName} size 5 topluluk puanı gönderdi.`, href: `/uyeler/${senderId}`, read: false, createdAt: timestamp });
+  await batch.commit();
   return true;
 }
 

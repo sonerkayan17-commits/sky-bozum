@@ -1,55 +1,143 @@
 'use client';
 
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { collection, doc, getDocs, limit, onSnapshot, query, runTransaction, serverTimestamp, where } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 import Link from '../DeferredLink';
-import { useMemo, useState } from 'react';
+import { getFirebaseClient } from '../../lib/firebase';
+import { formatStoreMoney, storePackKey, type StoreCatalogEntry, type StoreOrder } from '../../lib/store';
 import type { ProductItem } from '../../lib/products';
 import ProductCover from './ProductCover';
 
-const stockLabel = 'Stok yok';
-
 export default function ProductCatalog({ product }: { product: ProductItem }) {
+  const router = useRouter();
   const [selectedId, setSelectedId] = useState(product.packs[0]?.id ?? '');
+  const [catalog, setCatalog] = useState<Record<string, StoreCatalogEntry>>({});
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [buying, setBuying] = useState(false);
+  const [notice, setNotice] = useState('');
+  const [delivered, setDelivered] = useState<StoreOrder | null>(null);
+  const [copied, setCopied] = useState(false);
   const selected = useMemo(() => product.packs.find((pack) => pack.id === selectedId) ?? product.packs[0], [product.packs, selectedId]);
+  const selectedCatalog = selected ? catalog[selected.id] : undefined;
+  const available = selectedCatalog?.active === true && selectedCatalog.stockCount > 0 && selectedCatalog.priceMinor !== null;
 
-  return (
-    <section className="product-catalog" aria-labelledby="product-packs-title">
-      <div className="product-catalog__heading">
-        <div>
-          <p className="product-kicker">Seçilebilir ürünler</p>
-          <h2 id="product-packs-title">{product.shortName} seçenekleri</h2>
-          <p>{product.intro}</p>
-        </div>
-        <span className="product-catalog__note">Gösterilen ürünler güncel katalog alanıdır.</span>
+  useEffect(() => {
+    const { db } = getFirebaseClient();
+    if (!db) { setLoading(false); return; }
+    return onSnapshot(query(collection(db, 'productCatalog'), where('productSlug', '==', product.slug)), (snapshot) => {
+      const entries = snapshot.docs.map((item) => {
+        const data = item.data();
+        return { key: item.id, productSlug: String(data.productSlug || ''), productName: String(data.productName || ''), packId: String(data.packId || ''), packLabel: String(data.packLabel || ''), priceMinor: Number.isSafeInteger(Number(data.priceMinor)) ? Number(data.priceMinor) : null, stockCount: Math.max(0, Math.trunc(Number(data.stockCount) || 0)), active: data.active === true } satisfies StoreCatalogEntry;
+      });
+      setCatalog(Object.fromEntries(entries.map((entry) => [entry.packId, entry]))); setLoading(false);
+    }, () => setLoading(false));
+  }, [product.slug]);
+
+  useEffect(() => {
+    const { auth } = getFirebaseClient();
+    if (!auth) return;
+    return onAuthStateChanged(auth, setUser);
+  }, []);
+
+  async function purchase() {
+    if (!selected || buying) return;
+    if (!user) { router.push(`/giris?next=${encodeURIComponent(`/urunler/${product.slug}`)}`); return; }
+    setBuying(true);
+    setNotice('');
+    setDelivered(null);
+    let completedOrderId = '';
+    try {
+      if (!user.emailVerified) throw new Error('Satın alma için e-posta adresinizi doğrulayın.');
+      const { db } = getFirebaseClient();
+      if (!db) throw new Error('Güvenli mağaza bağlantısı kurulamadı.');
+      const catalogKey = storePackKey(product.slug, selected.id);
+      const catalogRef = doc(db, 'productCatalog', catalogKey);
+      const memberRef = doc(db, 'members', user.uid);
+      const orderRef = doc(collection(db, 'productOrders'));
+      const ledgerRef = doc(db, 'memberLedger', `store-${orderRef.id}`);
+      const availableCodes = await getDocs(query(collection(catalogRef, 'codes'), where('status', '==', 'available'), limit(1)));
+      if (availableCodes.empty) throw new Error('Bu paket şu anda stokta değil.');
+      const selectedCodeRef = availableCodes.docs[0].ref;
+      await runTransaction(db, async (transaction) => {
+        const [catalogSnapshot, memberSnapshot, codeDocument] = await Promise.all([transaction.get(catalogRef), transaction.get(memberRef), transaction.get(selectedCodeRef)]);
+        const catalogData = catalogSnapshot.data(); const memberData = memberSnapshot.data();
+        if (!catalogSnapshot.exists() || catalogData?.active !== true) throw new Error('Bu ürün şu anda satışa açık değil.');
+        if (!memberSnapshot.exists() || memberData?.status !== 'active') throw new Error('Aktif bir üye hesabı gerekiyor.');
+        const priceMinor = Number(catalogData.priceMinor); const stockCount = Math.max(0, Math.trunc(Number(catalogData.stockCount) || 0));
+        if (!Number.isSafeInteger(priceMinor) || priceMinor <= 0 || stockCount <= 0) throw new Error('Bu paket şu anda stokta değil.');
+        const balanceMinor = Math.round((Number(memberData.balance) || 0) * 100);
+        if (!Number.isSafeInteger(balanceMinor) || balanceMinor < priceMinor) throw new Error('Bakiyeniz bu sipariş için yetersiz.');
+        const codeEncrypted = String(codeDocument.data()?.codeEncrypted || '');
+        if (!codeDocument.exists() || codeDocument.data()?.status !== 'available' || !codeEncrypted) throw new Error('Seçilen stok başka bir siparişe ayrıldı; lütfen yeniden deneyin.');
+        const timestamp = serverTimestamp(); const balanceAfter = (balanceMinor - priceMinor) / 100;
+        transaction.update(memberRef, { balance: balanceAfter, lastStoreOrderId: orderRef.id, updatedAt: timestamp });
+        transaction.update(selectedCodeRef, { status: 'delivered', deliveredTo: user.uid, deliveredAt: timestamp, orderId: orderRef.id });
+        transaction.update(catalogRef, { stockCount: stockCount - 1, lastOrderId: orderRef.id, updatedAt: timestamp });
+        transaction.set(orderRef, { userId: user.uid, userEmail: user.email || '', productSlug: product.slug, productName: product.shortName, packId: selected.id, packLabel: selected.label, catalogKey, codeId: codeDocument.id, codeEncrypted, priceMinor, status: 'delivered', createdAt: timestamp, deliveredAt: timestamp });
+        transaction.set(ledgerRef, { memberId: user.uid, kind: 'balance', amount: -(priceMinor / 100), balanceAfter, note: `${product.shortName} · ${selected.label} satın alımı`, orderId: orderRef.id, performedBy: 'store', createdAt: timestamp });
+      });
+      completedOrderId = orderRef.id;
+      const response = await fetch('/api/store/reveal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await user.getIdToken()}` },
+        body: JSON.stringify({ orderId: orderRef.id }),
+      });
+      const payload = await response.json().catch(() => ({})) as { order?: StoreOrder; error?: string };
+      if (!response.ok || !payload.order) throw new Error(payload.error || 'Satın alma tamamlanamadı.');
+      setDelivered(payload.order);
+      setNotice('Satın alma tamamlandı; ürün kodunuz güvenli biçimde teslim edildi.');
+    } catch (error) {
+      setNotice(completedOrderId
+        ? 'Satın alma ve bakiye işlemi tamamlandı. Kodunuz Siparişlerim alanına kaydedildi; görüntülemek için alanı yeniden açın.'
+        : error instanceof Error ? error.message : 'Satın alma tamamlanamadı.');
+    } finally {
+      setBuying(false);
+    }
+  }
+
+  async function copyCode() {
+    if (!delivered?.code) return;
+    await navigator.clipboard.writeText(delivered.code);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  }
+
+  return <section className="product-catalog" aria-labelledby="product-packs-title">
+    <div className="product-catalog__heading">
+      <div><p className="product-kicker">Seçilebilir ürünler</p><h2 id="product-packs-title">{product.shortName} seçenekleri</h2><p>{product.intro}</p></div>
+      <span className="product-catalog__note">Fiyat ve stok bilgisi satın alma öncesinde anlık doğrulanır.</span>
+    </div>
+    <div className="product-catalog__layout">
+      <div className="product-pack-grid">
+        {product.packs.map((pack) => {
+          const entry = catalog[pack.id];
+          const isSelected = pack.id === selected?.id;
+          const inStock = entry?.active === true && entry.stockCount > 0 && entry.priceMinor !== null;
+          return <button key={pack.id} type="button" className={`product-pack ${isSelected ? 'is-selected' : ''}`} onClick={() => { setSelectedId(pack.id); setDelivered(null); setNotice(''); }} aria-pressed={isSelected}>
+            <ProductCover product={product} compact />
+            <span className="product-pack__title">{pack.label}</span><span className="product-pack__description">{pack.description}</span>
+            <span className={`product-pack__stock ${inStock ? 'is-available' : ''}`}>{loading && !entry ? 'Stok kontrol ediliyor…' : inStock ? `${entry.stockCount} adet stokta` : 'Stok yok'}</span>
+            <strong className="product-pack__price">{inStock ? formatStoreMoney(entry.priceMinor) : '—'}</strong>
+            <span className="product-pack__action">{isSelected ? 'Seçildi' : 'Ürünü seç'}</span>
+          </button>;
+        })}
       </div>
-
-      <div className="product-catalog__layout">
-        <div className="product-pack-grid">
-          {product.packs.map((pack) => {
-            const isSelected = pack.id === selected?.id;
-            return (
-              <button key={pack.id} type="button" className={`product-pack ${isSelected ? 'is-selected' : ''}`} onClick={() => setSelectedId(pack.id)} aria-pressed={isSelected}>
-                <ProductCover product={product} compact />
-                <span className="product-pack__title">{pack.label}</span>
-                <span className="product-pack__description">{pack.description}</span>
-                <span className="product-pack__stock">{stockLabel}</span>
-                <span className="product-pack__action">{isSelected ? 'Seçildi' : 'Ürünü seç'}</span>
-              </button>
-            );
-          })}
+      <aside className="product-selection" aria-live="polite">
+        <p className="product-kicker">Seçimin</p><h3>{selected?.label ?? product.shortName}</h3><p>{selected?.description ?? product.description}</p>
+        <strong className="product-selection__price">{available ? formatStoreMoney(selectedCatalog?.priceMinor) : 'Fiyat stokla birlikte açılır'}</strong>
+        <div className={`product-selection__stock ${available ? 'is-available' : ''}`}><span /> {available ? `${selectedCatalog?.stockCount} adet stokta` : 'Stok yok'}</div>
+        <p className="product-selection__help">{available ? 'Satın al dediğinizde ücret bakiyenizden tek seferde düşülür ve kullanılmamış kod yalnız size teslim edilir.' : 'Satın alma şu an kapalıdır. Yönetim stok ve fiyat eklediğinde buton otomatik açılır.'}</p>
+        <div className="product-selection__actions">
+          <button type="button" className={available ? 'is-enabled' : ''} disabled={!available || buying} onClick={() => void purchase()}>{buying ? 'Güvenli işlem yapılıyor…' : !user && available ? 'Giriş yap ve satın al' : available ? 'Bakiyemden satın al' : 'Satın alma kapalı'}</button>
+          <Link href="/hesabim/siparisler" className="product-selection__orders">Siparişlerim <span aria-hidden="true">→</span></Link>
+          <Link href="/iletisim" className="product-selection__support">Destek al <span aria-hidden="true">→</span></Link>
         </div>
-
-        <aside className="product-selection" aria-live="polite">
-          <p className="product-kicker">Seçimin</p>
-          <h3>{selected?.label ?? product.shortName}</h3>
-          <p>{selected?.description ?? product.description}</p>
-          <div className="product-selection__stock"><span /> Stok yok</div>
-          <p className="product-selection__help">Bu ürün için satın alma ve sepete ekleme şu an kapalıdır. Stok açıldığında aynı alandan devam edebilirsiniz.</p>
-          <div className="product-selection__actions">
-            <button type="button" disabled>Sepete ekle</button>
-            <Link href="/iletisim" className="product-selection__support">Stok sor <span aria-hidden="true">→</span></Link>
-          </div>
-        </aside>
-      </div>
-    </section>
-  );
+        {notice ? <p className={`product-selection__notice ${delivered ? 'is-success' : ''}`}>{notice}</p> : null}
+        {delivered ? <div className="product-delivery"><span>TESLİM EDİLEN KOD</span><code>{delivered.code}</code><button type="button" onClick={() => void copyCode()}>{copied ? 'Kopyalandı' : 'Kodu kopyala'}</button><small>Kodu güvenli yerde saklayın; ayrıca Siparişlerim alanından yeniden görüntüleyebilirsiniz.</small></div> : null}
+      </aside>
+    </div>
+  </section>;
 }

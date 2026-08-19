@@ -217,23 +217,30 @@ export async function changeMemberValue(
   note: string,
 ) {
   if (!Number.isFinite(amount) || amount === 0) throw new Error('Geçerli bir tutar girin.');
+  if (kind === 'points' && !Number.isInteger(amount)) throw new Error('Puan işlemleri yalnızca tam sayı olabilir.');
   const memberRef = doc(firestore, 'members', member.id);
   const ledgerRef = doc(collection(firestore, 'memberLedger'));
 
   await runTransaction(firestore, async (transaction) => {
     const current = await transaction.get(memberRef);
     if (!current.exists()) throw new Error('Üye kaydı bulunamadı.');
-    const existing = Number(current.data()[kind]) || 0;
-    const next = Math.max(0, existing + amount);
+    const rawExisting = Number(current.data()[kind]) || 0;
+    const existing = kind === 'balance' ? Math.round(rawExisting * 100) : Math.max(0, Math.trunc(rawExisting));
+    const normalizedAmount = kind === 'balance' ? Math.round(amount * 100) : amount;
+    if (normalizedAmount === 0) throw new Error('Tutar en az 0,01 TL olmalıdır.');
+    const next = Math.max(0, existing + normalizedAmount);
     const applied = next - existing;
     if (applied === 0) throw new Error('Bu işlem üyeyi eksi bakiyeye düşüremez.');
 
-    transaction.update(memberRef, { [kind]: next, updatedAt: serverTimestamp() });
+    const persistedNext = kind === 'balance' ? next / 100 : next;
+    const persistedApplied = kind === 'balance' ? applied / 100 : applied;
+
+    transaction.update(memberRef, { [kind]: persistedNext, updatedAt: serverTimestamp() });
     transaction.set(ledgerRef, {
       memberId: member.id,
       kind,
-      amount: applied,
-      balanceAfter: next,
+      amount: persistedApplied,
+      balanceAfter: persistedNext,
       note: note.trim().slice(0, 240) || 'Yönetici işlemi',
       performedBy: adminId,
       createdAt: serverTimestamp(),

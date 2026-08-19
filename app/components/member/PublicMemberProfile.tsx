@@ -117,7 +117,7 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
         if (created) setGifts((value) => value + 5);
         setNotice(created ? '5 topluluk puanı gönderildi.' : 'Bu üyeye daha önce puan gönderdiniz.');
       }
-    } catch { setNotice(kind === 'like' ? 'Profil beğenilemedi. Lütfen tekrar deneyin.' : 'Puan gönderilemedi. Lütfen tekrar deneyin.'); }
+    } catch (actionError) { setNotice(kind === 'like' ? 'Profil beğenilemedi. Lütfen tekrar deneyin.' : actionError instanceof Error ? actionError.message : 'Puan gönderilemedi. Lütfen tekrar deneyin.'); }
     finally { setProfileAction(null); }
   }
 

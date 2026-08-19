@@ -268,6 +268,32 @@ service cloud.firestore {
         && request.resource.data.phone.size() <= 24
         && request.resource.data.avatar is string
         && request.resource.data.avatar.size() <= 30000
+      ) || (
+        verifiedMember()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["points", "lastPointGiftId", "updatedAt"])
+        && request.resource.data.lastPointGiftId is string
+        && request.resource.data.updatedAt == request.time
+        && getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.lastPointGiftId)).data.senderId == request.auth.uid
+        && getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.lastPointGiftId)).data.amount == 5
+        && (
+          (memberId == request.auth.uid
+            && getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.lastPointGiftId)).data.receiverId != memberId
+            && request.resource.data.points == resource.data.points - 5)
+          || (memberId != request.auth.uid
+            && getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.lastPointGiftId)).data.receiverId == memberId
+            && request.resource.data.points == resource.data.points + 5)
+        )
+      ) || (
+        verifiedMember()
+        && memberId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["balance", "lastStoreOrderId", "updatedAt"])
+        && request.resource.data.lastStoreOrderId is string
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.balance is number
+        && request.resource.data.balance >= 0
+        && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.lastStoreOrderId)).data.userId == request.auth.uid
+        && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.lastStoreOrderId)).data.priceMinor is int
+        && request.resource.data.balance == resource.data.balance - (getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.lastStoreOrderId)).data.priceMinor / 100)
       );
       allow delete: if false;
     }
@@ -460,8 +486,74 @@ service cloud.firestore {
     }
 
     match /pointGifts/{giftId} {
-      allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
-      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.amount == 5 && request.resource.data.createdAt == request.time;
+      allow get: if ownsScopedDocument(giftId) || (signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid));
+      allow list: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
+      allow create: if verifiedMember()
+        && giftId == request.auth.uid + "_" + request.resource.data.receiverId
+        && request.resource.data.keys().hasOnly(["senderId", "receiverId", "amount", "createdAt"])
+        && request.resource.data.senderId == request.auth.uid
+        && request.resource.data.receiverId != request.auth.uid
+        && request.resource.data.amount == 5
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/members/$(request.auth.uid)).data.lastPointGiftId == giftId
+        && getAfter(/databases/$(database)/documents/members/$(request.resource.data.receiverId)).data.lastPointGiftId == giftId;
+      allow update, delete: if false;
+    }
+
+    // Katalog fiyatı ve stok sayısı herkese açıktır. Düz metin kod hiçbir zaman
+    // Firestore'a yazılmaz; şifreli stok yalnız doğrulanmış üyeye, teslimat
+    // işleminin atomik parçası olarak okunur.
+    match /productCatalog/{catalogId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        verifiedMember()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["stockCount", "lastOrderId", "updatedAt"])
+        && request.resource.data.lastOrderId is string
+        && request.resource.data.updatedAt == request.time
+        && resource.data.active == true
+        && resource.data.stockCount > 0
+        && request.resource.data.stockCount == resource.data.stockCount - 1
+        && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.lastOrderId)).data.userId == request.auth.uid
+        && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.lastOrderId)).data.catalogKey == catalogId
+      );
+
+      match /codes/{codeId} {
+        allow read: if isAdmin() || verifiedMember();
+        allow create, delete: if isAdmin();
+        allow update: if isAdmin() || (
+          verifiedMember()
+          && resource.data.status == "available"
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "deliveredTo", "deliveredAt", "orderId"])
+          && request.resource.data.status == "delivered"
+          && request.resource.data.deliveredTo == request.auth.uid
+          && request.resource.data.deliveredAt == request.time
+          && request.resource.data.orderId is string
+          && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.orderId)).data.userId == request.auth.uid
+          && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.orderId)).data.catalogKey == catalogId
+          && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.orderId)).data.codeId == codeId
+        );
+      }
+    }
+
+    match /productOrders/{orderId} {
+      allow get, list: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if verifiedMember()
+        && request.resource.data.keys().hasOnly(["userId", "userEmail", "productSlug", "productName", "packId", "packLabel", "catalogKey", "codeId", "codeEncrypted", "priceMinor", "status", "createdAt", "deliveredAt"])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.userEmail == request.auth.token.email
+        && request.resource.data.status == "delivered"
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.deliveredAt == request.time
+        && request.resource.data.priceMinor is int
+        && request.resource.data.priceMinor > 0
+        && request.resource.data.priceMinor == get(/databases/$(database)/documents/productCatalog/$(request.resource.data.catalogKey)).data.priceMinor
+        && request.resource.data.productSlug == get(/databases/$(database)/documents/productCatalog/$(request.resource.data.catalogKey)).data.productSlug
+        && request.resource.data.packId == get(/databases/$(database)/documents/productCatalog/$(request.resource.data.catalogKey)).data.packId
+        && request.resource.data.codeEncrypted == get(/databases/$(database)/documents/productCatalog/$(request.resource.data.catalogKey)/codes/$(request.resource.data.codeId)).data.codeEncrypted
+        && getAfter(/databases/$(database)/documents/productCatalog/$(request.resource.data.catalogKey)).data.lastOrderId == orderId
+        && getAfter(/databases/$(database)/documents/productCatalog/$(request.resource.data.catalogKey)/codes/$(request.resource.data.codeId)).data.orderId == orderId
+        && getAfter(/databases/$(database)/documents/members/$(request.auth.uid)).data.lastStoreOrderId == orderId;
       allow update, delete: if false;
     }
 
@@ -533,13 +625,45 @@ service cloud.firestore {
 
     match /memberLedger/{entryId} {
       allow read: if isAdmin() || (signedIn() && resource.data.memberId == request.auth.uid);
-      allow create: if isAdmin()
+      allow create: if (isAdmin()
         && request.resource.data.memberId is string
         && (request.resource.data.kind == "balance" || request.resource.data.kind == "points")
         && request.resource.data.amount is number
         && request.resource.data.balanceAfter is number
         && request.resource.data.performedBy == request.auth.uid
-        && request.resource.data.createdAt == request.time;
+        && request.resource.data.createdAt == request.time)
+        || (verifiedMember()
+          && request.resource.data.giftId is string
+          && (entryId == "gift-" + request.resource.data.giftId + "-sender" || entryId == "gift-" + request.resource.data.giftId + "-receiver")
+          && request.resource.data.keys().hasOnly(["memberId", "kind", "amount", "balanceAfter", "note", "performedBy", "giftId", "createdAt"])
+          && request.resource.data.kind == "points"
+          && request.resource.data.amount is int
+          && request.resource.data.note is string
+          && request.resource.data.note.size() >= 1
+          && request.resource.data.note.size() <= 240
+          && request.resource.data.performedBy == request.auth.uid
+          && request.resource.data.createdAt == request.time
+          && getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.giftId)).data.senderId == request.auth.uid
+          && ((request.resource.data.memberId == request.auth.uid
+              && request.resource.data.amount == -5
+              && request.resource.data.balanceAfter == getAfter(/databases/$(database)/documents/members/$(request.auth.uid)).data.points)
+            || (request.resource.data.memberId == getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.giftId)).data.receiverId && request.resource.data.amount == 5)))
+        || (verifiedMember()
+          && request.resource.data.orderId is string
+          && entryId == "store-" + request.resource.data.orderId
+          && request.resource.data.keys().hasOnly(["memberId", "kind", "amount", "balanceAfter", "note", "orderId", "performedBy", "createdAt"])
+          && request.resource.data.memberId == request.auth.uid
+          && request.resource.data.kind == "balance"
+          && request.resource.data.amount is number
+          && request.resource.data.balanceAfter is number
+          && request.resource.data.note is string
+          && request.resource.data.note.size() >= 1
+          && request.resource.data.note.size() <= 240
+          && request.resource.data.performedBy == "store"
+          && request.resource.data.createdAt == request.time
+          && getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.orderId)).data.userId == request.auth.uid
+          && request.resource.data.amount == -(getAfter(/databases/$(database)/documents/productOrders/$(request.resource.data.orderId)).data.priceMinor / 100)
+          && request.resource.data.balanceAfter == getAfter(/databases/$(database)/documents/members/$(request.auth.uid)).data.balance);
       allow update, delete: if false;
     }
 

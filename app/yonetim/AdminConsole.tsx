@@ -23,6 +23,7 @@ import ArticleCoverField from "./ArticleCoverField";
 import ReleaseReadinessPanel from "./ReleaseReadinessPanel";
 import AdminBackupPanel from "./AdminBackupPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
+import ProductInventoryPanel from "./ProductInventoryPanel";
 import type { ArticleItem } from "../lib/site";
 import {
   removeManagedArticle,
@@ -49,10 +50,10 @@ import {
   type MemberRole,
 } from "../lib/admin";
 
-type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "settings";
+type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "inventory" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 type AuditFilter = 'all' | 'site' | 'content' | 'member' | 'community' | 'operation' | 'system';
-const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "settings"];
+const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "inventory", "settings"];
 const permissions = [
   "Yorum paylaşımı",
   "İçerik taslağı",
@@ -494,6 +495,7 @@ export default function AdminConsole({
               ["content", "İçerik"],
               ["rates", "Oranlar"],
               ["operations", "İşlemler"],
+              ["inventory", "Ürün stokları"],
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
               ["forum", "Forum"],
@@ -747,6 +749,7 @@ export default function AdminConsole({
         {view === "backup" && <AdminBackupPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}
+        {view === "inventory" && <ProductInventoryPanel user={user} />}
         {view === "members" && (
           <section className="admin-section">
             <div className="admin-section-head">

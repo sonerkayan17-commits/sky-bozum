@@ -25,7 +25,7 @@ export type ProductItem = {
   related: string[];
 };
 
-const stockNotice = 'Bu ürün şu anda stokta değil. Stok açıldığında ürün sayfası güncellenecektir.';
+const stockNotice = 'Güncel stok ve satış fiyatı ürün sayfasındaki paket kartlarında anlık gösterilir. Stok yoksa satın alma butonu otomatik olarak kapalı kalır.';
 
 export const products: ProductItem[] = [
   {
