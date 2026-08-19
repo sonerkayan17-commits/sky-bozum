@@ -1,3 +1,8 @@
+.home-page > .render-later {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
 .home-article-card::before{content:"";position:absolute;inset:-1px;z-index:-1;border-radius:inherit;background:linear-gradient(135deg,color-mix(in srgb,var(--article-accent) 38%,transparent),transparent 38%,rgba(255,255,255,.06));opacity:0;transition:opacity .35s ease}
 .home-article-card:hover::before{opacity:.8}
 .home-article-body{padding:21px 21px 20px}
