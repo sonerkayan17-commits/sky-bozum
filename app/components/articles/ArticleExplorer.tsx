@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Link from '../DeferredLink';
 import { useDeferredValue, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { ArticleItem } from '../../lib/site';
 import ArticleCover from './ArticleCover';

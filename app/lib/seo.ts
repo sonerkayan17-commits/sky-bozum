@@ -19,7 +19,7 @@ export const SITE_NAME = 'Sky Bozum';
 export const SITE_LOCALE = 'tr_TR';
 export const SITE_LANGUAGE = 'tr-TR';
 export const DEFAULT_PUBLISHED_AT = '2026-07-20T09:00:00+03:00';
-export const DEFAULT_UPDATED_AT = '2026-07-28T09:00:00+03:00';
+export const DEFAULT_UPDATED_AT = '2026-08-19T09:00:00+03:00';
 export const DEFAULT_OG_IMAGE = '/hero-customer.webp';
 
 export function indexableRobots(noIndex = false): NonNullable<Metadata['robots']> {
