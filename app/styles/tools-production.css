@@ -45,9 +45,9 @@
 .hero-pro-logo img{max-width:100%;max-height:38px;object-fit:contain}
 @media (max-width:640px){.logo-surface{height:86px;padding:16px}.logo-surface img{max-height:52px}}
 .home-service-card__logos{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important;min-height:100px!important}
-.home-service-card__logos>span.logo-surface{width:100%!important;min-width:0!important;height:100px!important;padding:20px!important;border-radius:16px!important}
+.home-service-card__logos>span.logo-surface{width:100%!important;min-width:0!important;height:100px!important;padding:10px!important;border-radius:16px!important}
 .home-service-card__logos>span.logo-surface img{width:100%!important;height:100%!important;max-width:112px!important;max-height:60px!important}
-@media(max-width:640px){.home-service-card__logos{grid-template-columns:repeat(3,minmax(0,1fr));min-height:86px!important}.home-service-card__logos>span.logo-surface{height:86px!important;padding:14px!important}.home-service-card__logos>span.logo-surface img{max-height:54px!important}}
+@media(max-width:640px){.home-service-card__logos{grid-template-columns:repeat(3,minmax(0,1fr));min-height:86px!important}.home-service-card__logos>span.logo-surface{height:86px!important;padding:8px!important}.home-service-card__logos>span.logo-surface img{max-height:54px!important}}
 
 /* Logo System V3 final contrast and card consistency fixes */
 .brand-strip-card.brand-apple .brand-strip-logo{background:#fff!important;border-color:rgba(255,255,255,.82)!important;box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 0 0 1px rgba(15,23,42,.06)!important}
