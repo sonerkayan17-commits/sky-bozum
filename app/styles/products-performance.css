@@ -1,12 +1,3 @@
-/* Ürün rotalarında ilk ekranı öne al; aşağıdaki katalog bölümleri gerektiğinde çizilir. */
-.products-directory,
-.product-info,
-.product-related,
-.product-journey {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 720px;
-}
-
 /* Paket kartları çok sayıda aynı kapak içerir; hareketi ana kapaklarda tutup kartlarda azaltırız. */
 .product-pack-grid .product-cover__glow,
 .product-pack-grid .product-cover__orb,
