@@ -90,11 +90,20 @@ function DashboardSlide({ whatsapp }: { whatsapp: string }) {
 
 function ReferenceCarousel({ whatsapp }: { whatsapp: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [slidesReady, setSlidesReady] = useState(false);
   const [paused, setPaused] = useState(false);
   const startX = useRef<number | null>(null);
   const reducedMotion = usePrefersReducedMotion();
   const slideCount = referenceSlides.length + 1;
   const currentLabel = useMemo(() => activeIndex === 0 ? 'Ana ekran' : `${activeIndex} / ${referenceSlides.length}`, [activeIndex]);
+
+  // Keep the first paint focused on the dashboard. Reference images are still
+  // available immediately on interaction, then mounted once the first view is
+  // settled so they do not compete with the homepage LCP/layout pass.
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSlidesReady(true), 2500);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const slideClassName = (index: number) => {
     const previousIndex = (activeIndex - 1 + slideCount) % slideCount;
@@ -104,16 +113,23 @@ function ReferenceCarousel({ whatsapp }: { whatsapp: string }) {
   };
 
   const goTo = (nextIndex: number) => {
+    setSlidesReady(true);
     setActiveIndex(Math.max(0, Math.min(referenceSlides.length, nextIndex)));
   };
-  const previous = () => setActiveIndex((current) => current === 0 ? referenceSlides.length : current - 1);
-  const next = () => setActiveIndex((current) => current >= referenceSlides.length ? 1 : current + 1);
+  const previous = () => {
+    setSlidesReady(true);
+    setActiveIndex((current) => current === 0 ? referenceSlides.length : current - 1);
+  };
+  const next = () => {
+    setSlidesReady(true);
+    setActiveIndex((current) => current >= referenceSlides.length ? 1 : current + 1);
+  };
 
   useEffect(() => {
-    if (paused || reducedMotion) return;
+    if (!slidesReady || paused || reducedMotion) return;
     const timer = window.setTimeout(() => setActiveIndex((current) => current >= referenceSlides.length ? 1 : current + 1), 1500);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, paused, reducedMotion]);
+  }, [activeIndex, paused, reducedMotion, slidesReady]);
 
   return (
     <div
@@ -150,7 +166,7 @@ function ReferenceCarousel({ whatsapp }: { whatsapp: string }) {
           <div className={slideClassName(0)} aria-hidden={activeIndex !== 0}>
             <DashboardSlide whatsapp={whatsapp} />
           </div>
-          {referenceSlides.map((slide, index) => (
+          {(slidesReady ? referenceSlides : []).map((slide, index) => (
             <div
               className={slideClassName(index + 1)}
               key={slide.src}

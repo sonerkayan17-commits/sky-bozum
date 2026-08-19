@@ -1,14 +1,18 @@
+import dynamic from 'next/dynamic';
 import Link from './components/DeferredLink';
 import Hero from './components/Hero';
 import BrandStrip from './components/BrandStrip';
 import HomeTrust from './components/HomeTrust';
 import HomeServices from './components/HomeServices';
-import DeferredQuickCalculator from './components/home/DeferredQuickCalculator';
 import HomeBlog from './components/HomeBlog';
 import HomeTestimonials from './components/HomeTestimonials';
-import HomeFaq from './components/HomeFaq';
 import FinalCta from './components/FinalCta';
 import CredibilityBand from './components/CredibilityBand';
+
+// Keep the complete page in the server HTML for SEO, while splitting interactive
+// below-the-fold islands out of the first client bundle.
+const DeferredQuickCalculator = dynamic(() => import('./components/home/DeferredQuickCalculator'));
+const HomeFaq = dynamic(() => import('./components/HomeFaq'));
 import './styles/homepage-legacy.css';
 import './styles/homepage-polish.css';
 import './styles/content-services-core.css';
