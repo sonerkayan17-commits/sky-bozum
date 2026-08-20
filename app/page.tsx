@@ -8,6 +8,7 @@ import HomeBlog from './components/HomeBlog';
 import HomeTestimonials from './components/HomeTestimonials';
 import FinalCta from './components/FinalCta';
 import CredibilityBand from './components/CredibilityBand';
+import DeferredViewportSection from './components/home/DeferredViewportSection';
 
 // Keep the complete page in the server HTML for SEO, while splitting interactive
 // below-the-fold islands out of the first client bundle.
@@ -23,41 +24,46 @@ import './styles/home-contact-band-final.css';
 import './styles/home-trust-editorial.css';
 import './styles/home-trust-showcase.css';
 import './styles/credibility-band.css';
+import './styles/quality-80-pass.css';
 
 export default function Home() {
   return (
     <main className="home-page">
       <Hero />
-      <div className="render-later"><BrandStrip /></div>
-      <div className="render-later"><CredibilityBand /></div>
-      <div className="render-later"><HomeServices /></div>
-      <div className="render-later"><HomeTrust /></div>
+      <DeferredViewportSection className="render-later" desktopHeight={430} mobileHeight={646}><BrandStrip /></DeferredViewportSection>
+      <DeferredViewportSection className="render-later" desktopHeight={210} mobileHeight={247}><CredibilityBand /></DeferredViewportSection>
+      <DeferredViewportSection className="render-later" desktopHeight={650} mobileHeight={1075}><HomeServices /></DeferredViewportSection>
+      <DeferredViewportSection className="render-later" desktopHeight={590} mobileHeight={699}><HomeTrust /></DeferredViewportSection>
 
-      <section className="render-later bg-[#05090f] py-7 sm:py-8" aria-label="Hesaplama ve bilgi merkezi">
-        <div className="content-wide">
-          <div className="grid items-stretch gap-4 lg:grid-cols-2">
-            <DeferredQuickCalculator />
-            <HomeBlog compact sidebar />
+      <DeferredViewportSection className="render-later" desktopHeight={650} mobileHeight={885}>
+        <section className="bg-[#05090f] py-7 sm:py-8" aria-label="Hesaplama ve bilgi merkezi">
+          <div className="content-wide">
+            <div className="grid items-stretch gap-4 lg:grid-cols-2">
+              <DeferredQuickCalculator />
+              <HomeBlog compact sidebar />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </DeferredViewportSection>
 
-      <div className="render-later"><HomeTestimonials /></div>
-      <section className="render-later home-final-section content-wide rhythm-md">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <HomeFaq />
-          <FinalCta />
-        </div>
-        <nav className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-sm font-bold text-slate-400" aria-label="Önemli site bölümleri">
-          <span className="text-xs uppercase tracking-[0.16em] text-slate-600">Devam edin</span>
-          <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmetler</Link>
-          <Link href="/araclar" className="transition hover:text-rose-300">Araçlar Merkezi</Link>
-          <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">Bilgi Merkezi</Link>
-          <Link href="/urunler" className="transition hover:text-rose-300">Ürünler</Link>
-          <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk</Link>
-          <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven Merkezi</Link>
-        </nav>
-      </section>
+      <DeferredViewportSection className="render-later" desktopHeight={850} mobileHeight={864}><HomeTestimonials /></DeferredViewportSection>
+      <DeferredViewportSection className="render-later" desktopHeight={760} mobileHeight={1242}>
+        <section className="home-final-section content-wide rhythm-md">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <HomeFaq />
+            <FinalCta />
+          </div>
+          <nav className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-sm font-bold text-slate-400" aria-label="Önemli site bölümleri">
+            <span className="text-xs uppercase tracking-[0.16em] text-slate-600">Devam edin</span>
+            <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmetler</Link>
+            <Link href="/araclar" className="transition hover:text-rose-300">Araçlar Merkezi</Link>
+            <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">Bilgi Merkezi</Link>
+            <Link href="/urunler" className="transition hover:text-rose-300">Ürünler</Link>
+            <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk</Link>
+            <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven Merkezi</Link>
+          </nav>
+        </section>
+      </DeferredViewportSection>
     </main>
   );
 }

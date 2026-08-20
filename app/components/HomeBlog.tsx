@@ -33,9 +33,9 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
     : 'relative overflow-hidden rounded-[22px] border border-white/[0.12] bg-[radial-gradient(circle_at_100%_0%,rgba(245,190,54,.05),transparent_30%),linear-gradient(180deg,rgba(10,18,27,.98),rgba(6,12,19,.99))] p-4 shadow-[0_22px_56px_rgba(0,0,0,.22),inset_0_1px_0_rgba(255,255,255,.04)] sm:p-5';
 
   return (
-    <section className={compact ? 'h-full text-white' : 'section-band rhythm-lg bg-[#080a10] text-white'}>
-      <div className={compact ? 'h-full' : 'content-wide'}>
-        <div className={shellClass}>
+    <section className={`${compact ? 'h-full text-white' : 'section-band rhythm-lg bg-[#080a10] text-white'} home-blog-compact`}>
+      <div className={`${compact ? 'h-full' : 'content-wide'} home-blog-wrap`}>
+        <div className={`${shellClass} home-blog-shell`}>
           <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#f3bf31]/30 to-transparent" />
 
           <div className={sidebar ? 'mb-4 flex shrink-0 items-end justify-between gap-4' : 'mb-3 flex flex-col justify-between gap-2 sm:flex-row sm:items-end'}>
@@ -46,16 +46,16 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
             <Link href="/bilgi-merkezi" className="group/all inline-flex shrink-0 items-center gap-2 rounded-full border border-[#f1c43d]/15 bg-[#f1c43d]/[0.055] px-3 py-1.5 text-[10px] font-black text-[#f1c43d] transition hover:border-[#f1c43d]/30 hover:bg-[#f1c43d]/[0.09]">Tüm rehberler <span className="transition group-hover/all:translate-x-0.5">→</span></Link>
           </div>
 
-          <div className={sidebar ? 'grid min-h-0 flex-1 grid-rows-2 gap-3' : 'grid gap-3 md:grid-cols-2'}>
+          <div className={`${sidebar ? 'grid min-h-0 flex-1 grid-rows-2 gap-3' : 'grid gap-3 md:grid-cols-2'} home-blog-grid`}>
             {cards.map((card) => (
               <Link
                 key={card.slug}
                 href={`/bilgi-merkezi/${card.slug}`}
-                className={sidebar
+                className={`${sidebar
                   ? 'group relative grid min-h-0 overflow-hidden rounded-[17px] border border-white/[0.09] bg-[linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.015))] transition duration-300 hover:-translate-y-0.5 hover:border-[#e8b84f]/35 hover:bg-white/[0.045] hover:shadow-[0_18px_38px_rgba(0,0,0,.24)] sm:grid-cols-[40%_1fr]'
-                  : 'group relative grid min-h-[150px] overflow-hidden rounded-[17px] border border-white/[0.09] bg-[linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.015))] transition duration-300 hover:-translate-y-0.5 hover:border-[#e8b84f]/35 hover:bg-white/[0.045] hover:shadow-[0_18px_38px_rgba(0,0,0,.24)] sm:grid-cols-[160px_1fr]'}
+                  : 'group relative grid min-h-[150px] overflow-hidden rounded-[17px] border border-white/[0.09] bg-[linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,.015))] transition duration-300 hover:-translate-y-0.5 hover:border-[#e8b84f]/35 hover:bg-white/[0.045] hover:shadow-[0_18px_38px_rgba(0,0,0,.24)] sm:grid-cols-[160px_1fr]'} home-blog-card`}
               >
-                <div className={sidebar ? 'relative min-h-[132px] overflow-hidden border-b border-white/[0.06] bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,.045),transparent_58%),#071019] sm:min-h-0 sm:border-b-0 sm:border-r' : 'relative min-h-[118px] overflow-hidden border-b border-white/[0.06] bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,.045),transparent_58%),#071019] sm:min-h-full sm:border-b-0 sm:border-r'}>
+                <div className={`${sidebar ? 'relative min-h-[132px] overflow-hidden border-b border-white/[0.06] bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,.045),transparent_58%),#071019] sm:min-h-0 sm:border-b-0 sm:border-r' : 'relative min-h-[118px] overflow-hidden border-b border-white/[0.06] bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,.045),transparent_58%),#071019] sm:min-h-full sm:border-b-0 sm:border-r'} home-blog-cover`}>
                   <Image
                     src={card.cover}
                     alt={card.coverAlt}
@@ -66,7 +66,7 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/10" />
                 </div>
 
-                <div className="relative flex min-w-0 flex-col justify-center px-[18px] py-4">
+                <div className="home-blog-body relative flex min-w-0 flex-col justify-center px-[18px] py-4">
                   <p className="text-[9px] font-black uppercase tracking-[.18em] text-[#f1c43d]/80">{card.eyebrow}</p>
                   <h3 className="mt-1 text-[18px] font-black tracking-[-.025em] text-white">{card.title}</h3>
                   <p className="mt-1.5 max-w-[360px] text-[11.5px] leading-[1.62] text-white/58">{card.description}</p>

@@ -4,6 +4,7 @@ import ProductDirectory from '../components/products/ProductDirectory';
 import { products } from '../lib/products';
 import { absoluteUrl, createMetadata, jsonLd } from '../lib/seo';
 import '../styles/products-performance.css';
+import '../styles/products-quality-pass.css';
 
 export const metadata: Metadata = createMetadata({
   title: 'Oyun ve dijital ürünler',

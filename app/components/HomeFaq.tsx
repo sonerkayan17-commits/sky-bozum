@@ -12,6 +12,6 @@ const faqs = [
 ] as const;
 
 export default function HomeFaq() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1);
   return <div className="home-faq-card premium-card flex h-full flex-col p-6 sm:p-8" aria-labelledby="home-faq-title"><div className="flex items-start justify-between gap-4"><div><p className="home-faq-kicker">Bozum hakkında</p><h2 id="home-faq-title">Sık Sorulan Sorular</h2><p className="home-faq-intro">Mobil ödeme ve güvenli bozum hakkında temel sorular.</p></div><span className="home-faq-count">5 konu</span></div><div className="home-faq-list">{faqs.map((item,index)=>{const isOpen=openIndex===index;return <div key={item.question} className={`home-faq-item ${isOpen?'is-open':''}`}><button type="button" className="home-faq-question focus-ring" onClick={()=>setOpenIndex(isOpen?-1:index)} aria-expanded={isOpen}><span>{item.question}</span><span className="home-faq-toggle" aria-hidden="true">+</span></button><div className="home-faq-answer" aria-hidden={!isOpen}><p>{item.answer}</p></div></div>})}</div><div className="home-faq-links"><Link href="/sss" className="home-faq-primary-link">Tüm soruları inceleyin <span aria-hidden="true">→</span></Link><Link href="/gizlilik-politikasi">Gizlilik Politikası</Link><Link href="/kullanim-sartlari">Kullanım Şartları</Link></div></div>;
 }

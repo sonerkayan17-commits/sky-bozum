@@ -1,11 +1,17 @@
 import Link from 'next/link';
-import { forumSections, getForumStarterTopic, slugifyForumCategory } from '../lib/forumTaxonomy';
+import { forumSections, forumStarterTopics, getForumStarterTopic, slugifyForumCategory } from '../lib/forumTaxonomy';
 import { forumRoutes } from '../lib/forumRoutes';
 import './forum-directory.css';
 import './forum-directory-v2.css';
+import './forum-quality-pass.css';
 
 export default function ForumDirectory() {
   const categoryCount = forumSections.reduce((sum, section) => sum + section.categories.length, 0);
+  const featuredTopics = [
+    forumStarterTopics.find((topic) => topic.slug === 'sky-bozum-topluluk-alani-kullanim-rehberi'),
+    forumStarterTopics.find((topic) => topic.slug === 'sahte-bozum-sitelerini-anlamanin-temel-yollari'),
+    forumStarterTopics.find((topic) => topic.slug === '1000-tl-bakiyeden-elime-ne-kadar-gecer'),
+  ].filter((topic): topic is (typeof forumStarterTopics)[number] => Boolean(topic));
 
   return <section className="forum-directory">
     <header>
@@ -16,10 +22,26 @@ export default function ForumDirectory() {
       </div>
       <Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link>
     </header>
+    <nav className="forum-jump" aria-label="Topluluk bölümlerine hızlı geçiş">
+      {forumSections.map((section) => <a key={section.slug} href={`#${section.slug}`}>{section.icon} {section.title}</a>)}
+    </nav>
+    <section className="forum-start-desk" aria-label="Topluluk başlangıç rehberleri">
+      <div className="forum-start-desk__summary">
+        <span>RESMÎ BAŞLANGIÇ MASASI</span>
+        <strong>{forumStarterTopics.length} doğrulanmış başlangıç konusu</strong>
+        <p>Bozum, oran ve güvenlik sorularında önce yönetim tarafından hazırlanan kısa rehberlere bakın; cevap bulamazsanız kendi konunuzu açın.</p>
+        <div><b>{forumSections.length} bölüm</b><b>{categoryCount} aktif alan</b><b>Gerçek sayaçlar</b></div>
+      </div>
+      <div className="forum-start-desk__topics">
+        {featuredTopics.map((topic, index) => <Link key={topic.slug} href={forumRoutes.topic(topic.sectionSlug, topic.categorySlug, topic.slug)}>
+          <span>0{index + 1}</span><div><small>{topic.category}</small><strong>{topic.title}</strong></div><b aria-hidden="true">→</b>
+        </Link>)}
+      </div>
+    </section>
     <div className="forum-groups">
       {forumSections.map((section) => {
         const latestTopic = getForumStarterTopic(section.slug, slugifyForumCategory(section.categories[0]));
-        return <article key={section.slug}>
+        return <article key={section.slug} id={section.slug}>
           <div className="forum-group-icon" aria-hidden="true">{section.icon}</div>
           <div className="forum-group-main">
             <Link href={forumRoutes.section(section.slug)}><h2>{section.title}</h2></Link>

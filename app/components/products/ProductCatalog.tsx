@@ -1,14 +1,13 @@
 'use client';
 
-import { onAuthStateChanged, type User } from 'firebase/auth';
-import { collection, doc, getDocs, limit, onSnapshot, query, runTransaction, serverTimestamp, where } from 'firebase/firestore';
+import type { User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import Link from '../DeferredLink';
-import { getFirebaseClient } from '../../lib/firebase';
 import { formatStoreMoney, storePackKey, type StoreCatalogEntry, type StoreOrder } from '../../lib/store';
 import type { ProductItem } from '../../lib/products';
 import ProductCover from './ProductCover';
+import { deferClientTask } from '../../lib/defer-client-task';
 
 export default function ProductCatalog({ product }: { product: ProductItem }) {
   const router = useRouter();
@@ -25,37 +24,65 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
   const available = selectedCatalog?.active === true && selectedCatalog.stockCount > 0 && selectedCatalog.priceMinor !== null;
 
   useEffect(() => {
-    const { db } = getFirebaseClient();
-    if (!db) { setLoading(false); return; }
-    return onSnapshot(query(collection(db, 'productCatalog'), where('productSlug', '==', product.slug)), (snapshot) => {
-      const entries = snapshot.docs.map((item) => {
-        const data = item.data();
-        return { key: item.id, productSlug: String(data.productSlug || ''), productName: String(data.productName || ''), packId: String(data.packId || ''), packLabel: String(data.packLabel || ''), priceMinor: Number.isSafeInteger(Number(data.priceMinor)) ? Number(data.priceMinor) : null, stockCount: Math.max(0, Math.trunc(Number(data.stockCount) || 0)), active: data.active === true } satisfies StoreCatalogEntry;
-      });
-      setCatalog(Object.fromEntries(entries.map((entry) => [entry.packId, entry]))); setLoading(false);
-    }, () => setLoading(false));
+    let active = true;
+    let unsubscribe: () => void = () => {};
+    const cancel = deferClientTask(async () => {
+      const [{ getFirebaseClient }, { collection, onSnapshot, query, where }] = await Promise.all([
+        import('../../lib/firebase'),
+        import('firebase/firestore'),
+      ]);
+      if (!active) return;
+      const { db } = getFirebaseClient();
+      if (!db) { setLoading(false); return; }
+      unsubscribe = onSnapshot(query(collection(db, 'productCatalog'), where('productSlug', '==', product.slug)), (snapshot) => {
+        const entries = snapshot.docs.map((item) => {
+          const data = item.data();
+          return { key: item.id, productSlug: String(data.productSlug || ''), productName: String(data.productName || ''), packId: String(data.packId || ''), packLabel: String(data.packLabel || ''), priceMinor: Number.isSafeInteger(Number(data.priceMinor)) ? Number(data.priceMinor) : null, stockCount: Math.max(0, Math.trunc(Number(data.stockCount) || 0)), active: data.active === true } satisfies StoreCatalogEntry;
+        });
+        setCatalog(Object.fromEntries(entries.map((entry) => [entry.packId, entry]))); setLoading(false);
+      }, () => setLoading(false));
+    }, { delay: 1_200, intentEvents: false });
+    return () => { active = false; cancel(); unsubscribe(); };
   }, [product.slug]);
 
   useEffect(() => {
-    const { auth } = getFirebaseClient();
-    if (!auth) return;
-    return onAuthStateChanged(auth, setUser);
+    let active = true;
+    let unsubscribe: () => void = () => {};
+    const knownSession = window.localStorage.getItem('sky-bozum-member-session') === '1';
+    const cancel = deferClientTask(async () => {
+      const [{ getFirebaseClient }, { onAuthStateChanged }] = await Promise.all([
+        import('../../lib/firebase'),
+        import('firebase/auth'),
+      ]);
+      if (!active) return;
+      const { auth } = getFirebaseClient();
+      if (!auth) return;
+      unsubscribe = onAuthStateChanged(auth, setUser);
+    }, { delay: 1_000, eager: knownSession, intentEvents: true });
+    return () => { active = false; cancel(); unsubscribe(); };
   }, []);
 
   async function purchase() {
     if (!selected || buying) return;
-    if (!user) { router.push(`/giris?next=${encodeURIComponent(`/urunler/${product.slug}`)}`); return; }
+    const [{ getFirebaseClient }, firestoreModule] = await Promise.all([
+      import('../../lib/firebase'),
+      import('firebase/firestore'),
+    ]);
+    const { collection, doc, getDocs, limit, query, runTransaction, serverTimestamp, where } = firestoreModule;
+    const { auth } = getFirebaseClient();
+    const activeUser = user ?? auth?.currentUser ?? null;
+    if (!activeUser) { router.push(`/giris?next=${encodeURIComponent(`/urunler/${product.slug}`)}`); return; }
     setBuying(true);
     setNotice('');
     setDelivered(null);
     let completedOrderId = '';
     try {
-      if (!user.emailVerified) throw new Error('Satın alma için e-posta adresinizi doğrulayın.');
+      if (!activeUser.emailVerified) throw new Error('Satın alma için e-posta adresinizi doğrulayın.');
       const { db } = getFirebaseClient();
       if (!db) throw new Error('Güvenli mağaza bağlantısı kurulamadı.');
       const catalogKey = storePackKey(product.slug, selected.id);
       const catalogRef = doc(db, 'productCatalog', catalogKey);
-      const memberRef = doc(db, 'members', user.uid);
+      const memberRef = doc(db, 'members', activeUser.uid);
       const orderRef = doc(collection(db, 'productOrders'));
       const ledgerRef = doc(db, 'memberLedger', `store-${orderRef.id}`);
       const availableCodes = await getDocs(query(collection(catalogRef, 'codes'), where('status', '==', 'available'), limit(1)));
@@ -74,15 +101,15 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
         if (!codeDocument.exists() || codeDocument.data()?.status !== 'available' || !codeEncrypted) throw new Error('Seçilen stok başka bir siparişe ayrıldı; lütfen yeniden deneyin.');
         const timestamp = serverTimestamp(); const balanceAfter = (balanceMinor - priceMinor) / 100;
         transaction.update(memberRef, { balance: balanceAfter, lastStoreOrderId: orderRef.id, updatedAt: timestamp });
-        transaction.update(selectedCodeRef, { status: 'delivered', deliveredTo: user.uid, deliveredAt: timestamp, orderId: orderRef.id });
+        transaction.update(selectedCodeRef, { status: 'delivered', deliveredTo: activeUser.uid, deliveredAt: timestamp, orderId: orderRef.id });
         transaction.update(catalogRef, { stockCount: stockCount - 1, lastOrderId: orderRef.id, updatedAt: timestamp });
-        transaction.set(orderRef, { userId: user.uid, userEmail: user.email || '', productSlug: product.slug, productName: product.shortName, packId: selected.id, packLabel: selected.label, catalogKey, codeId: codeDocument.id, codeEncrypted, priceMinor, status: 'delivered', createdAt: timestamp, deliveredAt: timestamp });
-        transaction.set(ledgerRef, { memberId: user.uid, kind: 'balance', amount: -(priceMinor / 100), balanceAfter, note: `${product.shortName} · ${selected.label} satın alımı`, orderId: orderRef.id, performedBy: 'store', createdAt: timestamp });
+        transaction.set(orderRef, { userId: activeUser.uid, userEmail: activeUser.email || '', productSlug: product.slug, productName: product.shortName, packId: selected.id, packLabel: selected.label, catalogKey, codeId: codeDocument.id, codeEncrypted, priceMinor, status: 'delivered', createdAt: timestamp, deliveredAt: timestamp });
+        transaction.set(ledgerRef, { memberId: activeUser.uid, kind: 'balance', amount: -(priceMinor / 100), balanceAfter, note: `${product.shortName} · ${selected.label} satın alımı`, orderId: orderRef.id, performedBy: 'store', createdAt: timestamp });
       });
       completedOrderId = orderRef.id;
       const response = await fetch('/api/store/reveal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await user.getIdToken()}` },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await activeUser.getIdToken()}` },
         body: JSON.stringify({ orderId: orderRef.id }),
       });
       const payload = await response.json().catch(() => ({})) as { order?: StoreOrder; error?: string };
