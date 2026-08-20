@@ -16,10 +16,29 @@
 .member-bank-payout-info strong { margin-top: .3rem; font-size: .86rem; }
 .member-bank-payout-info p { margin-top: .35rem; max-width: 570px; color: #75817a; font-size: .66rem; line-height: 1.5; }
 .member-bank-payout-info a { flex: 0 0 auto; border-radius: 9px; background: #44d62c; padding: .7rem .85rem; color: #081006; font-size: .66rem; font-weight: 950; }
+.member-page > .admin-modal-backdrop { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; overflow: auto; background: rgba(3, 5, 8, .84); padding: 14px; backdrop-filter: blur(10px); }
+.member-page > .admin-modal-backdrop .member-request-modal { position: relative; width: min(720px, 100%); max-height: calc(100dvh - 28px); overflow: auto; border: 1px solid rgba(255, 255, 255, .12); border-radius: 20px; background: radial-gradient(circle at 95% 0, rgba(68, 214, 44, .08), transparent 28%), #10141a; box-shadow: 0 30px 90px rgba(0, 0, 0, .55); padding: clamp(1.1rem, 3vw, 1.7rem); color: #eef2f6; }
+.member-request-modal > span { color: #84e575; font-size: .58rem; font-weight: 950; letter-spacing: .16em; }
+.member-request-modal > h2 { margin-top: .4rem; font-size: clamp(1.35rem, 4vw, 2rem); letter-spacing: -.035em; }
+.member-request-modal .admin-close { position: absolute; top: .8rem; right: .8rem; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(255, 255, 255, .1); border-radius: 9px; background: #171c23; color: #d8dee6; font-size: 1.1rem; cursor: pointer; }
+.member-request-modal form { display: grid; gap: .85rem; }
+.member-request-modal form > label,
+.member-request-modal .member-form-pair > label { display: grid; gap: .38rem; color: #aab4c0; font-size: .68rem; font-weight: 850; }
+.member-request-modal input,
+.member-request-modal select,
+.member-request-modal textarea { width: 100%; border: 1px solid rgba(255, 255, 255, .11); border-radius: 9px; outline: 0; background: #090c10; padding: .72rem .78rem; color: #edf2f7; font: inherit; }
+.member-request-modal textarea { resize: vertical; line-height: 1.55; }
+.member-request-modal input:focus,
+.member-request-modal select:focus,
+.member-request-modal textarea:focus { border-color: rgba(68, 214, 44, .45); box-shadow: 0 0 0 3px rgba(68, 214, 44, .08); }
+.member-request-modal .admin-primary { min-height: 44px; border: 0; border-radius: 10px; background: #44d62c; color: #081006; font-weight: 950; cursor: pointer; }
+.member-request-modal .admin-primary:disabled { cursor: wait; opacity: .6; }
 
 @media (max-width: 720px) {
   .member-code-sale-summary { grid-template-columns: 1fr 1fr; }
   .member-code-sale-summary span:last-child { grid-column: 1 / -1; }
   .member-code-review-result small { width: 100%; margin-left: 0; }
   .member-bank-payout-info { align-items: flex-start; flex-direction: column; }
+  .member-page > .admin-modal-backdrop { align-items: end; padding: 7px; }
+  .member-page > .admin-modal-backdrop .member-request-modal { width: 100%; max-height: calc(100dvh - 14px); border-radius: 18px 18px 10px 10px; }
 }
