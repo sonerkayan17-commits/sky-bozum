@@ -65,29 +65,22 @@
     gap: 6px !important;
   }
   .home-page .hero-pro-rate {
-    grid-template-columns: 54px minmax(0, 1fr) !important;
-    gap: 8px !important;
-    min-height: 58px !important;
-    padding: 7px !important;
+    grid-template-columns: 38px minmax(0, 1fr) !important;
+    gap: 7px !important;
+    min-height: 52px !important;
+    padding: 6px !important;
     border: 1px solid rgba(255,255,255,.06) !important;
   }
-  .home-page .hero-pro-logo {
-    width: 54px !important;
-    height: 38px !important;
-    padding: 5px 6px !important;
-  }
-  .home-page .hero-pro-logo img {
-    max-width: 46px !important;
-    max-height: 25px !important;
-  }
-  .home-page .hero-pro-rate b { font-size: 10px !important; line-height: 1.25 !important; }
+  .home-page .hero-pro-logo { width: 38px !important; height: 32px !important; padding: 4px !important; }
+  .home-page .hero-pro-logo img { max-width: 31px !important; max-height: 18px !important; }
+  .home-page .hero-pro-rate b { font-size: 8.5px !important; }
   .home-page .hero-pro-rate small { display: none !important; }
   .home-page .hero-pro-rate strong {
     grid-column: 2;
     min-width: 0 !important;
-    margin-top: -7px;
+    margin-top: -9px;
     padding: 0 !important;
-    font-size: 10px !important;
+    font-size: 9px !important;
     text-align: left !important;
   }
   .home-page .hero-pro-disclaimer { margin-top: 9px !important; }
@@ -178,26 +171,6 @@
   .home-page .home-contact-band__guide-cover { aspect-ratio: 16 / 10 !important; }
   .home-page .home-contact-band__guide-copy strong { font-size: .54rem !important; }
   .home-page .home-contact-band__guide-copy b { font-size: .38rem !important; }
-}
-
-@media (max-width: 390px) {
-  .home-page .hero-pro-rate {
-    grid-template-columns: 46px minmax(0, 1fr) !important;
-    gap: 6px !important;
-    min-height: 56px !important;
-    padding: 6px !important;
-  }
-  .home-page .hero-pro-logo {
-    width: 46px !important;
-    height: 35px !important;
-    padding: 4px 5px !important;
-  }
-  .home-page .hero-pro-logo img {
-    max-width: 39px !important;
-    max-height: 22px !important;
-  }
-  .home-page .hero-pro-rate b { font-size: 9px !important; }
-  .home-page .hero-pro-rate strong { font-size: 9px !important; }
 }
 
 @media (hover: none), (prefers-reduced-motion: reduce) {
