@@ -2,8 +2,28 @@
   display: grid;
   grid-template-columns: minmax(250px, .82fr) minmax(0, 1.18fr);
   gap: 10px;
-  width: min(100%, 980px);
-  margin: 12px auto 0;
+  width: 100%;
+  margin: 12px 0 0;
+}
+
+/* Forum ana sayfasını tek bir yatay sisteme oturt. Önceki 980px sınırı
+   üst alanları daraltırken çözüm merkezini tam geniş bırakıyordu. */
+.forum-directory > header,
+.forum-directory > .forum-jump,
+.forum-directory > .forum-start-desk,
+.forum-directory > .forum-solution-lane,
+.forum-directory > .forum-groups {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.forum-directory > header {
+  padding-top: 2rem;
+}
+
+.forum-groups article {
+  grid-template-columns: 48px minmax(0, 1.35fr) minmax(260px, .65fr);
 }
 .forum-start-desk__summary,
 .forum-start-desk__topics {
