@@ -133,6 +133,7 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
         <div className="product-selection__actions">
           <button type="button" className={available ? 'is-enabled' : ''} disabled={!available || buying} onClick={() => void purchase()}>{buying ? 'Güvenli işlem yapılıyor…' : !user && available ? 'Giriş yap ve satın al' : available ? 'Bakiyemden satın al' : 'Satın alma kapalı'}</button>
           <Link href="/hesabim/siparisler" className="product-selection__orders">Siparişlerim <span aria-hidden="true">→</span></Link>
+          {product.slug === 'razer-gold' ? <Link href="/hesabim/talepler?service=razer-gold-tl" className="product-selection__sell">Elindeki Razer kodunu sat <span aria-hidden="true">→</span></Link> : null}
           <Link href="/iletisim" className="product-selection__support">Destek al <span aria-hidden="true">→</span></Link>
         </div>
         {notice ? <p className={`product-selection__notice ${delivered ? 'is-success' : ''}`}>{notice}</p> : null}

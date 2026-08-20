@@ -29,6 +29,7 @@ const journeyLinks = [
 ];
 
 export default function ServiceDetail({ service }: { service: ServiceItem }) {
+  const isRazerGold = service.slug === 'razer-gold-tl' || service.slug === 'razer-gold-usd';
   const related = guidesForService(service.slug, 4);
   const troubleshooting = troubleshootingGuides.filter((guide) => guide.serviceSlug === service.slug).slice(0, 3);
   const alternatives = services.filter((item) => item.slug !== service.slug && item.category === service.category).slice(0, 3);
@@ -44,6 +45,7 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
             <h1 className="mt-3 max-w-3xl text-4xl font-black leading-[1.06] tracking-tight sm:text-6xl">{service.name}</h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">{service.summary}</p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
+              {isRazerGold && <Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006] shadow-[0_14px_35px_rgba(68,214,44,.16)]">Kodu güvenli sat</Link>}
               <ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="hero" label="Güncel oran alın" />
               <Link href={`/oran-hesapla?service=${service.slug}`} className="btn-secondary focus-ring">Yaklaşık hesaplayın</Link>
             </div>
@@ -81,6 +83,8 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
       <section id="hesapla" className="service-section-anchor content-shell pb-14">
         <ServiceMiniCalculator serviceSlug={service.slug} serviceName={service.shortName} />
       </section>
+
+      {isRazerGold && <section className="content-shell pb-14" aria-labelledby="razer-code-sale-title"><div className="overflow-hidden rounded-[1.6rem] border border-[#44d62c]/20 bg-[radial-gradient(circle_at_90%_0%,rgba(68,214,44,.12),transparent_34%),linear-gradient(145deg,#101710,#0b0e12)] p-6 sm:p-8"><div className="grid gap-7 lg:grid-cols-[.7fr_1.3fr]"><div><p className="text-[11px] font-black uppercase tracking-[.18em] text-[#8ee97d]">Üye kod satış merkezi</p><h2 id="razer-code-sale-title" className="mt-3 text-3xl font-black tracking-tight">Kodu gönderin; kontrol ve ödemeyi hesabınızdan izleyin.</h2><p className="mt-4 text-sm leading-7 text-slate-400">Tam PIN şifreli kasaya alınır. Yönetici kodu kontrol eder, net tutarı onaylar ve seçiminize göre Sky Bozum bakiyesine veya kayıtlı IBAN’a ödeme kaydı oluşturur.</p><Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring mt-6 inline-flex rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006]">Şifreli kod formunu aç →</Link></div><div className="grid gap-3 sm:grid-cols-2"><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">01</span><h3 className="mt-3 font-black">Para birimi ve değeri seçin</h3><p className="mt-2 text-xs leading-6 text-slate-500">TL veya USD kodu ile her PIN’in değerini doğru seçin.</p></article><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">02</span><h3 className="mt-3 font-black">Kodları şifreli gönderin</h3><p className="mt-2 text-xs leading-6 text-slate-500">Her satıra bir kullanılmamış tam PIN girin; tekrarlar engellenir.</p></article><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">03</span><h3 className="mt-3 font-black">Kontrol sonucunu izleyin</h3><p className="mt-2 text-xs leading-6 text-slate-500">Talep, kod kontrolü ve net ödeme aşamaları hesabınıza yansır.</p></article><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">04</span><h3 className="mt-3 font-black">Bakiye veya IBAN’a alın</h3><p className="mt-2 text-xs leading-6 text-slate-500">Onaylanan ödeme seçtiğiniz hedefe işlem referansıyla kaydedilir.</p></article></div></div></div></section>}
 
       {service.slug === 'vodafone-mobil-odeme' && <VodafonePremiumSections />}
       {service.slug === 'turkcell-mobil-odeme' && <TurkcellPaycellPremiumSections mode="turkcell" />}
@@ -158,7 +162,7 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
       <section id="islem-baslat" className="service-section-anchor border-t border-white/8 py-16">
         <div className="content-shell">
           <div className="relative overflow-hidden rounded-[2rem] border border-rose-400/20 bg-[radial-gradient(circle_at_80%_20%,rgba(244,63,94,.22),transparent_35%),linear-gradient(135deg,#151019,#0b0d12)] p-7 sm:p-10">
-            <div className="relative z-10 max-w-3xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-300">Hazır olduğunuzda</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">{service.shortName} işlemini güvenli biçimde başlatın.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">Önce güncel oranı ve ürün uygunluğunu yazılı olarak doğrulayın. Satın alma veya kod paylaşma adımına onaydan sonra geçin.</p><div className="mt-7 flex flex-wrap gap-3"><ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="closing" label="WhatsApp ile işlem başlat" /><Link href="/iletisim" className="btn-secondary focus-ring">İletişim seçenekleri</Link></div></div>
+            <div className="relative z-10 max-w-3xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-300">Hazır olduğunuzda</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">{service.shortName} işlemini güvenli biçimde başlatın.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">Önce güncel oranı ve ürün uygunluğunu yazılı olarak doğrulayın. Satın alma veya kod paylaşma adımına onaydan sonra geçin.</p><div className="mt-7 flex flex-wrap gap-3">{isRazerGold && <Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006]">Üye kod satışını başlat</Link>}<ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="closing" label="WhatsApp ile işlem başlat" /><Link href="/iletisim" className="btn-secondary focus-ring">İletişim seçenekleri</Link></div></div>
           </div>
         </div>
       </section>

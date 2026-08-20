@@ -6,6 +6,7 @@ import ProductCatalog from '../../components/products/ProductCatalog';
 import { getProduct, products } from '../../lib/products';
 import { absoluteUrl, breadcrumbSchema, createMetadata, jsonLd } from '../../lib/seo';
 import '../../styles/products-performance.css';
+import '../../styles/razer-commerce.css';
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const product = getProduct(slug);
   if (!product) return {};
   return createMetadata({
-    title: `${product.name} | Sky Bozum`,
+    title: product.name,
     description: `${product.description} Paket, bölge, kullanım ve stok koşullarını adım adım inceleyin.`,
     path: `/urunler/${product.slug}`,
     image: product.coverImage,
@@ -76,6 +77,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <div className="products-shell">
         <ProductCatalog product={product} />
+
+        {product.slug === 'razer-gold' ? <section className="razer-sell-panel" aria-labelledby="razer-sell-title">
+          <div className="razer-sell-panel__intro"><p className="product-kicker">Razer Gold kod bozum merkezi</p><h2 id="razer-sell-title">Kodu canlı gönderin, her kontrol ve ödeme adımını hesabınızdan izleyin.</h2><p>Kullanılmamış TL veya USD PIN’i üye alanındaki şifreli kasaya gönderin. Yönetici kodları tek tek kontrol eder; kabul edilen kodlar için net tutarı onaylar ve seçtiğiniz ödeme hedefinde kayıtlı bir hareket oluşturur.</p><div><Link href="/hesabim/talepler?service=razer-gold-tl">TL kod satışı başlat →</Link><Link href="/hesabim/talepler?service=razer-gold-usd">USD kod satışı başlat</Link></div></div>
+          <div className="razer-sell-panel__steps"><article><span>01</span><strong>PIN’i şifreli gönderin</strong><p>Aynı kod ikinci kez kabul edilmez; açık PIN public veya profil ekranında gösterilmez.</p></article><article><span>02</span><strong>Tek tek kod kontrolü</strong><p>Her kod geçerli veya geçersiz olarak işaretlenir. Kısmi kabul varsa yalnız kabul edilen adet hesaplanır.</p></article><article><span>03</span><strong>Net tutarı görün</strong><p>Ödeme onayı ve işlem durumu üye hesabına anlık yansır; tahmini tutar kesin ödeme sayılmaz.</p></article><article><span>04</span><strong>Ödemenizi alın</strong><p>Cüzdan ödemesi bakiyeye atomik işlenir. IBAN ödemesi banka referansıyla işlem kaydına eklenir.</p></article></div>
+          <aside className="razer-sell-panel__payout"><div><span>ÖDEME SEÇENEKLERİ</span><strong>Sky Bozum cüzdanı</strong><p>Onaylanan tutar hesabınıza eklenir ve stoktaki ürün alışverişlerinde kullanılabilir.</p><Link href="/hesabim/cuzdan">Cüzdanı görüntüle →</Link></div><div><span>ÖDEME SEÇENEKLERİ</span><strong>Kayıtlı IBAN</strong><p>IBAN ve hesap sahibi yalnız size ve yetkili yöneticilere görünür. Transfer, referans kaydı olmadan tamamlanmış sayılmaz.</p><Link href="/hesabim/banka-bilgileri">IBAN bilgilerim →</Link></div></aside>
+          <p className="razer-sell-panel__notice">Hesap şifresi, SMS doğrulama kodu veya banka parolası istenmez. Kodun kullanılmamış ve size ait olması gerekir; ödeme yalnız doğrulanan kodlar için oluşturulur.</p>
+        </section> : null}
 
         <section className="product-info" aria-labelledby="product-info-title">
           <div className="product-info__grid">

@@ -316,7 +316,7 @@ service cloud.firestore {
     }
 
     match /memberPrivate/{memberId} {
-      allow read: if signedIn() && request.auth.uid == memberId;
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == memberId);
       allow create, update: if verifiedMember() && request.auth.uid == memberId
         && request.resource.data.keys().hasOnly(["accountHolder", "bankName", "iban", "updatedAt"])
         && request.resource.data.accountHolder is string
@@ -325,8 +325,7 @@ service cloud.firestore {
         && request.resource.data.bankName is string
         && request.resource.data.bankName.size() <= 80
         && request.resource.data.iban is string
-        && request.resource.data.iban.size() >= 24
-        && request.resource.data.iban.size() <= 34
+        && request.resource.data.iban.matches('^TR[0-9]{24}$')
         && request.resource.data.updatedAt == request.time;
       allow delete: if false;
     }
@@ -813,6 +812,38 @@ service cloud.firestore {
             && request.resource.data.note is string
             && request.resource.data.note.size() <= 500
             && freshCreateTimestamp(request.resource.data.createdAt)
+            && request.resource.data.updatedAt == request.time)
+          || (request.resource.data.memberId == request.auth.uid
+            && request.resource.data.createdBy == request.auth.uid
+            && request.resource.data.updatedBy == request.auth.uid
+            && request.resource.data.operationType == "code_sale"
+            && request.resource.data.productLabel == "Razer Gold"
+            && request.resource.data["service"] in ["razer-gold-tl", "razer-gold-usd"]
+            && request.resource.data.status == "new"
+            && request.resource.data.payout == 0
+            && request.resource.data.payoutState == "pending"
+            && request.resource.data.payoutMethod in ["balance", "iban"]
+            && request.resource.data.currency in ["TRY", "USD"]
+            && request.resource.data.codeValue is int
+            && ((request.resource.data.currency == "TRY" && request.resource.data.codeValue in [50, 100, 250, 500, 1000, 1500, 2000, 3000, 3500, 4000, 5000])
+              || (request.resource.data.currency == "USD" && request.resource.data.codeValue in [5, 10, 20, 50, 100, 200]))
+            && request.resource.data.codeCount is int
+            && request.resource.data.codeCount >= 1
+            && request.resource.data.codeCount <= 20
+            && request.resource.data.amount == request.resource.data.codeValue * request.resource.data.codeCount
+            && request.resource.data.codesEncrypted is list
+            && request.resource.data.codesEncrypted.size() == request.resource.data.codeCount
+            && request.resource.data.codeHashes is list
+            && request.resource.data.codeHashes.size() == request.resource.data.codeCount
+            && request.resource.data.codeReviews is list
+            && request.resource.data.codeReviews.size() == 0
+            && request.resource.data.approvedCodeCount == 0
+            && request.resource.data.rejectedCodeCount == 0
+            && request.resource.data.reviewState == "pending"
+            && request.resource.data.note is string
+            && request.resource.data.note.size() <= 500
+            && request.resource.data.keys().hasOnly(["memberId", "customer", "contact", "service", "amount", "payout", "status", "note", "operationType", "productLabel", "currency", "codeValue", "codeCount", "codesEncrypted", "codeHashes", "codeReviews", "approvedCodeCount", "rejectedCodeCount", "reviewState", "payoutMethod", "payoutState", "createdBy", "updatedBy", "createdAt", "updatedAt"])
+            && freshCreateTimestamp(request.resource.data.createdAt)
             && request.resource.data.updatedAt == request.time))
         && request.resource.data["customer"] is string
         && request.resource.data["customer"].size() >= 2
@@ -838,8 +869,73 @@ service cloud.firestore {
         && request.resource.data["amount"] > 0
         && request.resource.data["payout"] is number
         && request.resource.data["payout"] >= 0
-        && request.resource.data["status"] in ["new", "awaiting_product", "checking", "awaiting_payment", "completed", "cancelled"];
+        && request.resource.data["payout"] <= 1000000
+        && (!(request.resource.data.keys().hasAny(["operationType"])) || request.resource.data.operationType != "code_sale" || request.resource.data.currency == "USD" || request.resource.data.payout <= request.resource.data.amount)
+        && request.resource.data["status"] in ["new", "awaiting_product", "checking", "awaiting_payment", "completed", "cancelled"]
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time
+        && (!resource.data.keys().hasAny(["operationType"]) || resource.data.operationType != "code_sale" || (
+          request.resource.data.operationType == resource.data.operationType
+          && request.resource.data.memberId == resource.data.memberId
+          && request.resource.data.createdBy == resource.data.createdBy
+          && request.resource.data.createdAt == resource.data.createdAt
+          && request.resource.data.productLabel == resource.data.productLabel
+          && request.resource.data["service"] == resource.data["service"]
+          && request.resource.data.currency == resource.data.currency
+          && request.resource.data.codeValue == resource.data.codeValue
+          && request.resource.data.codeCount == resource.data.codeCount
+          && request.resource.data.amount == resource.data.amount
+          && request.resource.data.codesEncrypted == resource.data.codesEncrypted
+          && request.resource.data.codeHashes == resource.data.codeHashes
+          && request.resource.data.payoutMethod == resource.data.payoutMethod
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "priority", "note", "payout", "payoutState", "payoutReference", "paidAt", "codeReviews", "approvedCodeCount", "rejectedCodeCount", "reviewState", "updatedBy", "updatedAt"])
+          && request.resource.data.codeReviews is list
+          && request.resource.data.codeReviews.size() <= request.resource.data.codeCount
+          && request.resource.data.approvedCodeCount is int
+          && request.resource.data.rejectedCodeCount is int
+          && request.resource.data.approvedCodeCount >= 0
+          && request.resource.data.rejectedCodeCount >= 0
+          && request.resource.data.approvedCodeCount + request.resource.data.rejectedCodeCount == request.resource.data.codeReviews.size()
+          && request.resource.data.reviewState in ["pending", "in_progress", "complete"]
+          && (!(resource.data.status in ["awaiting_payment", "completed"]) || (
+            request.resource.data.codeReviews == resource.data.codeReviews
+            && request.resource.data.approvedCodeCount == resource.data.approvedCodeCount
+            && request.resource.data.rejectedCodeCount == resource.data.rejectedCodeCount
+            && request.resource.data.reviewState == resource.data.reviewState))
+          && (resource.data.status != "completed" || (
+            request.resource.data.status == "completed"
+            && request.resource.data.payout == resource.data.payout
+            && request.resource.data.payoutState == resource.data.payoutState
+            && request.resource.data.payoutReference == resource.data.payoutReference
+            && request.resource.data.paidAt == resource.data.paidAt))
+          && (request.resource.data.status != "awaiting_payment" || (
+            request.resource.data.reviewState == "complete"
+            && request.resource.data.approvedCodeCount > 0
+            && request.resource.data.payoutState == "approved"
+            && request.resource.data.payout > 0))
+          && (request.resource.data.status != "completed" || (
+            request.resource.data.payoutState == "paid"
+            && request.resource.data.payout > 0
+            && request.resource.data.payoutReference is string
+            && request.resource.data.payoutReference.size() >= 4
+            && request.resource.data.payoutReference.size() <= 120
+            && request.resource.data.paidAt == request.time))
+        ));
       allow delete: if isAdmin();
+    }
+
+    match /codeSaleClaims/{claimId} {
+      allow get: if canOperate();
+      allow list: if false;
+      allow create: if verifiedMember()
+        && request.resource.data.keys().hasOnly(["operationId", "memberId", "createdAt"])
+        && request.resource.data.memberId == request.auth.uid
+        && request.resource.data.operationId is string
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/operations/$(request.resource.data.operationId)).data.memberId == request.auth.uid
+        && getAfter(/databases/$(database)/documents/operations/$(request.resource.data.operationId)).data.operationType == "code_sale"
+        && getAfter(/databases/$(database)/documents/operations/$(request.resource.data.operationId)).data.codeHashes.hasAny([claimId]);
+      allow update, delete: if false;
     }
 
     match /operationNotes/{noteId} {

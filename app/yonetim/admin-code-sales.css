@@ -1,0 +1,23 @@
+.admin-revealed-codes > div {
+  display: grid !important;
+  grid-template-columns: auto minmax(150px, 1fr) auto;
+  align-items: center;
+  justify-content: initial !important;
+}
+
+.admin-revealed-codes > div.is-approved { border-color: rgba(68, 214, 44, .3); }
+.admin-revealed-codes > div.is-rejected { border-color: rgba(241, 71, 112, .28); background: rgba(241, 71, 112, .04); }
+.admin-code-index { color: #64707c; font-size: .58rem; font-weight: 950; }
+.admin-code-review-actions { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(180px, 1fr) auto; gap: .45rem; }
+.admin-code-review-actions button,
+.admin-code-review-actions select { min-height: 34px; border: 1px solid rgba(255, 255, 255, .1); border-radius: 7px; background: #0d1115; padding: 0 .65rem; color: #cbd3dc; font-size: .6rem; font-weight: 850; }
+.admin-code-review-actions button.is-approve { border-color: rgba(68, 214, 44, .24); color: #8be77c; }
+.admin-code-review-actions button.is-reject { border-color: rgba(241, 71, 112, .24); color: #f08ca3; }
+.admin-code-review-summary { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .65rem; }
+.admin-code-review-summary span { border: 1px solid rgba(255, 255, 255, .08); border-radius: 999px; background: #0b0e12; padding: .4rem .65rem; color: #8994a0; font-size: .6rem; }
+.admin-code-review-summary b { color: #fff; }
+
+@media (max-width: 900px) {
+  .admin-code-review-actions { grid-template-columns: 1fr; }
+  .admin-revealed-codes > div { grid-template-columns: auto 1fr auto; }
+}

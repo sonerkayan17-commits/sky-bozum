@@ -13,8 +13,8 @@ export type MemberView = 'overview' | 'account' | 'profile' | 'history' | 'tasks
 type MemberData = { displayName: string; phone: string; email: string; status: string; balance: number; points: number; avatar: string };
 type Ledger = { id: string; kind: string; amount: number; note: string; createdAt: Date | null };
 
-const navigation: Array<[MemberView | 'requests' | 'orders', string, string]> = [
-  ['overview', 'Profil özeti', '/hesabim'], ['requests', 'Taleplerim', '/hesabim/talepler'], ['orders', 'Siparişlerim', '/hesabim/siparisler'], ['account', 'Hesap işlemleri', '/hesabim/hesap-islemleri'], ['profile', 'Üyelik bilgileri', '/hesabim/uyelik-bilgileri'], ['history', 'İşlem geçmişi', '/hesabim/islem-gecmisi'], ['tasks', 'Görev merkezi', '/hesabim/gorev-merkezi'],
+const navigation: Array<[MemberView | 'wallet' | 'requests' | 'orders', string, string]> = [
+  ['overview', 'Profil özeti', '/hesabim'], ['wallet', 'Cüzdanım', '/hesabim/cuzdan'], ['requests', 'Taleplerim', '/hesabim/talepler'], ['orders', 'Siparişlerim', '/hesabim/siparisler'], ['account', 'Hesap işlemleri', '/hesabim/hesap-islemleri'], ['profile', 'Üyelik bilgileri', '/hesabim/uyelik-bilgileri'], ['history', 'İşlem geçmişi', '/hesabim/islem-gecmisi'], ['tasks', 'Görev merkezi', '/hesabim/gorev-merkezi'],
 ];
 
 const presetAvatars = Array.from({ length: 10 }, (_, index) => `/avatars/avatar-${index + 1}.webp`);

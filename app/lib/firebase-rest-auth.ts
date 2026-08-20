@@ -34,7 +34,7 @@ export function firebaseRestError(error: unknown) {
   return Response.json({ error: publicMessage }, { status, headers: { 'Cache-Control': 'no-store' } });
 }
 
-export async function readOwnFirestoreDocument(token: string, collectionName: string, documentId: string) {
+export async function readFirestoreDocumentWithToken(token: string, collectionName: string, documentId: string) {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '';
   if (!projectId) throw new Error('firebase-public-config-missing');
   const response = await fetch(`https://firestore.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/databases/(default)/documents/${encodeURIComponent(collectionName)}/${encodeURIComponent(documentId)}`, {
@@ -45,7 +45,9 @@ export async function readOwnFirestoreDocument(token: string, collectionName: st
   return response.json() as Promise<{ name?: string; fields?: Record<string, FirestoreRestValue> }>;
 }
 
-export type FirestoreRestValue = { stringValue?: string; integerValue?: string; doubleValue?: number; timestampValue?: string; booleanValue?: boolean };
+export const readOwnFirestoreDocument = readFirestoreDocumentWithToken;
+
+export type FirestoreRestValue = { stringValue?: string; integerValue?: string; doubleValue?: number; timestampValue?: string; booleanValue?: boolean; arrayValue?: { values?: FirestoreRestValue[] } };
 export function restValue(fields: Record<string, FirestoreRestValue> | undefined, key: string) {
   const value = fields?.[key];
   if (!value) return null;
@@ -55,4 +57,8 @@ export function restValue(fields: Record<string, FirestoreRestValue> | undefined
   if (value.timestampValue !== undefined) return value.timestampValue;
   if (value.booleanValue !== undefined) return value.booleanValue;
   return null;
+}
+
+export function restStringArray(fields: Record<string, FirestoreRestValue> | undefined, key: string) {
+  return (fields?.[key]?.arrayValue?.values || []).flatMap((value) => typeof value.stringValue === 'string' ? [value.stringValue] : []);
 }

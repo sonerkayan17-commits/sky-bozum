@@ -494,7 +494,7 @@ export default function AdminConsole({
               ["backup", "Yedek"],
               ["content", "İçerik"],
               ["rates", "Oranlar"],
-              ["operations", "İşlemler"],
+              ["operations", "Kod satışları / İşlemler"],
               ["inventory", "Ürün stokları"],
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
