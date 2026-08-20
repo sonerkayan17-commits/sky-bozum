@@ -30,6 +30,7 @@ export function SiteEditorProvider({ children }: { children: ReactNode }) {
     let unsubscribe: () => void = () => undefined;
     const accountRoute = /^\/(yonetim|admin|hesabim|giris|kayit|uyeler)(\/|$)/.test(pathname);
     const knownAdmin = typeof window !== 'undefined' && window.localStorage.getItem('sky-bozum-admin-session') === '1';
+    const shouldVerifyImmediately = accountRoute || knownAdmin;
     const cancel = deferClientTask(async () => {
       const [{ getFirebaseClient }, { onAuthStateChanged }] = await Promise.all([
         import('../../lib/firebase'),
@@ -55,7 +56,11 @@ export function SiteEditorProvider({ children }: { children: ReactNode }) {
           setIsAdmin(false); setUid(null); setIsEditMode(false);
         }
       });
-    }, 30_000, accountRoute || knownAdmin);
+    }, {
+      delay: shouldVerifyImmediately ? 0 : 60_000,
+      eager: shouldVerifyImmediately,
+      intentEvents: shouldVerifyImmediately,
+    });
     return () => { active = false; cancel(); unsubscribe(); };
   }, [pathname]);
 

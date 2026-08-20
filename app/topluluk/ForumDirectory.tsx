@@ -4,6 +4,7 @@ import { forumRoutes } from '../lib/forumRoutes';
 import './forum-directory.css';
 import './forum-directory-v2.css';
 import './forum-quality-pass.css';
+import './forum-solutions.css';
 
 export default function ForumDirectory() {
   const categoryCount = forumSections.reduce((sum, section) => sum + section.categories.length, 0);
@@ -37,6 +38,20 @@ export default function ForumDirectory() {
           <span>0{index + 1}</span><div><small>{topic.category}</small><strong>{topic.title}</strong></div><b aria-hidden="true">→</b>
         </Link>)}
       </div>
+    </section>
+    <section className="forum-solution-lane" aria-labelledby="forum-solution-title">
+      <div>
+        <span>SORUNU ÇÖZ, SONUCU PAYLAŞ</span>
+        <h2 id="forum-solution-title">Hata türünden doğru kontrol adımına geçin.</h2>
+        <p>Önce güvenli kontrol rehberini uygulayın. Sorun devam ederse doğru forum kategorisinde konu açın; sonuçlandığında konuyu “Çözüldü” olarak işaretleyin.</p>
+        <Link href="/bilgi-merkezi/sorun-cozme">Tüm çözüm rehberleri →</Link>
+      </div>
+      <nav aria-label="Sık kullanılan çözüm rehberleri">
+        <Link href="/bilgi-merkezi/sorun-cozme/vodafone-mobil-odeme-acilmiyor"><b>Mobil ödeme</b><span>Vodafone işlemi açılmıyor</span></Link>
+        <Link href="/bilgi-merkezi/sorun-cozme/paycell-kart-calismiyor"><b>Dijital cüzdan</b><span>Paycell kart çalışmıyor</span></Link>
+        <Link href="/bilgi-merkezi/sorun-cozme/razer-gold-kodu-gecersiz"><b>Dijital kod</b><span>Razer Gold kodu geçersiz</span></Link>
+        <Link href="/hesabim/yeni-konu"><b>Çözülmedi mi?</b><span>Doğru kategoride konu aç</span></Link>
+      </nav>
     </section>
     <div className="forum-groups">
       {forumSections.map((section) => {

@@ -13,7 +13,7 @@ const tools = read('app/lib/tools.ts');
 const sitemap = read('app/sitemap.ts');
 const robots = read('app/robots.ts');
 
-pass('Merkezi SITE_URL tanımlı', seo.includes("export const SITE_URL = 'https://bozumcu.net'"));
+pass('Merkezi SITE_URL tanımlı', seo.includes("export const PRODUCTION_SITE_URL = 'https://bozumcu.net'") && seo.includes('export const SITE_URL = normalizeSiteUrl('));
 pass('Merkezi metadata builder tanımlı', seo.includes('export function createMetadata'));
 pass('Breadcrumb schema builder tanımlı', seo.includes('export function breadcrumbSchema'));
 pass('Service schema builder tanımlı', seo.includes('export function serviceSchema'));

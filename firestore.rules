@@ -386,6 +386,9 @@ service cloud.firestore {
         && request.resource.data.uid == request.auth.uid
         && validForumDraft(request.resource.data)
         && (isAdmin() || request.resource.data.status == "pending")
+        && request.resource.data.resolutionStatus == "open"
+        && request.resource.data.resolvedBy == ""
+        && request.resource.data.resolvedAt == null
         && request.resource.data.title is string
         && request.resource.data.title.size() >= 5
         && request.resource.data.title.size() <= 100
@@ -398,6 +401,14 @@ service cloud.firestore {
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
         && resource.data.locked != true
+        && request.resource.data.locked == resource.data.locked
+        && ((resource.data.resolutionStatus == null
+            && request.resource.data.resolutionStatus == "open"
+            && request.resource.data.resolvedBy == ""
+            && request.resource.data.resolvedAt == null)
+          || (request.resource.data.resolutionStatus == resource.data.resolutionStatus
+            && request.resource.data.resolvedBy == resource.data.resolvedBy
+            && request.resource.data.resolvedAt == resource.data.resolvedAt))
         && validForumDraft(request.resource.data)
         && (request.resource.data.status == resource.data.status
           || (resource.data.status == "published" && request.resource.data.status == "pending"))
@@ -408,7 +419,17 @@ service cloud.firestore {
         && request.resource.data.body is string
         && request.resource.data.body.size() >= 10
         && request.resource.data.body.size() <= 30000
-        && request.resource.data.updatedAt == request.time);
+        && request.resource.data.updatedAt == request.time)
+        || (verifiedMemberOrAdmin()
+          && (isAdmin() || resource.data.uid == request.auth.uid)
+          && (resource.data.resolutionStatus == null || resource.data.resolutionStatus != "resolved")
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            "resolutionStatus", "resolvedBy", "resolvedAt", "updatedAt"
+          ])
+          && request.resource.data.resolutionStatus == "resolved"
+          && request.resource.data.resolvedBy == request.auth.uid
+          && request.resource.data.resolvedAt == request.time
+          && request.resource.data.updatedAt == request.time);
       allow delete: if canModerate();
     }
 
@@ -953,6 +974,31 @@ service cloud.firestore {
         && request.resource.data.createdAt == request.time;
       allow update: if false;
       allow delete: if isAdmin();
+    }
+
+    // Üyeye gösterilen işlem hareketleri ekip içi notlardan ayrı tutulur.
+    // Böylece müşteri yalnız kendi işlemine ait, paylaşılması güvenli durum
+    // metinlerini gerçek zamanlı okuyabilir; iç operasyon notları sızmaz.
+    match /operationEvents/{eventId} {
+      allow read: if canOperate()
+        || (signedIn() && resource.data.memberId == request.auth.uid);
+      allow create: if canOperate()
+        && request.resource.data.keys().hasOnly([
+          "operationId", "memberId", "type", "body", "createdAt"
+        ])
+        && request.resource.data.operationId is string
+        && request.resource.data.operationId.size() >= 1
+        && request.resource.data.operationId.size() <= 180
+        && request.resource.data.memberId is string
+        && request.resource.data.memberId.size() >= 1
+        && request.resource.data.memberId
+          == get(/databases/$(database)/documents/operations/$(request.resource.data.operationId)).data.memberId
+        && request.resource.data.type in ["status", "system"]
+        && request.resource.data.body is string
+        && request.resource.data.body.size() >= 1
+        && request.resource.data.body.size() <= 300
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
     }
 
     match /{document=**} {

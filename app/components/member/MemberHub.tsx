@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/immutability */
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile, type Auth, type User } from 'firebase/auth';
 import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
@@ -20,6 +21,7 @@ const navigation: Array<[MemberView | 'wallet' | 'requests' | 'orders', string, 
 const presetAvatars = Array.from({ length: 10 }, (_, index) => `/avatars/avatar-${index + 1}.webp`);
 
 export default function MemberHub({ view }: { view: MemberView }) {
+  const router = useRouter();
   const [user, setUser] = useState<(User & { auth: Auth }) | null>(null);
   const [member, setMember] = useState<MemberData | null>(null);
   const [activities, setActivities] = useState<MemberActivity[]>([]);
@@ -146,7 +148,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
     setAccountAction('logout');
     try {
       await signOut(user!.auth);
-      location.assign('/');
+      router.push('/');
     } catch {
       setNotice('Oturum kapatılamadı. Lütfen tekrar deneyin.');
       setAccountAction(null);

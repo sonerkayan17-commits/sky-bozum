@@ -21,6 +21,8 @@ const checks = [
   ['Ödeme öncesi tüm kodlar inceleniyor', files.admin.includes('operation.codeReviews.length !== operation.codeCount')],
   ['Bakiye ödemesi tek transaction içinde', files.admin.includes('runTransaction') && files.admin.includes("`code-sale-${operation.id}`") && files.admin.includes("payoutState: 'paid'")],
   ['Üye inceleme ve ödeme sonucunu izliyor', files.member.includes('member-code-review-result') && files.member.includes('payoutReference')],
+  ['Üye güvenli işlem zaman çizelgesini izliyor', files.member.includes("collection(client.db!, 'operationEvents')") && files.member.includes('member-operation-timeline')],
+  ['İşlem hareketleri iç ekip notlarından ayrılıyor', files.rules.includes('match /operationEvents/{eventId}') && files.rules.includes('resource.data.memberId == request.auth.uid') && files.admin.includes("collection(db, 'operationEvents')")],
   ['Cüzdan gerçek zamanlı hesap defterini izliyor', files.wallet.includes("collection(db, 'memberLedger')") && files.wallet.includes('onSnapshot')],
 ];
 

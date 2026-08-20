@@ -2,6 +2,7 @@
 
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, type FormEvent } from 'react';
 import { createPendingComment, getOrCreateVisitorId, registerEngagement, subscribeToApprovedCommentsForService, subscribeToEngagementCountsForTarget, type PublicComment } from '../../lib/comments';
 import { getFirebaseClient } from '../../lib/firebase';
@@ -14,6 +15,7 @@ import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, update
 type Props = { targetId: string; title: string; kind?: 'article' | 'topic' };
 
 export default function ContentEngagement({ targetId, title, kind = 'article' }: Props) {
+  const router = useRouter();
   const [client, setClient] = useState<ReturnType<typeof getFirebaseClient>>({ auth: null, db: null });
   const { auth, db } = client;
   const service = `${kind}:${targetId}`.slice(0, 100);
@@ -134,7 +136,7 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   }
 
   async function toggleBookmark() {
-    if (!user || !db) { window.location.assign('/giris'); return; }
+    if (!user || !db) { router.push('/giris'); return; }
     if (bookmarkBusy) return;
     setBookmarkBusy(true);
     try {

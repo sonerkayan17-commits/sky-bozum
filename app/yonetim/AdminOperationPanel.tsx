@@ -151,9 +151,24 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     completed: operations.filter((item) => item.status === 'completed').length,
   }), [operations]);
 
-  async function addTimelineEntry(operationId: string, type: OperationNote['type'], body: string) {
+  async function addTimelineEntry(
+    operationId: string,
+    type: OperationNote['type'],
+    body: string,
+    memberId = '',
+    publicBody = '',
+  ) {
     if (!db) return;
     await addDoc(collection(db, 'operationNotes'), { operationId, type, body: body.slice(0, 600), actorId, createdAt: serverTimestamp() });
+    if (memberId && publicBody) {
+      await addDoc(collection(db, 'operationEvents'), {
+        operationId,
+        memberId,
+        type: type === 'status' ? 'status' : 'system',
+        body: publicBody.slice(0, 300),
+        createdAt: serverTimestamp(),
+      });
+    }
   }
 
   async function createOperation(event: FormEvent<HTMLFormElement>) {
@@ -199,7 +214,13 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setSavingId(operation.id);
     try {
       await updateDoc(doc(db, 'operations', operation.id), { status, updatedBy: actorId, updatedAt: serverTimestamp() });
-      await addTimelineEntry(operation.id, 'status', `Durum “${statusLabels[status]}” olarak güncellendi.`);
+      await addTimelineEntry(
+        operation.id,
+        'status',
+        `Durum “${statusLabels[status]}” olarak güncellendi.`,
+        operation.memberId,
+        `İşleminiz “${statusLabels[status]}” aşamasına geçti.`,
+      );
       await addDoc(collection(db, 'contentAudit'), { action: `operation:${status}`, articleSlug: operation.id, actorId, createdAt: serverTimestamp() });
       if (operation.memberId) {
         await addDoc(collection(db, 'notifications'), {
@@ -263,7 +284,13 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setPaymentSavingId(operation.id);
     try {
       await updateDoc(doc(db, 'operations', operation.id), { payout, status: 'awaiting_payment', payoutState: 'approved', updatedBy: actorId, updatedAt: serverTimestamp() });
-      await addTimelineEntry(operation.id, 'status', `${payout.toLocaleString('tr-TR')} TL net ödeme onaylandı; hedef: ${payoutMethodLabel(operation.payoutMethod)}.`);
+      await addTimelineEntry(
+        operation.id,
+        'status',
+        `${payout.toLocaleString('tr-TR')} TL net ödeme onaylandı; hedef: ${payoutMethodLabel(operation.payoutMethod)}.`,
+        operation.memberId,
+        `${payout.toLocaleString('tr-TR')} TL net ödeme onaylandı. Ödeme hedefi: ${payoutMethodLabel(operation.payoutMethod)}.`,
+      );
       await notifyMember(operation, `Razer Gold kod kontrolünüz tamamlandı. ${operation.approvedCodeCount} kod kabul edildi ve ${payout.toLocaleString('tr-TR')} TL ödeme onaylandı.`).catch(() => undefined);
       setNotice('Net ödeme onaylandı ve müşterinin ekranına yansıtıldı.');
     } catch { setNotice('Ödeme tutarı onaylanamadı.'); }
@@ -296,7 +323,13 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
         transaction.update(operationRef, { payout, status: 'completed', payoutState: 'paid', payoutReference: reference, paidAt: timestamp, updatedBy: actorId, updatedAt: timestamp });
         transaction.set(ledgerRef, { memberId: operation.memberId, kind: 'balance', amount: payout, balanceAfter: nextBalance, note: `Razer Gold kod satışı ödemesi · ${operation.id.slice(0, 10).toUpperCase()}`, operationId: operation.id, performedBy: actorId, createdAt: timestamp });
       });
-      await addTimelineEntry(operation.id, 'status', `${operation.payout.toLocaleString('tr-TR')} TL üye bakiyesine aktarıldı ve işlem tamamlandı.`);
+      await addTimelineEntry(
+        operation.id,
+        'status',
+        `${operation.payout.toLocaleString('tr-TR')} TL üye bakiyesine aktarıldı ve işlem tamamlandı.`,
+        operation.memberId,
+        `${operation.payout.toLocaleString('tr-TR')} TL Sky Bozum bakiyenize aktarıldı. İşlem tamamlandı.`,
+      );
       await notifyMember(operation, `${operation.payout.toLocaleString('tr-TR')} TL Razer Gold kod satış ödemeniz Sky Bozum cüzdanınıza aktarıldı.`).catch(() => undefined);
       setNotice('Ödeme üye bakiyesine atomik olarak aktarıldı.');
     } catch (error) { setNotice(error instanceof Error ? error.message : 'Bakiye ödemesi tamamlanamadı.'); }
@@ -311,7 +344,13 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setPaymentSavingId(operation.id);
     try {
       await updateDoc(doc(db, 'operations', operation.id), { status: 'completed', payoutState: 'paid', payoutReference: reference.slice(0, 120), paidAt: serverTimestamp(), updatedBy: actorId, updatedAt: serverTimestamp() });
-      await addTimelineEntry(operation.id, 'status', `${operation.payout.toLocaleString('tr-TR')} TL kayıtlı IBAN'a ödendi. Referans: ${reference.slice(0, 120)}`);
+      await addTimelineEntry(
+        operation.id,
+        'status',
+        `${operation.payout.toLocaleString('tr-TR')} TL kayıtlı IBAN'a ödendi. Referans: ${reference.slice(0, 120)}`,
+        operation.memberId,
+        `${operation.payout.toLocaleString('tr-TR')} TL kayıtlı IBAN'ınıza gönderildi. Referans: ${reference.slice(0, 120)}`,
+      );
       await notifyMember(operation, `${operation.payout.toLocaleString('tr-TR')} TL Razer Gold kod satış ödemeniz kayıtlı IBAN'ınıza gönderildi. Referans: ${reference.slice(0, 120)}`).catch(() => undefined);
       setNotice('IBAN ödemesi referansla birlikte tamamlandı.');
     } catch { setNotice('IBAN ödemesi tamamlandı olarak kaydedilemedi.'); }
@@ -338,6 +377,15 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setPaymentSavingId(operation.id);
     try {
       await updateDoc(doc(db, 'operations', operation.id), { codeReviews, approvedCodeCount, rejectedCodeCount, reviewState, status: 'checking', updatedBy: actorId, updatedAt: serverTimestamp() });
+      if (reviewState === 'complete') {
+        await addTimelineEntry(
+          operation.id,
+          'status',
+          `Kod incelemesi tamamlandı: ${approvedCodeCount} geçerli, ${rejectedCodeCount} geçersiz.`,
+          operation.memberId,
+          `Kod kontrolü tamamlandı: ${approvedCodeCount} kod kabul edildi, ${rejectedCodeCount} kod kabul edilmedi.`,
+        );
+      }
       setNotice(`Kod ${index + 1} “${status === 'approved' ? 'geçerli' : 'geçersiz'}” olarak kaydedildi.`);
     } catch { setNotice('Kod inceleme sonucu kaydedilemedi.'); }
     finally { setPaymentSavingId(null); }

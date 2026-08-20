@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
@@ -20,6 +21,7 @@ import { trackConversion } from '../lib/conversion';
 import './account-access.css';
 
 export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -101,7 +103,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
           return;
         }
         await saveMember(result.user, result.user.displayName || email.trim().split('@')[0]);
-        window.location.assign('/bilgi-merkezi');
+        router.push('/bilgi-merkezi');
         return;
       }
 
@@ -130,7 +132,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       trackConversion(mode === 'login' ? 'account_login_attempted' : 'account_register_attempted', { method: 'google' });
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       await saveMember(result.user, result.user.displayName || 'Google kullanıcısı');
-      window.location.assign('/bilgi-merkezi');
+      router.push('/bilgi-merkezi');
     } catch { setError('Google ile giriş tamamlanamadı. Açılır pencereye izin verip tekrar deneyin.'); }
     finally { setBusy(false); }
   }

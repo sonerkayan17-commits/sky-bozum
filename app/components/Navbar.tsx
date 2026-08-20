@@ -153,7 +153,7 @@ export default function Navbar() {
   return (
     <header className="site-navbar sticky top-0 z-50 border-b border-white/10 bg-[#08090e]/88 text-white backdrop-blur-2xl">
       <div className="site-navbar__shell content-shell flex h-[68px] items-center justify-between gap-4">
-        <Link href="/" className="site-navbar__brand group flex items-center gap-3" aria-label="Sky Bozum ana sayfa">
+        <Link href="/" className="site-navbar__brand group flex items-center gap-3">
           <span className="relative h-11 w-11 overflow-hidden rounded-xl border border-pink-500/20 shadow-[0_10px_28px_rgba(236,72,153,.18)]"><Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme logosu" fill sizes="44px" className="object-cover" priority /></span>
           <span className="leading-none">
             <span className="block text-[11px] font-black uppercase tracking-[.24em] text-[#f2c98a]">Sky</span>

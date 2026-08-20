@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { useEffect, useState, type FormEvent } from 'react';
@@ -12,6 +13,7 @@ import { likeProfile, sendMessage, sendPointGift } from '../../lib/social';
 type ReferralMember = { id: string; name: string };
 
 export default function PublicMemberProfile({ memberId }: { memberId: string }) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [name, setName] = useState('Sky Bozum üyesi');
   const [avatar, setAvatar] = useState('');
@@ -102,7 +104,7 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
 
   async function act(kind: 'like' | 'gift') {
     const { db } = getFirebaseClient();
-    if (!user || !db) { location.assign('/giris'); return; }
+    if (!user || !db) { router.push('/giris'); return; }
     if (profileAction || (kind === 'like' && likedProfile) || (kind === 'gift' && giftSent)) return;
     setProfileAction(kind);
     try {
@@ -124,7 +126,7 @@ export default function PublicMemberProfile({ memberId }: { memberId: string }) 
   async function submit(event: FormEvent) {
     event.preventDefault();
     const { db } = getFirebaseClient();
-    if (!user || !db) { location.assign('/giris'); return; }
+    if (!user || !db) { router.push('/giris'); return; }
     if (sending) return;
     setSending(true);
     try {

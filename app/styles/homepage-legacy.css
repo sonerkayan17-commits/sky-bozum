@@ -34,6 +34,13 @@
 @media(max-width:800px){.home-page .hero-pro-copy{order:1!important}.home-page .hero-pro-visual{order:2!important}.home-page .hero-pro-rates{order:3!important}}
 @media(prefers-reduced-motion:reduce){html[data-motion-preview=true] .hero-reference-slide{transition:opacity .34s ease,transform .34s ease!important}html[data-motion-preview=true] .hero-reference-controls>button{transition:background .2s ease,border-color .2s ease,transform .2s ease!important}html[data-motion-preview=true] .hero-reference-dots button{transition:width .2s ease,background .2s ease!important}}
 
+/* Hero carousel is above the fold; keep its continuous motion in critical CSS. */
+.hero-reference-slide{opacity:0;transform:translate3d(100%,0,0);transition:opacity .22s ease,transform .58s cubic-bezier(.22,.8,.24,1);will-change:opacity,transform}
+.hero-reference-slide.is-active{opacity:1;transform:translate3d(0,0,0)}
+.hero-reference-slide.is-prev{opacity:0;transform:translate3d(-100%,0,0)}
+.hero-reference-slide.is-next{opacity:0;transform:translate3d(100%,0,0)}
+@media(prefers-reduced-motion:reduce){.hero-reference-slide{transition:none}}
+
 /* V10 Adım 3 — Telefon içi güven mesajı */
 .hero-pro-trust-card{position:relative;display:grid;grid-template-columns:58px minmax(0,1fr);align-items:center;gap:13px;min-height:108px;margin-top:11px;overflow:hidden;border:1px solid rgba(255,255,255,.085);border-radius:18px;background:radial-gradient(circle at 92% 15%,rgba(255,100,54,.15),transparent 42%),linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.018));padding:15px 16px;box-shadow:inset 0 1px rgba(255,255,255,.055),0 14px 34px rgba(0,0,0,.18)}
 .hero-pro-trust-card::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 5%,rgba(236,21,93,.065) 48%,rgba(255,143,52,.055) 75%,transparent);pointer-events:none}

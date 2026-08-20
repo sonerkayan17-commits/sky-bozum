@@ -1,0 +1,7 @@
+.community-post-path { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.community-post-path > b { flex: none; border: 1px solid rgba(248, 185, 79, .25); border-radius: 999px; padding: .32rem .55rem; color: #e6bd72; background: rgba(248, 185, 79, .07); font-size: .58rem; letter-spacing: .05em; }
+.community-page article.is-resolved { border-color: rgba(76, 214, 153, .2); background: linear-gradient(145deg, rgba(76, 214, 153, .055), rgba(255, 255, 255, .02)); }
+.community-page article.is-resolved .community-post-path > b { border-color: rgba(76, 214, 153, .28); color: #8de0b8; background: rgba(76, 214, 153, .08); }
+.community-page .community-resolve { border-color: rgba(76, 214, 153, .3); color: #8de0b8; }
+.community-page .community-resolve:hover { background: rgba(76, 214, 153, .09); color: #b3f0d0; }
+@media (max-width: 620px) { .community-post-path { align-items: flex-start; flex-direction: column; } }

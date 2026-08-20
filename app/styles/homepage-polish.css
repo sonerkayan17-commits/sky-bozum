@@ -583,33 +583,6 @@ linear-gradient(180deg,#090b10 0%,#080a0f 100%);padding:clamp(74px,8vw,124px) 0}
 @media(max-width:900px){.home-page .brand-strip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-page .brand-strip-card{border-bottom:1px solid rgba(255,255,255,.07)}.home-page .brand-strip-card:nth-child(odd){border-right:1px solid rgba(255,255,255,.07)}.home-page .home-faq-card,.home-page .home-support-card{min-height:auto}}
 @media(max-width:640px){.home-page .brand-strip{padding:44px 0 48px}.home-page .brand-strip-grid{grid-template-columns:1fr}.home-page .brand-strip-card{grid-template-columns:72px minmax(0,1fr) 18px;min-height:100px}.home-page .brand-strip-logo{width:72px;height:62px}.home-page .brand-strip-logo-image{max-width:58px!important}.home-page #oran-teklifi{padding-block:52px}.home-page .quote-visual__canvas{min-height:330px}.home-page .quote-visual__phone{width:76%}.home-page .quote-visual__float{width:148px}.home-page .experience-showcase{padding:64px 0}.home-page .experience-card{min-height:auto}}
 
-/* Carousel motion refinement: adjacent slides move as a continuous loop. */
-.hero-reference-slide {
-  opacity: 0;
-  transform: translate3d(100%, 0, 0);
-  transition: opacity .22s ease, transform .58s cubic-bezier(.22, .8, .24, 1);
-  will-change: opacity, transform;
-}
-
-.hero-reference-slide.is-active {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-.hero-reference-slide.is-prev {
-  opacity: 0;
-  transform: translate3d(-100%, 0, 0);
-}
-
-.hero-reference-slide.is-next {
-  opacity: 0;
-  transform: translate3d(100%, 0, 0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-reference-slide { transition: none; }
-}
-
 /* V10.7 homepage 100-point refinement */
 .home-page .content-wide.rhythm-md>.grid{gap:28px;align-items:stretch}
 .home-page .home-faq-card,.home-page .home-support-card{min-height:640px}

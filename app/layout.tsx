@@ -14,7 +14,6 @@ import SiteAnnouncement from './components/SiteAnnouncement';
 import { SiteEditorProvider } from './components/admin/SiteEditorProvider';
 import SiteAdminRuntime from './components/admin/SiteAdminRuntime';
 import MotionPreviewBridge from './components/MotionPreviewBridge';
-import './styles/inline-editor.css';
 
 
 export const viewport: Viewport = {

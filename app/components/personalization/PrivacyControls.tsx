@@ -12,8 +12,8 @@ export default function PrivacyControls({ showReset = false }: { showReset?: boo
   };
   return (
     <div><div className="flex flex-wrap items-center gap-3">
-      <button type="button" onClick={() => { setNotice(''); openPreferences(); }} className="text-xs font-bold text-slate-400 transition hover:text-rose-300">Çerez tercihleri</button>
-      {showReset && consent === 'accepted' && <button type="button" onClick={handleReset} className="text-xs font-bold text-slate-400 transition hover:text-rose-300">Anonim profili sıfırla</button>}
+      <button type="button" onClick={() => { setNotice(''); openPreferences(); }} className="min-h-8 py-1 text-xs font-bold text-slate-400 transition hover:text-rose-300">Çerez tercihleri</button>
+      {showReset && consent === 'accepted' && <button type="button" onClick={handleReset} className="min-h-8 py-1 text-xs font-bold text-slate-400 transition hover:text-rose-300">Anonim profili sıfırla</button>}
     </div>{showReset && <p className="mt-2 min-h-4 text-xs text-emerald-300" aria-live="polite">{notice}</p>}</div>
   );
 }

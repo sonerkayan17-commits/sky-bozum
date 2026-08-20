@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { addDoc, collection, doc, onSnapshot, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
@@ -11,6 +12,7 @@ import RichArticleEditor, { sanitizeArticleHtml } from '../../yonetim/RichArticl
 import '../../yonetim/content.css';
 import './community-editor.css';
 import './topic-category.css';
+import './community-solutions.css';
 
 type Post = {
   id: string;
@@ -25,6 +27,9 @@ type Post = {
   status: string;
   visibility: string;
   locked: boolean;
+  resolutionStatus: 'open' | 'resolved';
+  resolvedBy: string;
+  resolvedAt: Date | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -36,6 +41,7 @@ type Props = {
 };
 
 export default function CommunityTopics({ compose = false, sectionSlug: scopedSectionSlug, categorySlug: scopedCategorySlug }: Props) {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -55,7 +61,10 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     () => posts.filter((post) => (
       (!scopedSectionSlug || post.sectionSlug === scopedSectionSlug)
       && (!scopedCategorySlug || post.categorySlug === scopedCategorySlug)
-    )),
+    )).sort((a, b) => {
+      if (a.resolutionStatus !== b.resolutionStatus) return a.resolutionStatus === 'open' ? -1 : 1;
+      return (b.updatedAt?.getTime() || b.createdAt?.getTime() || 0) - (a.updatedAt?.getTime() || a.createdAt?.getTime() || 0);
+    }),
     [posts, scopedCategorySlug, scopedSectionSlug],
   );
 
@@ -75,7 +84,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       [...publicPosts, ...ownPosts, ...adminPosts].forEach((post) => merged.set(post.id, post));
       setPosts([...merged.values()].sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)));
     };
-    const mapPost = (item: { id: string; data: () => Record<string, unknown> }) => {
+    const mapPost = (item: { id: string; data: () => Record<string, unknown> }): Post => {
       const data = item.data();
       return {
         id: item.id,
@@ -90,6 +99,9 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
         status: String(data.status || 'unknown'),
         visibility: String(data.visibility || 'unknown'),
         locked: data.locked === true,
+        resolutionStatus: data.resolutionStatus === 'resolved' ? 'resolved' : 'open',
+        resolvedBy: String(data.resolvedBy || ''),
+        resolvedAt: (data.resolvedAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
         createdAt: (data.createdAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
         updatedAt: (data.updatedAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? null,
       };
@@ -164,7 +176,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
     event.preventDefault();
     const { db } = getFirebaseClient();
     if (!user || !db) {
-      location.assign('/giris');
+      router.push('/giris');
       return;
     }
 
@@ -188,6 +200,9 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       visibility: 'public' as const,
       status: isAdmin ? (currentPost?.status === 'archived' ? 'archived' as const : 'published' as const) : 'pending' as const,
       locked: currentPost?.locked === true,
+      resolutionStatus: currentPost?.resolutionStatus || 'open',
+      resolvedBy: currentPost?.resolvedBy || '',
+      resolvedAt: currentPost?.resolvedAt || null,
       updatedAt: serverTimestamp(),
     };
 
@@ -212,7 +227,7 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
 
   async function reportPost(post: Post) {
     if (!user) {
-      location.assign('/giris');
+      router.push('/giris');
       return;
     }
     const { db } = getFirebaseClient();
@@ -223,6 +238,22 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
       if (!created) setNotice('Bu konuyu zaten bildirdiniz.');
     } catch {
       // Rapor formu görünür akışı bozmaz; yetki hatası güvenlik kuralında tutulur.
+    }
+  }
+
+  async function markResolved(post: Post) {
+    const { db } = getFirebaseClient();
+    if (!db || !user || (post.uid !== user.uid && !isAdmin) || post.resolutionStatus === 'resolved') return;
+    try {
+      await updateDoc(doc(db, 'memberPosts', post.id), {
+        resolutionStatus: 'resolved',
+        resolvedBy: user.uid,
+        resolvedAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      setNotice('Konu çözüldü olarak işaretlendi. Çözüm arayanlar bu durumu artık görebilir.');
+    } catch {
+      setNotice('Çözüm durumu kaydedilemedi. Yetkinizi ve bağlantınızı kontrol edin.');
     }
   }
 
@@ -264,6 +295,6 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
   if (!visiblePosts.length) return null;
   return <section className="community-page community-page--scoped" aria-label="Üye konuları">
     <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href={user ? '/hesabim/yeni-konu' : '/giris'}>{user ? '+ Yeni konu aç' : 'Üye girişi yap'}</Link></header>
-    <div>{visiblePosts.map((post) => <article key={post.id}><span>{post.category} › {post.subCategory}</span><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{isAdmin ? <><button type="button" onClick={() => edit(post)}>Düzenle</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></> : user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
+    <div>{visiblePosts.map((post) => <article key={post.id} className={post.resolutionStatus === 'resolved' ? 'is-resolved' : 'is-open'}><div className="community-post-path"><span>{post.category} › {post.subCategory}</span><b>{post.resolutionStatus === 'resolved' ? '✓ Çözüldü' : 'Yanıt bekliyor'}</b></div><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{post.resolutionStatus === 'open' && user && (post.uid === user.uid || isAdmin) ? <button type="button" className="community-resolve" onClick={() => void markResolved(post)}>✓ Çözüldü olarak işaretle</button> : null}{isAdmin ? <><button type="button" onClick={() => edit(post)}>Düzenle</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></> : user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
   </section>;
 }

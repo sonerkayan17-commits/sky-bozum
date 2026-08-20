@@ -112,10 +112,6 @@ function ReferenceCarousel({ whatsapp }: { whatsapp: string }) {
     return `hero-reference-slide ${position}`.trim();
   };
 
-  const goTo = (nextIndex: number) => {
-    setSlidesReady(true);
-    setActiveIndex(Math.max(0, Math.min(referenceSlides.length, nextIndex)));
-  };
   const previous = () => {
     setSlidesReady(true);
     setActiveIndex((current) => current === 0 ? referenceSlides.length : current - 1);
@@ -193,18 +189,7 @@ function ReferenceCarousel({ whatsapp }: { whatsapp: string }) {
       </div>}
       <div className={`hero-reference-controls ${activeIndex === 0 ? 'is-dashboard' : ''}`}>
         <button type="button" onClick={previous} aria-label="Önceki referansı göster">‹</button>
-        <div className="hero-reference-dots" aria-label="Referans pozisyonu">
-          <button type="button" aria-label="Ana ekranı göster" aria-current={activeIndex === 0 ? 'true' : undefined} onClick={() => goTo(0)} />
-          {referenceSlides.map((slide, index) => (
-            <button
-              type="button"
-              key={slide.src}
-              aria-label={`${index + 1}. referansı göster`}
-              aria-current={index + 1 === activeIndex ? 'true' : undefined}
-              onClick={() => goTo(index + 1)}
-            />
-          ))}
-        </div>
+        <span className="hero-reference-position" aria-live="polite">{currentLabel}</span>
         <button type="button" onClick={next} aria-label="Sonraki referansı göster">›</button>
       </div>
     </div>
@@ -271,7 +256,6 @@ export default function Hero() {
                 href={`/hizmetler/${item.serviceSlug}`}
                 className="hero-pro-rate"
                 key={item.id}
-                aria-label={`${item.name} hizmet detaylarını ve güncel oran bilgisini görüntüle`}
                 title={`${item.name} detaylarını görüntüle`}
               >
                 <span className={`hero-pro-logo hero-pro-logo--${item.id} ${item.id === 'apple' ? 'hero-pro-logo--light' : ''}`}>

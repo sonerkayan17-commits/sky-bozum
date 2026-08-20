@@ -9,6 +9,7 @@ import { formatCodeValue, payoutMethodLabel, razerCodeValues, type CodeSalePayou
 import { getFirebaseClient } from '../../lib/firebase';
 import { parseTurkishAmount, rateItems, validateAmount } from '../../lib/rates';
 import './member-operations.css';
+import './member-operation-timeline.css';
 import './member-commerce.css';
 
 type Status = 'new' | 'awaiting_product' | 'checking' | 'awaiting_payment' | 'completed' | 'cancelled';
@@ -21,6 +22,7 @@ type Operation = {
 };
 type BankInfo = { accountHolder: string; bankName: string; iban: string };
 type EncryptedCode = { id: string; codeEncrypted: string };
+type OperationEvent = { id: string; operationId: string; type: 'status' | 'system'; body: string; createdAt: Date | null };
 
 const labels: Record<Status, string> = { new: 'Talep alındı', awaiting_product: 'Kod bekleniyor', checking: 'Kod kontrol ediliyor', awaiting_payment: 'Ödeme onaylandı', completed: 'Ödeme tamamlandı', cancelled: 'İptal edildi' };
 const statusStep: Record<Status, number> = { new: 0, awaiting_product: 0, checking: 1, awaiting_payment: 2, completed: 3, cancelled: -1 };
@@ -36,6 +38,7 @@ export default function MemberOperations() {
   const [user, setUser] = useState<User | null>(null);
   const [db, setDb] = useState<Firestore | null>(null);
   const [operations, setOperations] = useState<Operation[]>([]);
+  const [operationEvents, setOperationEvents] = useState<OperationEvent[]>([]);
   const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
   const [memberName, setMemberName] = useState('');
   const [contact, setContact] = useState('');
@@ -69,10 +72,12 @@ export default function MemberOperations() {
     setDb(client.db);
     if (!client.auth || !client.db) { setLoading(false); return; }
     let stopOperations = () => {};
+    let stopEvents = () => {};
     const stopAuth = onAuthStateChanged(client.auth, (nextUser) => {
       stopOperations();
+      stopEvents();
       setUser(nextUser);
-      if (!nextUser) { setOperations([]); setLoading(false); return; }
+      if (!nextUser) { setOperations([]); setOperationEvents([]); setLoading(false); return; }
       setMemberName(nextUser.displayName || '');
       setContact(nextUser.email || '');
       void Promise.all([
@@ -103,8 +108,20 @@ export default function MemberOperations() {
         }).sort((a, b) => (b.updatedAt?.getTime() || b.createdAt?.getTime() || 0) - (a.updatedAt?.getTime() || a.createdAt?.getTime() || 0)));
         setLoading(false);
       }, () => { setNotice('Talepleriniz yüklenemedi.'); setLoading(false); });
+      stopEvents = onSnapshot(query(collection(client.db!, 'operationEvents'), where('memberId', '==', nextUser.uid)), (snapshot) => {
+        setOperationEvents(snapshot.docs.map((entry) => {
+          const data = entry.data();
+          return {
+            id: entry.id,
+            operationId: String(data.operationId || ''),
+            type: data.type === 'status' ? 'status' : 'system',
+            body: String(data.body || ''),
+            createdAt: data.createdAt?.toDate?.() ?? null,
+          } satisfies OperationEvent;
+        }).sort((a, b) => (a.createdAt?.getTime() || 0) - (b.createdAt?.getTime() || 0)));
+      }, () => setNotice('İşlem zaman çizelgesi şu anda yüklenemedi.'));
     });
-    return () => { stopAuth(); stopOperations(); };
+    return () => { stopAuth(); stopOperations(); stopEvents(); };
   }, []);
 
   const active = useMemo(() => operations.filter((item) => !['completed', 'cancelled'].includes(item.status)).length, [operations]);
@@ -175,10 +192,18 @@ export default function MemberOperations() {
     {notice && <p className="member-notice" role="status">{notice}</p>}
     <div className="member-operation-list">{operations.length ? operations.map((operation) => {
       const step = statusStep[operation.status];
+      const timeline = operationEvents.filter((event) => event.operationId === operation.id);
       return <article key={operation.id} className={operation.operationType === 'code_sale' ? 'is-code-sale' : ''}>
         <div className="member-operation-top"><div><span>{operation.operationType === 'code_sale' ? 'RAZER GOLD KOD SATIŞI' : operation.service}</span><h2>{operation.operationType === 'code_sale' ? `${operation.codeCount} × ${formatCodeValue(operation.currency, operation.codeValue)}` : `${operation.amount.toLocaleString('tr-TR')} TL talep`}</h2></div><b className={`member-operation-status status-${operation.status}`}>{labels[operation.status]}</b></div>
         {operation.operationType === 'code_sale' ? <><div className="member-operation-details"><span><small>Toplam kod değeri</small><strong>{formatCodeValue(operation.currency, operation.amount)}</strong></span><span><small>Ödeme yöntemi</small><strong>{payoutMethodLabel(operation.payoutMethod)}</strong></span><span><small>Onaylanan ödeme</small><strong>{operation.payout > 0 ? `${operation.payout.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} TL` : 'Kontrol sonrası'}</strong></span><span><small>İşlem no</small><strong>{operation.id.slice(0, 10).toUpperCase()}</strong></span></div>{operation.reviewState !== 'pending' ? <div className="member-code-review-result"><span><b>{operation.approvedCodeCount}</b> kod kabul edildi</span><span><b>{operation.rejectedCodeCount}</b> kod kabul edilmedi</span><small>Ödeme yalnız geçerli bulunan kodlar için hesaplanır.</small></div> : null}<div className="member-operation-progress" aria-label="İşlem ilerlemesi">{steps.map((label, index) => <span key={label} className={step >= index ? 'is-done' : ''}><i>{step > index ? '✓' : index + 1}</i><b>{label}</b></span>)}</div>{operation.status === 'completed' && operation.payoutReference ? <p className="member-operation-reference">Ödeme referansı: <strong>{operation.payoutReference}</strong></p> : null}</> : null}
         <div className="member-operation-meta"><span>{operation.payout > 0 ? `Net ödeme: ${operation.payout.toLocaleString('tr-TR')} TL` : 'Net ödeme kod kontrolünden sonra kesinleşir'}</span><time>{operation.updatedAt?.toLocaleString('tr-TR') || operation.createdAt?.toLocaleString('tr-TR') || 'Yeni'}</time></div>{operation.note && <p>{operation.note}</p>}
+        <details className="member-operation-timeline" open={!['completed', 'cancelled'].includes(operation.status)}>
+          <summary>İşlem hareketleri <span>{timeline.length + 1} kayıt</span></summary>
+          <ol>
+            <li><i aria-hidden="true" /><div><strong>Talebiniz oluşturuldu.</strong><time>{operation.createdAt?.toLocaleString('tr-TR') || 'Yeni'}</time></div></li>
+            {timeline.map((event) => <li key={event.id} className={`is-${event.type}`}><i aria-hidden="true" /><div><strong>{event.body}</strong><time>{event.createdAt?.toLocaleString('tr-TR') || 'Az önce'}</time></div></li>)}
+          </ol>
+        </details>
       </article>;
     }) : <div className="member-empty-state"><h2>Henüz kod veya bozum talebiniz yok.</h2><p>Kullanılmamış Razer Gold kodunuzu güvenli forma girerek ilk kontrol kaydını başlatabilirsiniz.</p><button onClick={openCodeSale}>İlk kodu gönder</button></div>}</div>
   </section></div>

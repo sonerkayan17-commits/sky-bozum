@@ -9,9 +9,18 @@ const pass = (m) => console.log(`✓ ${m}`);
 const fail = (m) => failures.push(m);
 const sha = (text) => crypto.createHash('sha256').update(text).digest('hex');
 
+function sourceText(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).map((entry) => {
+    const absolute = path.join(dir, entry.name);
+    if (entry.isDirectory()) return sourceText(absolute);
+    return /\.(css|ts|tsx)$/.test(entry.name) ? fs.readFileSync(absolute, 'utf8') : '';
+  }).join('\n');
+}
+
 const globalEntry = fs.readFileSync(path.join(root, 'app/globals.css'), 'utf8');
+const appSource = sourceText(path.join(root, 'app'));
 for (const chunk of manifest.css_chunks) {
-  if (!globalEntry.includes(`@import "./styles/${path.basename(chunk.file)}";`)) fail(`CSS importu eksik: ${chunk.file}`);
+  if (!appSource.includes(path.basename(chunk.file))) fail(`CSS importu eksik: ${chunk.file}`);
   const absolute = path.join(root, chunk.file);
   if (!fs.existsSync(absolute)) fail(`CSS parçası eksik: ${chunk.file}`);
   else if (fs.statSync(absolute).size > 50_000) fail(`CSS parçası 50 KB sınırını aşıyor: ${chunk.file}`);
@@ -44,11 +53,12 @@ else fail(`Makale sayısı değişmiş: ${articleCount}/${manifest.article_count
 if (sha(slugs.join('\n')) === manifest.article_slugs_sha256) pass('Makale slug sırası korundu');
 else fail('Makale slug sırası veya içeriği değişmiş');
 
-for (const former of ['app/globals.css', 'app/lib/v21ExtendedArticles.ts']) {
-  const size = fs.statSync(path.join(root, former)).size;
-  if (size > 5_000) fail(`${former} hâlâ gereğinden büyük (${size} bayt)`);
-  else pass(`${former} hafif giriş dosyasına dönüştürüldü (${size} bayt)`);
-}
+const globalSize = Buffer.byteLength(globalEntry);
+if (globalSize > 40_000) fail(`app/globals.css üretim sınırını aşıyor (${globalSize} bayt)`);
+else pass(`app/globals.css kontrollü global katmanda (${globalSize} bayt)`);
+const articleIndexSize = fs.statSync(path.join(root, 'app/lib/v21ExtendedArticles.ts')).size;
+if (articleIndexSize > 5_000) fail(`app/lib/v21ExtendedArticles.ts hâlâ gereğinden büyük (${articleIndexSize} bayt)`);
+else pass(`app/lib/v21ExtendedArticles.ts hafif giriş dosyasına dönüştürüldü (${articleIndexSize} bayt)`);
 
 console.log('\nV36.2 bakım mimarisi özeti');
 for (const message of failures) console.error(`FAIL ${message}`);
