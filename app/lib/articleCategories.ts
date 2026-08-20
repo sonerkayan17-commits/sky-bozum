@@ -16,7 +16,7 @@ const categoryDescriptions: Record<string, string> = {
   iletisim: 'Resmî iletişim kanalları, işlem öncesi hazırlanması gereken bilgiler ve güvenli destek süreci.',
 };
 
-export function articleJourneyRank(article: ArticleItem) {
+export function articleJourneyRank(article: Pick<ArticleItem, 'title' | 'excerpt'>) {
   const value = `${article.title} ${article.excerpt}`.toLocaleLowerCase('tr-TR');
   if (/nedir|temel rehber|başlangıç/.test(value)) return 10;
   if (/nasıl kullanılır|nasıl açılır|nasıl alınır/.test(value)) return 20;
@@ -26,7 +26,7 @@ export function articleJourneyRank(article: ArticleItem) {
   return 35;
 }
 
-export function getArticleCategories(articles: ArticleItem[]) {
+export function getArticleCategories(articles: readonly Pick<ArticleItem, 'category'>[]) {
   const map = new Map<string, { name: string; slug: string; count: number; excerpt: string }>();
   for (const article of articles) {
     const current = map.get(article.category);

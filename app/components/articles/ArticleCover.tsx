@@ -3,7 +3,9 @@ import type { ArticleItem } from '../../lib/site';
 import { premiumArticleCovers } from '../../lib/premiumArticleCovers';
 import { getArticleVisualMeta } from '../../lib/articleVisualSystem';
 
-function coverTone(article: ArticleItem) {
+type ArticleCoverItem = Pick<ArticleItem, 'slug' | 'title' | 'category' | 'keywords' | 'cover' | 'coverAlt'>;
+
+function coverTone(article: ArticleCoverItem) {
   const value = `${article.title} ${article.category} ${article.keywords?.join(' ') ?? ''}`.toLocaleLowerCase('tr-TR');
   if (/vodafone/.test(value)) return 'vodafone';
   if (/paycell/.test(value)) return 'paycell';
@@ -38,7 +40,7 @@ const fallbackCovers: Record<string, string> = {
   default: '/images/bilgi-merkezi/v40-guide-system/guide-hub-hero.webp',
 };
 
-export default function ArticleCover({ article, compact = false, dense = false, priority = false, eager = false, className = '' }: { article: ArticleItem; compact?: boolean; dense?: boolean; priority?: boolean; eager?: boolean; className?: string }) {
+export default function ArticleCover({ article, compact = false, dense = false, priority = false, eager = false, className = '' }: { article: ArticleCoverItem; compact?: boolean; dense?: boolean; priority?: boolean; eager?: boolean; className?: string }) {
   const premiumCover = premiumArticleCovers[article.slug];
   const tone = coverTone(article);
   const visualMeta = getArticleVisualMeta(article.slug);

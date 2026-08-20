@@ -60,6 +60,7 @@ export default function Navbar() {
     let unsubscribe: () => void = () => undefined;
     const accountRoute = /^\/(yonetim|admin|hesabim|giris|kayit|uyeler)(\/|$)/.test(pathname);
     const knownSession = typeof window !== 'undefined' && window.localStorage.getItem('sky-bozum-member-session') === '1';
+    const shouldVerifyImmediately = accountRoute || knownSession;
     const cancel = deferClientTask(async () => {
       const [{ getFirebaseClient }, { onAuthStateChanged }] = await Promise.all([
         import('../lib/firebase'),
@@ -74,7 +75,11 @@ export default function Navbar() {
         setMemberName(user ? (user.displayName?.trim() || user.email?.split('@')[0] || 'Hesabım') : null);
         setAuthReady(true);
       });
-    }, 30_000, accountRoute || knownSession);
+    }, {
+      delay: shouldVerifyImmediately ? 0 : 90_000,
+      eager: shouldVerifyImmediately,
+      intentEvents: shouldVerifyImmediately,
+    });
     return () => { active = false; cancel(); unsubscribe(); };
   }, [pathname]);
 

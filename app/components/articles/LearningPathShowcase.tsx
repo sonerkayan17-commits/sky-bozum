@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../DeferredLink';
 import { articles } from '../../lib/site';
 import { learningPaths } from '../../lib/learningPaths';
 
@@ -22,7 +22,6 @@ export default function LearningPathShowcase() {
             <Link
               key={path.slug}
               href={first ? `/bilgi-merkezi/${first.slug}` : '/bilgi-merkezi'}
-              aria-label={`${path.title} makalelerini incele`}
               className="focus-ring knowledge-learning-card group !grid !min-h-[88px] !grid-cols-[32px_minmax(0,1fr)_auto] !items-center !gap-3 !overflow-visible !rounded-xl !border-white/8 !bg-white/[0.025] !px-3 !py-3 transition hover:-translate-y-0.5 hover:!border-rose-400/30 hover:!bg-white/[0.04]"
             >
               <span className="grid size-8 place-items-center rounded-lg bg-white/[0.045] text-[11px] font-black text-slate-500">

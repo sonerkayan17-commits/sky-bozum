@@ -12,11 +12,11 @@ const tones = {
   slate: 'from-slate-400/15 to-slate-950/10 border-slate-300/15',
 };
 
-export default function ServiceCard({ service }: { service: ServiceItem }) {
+export default function ServiceCard({ service, priority = false }: { service: ServiceItem; priority?: boolean }) {
   return (
     <Link href={`/hizmetler/${service.slug}`} prefetch={false} aria-label={`${service.name} sayfasını aç`} className="focus-ring interactive-card group flex h-full min-h-80 flex-col rounded-[24px] border border-white/8 bg-[#0e1118] p-4 hover:border-rose-400/25 hover:bg-[#12151d]">
       <div className={`relative flex h-[140px] items-center justify-center overflow-hidden rounded-2xl border bg-gradient-to-br p-5 ${tones[service.tone]} ${service.slug === 'itunes-apple' ? 'bg-white' : ''}`}>
-        <Image src={service.logo} alt={`${service.shortName} logosu`} width={230} height={92} sizes="(max-width: 639px) 70vw, (max-width: 1279px) 34vw, 230px" className="relative z-10 h-[100px] w-full max-w-[230px] object-contain drop-shadow-xl transition duration-300 group-hover:scale-[1.03]" />
+        <Image src={service.logo} alt={`${service.shortName} logosu`} width={230} height={92} priority={priority} fetchPriority={priority ? 'high' : undefined} sizes="(max-width: 639px) calc(100vw - 64px), (max-width: 1279px) 34vw, 230px" className="relative z-10 h-[100px] w-full max-w-[230px] object-contain drop-shadow-xl transition duration-300 group-hover:scale-[1.03]" />
         {service.popular && <span className="absolute left-3 top-3 rounded-full bg-black/45 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-white">Popüler</span>}
       </div>
       <div className="flex flex-1 flex-col pt-5">

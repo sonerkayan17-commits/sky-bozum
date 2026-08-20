@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Link from '../components/DeferredLink';
 import Image from 'next/image';
 import ServiceCard from '../components/services/ServiceCard';
 import { articles, services } from '../lib/site';
@@ -99,7 +99,7 @@ export default function ServicesPage() {
                 <p className="text-sm text-slate-500">{groupServices.length} hizmet</p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                {groupServices.map((service) => <ServiceCard key={service.slug} service={service} />)}
+                {groupServices.map((service, serviceIndex) => <ServiceCard key={service.slug} service={service} priority={index === 0 && serviceIndex === 0} />)}
               </div>
             </div>
           );

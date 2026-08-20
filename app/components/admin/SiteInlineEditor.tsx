@@ -94,7 +94,7 @@ function usePublishedContent(contentKey: string, fallback: StoredContent, expect
         const resolved = { ...fallback, ...next, style: normalizeStyle(next.style) };
         setContent((current) => JSON.stringify(current) === JSON.stringify(resolved) ? current : resolved);
       });
-    }, { delay: 20_000, intentEvents: false });
+    }, { delay: 90_000, intentEvents: false });
     return () => { active = false; cancel(); unsubscribe(); };
   }, [contentKey, expectedType, fallback]);
 

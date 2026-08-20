@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../components/DeferredLink';
 import { forumSections, forumStarterTopics, getForumStarterTopic, slugifyForumCategory } from '../lib/forumTaxonomy';
 import { forumRoutes } from '../lib/forumRoutes';
 import './forum-directory.css';

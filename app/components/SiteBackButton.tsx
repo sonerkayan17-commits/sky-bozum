@@ -8,5 +8,5 @@ export default function SiteBackButton() {
 
   if (pathname === '/') return null;
 
-  return <button type="button" className="site-back-button focus-ring" onClick={() => window.history.length > 1 ? router.back() : router.push('/')} aria-label="Önceki sayfaya dön"><span aria-hidden="true">←</span><span>Geri</span></button>;
+  return <button type="button" className="site-back-button focus-ring" onClick={() => window.history.length > 1 ? router.back() : router.push('/')} aria-label="Geri"><span aria-hidden="true">←</span><span>Geri</span></button>;
 }

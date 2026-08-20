@@ -3,10 +3,10 @@ import Link from './DeferredLink';
 import { siteConfig } from '../lib/site-config';
 import { siteFeatures } from '../lib/features';
 import { defaultSiteSettings } from '../lib/siteSettingsDefaults';
-import { InlineEditableText } from './admin/SiteInlineEditor';
 import PrivacyControls from './personalization/PrivacyControls';
 import TawkChat from './TawkChat';
 import FooterContact from './FooterContact';
+import FooterCopy from './FooterCopy';
 
 const groups = [
   ['Hizmetlerimiz', [['Vodafone Mobil Ödeme', '/hizmetler/vodafone-mobil-odeme'], ['Turkcell Mobil Ödeme', '/hizmetler/turkcell-mobil-odeme'], ['Türk Telekom Mobil Ödeme', '/hizmetler/turk-telekom-mobil-odeme'], ['Paycell', '/hizmetler/paycell'], ['Pokus', '/hizmetler/pokus'], ['Apple / iTunes', '/hizmetler/itunes-apple'], ['Razer Gold TL & USD', '/hizmetler/razer-gold-tl'], ['Steam Cüzdan Kodu', '/hizmetler/steam']]],
@@ -35,9 +35,7 @@ export default function Footer() {
                 <span className="mt-0.5 block text-xs font-semibold text-slate-500">bozumcu.net</span>
               </span>
             </Link>
-            <InlineEditableText contentKey="site.footer.description" defaultValue={settings.footerDescription} as="p" className="mt-5 text-sm leading-7 text-slate-400" multiline />
-
-            <InlineEditableText contentKey="site.footer.tagline" defaultValue={settings.brandTagline} as="p" className="mt-2 text-xs text-slate-500" multiline />
+            <FooterCopy />
             <div className="mt-6 flex gap-2.5">
               {socials.map((social) => (
                 <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} className="focus-ring grid size-9 place-items-center rounded-full border border-white/10 bg-white/[.03] text-slate-400 transition hover:border-[#e8c27a]/35 hover:text-[#f2c98a]">

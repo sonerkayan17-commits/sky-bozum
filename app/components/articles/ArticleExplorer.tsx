@@ -11,6 +11,10 @@ import { getCategoryVisual } from '../../lib/categoryVisuals';
 type SortMode = 'popular' | 'newest' | 'az';
 type Topic = 'Tümü' | 'Mobil Ödeme' | 'Operatörler' | 'Dijital Kodlar' | 'Güvenlik' | 'Kart İşlemleri';
 
+export type ArticleExplorerItem = Pick<ArticleItem,
+  'slug' | 'title' | 'excerpt' | 'category' | 'readTime' | 'publishedAt' | 'updatedAt' | 'cover' | 'coverAlt' | 'keywords'
+> & { searchText: string };
+
 const topicOptions: Topic[] = ['Tümü', 'Mobil Ödeme', 'Operatörler', 'Dijital Kodlar', 'Güvenlik', 'Kart İşlemleri'];
 
 const featuredArticleSlugs = [
@@ -92,7 +96,7 @@ function canonicalizeQuery(value: string) {
   return value.trim().replace(/\s+/g, ' ').slice(0, 100);
 }
 
-function articleTopic(article: ArticleItem): Topic {
+function articleTopic(article: ArticleExplorerItem): Topic {
   const value = normalize(`${article.category} ${article.title} ${(article.keywords ?? []).join(' ')}`);
   if (/guven|dolandir|sahte|risk|korun|gizlilik/.test(value)) return 'Güvenlik';
   if (/kart|hepsipay|hadi|financell|kredim|moneypay|multinet|pluxee|tokenflex|ticket/.test(value)) return 'Kart İşlemleri';
@@ -101,7 +105,7 @@ function articleTopic(article: ArticleItem): Topic {
   return 'Mobil Ödeme';
 }
 
-function businessPriorityScore(article: ArticleItem) {
+function businessPriorityScore(article: ArticleExplorerItem) {
   const value = normalize(`${article.title} ${article.category} ${(article.keywords ?? []).join(' ')}`);
   let score = 0;
   if (/mobil odeme|mobil bozum|bozum|bozdur|operator bakiyesi/.test(value)) score += 180;
@@ -112,14 +116,14 @@ function businessPriorityScore(article: ArticleItem) {
   return score;
 }
 
-function popularityScore(article: ArticleItem, originalIndex: number) {
+function popularityScore(article: ArticleExplorerItem, originalIndex: number) {
   const value = normalize(`${article.title} ${article.category} ${(article.keywords ?? []).join(' ')}`);
   let score = Math.max(0, 120 - originalIndex) + businessPriorityScore(article);
   if (/nasil|nedir|bozum|bozdur|limit|calismiyor|kullanilir/.test(value)) score += 45;
   return score;
 }
 
-function articleBadge(article: ArticleItem) {
+function articleBadge(article: ArticleExplorerItem) {
   const value = normalize(`${article.title} ${article.category}`);
   if (/yeni|2026|guncel/.test(value)) return { label: 'Güncel', tone: 'emerald' };
   if (/guven|dolandir|risk|korun/.test(value)) return { label: 'Güvenlik', tone: 'violet' };
@@ -148,7 +152,7 @@ export function formatDate(value?: string) {
   return new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
 }
 
-function ArticleMeta({ article, editorial = false }: { article: ArticleItem; editorial?: boolean }) {
+function ArticleMeta({ article, editorial = false }: { article: ArticleExplorerItem; editorial?: boolean }) {
   const badge = articleBadge(article);
   const toneClasses: Record<string, string> = {
     emerald: 'border-emerald-300/20 bg-emerald-300/10 text-emerald-200',
@@ -164,17 +168,17 @@ function ArticleMeta({ article, editorial = false }: { article: ArticleItem; edi
   </div>;
 }
 
-function ArticleCard({ article, priority = false, eagerCover = false, featuredCompact = false, featuredDense = false }: { article: ArticleItem; priority?: boolean; eagerCover?: boolean; featuredCompact?: boolean; featuredDense?: boolean }) {
+function ArticleCard({ article, featuredCompact = false, featuredDense = false }: { article: ArticleExplorerItem; featuredCompact?: boolean; featuredDense?: boolean }) {
   const titleId = `article-card-title-${useId().replace(/:/g, '')}`;
-  return <Link href={`/bilgi-merkezi/${article.slug}`} aria-labelledby={titleId} className={`focus-ring interactive-card editorial-card group flex h-full flex-col overflow-hidden border border-white/8 bg-[linear-gradient(180deg,#111620_0%,#0c1017_100%)] shadow-[0_24px_80px_-48px_rgba(0,0,0,.9)] transition duration-500 hover:-translate-y-1.5 hover:border-rose-400/35 hover:shadow-[0_32px_90px_-42px_rgba(244,63,94,.28)] ${featuredDense ? 'article-card--featured-dense rounded-[14px]' : featuredCompact ? 'rounded-[20px]' : 'rounded-[26px]'}`}><ArticleCover article={article} compact dense={featuredDense} priority={priority} eager={eagerCover} /><div className={`flex flex-1 flex-col ${featuredDense ? 'article-card__body--featured-dense min-h-0 p-2.5' : featuredCompact ? 'min-h-[170px] p-4' : 'min-h-[204px] p-5 sm:min-h-[220px] sm:p-6'}`}><ArticleMeta article={article} editorial/><h2 id={titleId} className={`${featuredDense ? 'mt-1.5 text-[12px] leading-[1.18]' : featuredCompact ? 'mt-3 text-[15px] leading-[1.25] sm:text-base' : 'mt-4 text-lg leading-[1.22] sm:mt-5 sm:text-xl sm:leading-[1.18]'} line-clamp-2 font-black tracking-[-0.02em] text-white transition-colors duration-300 group-hover:text-rose-100`}>{article.title}</h2><p className={`${featuredDense ? 'mt-1 text-[10px] leading-[.9rem]' : featuredCompact ? 'mt-2 text-[12px] leading-[1.2rem]' : 'mt-3 text-sm leading-[1.55rem]'} line-clamp-2 text-slate-400`}>{article.excerpt}</p><span className={`${featuredDense ? 'pt-1.5 text-[10px]' : featuredCompact ? 'pt-3 text-xs' : 'pt-4 text-sm sm:pt-5'} mt-auto inline-flex items-center gap-2 font-extrabold text-rose-300 transition-colors group-hover:text-white`}>{featuredDense || featuredCompact ? 'Makaleyi incele' : 'Rehberi oku'} <span className="transition group-hover:translate-x-1" aria-hidden="true">→</span></span></div></Link>;
+  return <Link href={`/bilgi-merkezi/${article.slug}`} className={`focus-ring interactive-card editorial-card group flex h-full flex-col overflow-hidden border border-white/8 bg-[linear-gradient(180deg,#111620_0%,#0c1017_100%)] shadow-[0_24px_80px_-48px_rgba(0,0,0,.9)] transition duration-500 hover:-translate-y-1.5 hover:border-rose-400/35 hover:shadow-[0_32px_90px_-42px_rgba(244,63,94,.28)] ${featuredDense ? 'article-card--featured-dense rounded-[14px]' : featuredCompact ? 'rounded-[20px]' : 'rounded-[26px]'}`}><ArticleCover article={article} compact dense={featuredDense} /><div className={`flex flex-1 flex-col ${featuredDense ? 'article-card__body--featured-dense min-h-0 p-2.5' : featuredCompact ? 'min-h-[170px] p-4' : 'min-h-[204px] p-5 sm:min-h-[220px] sm:p-6'}`}><ArticleMeta article={article} editorial/><h2 id={titleId} className={`${featuredDense ? 'mt-1.5 text-[12px] leading-[1.18]' : featuredCompact ? 'mt-3 text-[15px] leading-[1.25] sm:text-base' : 'mt-4 text-lg leading-[1.22] sm:mt-5 sm:text-xl sm:leading-[1.18]'} line-clamp-2 font-black tracking-[-0.02em] text-white transition-colors duration-300 group-hover:text-rose-100`}>{article.title}</h2><p className={`${featuredDense ? 'mt-1 text-[10px] leading-[.9rem]' : featuredCompact ? 'mt-2 text-[12px] leading-[1.2rem]' : 'mt-3 text-sm leading-[1.55rem]'} line-clamp-2 text-slate-400`}>{article.excerpt}</p><span className={`${featuredDense ? 'pt-1.5 text-[10px]' : featuredCompact ? 'pt-3 text-xs' : 'pt-4 text-sm sm:pt-5'} mt-auto inline-flex items-center gap-2 font-extrabold text-rose-300 transition-colors group-hover:text-white`}>{featuredDense || featuredCompact ? 'Makaleyi incele' : 'Rehberi oku'} <span className="transition group-hover:translate-x-1" aria-hidden="true">→</span></span></div></Link>;
 }
 
 
-function ArchiveArticleCard({ article }: { article: ArticleItem }) {
+function ArchiveArticleCard({ article }: { article: ArticleExplorerItem }) {
   const titleId = `archive-article-title-${useId().replace(/:/g, '')}`;
   const topic = articleTopic(article);
   const presentation = topicPresentation[topic];
-  return <Link href={`/bilgi-merkezi/${article.slug}`} aria-labelledby={titleId} className={`focus-ring article-archive-card group relative flex min-h-[188px] flex-col overflow-hidden rounded-[20px] border p-5 pl-6 shadow-[0_16px_46px_-38px_rgba(0,0,0,.9)] transition duration-300 hover:-translate-y-1 ${presentation.card}`}> 
+  return <Link href={`/bilgi-merkezi/${article.slug}`} className={`focus-ring article-archive-card group relative flex min-h-[188px] flex-col overflow-hidden rounded-[20px] border p-5 pl-6 shadow-[0_16px_46px_-38px_rgba(0,0,0,.9)] transition duration-300 hover:-translate-y-1 ${presentation.card}`}>
     <span aria-hidden="true" className={`absolute bottom-5 left-0 top-5 w-[2px] rounded-full ${presentation.strip} opacity-75`} />
     <div className="flex items-start justify-between gap-3">
       <span className={`inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[.13em] ${presentation.meta}`}><span aria-hidden="true" className={`size-1.5 rounded-full ${presentation.dot}`} />{presentation.label}</span>
@@ -193,7 +197,7 @@ export function CompactArticleLink({ article, index }: { article: ArticleItem; i
   return <Link href={`/bilgi-merkezi/${article.slug}`} aria-labelledby={titleId} className="focus-ring group flex min-h-[84px] items-center gap-4 rounded-2xl border border-white/8 bg-white/[.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[.04]"><span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/[.05] text-sm font-black text-slate-400 group-hover:text-rose-300">{String(index + 1).padStart(2, '0')}</span><span className="min-w-0"><strong id={titleId} className="line-clamp-2 text-sm font-black leading-5 text-white">{article.title}</strong><span className="mt-1 block text-xs font-bold text-slate-500">{article.category} · {article.readTime}</span></span><span aria-hidden="true" className="ml-auto shrink-0 text-rose-400 transition group-hover:translate-x-1">→</span></Link>;
 }
 
-export default function ArticleExplorer({ articles, initialQuery = '', initialCategory = 'Tümü', initialSort = 'popular', initialTopic = 'Tümü', hideCategoryFilter = false }: { articles: ArticleItem[]; initialQuery?: string; initialCategory?: string; initialSort?: SortMode; initialTopic?: Topic; hideCategoryFilter?: boolean }) {
+export default function ArticleExplorer({ articles, initialQuery = '', initialCategory = 'Tümü', initialSort = 'popular', initialTopic = 'Tümü', hideCategoryFilter = false }: { articles: ArticleExplorerItem[]; initialQuery?: string; initialCategory?: string; initialSort?: SortMode; initialTopic?: Topic; hideCategoryFilter?: boolean }) {
   const categories = useMemo(() => ['Tümü', ...new Set(articles.map((article) => article.category))], [articles]);
   const categoryHubs = useMemo(() => getArticleCategories(articles), [articles]);
   const [query, setQuery] = useState(initialQuery);
@@ -322,20 +326,13 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
   }, [category, query, sort, topic]);
 
   const indexedArticles = useMemo(() => articles.map((article, originalIndex) => {
-    const body = article.sections.flatMap((section) => [
-      section.title,
-      ...section.paragraphs,
-      ...(section.bullets ?? []),
-      ...(section.subsections?.flatMap((subsection) => [subsection.title, ...subsection.paragraphs]) ?? []),
-    ]).join(' ');
-
     return {
       article,
       originalIndex,
       popularity: popularityScore(article, originalIndex),
       topic: articleTopic(article),
       normalizedTitle: normalize(article.title),
-      searchText: normalize(`${article.title} ${article.excerpt} ${article.category} ${(article.keywords ?? []).join(' ')} ${body}`),
+      searchText: normalize(`${article.title} ${article.excerpt} ${article.category} ${(article.keywords ?? []).join(' ')} ${article.searchText}`),
     };
   }), [articles]);
 
@@ -376,7 +373,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
   const featured = discoveryMode
     ? featuredArticleSlugs
         .map((slug) => results.find((article) => article.slug === slug))
-        .filter((article): article is ArticleItem => Boolean(article))
+        .filter((article): article is ArticleExplorerItem => Boolean(article))
     : [];
   const featuredSlugs = new Set(featured.map((article) => article.slug));
   const discoveryRemainder = discoveryMode ? results.filter((article) => !featuredSlugs.has(article.slug)) : results;
@@ -455,11 +452,11 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
     </div>
 
     {discoveryMode && featured.length > 0 && <>
-      <section className="mt-8 scroll-mt-28" aria-labelledby="featured-guides-title"><div className="mb-4 flex items-end justify-between gap-4"><div><p className="text-[10px] font-extrabold uppercase tracking-[.16em] text-rose-400">Editör seçimi</p><h2 id="featured-guides-title" className="mt-1.5 text-xl font-black sm:text-2xl">Öne çıkan rehberler</h2></div><span className="text-xs font-bold text-slate-500">5 seçili içerik</span></div><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">{featured.slice(0, 5).map((article, index) => <ArticleCard key={article.slug} article={article} priority={index < 2} eagerCover featuredCompact/>)}</div></section>
-      <section className="render-later mt-12"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[.16em] text-orange-300">En çok sorulanlar</p><h2 className="mt-2 text-2xl font-black">Popüler rehberler</h2></div><span className="text-xs font-bold text-slate-500">5 seçili içerik</span></div><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">{popular.map((article, index) => <ArticleCard key={article.slug} article={article} priority={index < 2} eagerCover featuredCompact/>)}</div></section>
+      <section className="mt-8 scroll-mt-28" aria-labelledby="featured-guides-title"><div className="mb-4 flex items-end justify-between gap-4"><div><p className="text-[10px] font-extrabold uppercase tracking-[.16em] text-rose-400">Editör seçimi</p><h2 id="featured-guides-title" className="mt-1.5 text-xl font-black sm:text-2xl">Öne çıkan rehberler</h2></div><span className="text-xs font-bold text-slate-500">5 seçili içerik</span></div><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">{featured.slice(0, 5).map((article) => <ArticleCard key={article.slug} article={article} featuredCompact/>)}</div></section>
+      <section className="render-later mt-12"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[.16em] text-orange-300">En çok sorulanlar</p><h2 className="mt-2 text-2xl font-black">Popüler rehberler</h2></div><span className="text-xs font-bold text-slate-500">5 seçili içerik</span></div><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">{popular.map((article) => <ArticleCard key={article.slug} article={article} featuredCompact/>)}</div></section>
       <section className="render-later mt-12"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[.15em] text-rose-400">Konu merkezleri</p><h2 className="mt-2 text-2xl font-black">Kategoriye göre keşfedin</h2></div><span className="text-xs font-bold text-slate-500">{categoryHubs.length} kategori</span></div><div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{categoryHubs.slice(0, 12).map((hub) => { const visual = getCategoryVisual(hub.slug); return <Link key={hub.slug} href={`/bilgi-merkezi/kategori/${hub.slug}`} className="focus-ring group overflow-hidden rounded-2xl border border-white/8 bg-white/[.025] transition hover:-translate-y-1 hover:border-rose-400/25"><div className="category-card-visual relative aspect-[3/2] overflow-hidden bg-[#0a0e17]">{visual ? <Image src={visual.card} alt={visual.cardAlt} fill loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 300px" className={`${isVectorAsset(visual.card) ? 'object-contain p-3 sm:p-4' : 'object-cover'} transition duration-500 group-hover:scale-[1.03]`} /> : <div className="category-card-visual__fallback" aria-hidden="true"><span>{hub.name.slice(0, 2).toLocaleUpperCase('tr-TR')}</span><i /></div>}</div><div className="p-5"><div className="flex items-center justify-between gap-3"><strong className="text-sm font-black text-white">{hub.name}</strong><span className="rounded-full bg-white/[.05] px-2.5 py-1 text-[10px] font-extrabold text-slate-400">{hub.count}</span></div><p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">{hub.excerpt}</p><span className="mt-4 inline-flex text-xs font-extrabold text-rose-400">Merkezi aç <span aria-hidden="true">→</span></span></div></Link>; })}</div></section>
       <section className="render-later mt-12 rounded-3xl border border-white/8 bg-gradient-to-br from-white/[.045] to-transparent p-5 sm:p-7"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-xs font-extrabold uppercase tracking-[.16em] text-cyan-300">Hızlı başlangıç</p><h2 className="mt-2 text-2xl font-black">Konuya göre yolunuzu seçin</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">Ne aradığınızı tam bilmiyorsanız, işleminize en yakın konudan başlayın.</p></div></div><div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">{topicOptions.slice(1).map((item) => { const topicItem = item as Exclude<Topic, 'Tümü'>; const count = topicCounts[topicItem]; const detail = topicDetails[topicItem]; return <button key={topicItem} type="button" onClick={() => openTopic(topicItem)} aria-controls="article-archive" aria-pressed={false} className="focus-ring group rounded-2xl border border-white/8 bg-[#0d1118] p-5 text-left transition hover:-translate-y-1 hover:border-cyan-300/25"><span className="text-2xl" aria-hidden="true">{detail.icon}</span><strong className="mt-4 block text-sm font-black text-white">{topicItem}</strong><span className="mt-2 block text-xs leading-5 text-slate-500">{detail.description}</span><span className="mt-4 inline-flex text-[11px] font-extrabold text-cyan-300">{count} rehber <span aria-hidden="true">→</span></span></button>; })}</div></section>
-      <section className="render-later mt-8" aria-labelledby="latest-guides-title"><div className="mb-4 flex items-end justify-between gap-4"><div><p className="text-[10px] font-extrabold uppercase tracking-[.16em] text-emerald-300">Yeni içerikler</p><h2 id="latest-guides-title" className="mt-1.5 text-xl font-black sm:text-2xl">Son eklenen rehberler</h2></div><button type="button" onClick={showNewestArticles} aria-controls="article-archive" className="focus-ring rounded-lg border border-white/10 px-3 py-1.5 text-[10px] font-extrabold text-slate-300 transition hover:border-emerald-300/25 hover:text-white">Yeni içerikleri göster <span aria-hidden="true">→</span></button></div><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">{latest.map((article, index) => <ArticleCard key={article.slug} article={article} priority={index < 2} eagerCover featuredCompact/>)}</div></section>
+      <section className="render-later mt-8" aria-labelledby="latest-guides-title"><div className="mb-4 flex items-end justify-between gap-4"><div><p className="text-[10px] font-extrabold uppercase tracking-[.16em] text-emerald-300">Yeni içerikler</p><h2 id="latest-guides-title" className="mt-1.5 text-xl font-black sm:text-2xl">Son eklenen rehberler</h2></div><button type="button" onClick={showNewestArticles} aria-controls="article-archive" className="focus-ring rounded-lg border border-white/10 px-3 py-1.5 text-[10px] font-extrabold text-slate-300 transition hover:border-emerald-300/25 hover:text-white">Yeni içerikleri göster <span aria-hidden="true">→</span></button></div><div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">{latest.map((article) => <ArticleCard key={article.slug} article={article} featuredCompact/>)}</div></section>
     </>}
 
     <section ref={archiveRef} id="article-archive" tabIndex={-1} aria-labelledby="article-archive-title" aria-busy={searchIsPending} className="render-later mt-12 scroll-mt-28 rounded-2xl outline-none">

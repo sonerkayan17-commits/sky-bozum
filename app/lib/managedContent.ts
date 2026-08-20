@@ -42,7 +42,9 @@ export async function getManagedContentArticles(): Promise<ManagedArticle[]> {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   if (!projectId) return [];
   try {
-    const response = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/contentArticles?pageSize=500`, { cache: 'no-store' });
+    const response = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/contentArticles?pageSize=500`, {
+      next: { revalidate: 60, tags: ['managed-content'] },
+    });
     if (!response.ok) return [];
     const payload = await response.json() as { documents?: FirestoreDocument[] };
     return (payload.documents || []).map(parseDocument).filter((item): item is ManagedArticle => Boolean(item));
@@ -66,7 +68,9 @@ export async function getManagedContentArticle(slug: string) {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   if (!projectId || !slug) return null;
   try {
-    const response = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/contentArticles/${encodeURIComponent(slug)}`, { cache: 'no-store' });
+    const response = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/contentArticles/${encodeURIComponent(slug)}`, {
+      next: { revalidate: 60, tags: ['managed-content'] },
+    });
     return response.ok ? parseDocument(await response.json() as FirestoreDocument) : null;
   } catch { return null; }
 }

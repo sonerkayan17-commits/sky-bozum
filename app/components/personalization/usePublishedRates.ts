@@ -18,6 +18,7 @@ export default function usePublishedRates() {
   useEffect(() => {
     let active = true;
     let unsubscribe: () => void = () => undefined;
+    const accountRoute = /^\/(yonetim|admin|hesabim)(\/|$)/.test(pathname);
     const cancel = deferClientTask(async () => {
       const [{ getFirebaseClient }, { collection, onSnapshot, query, where }] = await Promise.all([
         import('../../lib/firebase'),
@@ -35,7 +36,11 @@ export default function usePublishedRates() {
         });
         setOverrides((current) => JSON.stringify(current) === JSON.stringify(next) ? current : next);
       }, () => setOverrides({}));
-    }, { delay: pathname === '/' ? 12_000 : 0, eager: pathname !== '/', intentEvents: true });
+    }, {
+      delay: accountRoute ? 0 : 90_000,
+      eager: accountRoute,
+      intentEvents: accountRoute,
+    });
     return () => { active = false; cancel(); unsubscribe(); };
   }, [pathname]);
 

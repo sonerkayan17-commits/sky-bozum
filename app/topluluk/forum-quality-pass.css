@@ -22,6 +22,12 @@
   padding-top: 2rem;
 }
 
+.forum-directory > header > a {
+  background: #c91f50;
+  color: #fff;
+  font-size: .82rem;
+}
+
 .forum-groups article {
   grid-template-columns: 48px minmax(0, 1.35fr) minmax(260px, .65fr);
 }
