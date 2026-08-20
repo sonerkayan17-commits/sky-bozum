@@ -27,6 +27,13 @@
 }
 
 @media (max-width: 640px) {
+  /* Keep the mobile first paint inexpensive. These decorative layers do not
+     carry information and were delaying the hero heading on slower devices. */
+  .home-page .hero-pro-glow,
+  .home-page .hero-pro-orbit { display: none !important; }
+  .home-page .hero-pro-rates,
+  .home-page .hero-reference-head { backdrop-filter: none !important; }
+  .home-page .hero-reference-slide { will-change: auto !important; }
   .home-page .viewport-deferred-section { min-height: var(--deferred-mobile-height); }
   .home-page.home-page .brand-strip .brand-strip-grid,
   .home-page.home-page .home-services .home-services__grid {
