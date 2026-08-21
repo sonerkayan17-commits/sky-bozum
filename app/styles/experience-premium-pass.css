@@ -239,4 +239,17 @@
   .services-directory-page .service-guide-card{border-radius:16px!important}
   .services-directory-page .service-guide-card h3{font-size:.82rem!important;line-height:1.28!important}
   .services-directory-page .service-guide-card p{font-size:.65rem!important;line-height:1.45!important}
+
+  /* Bilgi Merkezi: telefonda uzun tekli akış yerine okunabilir 2'li rehber düzeni. */
+  .knowledge-center-page .editorial-card{border-radius:16px!important}
+  .knowledge-center-page .editorial-card .article-premium-cover{min-height:0!important;aspect-ratio:4/3!important}
+  .knowledge-center-page .editorial-card .article-premium-cover__guide{display:none!important}
+  .knowledge-center-page .editorial-card .article-card__body{min-height:154px!important;padding:10px!important}
+  .knowledge-center-page .editorial-card .article-card__meta{gap:4px!important}
+  .knowledge-center-page .editorial-card .article-card__meta>span{margin-left:0!important;padding:3px 5px!important;font-size:7px!important;letter-spacing:.04em!important}
+  .knowledge-center-page .editorial-card .article-card__meta>span:nth-child(2){display:none!important}
+  .knowledge-center-page .editorial-card .article-card__meta>span:last-child{margin-left:auto!important}
+  .knowledge-center-page .editorial-card .article-card__title{display:-webkit-box;margin-top:7px!important;overflow:hidden;font-size:.75rem!important;line-height:1.28!important;-webkit-box-orient:vertical;-webkit-line-clamp:3}
+  .knowledge-center-page .editorial-card .article-card__excerpt{display:-webkit-box;margin-top:5px!important;overflow:hidden;font-size:.58rem!important;line-height:.9rem!important;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+  .knowledge-center-page .editorial-card .article-card__link{padding-top:8px!important;font-size:.6rem!important}
 }

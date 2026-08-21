@@ -64,7 +64,7 @@ export default function ArticleCover({ article, compact = false, dense = false, 
           src={cover}
           alt={article.coverAlt ?? `${article.title} rehber kapağı`}
           fill
-          sizes={dense ? '(max-width: 640px) 45vw, 240px' : compact ? '(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 34vw' : '(max-width: 1023px) 100vw, 820px'}
+          sizes={dense ? '(max-width: 640px) 45vw, 240px' : compact ? '(max-width: 639px) 46vw, (max-width: 1279px) 50vw, 34vw' : '(max-width: 639px) 46vw, (max-width: 1023px) 100vw, 820px'}
           priority={priority}
           loading={priority ? undefined : eager ? 'eager' : 'lazy'}
           decoding={priority || eager ? 'sync' : 'async'}

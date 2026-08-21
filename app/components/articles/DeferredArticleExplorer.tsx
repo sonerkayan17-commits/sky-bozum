@@ -56,11 +56,11 @@ export default function DeferredArticleExplorer({
         </div>
         <button type="button" onClick={() => setReady(true)} className="focus-ring min-h-11 rounded-xl border border-rose-300/25 bg-rose-400/[.08] px-4 text-xs font-black text-rose-200">Arama ve filtreleri aç</button>
       </div>
-      <div className="mt-5 grid gap-3 md:grid-cols-2">
+      <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-2">
         {articles.slice(0, 6).map((article, index) => (
-          <Link key={article.slug} href={`/bilgi-merkezi/${article.slug}`} className="focus-ring flex min-h-20 items-center gap-4 rounded-2xl border border-white/8 bg-white/[.02] p-4 transition hover:border-rose-300/25">
-            <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-xl bg-white/[.045] text-xs font-black text-rose-300">{String(index + 1).padStart(2, '0')}</span>
-            <span className="min-w-0"><strong className="line-clamp-2 text-sm font-black text-white">{article.title}</strong><small className="mt-1 block text-xs text-slate-500">{article.category} · {article.readTime}</small></span>
+          <Link key={article.slug} href={`/bilgi-merkezi/${article.slug}`} className="focus-ring flex min-h-36 flex-col items-start gap-2 rounded-2xl border border-white/8 bg-white/[.02] p-3 transition hover:border-rose-300/25 sm:min-h-20 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
+            <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/[.045] text-[10px] font-black text-rose-300 sm:size-9 sm:rounded-xl sm:text-xs">{String(index + 1).padStart(2, '0')}</span>
+            <span className="min-w-0"><strong className="line-clamp-3 text-xs font-black leading-4 text-white sm:line-clamp-2 sm:text-sm sm:leading-5">{article.title}</strong><small className="mt-1 block text-[9px] text-slate-500 sm:text-xs">{article.category} · {article.readTime}</small></span>
           </Link>
         ))}
       </div>
