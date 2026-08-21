@@ -219,3 +219,24 @@
   }
   .home-page .experience-grid--five .experience-card-footer{margin-top:11px;padding-top:10px;font-size:.55rem!important}
 }
+
+/* Hizmet dizini: telefonda tek kartlık uzun akış yerine okunabilir 2'li seçim düzeni. */
+@media(max-width:639px){
+  .services-directory-page .services-directory-groups{padding-top:1.8rem!important}
+  .services-directory-page .services-directory-groups>div+div{margin-top:1.8rem!important}
+  .services-directory-page .services-directory-groups>div>div:first-child{margin-bottom:14px!important;padding-bottom:14px!important}
+  .services-directory-page .service-directory-card{min-height:0!important;border-radius:16px!important;padding:10px!important}
+  .services-directory-page .service-directory-card>div:first-child{height:88px!important;border-radius:12px!important;padding:9px!important}
+  .services-directory-page .service-directory-card>div:first-child img{height:66px!important;max-height:66px!important;width:92%!important}
+  .services-directory-page .service-directory-card>div:first-child>span{left:6px;top:6px;padding:3px 5px;font-size:7px}
+  .services-directory-page .service-directory-card>div:last-child{padding-top:10px!important}
+  .services-directory-page .service-directory-card__category{display:none}
+  .services-directory-page .service-directory-card__rate{max-width:100%;margin-left:auto;padding:4px 6px;font-size:8px;line-height:1.2;white-space:nowrap}
+  .services-directory-page .service-directory-card h3{margin-top:8px!important;font-size:.92rem!important;line-height:1.2!important}
+  .services-directory-page .service-directory-card__description{display:-webkit-box;margin-top:5px!important;overflow:hidden;font-size:.67rem!important;line-height:1.45!important;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+  .services-directory-page .service-directory-card__action{padding-top:9px!important}
+  .services-directory-page .service-directory-card__action>span{min-height:34px;width:100%;justify-content:space-between;border-radius:9px;padding-inline:9px;font-size:.66rem!important}
+  .services-directory-page .service-guide-card{border-radius:16px!important}
+  .services-directory-page .service-guide-card h3{font-size:.82rem!important;line-height:1.28!important}
+  .services-directory-page .service-guide-card p{font-size:.65rem!important;line-height:1.45!important}
+}

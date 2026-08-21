@@ -98,7 +98,7 @@ export default function ServicesPage() {
                 </div>
                 <p className="text-sm text-slate-500">{groupServices.length} hizmet</p>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
                 {groupServices.map((service, serviceIndex) => <ServiceCard key={service.slug} service={service} priority={index === 0 && serviceIndex === 0} />)}
               </div>
             </div>
@@ -116,27 +116,27 @@ export default function ServicesPage() {
           <Link href="/bilgi-merkezi" className="shrink-0 text-sm font-black text-amber-300 transition hover:text-amber-200">Bilgi Merkezi’ni açın →</Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="service-guide-grid grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
           {serviceGuides.map(({ article, displayTitle, cover }) => {
             const relatedService = services.find((service) => service.slug === article.serviceSlug);
             return (
-              <article key={article.slug} className="group overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br from-white/[0.055] to-white/[0.018] shadow-[0_18px_50px_rgba(0,0,0,.22)] transition hover:-translate-y-1 hover:border-amber-300/25">
+              <article key={article.slug} className="service-guide-card group overflow-hidden rounded-[22px] border border-white/10 bg-gradient-to-br from-white/[0.055] to-white/[0.018] shadow-[0_18px_50px_rgba(0,0,0,.22)] transition hover:-translate-y-1 hover:border-amber-300/25">
                 <Link href={`/bilgi-merkezi/${article.slug}`} className="block">
                   <div className="relative aspect-[16/8.5] overflow-hidden border-b border-white/8 bg-[radial-gradient(circle_at_20%_20%,rgba(251,191,36,.14),transparent_35%),linear-gradient(145deg,#111722,#0a0e15)]">
-                    <Image src={cover} alt={article.coverAlt ?? displayTitle} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition duration-500 group-hover:scale-[1.025]" />
+                    <Image src={cover} alt={article.coverAlt ?? displayTitle} fill sizes="(max-width: 639px) 46vw, (max-width: 1279px) 31vw, 24vw" className="object-cover transition duration-500 group-hover:scale-[1.025]" />
                   </div>
-                  <div className="p-5">
+                  <div className="p-3 sm:p-5">
                     <div className="flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.13em] text-amber-300">
                       <span>{article.category}</span><span className="text-slate-500">{article.readTime}</span>
                     </div>
-                    <h3 className="mt-3 text-lg font-black leading-snug tracking-tight text-white">{displayTitle}</h3>
-                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-400">{serviceGuideExcerpts[article.slug as keyof typeof serviceGuideExcerpts] ?? article.excerpt}</p>
+                    <h3 className="mt-2 text-sm font-black leading-snug tracking-tight text-white sm:mt-3 sm:text-lg">{displayTitle}</h3>
+                    <p className="mt-2 line-clamp-2 text-[11px] leading-5 text-slate-400 sm:line-clamp-3 sm:text-sm sm:leading-6">{serviceGuideExcerpts[article.slug as keyof typeof serviceGuideExcerpts] ?? article.excerpt}</p>
                   </div>
                 </Link>
                 {relatedService ? (
-                  <Link href={`/hizmetler/${relatedService.slug}`} className="mx-5 mb-5 flex items-center gap-3 rounded-xl border border-white/8 bg-black/20 px-3.5 py-3 text-xs font-extrabold text-slate-300 transition hover:border-amber-300/25 hover:text-white">
-                    <span className="relative grid h-8 w-10 place-items-center rounded-lg bg-white/95 p-1.5"><Image src={relatedService.logo} alt="" fill sizes="40px" className="object-contain p-1.5" /></span>
-                    <span>{relatedService.shortName} hizmet sayfası</span><span className="ml-auto text-amber-300">→</span>
+                  <Link href={`/hizmetler/${relatedService.slug}`} className="mx-3 mb-3 flex items-center gap-2 rounded-xl border border-white/8 bg-black/20 px-2.5 py-2 text-[10px] font-extrabold text-slate-300 transition hover:border-amber-300/25 hover:text-white sm:mx-5 sm:mb-5 sm:gap-3 sm:px-3.5 sm:py-3 sm:text-xs">
+                    <span className="relative grid h-7 w-8 shrink-0 place-items-center rounded-lg bg-white/95 p-1 sm:h-8 sm:w-10 sm:p-1.5"><Image src={relatedService.logo} alt="" fill sizes="40px" className="object-contain p-1.5" /></span>
+                    <span className="line-clamp-2">{relatedService.shortName} hizmet sayfası</span><span className="ml-auto text-amber-300">→</span>
                   </Link>
                 ) : null}
               </article>
