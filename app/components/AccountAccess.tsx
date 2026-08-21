@@ -3,22 +3,31 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  sendEmailVerification,
-  sendPasswordResetEmail,
-  signOut,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  updateProfile,
-  type User,
-} from 'firebase/auth';
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { getFirebaseClient } from '../lib/firebase';
+import type { User } from 'firebase/auth';
 import { findReferrerId, getReferralCode } from '../lib/referrals';
 import { trackConversion } from '../lib/conversion';
 import './account-access.css';
+
+type FirebaseRuntime = {
+  client: ReturnType<typeof import('../lib/firebase')['getFirebaseClient']>;
+  authApi: typeof import('firebase/auth');
+  storeApi: typeof import('firebase/firestore');
+};
+
+let firebaseRuntimePromise: Promise<FirebaseRuntime> | null = null;
+
+function loadFirebaseRuntime() {
+  firebaseRuntimePromise ??= Promise.all([
+    import('../lib/firebase'),
+    import('firebase/auth'),
+    import('firebase/firestore'),
+  ]).then(([firebase, authApi, storeApi]) => ({
+    client: firebase.getFirebaseClient(),
+    authApi,
+    storeApi,
+  }));
+  return firebaseRuntimePromise;
+}
 
 export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) {
   const router = useRouter();
@@ -38,8 +47,9 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
   }, []);
 
   async function saveMember(user: User, displayName: string, phoneNumber = '') {
-    const { db } = getFirebaseClient();
+    const { client: { db }, storeApi } = await loadFirebaseRuntime();
     if (!db) throw new Error('database-unavailable');
+    const { doc, getDoc, serverTimestamp, setDoc } = storeApi;
     const referralCode = window.localStorage.getItem('sky-referral-code') || '';
     const referredBy = referralCode ? await findReferrerId(db, referralCode) : null;
     const ownReferralCode = getReferralCode(user.uid);
@@ -86,12 +96,13 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     event.preventDefault();
     if (busy) return;
     setError(''); setStatus('');
-    const { auth } = getFirebaseClient();
-    if (!auth) { setError('Güvenli bağlantı hazırlanamadı. Sayfayı yenileyin.'); return; }
-    auth.languageCode = 'tr';
     setBusy(true);
 
     try {
+      const { client: { auth }, authApi } = await loadFirebaseRuntime();
+      if (!auth) { setError('Güvenli bağlantı hazırlanamadı. Sayfayı yenileyin.'); return; }
+      const { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut, updateProfile } = authApi;
+      auth.languageCode = 'tr';
       if (mode === 'login') {
         trackConversion('account_login_attempted', { method: 'email' });
         const result = await signInWithEmailAndPassword(auth, email.trim(), password);
@@ -103,6 +114,11 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
           return;
         }
         await saveMember(result.user, result.user.displayName || email.trim().split('@')[0]);
+        window.localStorage.setItem('sky-bozum-member-session', '1');
+        const token = await result.user.getIdTokenResult();
+        if (token.claims.admin === true || result.user.email === 'sonerkayan17@gmail.com') {
+          window.localStorage.setItem('sky-bozum-admin-session', '1');
+        }
         router.push('/bilgi-merkezi');
         return;
       }
@@ -124,14 +140,20 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
   async function googleLogin() {
     if (busy) return;
     setError(''); setStatus('');
-    const { auth } = getFirebaseClient();
-    if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
-    auth.languageCode = 'tr';
     setBusy(true);
     try {
+      const { client: { auth }, authApi } = await loadFirebaseRuntime();
+      if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
+      const { GoogleAuthProvider, signInWithPopup } = authApi;
+      auth.languageCode = 'tr';
       trackConversion(mode === 'login' ? 'account_login_attempted' : 'account_register_attempted', { method: 'google' });
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       await saveMember(result.user, result.user.displayName || 'Google kullanıcısı');
+      window.localStorage.setItem('sky-bozum-member-session', '1');
+      const token = await result.user.getIdTokenResult();
+      if (token.claims.admin === true || result.user.email === 'sonerkayan17@gmail.com') {
+        window.localStorage.setItem('sky-bozum-admin-session', '1');
+      }
       router.push('/bilgi-merkezi');
     } catch { setError('Google ile giriş tamamlanamadı. Açılır pencereye izin verip tekrar deneyin.'); }
     finally { setBusy(false); }
@@ -141,11 +163,15 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
     if (busy) return;
     setError(''); setStatus('');
     if (!email.trim()) { setError('Önce e-posta adresinizi yazın.'); return; }
-    const { auth } = getFirebaseClient();
-    if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
-    auth.languageCode = 'tr';
     setBusy(true);
-    try { trackConversion('password_reset_requested', { method: 'email' }); await sendPasswordResetEmail(auth, email.trim()); setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.'); }
+    try {
+      const { client: { auth }, authApi: { sendPasswordResetEmail } } = await loadFirebaseRuntime();
+      if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
+      auth.languageCode = 'tr';
+      trackConversion('password_reset_requested', { method: 'email' });
+      await sendPasswordResetEmail(auth, email.trim());
+      setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.');
+    }
     catch { setError('Parola yenileme e-postası gönderilemedi. Adresi kontrol edin.'); }
     finally { setBusy(false); }
   }

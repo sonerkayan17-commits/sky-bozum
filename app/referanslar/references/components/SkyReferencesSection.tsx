@@ -1,16 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import {
-  createPendingComment,
-  getOrCreateVisitorId,
-  registerEngagement,
-  subscribeToApprovedComments,
-  subscribeToEngagementCounts,
-  type EngagementCounts,
-  type PublicComment,
-} from '../../../lib/comments';
-import { db, isFirebaseConfigured } from '../../../lib/firebase';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import type { Firestore } from 'firebase/firestore';
+import type { EngagementCounts, PublicComment } from '../../../lib/comments';
 import { prefersReducedMotion } from '../../../lib/motion';
 import type { SkyReference } from '../data/skyReferences.types';
 import { exampleSiteReviews } from '../data/referenceReviews.data';
@@ -18,6 +10,10 @@ import styles from './SkyReferencesSection.module.css';
 
 type Props = { references: SkyReference[] };
 type ReplyTarget = { id: string; service: string; label: string } | null;
+type ReferenceInteractionRuntime = {
+  db: Firestore;
+  comments: typeof import('../../../lib/comments');
+};
 
 const serviceOptions = [
   'Mobil Ödeme',
@@ -334,7 +330,22 @@ function ApprovedCommentCard({
 }
 
 export default function SkyReferencesSection({ references }: Props) {
-  const interactionsEnabled = Boolean(db && isFirebaseConfigured);
+  const runtimePromiseRef = useRef<Promise<ReferenceInteractionRuntime | null> | null>(null);
+  const reviewPanelRef = useRef<HTMLElement | null>(null);
+  const [interactionRuntime, setInteractionRuntime] = useState<ReferenceInteractionRuntime | null>(null);
+  const interactionsEnabled = Boolean(interactionRuntime?.db);
+  const loadInteractionRuntime = useCallback(async () => {
+    runtimePromiseRef.current ??= Promise.all([
+      import('../../../lib/firebase'),
+      import('../../../lib/comments'),
+    ]).then(([firebase, comments]) => {
+      const { db } = firebase.getFirebaseClient();
+      return db ? { db, comments } : null;
+    });
+    const runtime = await runtimePromiseRef.current;
+    if (runtime) setInteractionRuntime((current) => current ?? runtime);
+    return runtime;
+  }, []);
   const wmReferences = useMemo(
     () => references.filter((item) => item.source === 'wmaraci' && item.sourceUrl && item.verified),
     [references],
@@ -456,9 +467,10 @@ export default function SkyReferencesSection({ references }: Props) {
   }
 
   useEffect(() => {
-    if (!db) return;
-    const unsubscribeComments = subscribeToApprovedComments(db, setApprovedComments, () => undefined);
-    const unsubscribeEngagements = subscribeToEngagementCounts(
+    if (!interactionRuntime) return;
+    const { db, comments } = interactionRuntime;
+    const unsubscribeComments = comments.subscribeToApprovedComments(db, setApprovedComments, () => undefined);
+    const unsubscribeEngagements = comments.subscribeToEngagementCounts(
       db,
       (counts) => {
         setLikes(counts.likes);
@@ -467,24 +479,38 @@ export default function SkyReferencesSection({ references }: Props) {
       () => undefined,
     );
 
-    const visitorId = getOrCreateVisitorId();
+    const visitorId = comments.getOrCreateVisitorId();
     const likedStorage = window.localStorage.getItem('sky-reference-likes');
     if (likedStorage) {
       try { setLikedTargets(new Set(JSON.parse(likedStorage) as string[])); } catch { /* ignore invalid cache */ }
     }
-    registerEngagement(db, visitorId, 'view', 'references-page').catch(() => undefined);
+    comments.registerEngagement(db, visitorId, 'view', 'references-page').catch(() => undefined);
 
     return () => {
       unsubscribeComments();
       unsubscribeEngagements();
     };
-  }, []);
+  }, [interactionRuntime]);
+
+  useEffect(() => {
+    const panel = reviewPanelRef.current;
+    if (!panel || interactionRuntime || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      void loadInteractionRuntime();
+      observer.disconnect();
+    }, { rootMargin: '500px 0px' });
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [interactionRuntime, loadInteractionRuntime]);
 
   async function handleLike(targetId: string) {
-    if (!db || likedTargets.has(targetId)) return;
-    const visitorId = getOrCreateVisitorId();
+    if (likedTargets.has(targetId)) return;
+    const runtime = interactionRuntime ?? await loadInteractionRuntime();
+    if (!runtime) return;
+    const visitorId = runtime.comments.getOrCreateVisitorId();
     try {
-      await registerEngagement(db, visitorId, 'like', targetId);
+      await runtime.comments.registerEngagement(runtime.db, visitorId, 'like', targetId);
       setLikedTargets((current) => {
         const next = new Set(current).add(targetId);
         window.localStorage.setItem('sky-reference-likes', JSON.stringify([...next]));
@@ -503,13 +529,14 @@ export default function SkyReferencesSection({ references }: Props) {
 
   async function submitReply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!db || !isFirebaseConfigured || !replyTarget || replyAuthor.trim().length < 2 || replyMessage.trim().length < 3) {
+    const runtime = interactionRuntime ?? await loadInteractionRuntime();
+    if (!runtime || !replyTarget || replyAuthor.trim().length < 2 || replyMessage.trim().length < 3) {
       setReplyStatus('error');
       return;
     }
     setReplyStatus('sending');
     try {
-      await createPendingComment(db, {
+      await runtime.comments.createPendingComment(runtime.db, {
         parentId: replyTarget.id,
         author: replyAuthor.trim(),
         service: serviceOptions.includes(replyTarget.service) ? replyTarget.service : 'Diğer',
@@ -529,14 +556,15 @@ export default function SkyReferencesSection({ references }: Props) {
     const cleanAuthor = author.trim();
     const cleanMessage = message.trim();
 
-    if (!db || !isFirebaseConfigured || cleanAuthor.length < 2 || !service || cleanMessage.length < 12) {
+    const runtime = interactionRuntime ?? await loadInteractionRuntime();
+    if (!runtime || cleanAuthor.length < 2 || !service || cleanMessage.length < 12) {
       setStatus('error');
       return;
     }
 
     setStatus('sending');
     try {
-      await createPendingComment(db, { author: cleanAuthor, service, message: cleanMessage, rating });
+      await runtime.comments.createPendingComment(runtime.db, { author: cleanAuthor, service, message: cleanMessage, rating });
       setAuthor('');
       setService('');
       setMessage('');
@@ -548,7 +576,13 @@ export default function SkyReferencesSection({ references }: Props) {
   }
 
   return (
-    <section className={styles.section} aria-labelledby="references-title">
+    <section
+      className={styles.section}
+      aria-labelledby="references-title"
+      onPointerEnter={() => void loadInteractionRuntime()}
+      onFocusCapture={() => void loadInteractionRuntime()}
+      onTouchStart={() => void loadInteractionRuntime()}
+    >
       <div className={styles.container}>
         <header className={styles.hero}>
           <div>
@@ -811,7 +845,7 @@ export default function SkyReferencesSection({ references }: Props) {
             </section>
           ) : null}
 
-          <section className={styles.reviewPanel} aria-labelledby="review-form-title">
+          <section ref={reviewPanelRef} className={styles.reviewPanel} aria-labelledby="review-form-title">
             <div className={styles.reviewIntro}>
               <h3 id="review-form-title">Deneyiminizi paylaşın</h3>
               <p>Hizmetlerimiz hakkındaki deneyiminizi paylaşarak diğer kullanıcılara yardımcı olabilirsiniz.</p>

@@ -58,7 +58,7 @@ export default function Navbar() {
   useEffect(() => {
     let active = true;
     let unsubscribe: () => void = () => undefined;
-    const accountRoute = /^\/(yonetim|admin|hesabim|giris|kayit|uyeler)(\/|$)/.test(pathname);
+    const accountRoute = /^\/(yonetim|admin|hesabim)(\/|$)/.test(pathname);
     const knownSession = typeof window !== 'undefined' && window.localStorage.getItem('sky-bozum-member-session') === '1';
     const shouldVerifyImmediately = accountRoute || knownSession;
     const cancel = deferClientTask(async () => {

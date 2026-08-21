@@ -28,7 +28,7 @@ export function SiteEditorProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     let unsubscribe: () => void = () => undefined;
-    const accountRoute = /^\/(yonetim|admin|hesabim|giris|kayit|uyeler)(\/|$)/.test(pathname);
+    const accountRoute = /^\/(yonetim|admin|hesabim)(\/|$)/.test(pathname);
     const knownAdmin = typeof window !== 'undefined' && window.localStorage.getItem('sky-bozum-admin-session') === '1';
     const shouldVerifyImmediately = accountRoute || knownAdmin;
     const cancel = deferClientTask(async () => {
