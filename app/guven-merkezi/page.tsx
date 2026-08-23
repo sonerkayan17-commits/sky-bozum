@@ -44,9 +44,11 @@ export default function TrustCenterPage() {
           <div className="trust-v1-hero-visual">
             <Image src="/images/guven-merkezi/guven-merkezi-hero-v1.webp" alt="Telefon, güvenlik kalkanı, doğrulama rozeti ve kilitten oluşan dijital işlem güvenliği görseli" fill priority sizes="(max-width: 800px) 100vw, 52vw" />
             <i className="trust-v1-visual-shine" aria-hidden="true" />
-            <aside className="trust-v1-visual-channel"><div><span>RESMÎ KANAL</span><b><i /> DOĞRULANABİLİR</b></div><dl><div><dt>Alan adı</dt><dd>{siteConfig.domain}</dd></div><div><dt>WhatsApp</dt><dd>{siteConfig.phone}</dd></div></dl><p>Şifre, SMS kodu ve ekran erişimi istenmez.</p></aside>
+            <span className="trust-v1-visual-badge is-written">YAZILI TEYİT</span>
+            <span className="trust-v1-visual-badge is-protected">HASSAS VERİ YOK</span>
           </div>
         </div>
+        <aside className="trust-v1-official-strip"><div className="trust-v1-official-status"><i /> RESMÎ KANAL DOĞRULANDI</div><dl><div><dt>Alan adı</dt><dd>{siteConfig.domain}</dd></div><div><dt>WhatsApp</dt><dd>{siteConfig.phone}</dd></div><div><dt>Güvenlik sınırı</dt><dd>Şifre, SMS kodu ve ekran erişimi istenmez</dd></div></dl></aside>
       </div>
     </section>
 

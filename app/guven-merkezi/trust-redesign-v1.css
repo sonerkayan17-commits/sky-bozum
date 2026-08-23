@@ -18,9 +18,11 @@
 }
 
 .trust-v1-hero {
+  position: relative;
+  overflow: hidden;
   padding: 23px 0 29px;
   border-bottom: 1px solid #252b34;
-  background: linear-gradient(120deg, #0a0d12, #11161d 68%, #190d13);
+  background: radial-gradient(circle at 78% 42%, rgba(186,44,76,.16), transparent 31%), radial-gradient(circle at 61% 16%, rgba(39,113,158,.08), transparent 24%), linear-gradient(120deg, #0a0d12, #11161d 68%, #190d13);
 }
 
 .trust-v1-breadcrumb {
@@ -85,13 +87,13 @@
 
 .trust-v1-hero-visual {
   position: relative;
-  min-height: 285px;
+  min-height: 310px;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(237, 110, 129, .2);
-  border-radius: 18px;
-  background: #080b10;
-  box-shadow: 0 24px 70px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04);
+  margin: -18px -26px -18px -10px;
+  background: transparent;
+  -webkit-mask-image: radial-gradient(ellipse 96% 96% at 58% 48%, #000 55%, rgba(0,0,0,.92) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 96% 96% at 58% 48%, #000 55%, rgba(0,0,0,.92) 72%, transparent 100%);
 }
 
 .trust-v1-hero-visual::before {
@@ -100,12 +102,12 @@
   z-index: 1;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(90deg, rgba(8,11,16,.68), transparent 37%), linear-gradient(0deg, rgba(8,11,16,.72), transparent 42%);
+  background: linear-gradient(90deg, rgba(8,11,16,.48), transparent 31%), linear-gradient(0deg, rgba(8,11,16,.38), transparent 35%);
 }
 
 .trust-v1-hero-visual > img {
   object-fit: cover;
-  object-position: center;
+  object-position: 58% center;
   transition: transform .6s ease, filter .6s ease;
 }
 
@@ -135,37 +137,51 @@
   100% { transform: skewX(-18deg) translateX(850%); opacity: 0; }
 }
 
-.trust-v1-visual-channel {
+.trust-v1-visual-badge {
   position: absolute;
   z-index: 3;
-  right: 14px;
-  bottom: 14px;
-  left: 14px;
-  padding: 11px 13px;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 10px;
-  background: rgba(8,11,16,.76);
-  box-shadow: 0 12px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
-  backdrop-filter: blur(14px);
-}
-
-.trust-v1-visual-channel > div:first-child {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  color: #87919c;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px;
+  background: rgba(9,12,17,.72);
+  box-shadow: 0 10px 28px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(12px);
+  color: #dbe1e7;
   font-size: 8px;
   font-weight: 900;
   letter-spacing: .14em;
 }
 
-.trust-v1-visual-channel > div:first-child b { color: #ee7c8e; font-size: 8px; }
-.trust-v1-visual-channel > div:first-child i { display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #39dfa8; box-shadow: 0 0 12px rgba(57,223,168,.6); }
-.trust-v1-visual-channel dl { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 9px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.09); }
-.trust-v1-visual-channel dl > div { min-width: 0; }
-.trust-v1-visual-channel dt { color: #747f8b; font-size: 8px; }
-.trust-v1-visual-channel dd { margin-top: 3px; color: #f0f2f4; font-size: 10px; font-weight: 900; overflow-wrap: anywhere; }
-.trust-v1-visual-channel > p { margin-top: 8px; color: #9ca5af; font-size: 9px; }
+.trust-v1-visual-badge::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: #39dfa8; box-shadow: 0 0 12px rgba(57,223,168,.65); }
+.trust-v1-visual-badge.is-written { top: 64px; left: 9%; }
+.trust-v1-visual-badge.is-protected { right: 5%; bottom: 60px; }
+
+.trust-v1-official-strip {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr);
+  gap: 26px;
+  align-items: center;
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,.1);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.trust-v1-official-status {
+  display: flex;
+  align-items: center;
+  color: #ee7c8e;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  white-space: nowrap;
+}
+
+.trust-v1-official-status i { width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: #39dfa8; box-shadow: 0 0 14px rgba(57,223,168,.65); }
+.trust-v1-official-strip dl { display: grid; grid-template-columns: .75fr .8fr 1.45fr; gap: 18px; }
+.trust-v1-official-strip dl > div { min-width: 0; padding-left: 18px; border-left: 1px solid rgba(255,255,255,.09); }
+.trust-v1-official-strip dt { color: #707a85; font-size: 8px; }
+.trust-v1-official-strip dd { margin-top: 3px; color: #e9edf0; font-size: 10px; font-weight: 900; overflow-wrap: anywhere; }
 
 .trust-v1-channel-card {
   display: grid;
@@ -336,7 +352,9 @@
   .trust-v1-hero-grid,
   .trust-v1-final-grid { grid-template-columns: 1fr; gap: 22px; }
   .trust-v1-hero-grid { margin-top: 20px; }
-  .trust-v1-hero-visual { min-height: 300px; }
+  .trust-v1-hero-visual { min-height: 300px; margin: -12px -16px -10px; }
+  .trust-v1-official-strip { grid-template-columns: 1fr; gap: 10px; }
+  .trust-v1-official-strip dl > div:first-child { padding-left: 0; border-left: 0; }
   .trust-v1-section-head { align-items: flex-start; flex-direction: column; gap: 7px; }
   .trust-v1-section-head > span { text-align: left; }
   .trust-v1-links { grid-template-columns: repeat(3, 1fr); }
@@ -346,10 +364,14 @@
 @media (max-width: 560px) {
   .trust-v1-hero { padding: 20px 0 24px; }
   .trust-v1-hero h1 { font-size: clamp(38px, 12vw, 48px); }
-  .trust-v1-hero-visual { min-height: 250px; border-radius: 14px; }
+  .trust-v1-hero-visual { min-height: 250px; margin: -8px -10px -4px; }
   .trust-v1-hero-visual > img { object-position: 58% center; }
-  .trust-v1-visual-channel { right: 9px; bottom: 9px; left: 9px; padding: 9px 10px; }
-  .trust-v1-visual-channel > p { display: none; }
+  .trust-v1-visual-badge { padding: 6px 8px; font-size: 7px; }
+  .trust-v1-visual-badge.is-written { top: 42px; left: 5%; }
+  .trust-v1-visual-badge.is-protected { right: 3%; bottom: 38px; }
+  .trust-v1-official-strip dl { grid-template-columns: 1fr 1fr; gap: 9px; }
+  .trust-v1-official-strip dl > div { padding-left: 9px; }
+  .trust-v1-official-strip dl > div:last-child { grid-column: 1 / -1; padding-top: 8px; padding-left: 0; border-top: 1px solid rgba(255,255,255,.08); border-left: 0; }
   .trust-v1-channel-card { padding: 14px; }
   .trust-v1-channel-row { padding-inline: 6px; }
   .trust-v1-channel-row + .trust-v1-channel-row { padding-left: 7px; }
