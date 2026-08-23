@@ -24,7 +24,7 @@ export default function Footer() {
   return (
     <>
       <TawkChat />
-      <footer className="relative overflow-hidden border-t border-white/8 bg-[#07080d] pb-8 pt-14 text-white">
+      <footer className="site-footer relative overflow-hidden border-t border-white/8 bg-[#07080d] pb-8 pt-14 text-white">
       <div className="content-wide relative">
         <div className="grid gap-10 border-b border-white/8 pb-12 lg:grid-cols-[1.1fr_2.4fr]">
           <div className="max-w-sm">
