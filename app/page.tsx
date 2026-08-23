@@ -35,7 +35,7 @@ export default function Home() {
       <DeferredViewportSection className="render-later" desktopHeight={650} mobileHeight={1075}><HomeServices /></DeferredViewportSection>
       <DeferredViewportSection className="render-later" desktopHeight={590} mobileHeight={699}><HomeTrust /></DeferredViewportSection>
 
-      <DeferredViewportSection className="render-later" desktopHeight={650} mobileHeight={885}>
+      <DeferredViewportSection className="render-later" desktopHeight={500} mobileHeight={850}>
         <section className="bg-[#05090f] py-7 sm:py-8" aria-label="Hesaplama ve bilgi merkezi">
           <div className="content-wide">
             <div className="grid items-stretch gap-4 lg:grid-cols-2">

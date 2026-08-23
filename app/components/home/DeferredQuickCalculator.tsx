@@ -28,7 +28,7 @@ export default function DeferredQuickCalculator() {
   }, []);
 
   return (
-    <div ref={hostRef} className="min-h-[410px]">
+    <div ref={hostRef} className="min-h-[350px]">
       {shouldLoad ? (
         <Suspense fallback={<CalculatorPlaceholder />}>
           <QuickCalculator compact />
@@ -41,7 +41,7 @@ export default function DeferredQuickCalculator() {
 function CalculatorPlaceholder() {
   return (
     <div
-      className="h-full min-h-[410px] rounded-[24px] border border-white/[.08] bg-white/[.02]"
+      className="h-full min-h-[350px] rounded-[24px] border border-white/[.08] bg-white/[.02]"
       aria-hidden="true"
     />
   );

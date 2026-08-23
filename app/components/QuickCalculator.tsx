@@ -71,12 +71,12 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
   }, []);
 
   return (
-    <section id={compact ? undefined : 'oran-teklifi'} className={compact ? 'h-full min-h-0 w-full self-stretch text-white' : 'rhythm-md bg-[#07080d] text-white'}>
-      <div className={compact ? 'h-full' : 'content-wide'}>
-        <div className="group relative flex h-full min-h-[540px] w-full flex-col overflow-visible rounded-[22px] border border-white/[0.12] bg-[radial-gradient(circle_at_10%_0%,rgba(245,190,54,.075),transparent_31%),linear-gradient(180deg,rgba(10,18,27,.985),rgba(6,12,19,.995))] p-5 shadow-[0_24px_64px_rgba(0,0,0,.28),inset_0_1px_0_rgba(255,255,255,.045)] transition duration-500 hover:border-white/[0.17]">
+    <section id={compact ? undefined : 'oran-teklifi'} className={compact ? 'w-full text-white' : 'rhythm-md bg-[#07080d] text-white'}>
+      <div className={compact ? '' : 'content-wide'}>
+        <div className="group relative w-full overflow-visible rounded-[22px] border border-white/[0.12] bg-[radial-gradient(circle_at_10%_0%,rgba(245,190,54,.07),transparent_31%),linear-gradient(180deg,rgba(10,18,27,.985),rgba(6,12,19,.995))] p-4 shadow-[0_24px_64px_rgba(0,0,0,.24),inset_0_1px_0_rgba(255,255,255,.045)] transition duration-500 hover:border-white/[0.17] sm:p-5">
           <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#f3bf31]/40 to-transparent" />
 
-          <header className="flex shrink-0 items-end justify-between gap-4">
+          <header className="flex items-center justify-between gap-4">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f3bf31]">Hesap Makinesi</p>
               <h2 className="mt-1 text-[27px] font-black tracking-[-.04em] text-white">Oran Hesapla</h2>
@@ -87,10 +87,9 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
             </div>
           </header>
 
-          <div className="mt-4 grid min-h-0 flex-1 overflow-hidden rounded-[18px] border border-white/[0.075] bg-white/[0.018] xl:grid-cols-[minmax(0,1.16fr)_minmax(224px,.84fr)]">
-            <div className="relative flex min-h-0 flex-col p-[18px] xl:border-r xl:border-white/[0.07]">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div ref={menuRef} className="relative z-30">
+          <div className="mt-4 border-t border-white/[0.075] pt-4">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div ref={menuRef} className="relative z-30 min-w-0">
                   <label id="service-label" className="block text-[11px] font-semibold text-white/66">Hizmet</label>
                   <button
                     type="button"
@@ -124,7 +123,7 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                   )}
                 </div>
 
-                <label className="block text-[11px] font-semibold text-white/66">Tutar
+                <label className="block min-w-0 text-[11px] font-semibold text-white/66">Tutar
                   <div className="relative mt-1.5">
                     <input
                       value={amount}
@@ -138,93 +137,40 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
                     <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[11px] font-black text-white/48">TL</span>
                   </div>
                 </label>
+            </div>
+
+            <p id={amountHelpId} aria-live="polite" className={`mt-2 min-h-4 text-[11px] font-semibold ${error ? 'text-rose-400' : 'text-white/46'}`}>
+              {error || <>Güncel oran aralığı: <span className="text-[#f3bf31]">{selected.range}</span></>}
+            </p>
+
+            <div className="mt-3 flex flex-col justify-between gap-3 border-y border-white/[0.075] py-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-[10px] font-semibold text-white/55">Tahmini ödemeniz</p>
+                <p className="mt-1 whitespace-nowrap text-[34px] font-black leading-none tracking-[-.055em] text-emerald-400 sm:text-[38px]">
+                  {net.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL
+                </p>
               </div>
-
-              <p id={amountHelpId} aria-live="polite" className={`mt-2 min-h-4 text-[11px] font-semibold ${error ? 'text-rose-400' : 'text-white/46'}`}>
-                {error || <>Güncel oran aralığı: <span className="text-[#f3bf31]">{selected.range}</span></>}
-              </p>
-
-              <div className="relative mt-3 flex min-h-[166px] flex-1 items-center overflow-hidden rounded-[17px] border border-emerald-400/24 bg-[radial-gradient(circle_at_9%_8%,rgba(52,211,153,.14),transparent_39%),linear-gradient(135deg,rgba(16,185,129,.065),rgba(255,255,255,.012)_62%,rgba(245,190,54,.03))] px-5 py-5 shadow-[0_18px_46px_rgba(0,0,0,.18),inset_0_1px_0_rgba(255,255,255,.05)]">
-                <div className="pointer-events-none absolute -right-8 -bottom-10 h-40 w-40 rounded-full border border-emerald-300/[0.075]" />
-                <div className="relative w-full">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-[11px] font-semibold text-white/70">Tahmini ödemeniz</p>
-                    <span className="shrink-0 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[9px] font-black text-emerald-300">{selected.range}</span>
-                  </div>
-                  <p className="mt-3 whitespace-nowrap text-[36px] font-black leading-none tracking-[-.055em] text-emerald-400 sm:text-[39px]">
-                    {net.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL
-                  </p>
-                  <div className="mt-4 flex flex-wrap items-center gap-2 text-[9px] font-bold text-white/45">
-                    <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">FAST / Havale</span>
-                    <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">Süre değişebilir</span>
-                    <span className="rounded-full border border-white/[0.08] bg-white/[0.025] px-2.5 py-1">Kesin oran onayı</span>
-                  </div>
-                </div>
+              <div className="flex flex-wrap gap-2 text-[9px] font-bold sm:justify-end">
+                <span className="rounded-full border border-emerald-400/18 bg-emerald-400/[0.06] px-2.5 py-1 text-emerald-300">{selected.range}</span>
+                <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-white/50">FAST / Havale</span>
+                <span className="rounded-full border border-white/[0.08] px-2.5 py-1 text-white/50">Kesin oran teyidi</span>
               </div>
+            </div>
 
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
                 href={`${siteConfig.whatsapp.split('?')[0]}?text=${message}`}
                 target="_blank"
                 rel="noreferrer"
-                className="relative mt-3 flex min-h-[48px] w-full items-center justify-center gap-2 overflow-hidden rounded-[14px] bg-[linear-gradient(100deg,#f4ae24_0%,#ffd44f_52%,#f2b62d_100%)] px-4 text-[13px] font-black text-[#17120a] shadow-[0_12px_28px_rgba(245,190,54,.16),inset_0_1px_0_rgba(255,255,255,.38)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f3bf31]/25"
+                className="relative flex min-h-[46px] flex-1 items-center justify-center gap-2 overflow-hidden rounded-[13px] bg-[linear-gradient(100deg,#f4ae24_0%,#ffd44f_52%,#f2b62d_100%)] px-4 text-[12px] font-black text-[#17120a] shadow-[0_12px_28px_rgba(245,190,54,.14),inset_0_1px_0_rgba(255,255,255,.38)] transition duration-300 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f3bf31]/25"
               >
-                <WhatsAppIcon /> WhatsApp’tan Kesin Teklif Al
+                <WhatsAppIcon /> Kesin Oranı WhatsApp’tan Al
               </a>
+              <p className="flex items-center gap-2 text-[9px] leading-4 text-white/42 sm:max-w-[210px]">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-emerald-400/18 text-emerald-300"><CheckIcon /></span>
+                İşlem başlamadan önce oran ve ödeme tutarı yazılı olarak kesinleştirilir.
+              </p>
             </div>
-
-            <aside className="relative flex min-h-0 flex-col overflow-hidden bg-[radial-gradient(circle_at_100%_0%,rgba(243,191,49,.085),transparent_36%),linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.008))] p-[18px]">
-              <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-[#f3bf31]/[0.055] blur-2xl" />
-              <div className="relative flex items-center justify-between gap-3">
-                <p className="text-[9px] font-black uppercase tracking-[.18em] text-[#f3bf31]">İşlem Özeti</p>
-                <span className="flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.65)]" />
-              </div>
-
-              <div className="relative mt-4 overflow-hidden rounded-[15px] border border-white/[0.075] bg-black/20 p-3.5">
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-[#f3bf31]/35 to-transparent" />
-                <p className="text-[9px] font-semibold text-white/40">Seçilen hizmet</p>
-                <p className="mt-1 truncate text-[14px] font-black tracking-[-.02em] text-white">{selected.name}</p>
-                <div className="my-3 h-px bg-white/[0.065]" />
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <p className="text-[9px] font-semibold text-white/40">Tutar</p>
-                    <p className="mt-1 text-[16px] font-black text-white">{numericAmount.toLocaleString('tr-TR')} TL</p>
-                  </div>
-                  <span className="mb-1 text-[13px] text-[#f3bf31]">→</span>
-                  <div className="text-right">
-                    <p className="text-[9px] font-semibold text-white/40">Tahmini ödeme</p>
-                    <p className="mt-1 text-[18px] font-black tracking-[-.035em] text-emerald-400">{net.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} TL</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative mt-3 grid grid-cols-2 gap-2.5">
-                <div className="rounded-[13px] border border-white/[0.065] bg-white/[0.022] px-3 py-2.5">
-                  <p className="text-[8px] font-semibold text-white/38">Oran aralığı</p>
-                  <p className="mt-1 text-[14px] font-black text-[#f3bf31]">{selected.range}</p>
-                </div>
-                <div className="rounded-[13px] border border-white/[0.065] bg-white/[0.022] px-3 py-2.5">
-                  <p className="text-[8px] font-semibold text-white/38">Tahmini süre</p>
-                  <p className="mt-1 text-[14px] font-black text-white">Banka ve doğrulamaya göre</p>
-                </div>
-              </div>
-
-              <div className="relative mt-4 border-t border-white/[0.07] pt-3.5">
-                <p className="text-[9px] font-black uppercase tracking-[.16em] text-white/42">Güvenli işlem akışı</p>
-                <div className="mt-3 space-y-2.5">
-                  {['Kesin oran paylaşılır', 'Onayınız alınır', 'Ödeme FAST / Havale ile geçer'].map((item, index) => (
-                    <div key={item} className="flex items-center gap-2.5 text-white/60">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#f3bf31]/16 bg-[#f3bf31]/[0.055] text-[9px] font-black text-[#f3bf31]">{index + 1}</span>
-                      <p className="text-[10px] leading-[1.4]">{item}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="relative mt-auto flex items-center gap-2.5 rounded-[13px] border border-emerald-400/12 bg-emerald-400/[0.035] px-3 py-2.5">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-400/18 bg-emerald-400/[0.07] text-emerald-300"><CheckIcon /></span>
-                <p className="text-[9px] leading-[1.45] text-white/46">İşlem başlamadan önce güncel oranınız kesinleştirilir.</p>
-              </div>
-            </aside>
           </div>
         </div>
       </div>
