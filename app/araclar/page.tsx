@@ -66,7 +66,7 @@ export default function Page() {
             <div><span>02</span><b>Karşılaştır</b><small>Farklı hizmetler</small></div>
             <div><span>03</span><b>Yönünü bul</b><small>Doğru işlem adımı</small></div>
           </div>
-          <figure className="tc2-hero-art">
+          <figure className="tc2-hero-art tc2-hero-art--contained">
             <svg className="tc2-hero-lightning" viewBox="0 0 400 500" aria-hidden="true">
               <defs>
                 <linearGradient id="tc2-electric-gradient" x1="0" y1="0" x2="1" y2="1">
