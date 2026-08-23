@@ -75,7 +75,7 @@ export const v21ExtendedArticlesPart5 = [
     links: [
       { label: 'Mobil ödeme konu merkezi', href: '/bilgi-merkezi/konu/sms-mobil-odeme' },
       { label: 'Sorun çözme merkezi', href: '/bilgi-merkezi/sorun-cozme' },
-      { label: 'Güven Merkezi', href: '/guven-merkezi' },
+      { label: 'Güvenli İletişim', href: '/iletisim#guvenlik' },
     ],
     sections: [
       { title: 'Limit görünürken işlem neden reddedilir?', paragraphs: ['Kullanılabilir limit, işlemin tamamlanması için gereken koşullardan yalnızca biridir. Hat durumu, ürün kategorisi, satıcı sınırı, günlük adet, güvenlik değerlendirmesi ve doğrulama sonucu da işlemi etkileyebilir.', 'Uygulamada görünen üst limit ile o anda belirli bir mağazada kullanılabilecek tutar aynı olmayabilir.'] },
@@ -135,7 +135,7 @@ export const v21ExtendedArticlesPart5 = [
     links: [
       { label: 'Kart İşlemleri konu merkezi', href: '/bilgi-merkezi/konu/kredi-karti-sanal-kart' },
       { label: 'Dijital kod güvenliği', href: '/bilgi-merkezi/dijital-kod-hediye-karti-rehberi' },
-      { label: 'Güven Merkezi', href: '/guven-merkezi' },
+      { label: 'Güvenli İletişim', href: '/iletisim#guvenlik' },
     ],
     sections: [
       { title: 'Kart işlemi neden reddedilir?', paragraphs: ['Yeterli limit bulunması işlemin kesin olarak onaylanacağı anlamına gelmez. İnternet alışverişi izni, sanal kart limiti, 3D Secure doğrulaması, satıcı kategorisi, banka güvenlik değerlendirmesi veya geçici teknik kesinti sonucu etkileyebilir.', 'Hata mesajını ve işlem saatini kaydetmek, bankanın doğru kaydı incelemesini kolaylaştırır.'] },

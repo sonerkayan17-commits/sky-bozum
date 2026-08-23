@@ -18,7 +18,7 @@ export default function HomeTrust() {
             <h2 id="home-trust-title">Güven, işlemden önce <em>görünür olmalı.</em></h2>
             <InlineEditableText contentKey="home.trust.description" defaultValue="Ne paylaşacağınız, ne kadar alacağınız ve sürecin hangi kanaldan ilerleyeceği daha işlem başlamadan netleşir." as="p" multiline />
             <div>
-              <Link href="/guven-merkezi" className="focus-ring">Güven Merkezini açın <span aria-hidden="true">→</span></Link>
+              <Link href="/iletisim#guvenlik" className="focus-ring">Güvenlik kontrolünü açın <span aria-hidden="true">→</span></Link>
               <Link href="/iletisim" className="focus-ring">Resmî kanallar</Link>
             </div>
           </div>

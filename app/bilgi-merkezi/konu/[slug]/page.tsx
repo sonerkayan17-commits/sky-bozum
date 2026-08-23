@@ -50,7 +50,7 @@ export default async function TopicPage({ params }: { params: Promise<{ slug: st
       <p className="mt-8 text-xs font-extrabold uppercase tracking-[.18em] text-rose-400">Konu merkezi</p>
       <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight sm:text-6xl">{hub.name} bilgi merkezi</h1>
       <p className="mt-5 max-w-3xl text-base leading-8 text-slate-400">{hub.description}</p>
-      <div className="knowledge-hub-summary"><span><b>{hub.articles.length}</b> bağlantılı rehber</span><span><b>{String(stages.length + 1).padStart(2, '0')}</b> okuma aşaması</span><Link href="/guven-merkezi">Güvenlik standardı →</Link></div>
+      <div className="knowledge-hub-summary"><span><b>{hub.articles.length}</b> bağlantılı rehber</span><span><b>{String(stages.length + 1).padStart(2, '0')}</b> okuma aşaması</span><Link href="/iletisim#guvenlik">Güvenlik standardı →</Link></div>
       <div className="mt-7 flex flex-wrap gap-3">{hub.serviceSlug ? <Link href={`/hizmetler/${hub.serviceSlug}`} className="btn-primary focus-ring">Hizmet ve güncel koşullar</Link> : null}<Link href="/bilgi-merkezi/sorun-cozme" className="btn-secondary focus-ring">Sorun çözme rehberleri</Link></div>
     </div></header>
     <section className="knowledge-hub-archive content-shell py-12 sm:py-16" aria-labelledby="topic-archive-title">

@@ -62,7 +62,7 @@ export default function Home() {
               <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">Bilgi Merkezi</Link>
               <Link href="/urunler" className="transition hover:text-rose-300">Ürünler</Link>
               <Link href="/topluluk" className="transition hover:text-rose-300">Topluluk</Link>
-              <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven Merkezi</Link>
+              <Link href="/iletisim#guvenlik" className="transition hover:text-rose-300">Güvenli İletişim</Link>
             </nav>
           </section>
         </DeferredViewportSection>

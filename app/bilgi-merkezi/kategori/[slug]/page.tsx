@@ -58,7 +58,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <p className="mt-8 text-xs font-extrabold uppercase tracking-[.18em] text-rose-400">Kategori merkezi</p>
       <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight sm:text-6xl">{category.name} rehberleri</h1>
       <p className="mt-5 max-w-3xl text-base leading-8 text-slate-400">{category.excerpt}</p>
-      <div className="knowledge-hub-summary"><span><b>{items.length}</b> doğrulanmış rehber</span><span><b>{String(relatedHubs.length).padStart(2, '0')}</b> konu merkezi</span><Link href="/guven-merkezi">Güvenlik standardı →</Link></div>
+      <div className="knowledge-hub-summary"><span><b>{items.length}</b> doğrulanmış rehber</span><span><b>{String(relatedHubs.length).padStart(2, '0')}</b> konu merkezi</span><Link href="/iletisim#guvenlik">Güvenlik standardı →</Link></div>
       {categoryVisual ? <div className="relative mt-8 aspect-[16/9] max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-[#0a0e17]"><Image src={categoryVisual.hero} alt={categoryVisual.heroAlt} fill priority sizes="(max-width: 1023px) 100vw, 1024px" className={categoryVisual.hero.toLowerCase().endsWith('.svg') ? 'object-contain p-3 sm:p-5' : 'object-cover'} /></div> : null}
     </div></header>
     <section className="knowledge-hub-archive content-shell py-12 sm:py-16" aria-labelledby="category-archive-title">

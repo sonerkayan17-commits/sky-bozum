@@ -3,7 +3,7 @@ import Link from 'next/link';
 const steps = [
   { number: '01', title: 'Amacınızı belirtin', text: 'Talep türünü seçin; ilk temas için yalnızca gerekli başlangıç bilgisini hazırlayın.', href: '#iletisim-yonlendirici', action: 'Talep türünü seç' },
   { number: '02', title: 'Koşulları netleştirin', text: 'Oran, uygunluk ve izlenecek adım ilerlemeden önce açık biçimde teyit edilir.', href: '/araclar', action: 'Yaklaşık sonucu gör' },
-  { number: '03', title: 'Onayınızla ilerleyin', text: 'Yalnızca açıkça teyit ettiğiniz akışta devam edin; kanal değişirse yeniden doğrulama alın.', href: '/guven-merkezi', action: 'Güvenlik kontrolünü aç' },
+  { number: '03', title: 'Onayınızla ilerleyin', text: 'Yalnızca açıkça teyit ettiğiniz akışta devam edin; kanal değişirse yeniden doğrulama alın.', href: '/iletisim#guvenlik', action: 'Güvenlik kontrolünü aç' },
 ];
 
 export default function ContactProcess() {

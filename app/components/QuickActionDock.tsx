@@ -20,19 +20,12 @@ const actions: DockAction[] = [
   ...(siteFeatures.communityForum ? [{ label: 'Forum', href: '/topluluk', icon: '☵', activeRoutes: ['/topluluk'] }] : []),
 ];
 
-const routesWithDedicatedDock = ['/guven-merkezi'];
-
 function routeIsActive(pathname: string, routes: string[] = []) {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 }
 
 export default function QuickActionDock() {
   const pathname = usePathname();
-  const hasDedicatedDock = routesWithDedicatedDock.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
-
-  if (hasDedicatedDock) return null;
 
   return (
     <nav className="quick-dock" aria-label="Hızlı işlemler">

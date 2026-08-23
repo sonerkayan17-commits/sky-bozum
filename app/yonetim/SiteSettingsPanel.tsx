@@ -36,7 +36,7 @@ const searchActions: Array<{
 }> = [
   { label: 'Oran hesapla', hint: 'Hesaplama aracına veya istediğiniz başka bir sayfaya yönlendirin.', enabled: 'searchQuickActionRateEnabled', title: 'searchQuickActionRateTitle', description: 'searchQuickActionRateDescription', href: 'searchQuickActionRateHref' },
   { label: 'Tüm hizmetler', hint: 'Hizmet kataloğu ya da seçtiğiniz özel bir sayfa için.', enabled: 'searchQuickActionServicesEnabled', title: 'searchQuickActionServicesTitle', description: 'searchQuickActionServicesDescription', href: 'searchQuickActionServicesHref' },
-  { label: 'Güvenlik kontrolü', hint: 'Güven Merkezi veya farklı bir bilgilendirme sayfası için.', enabled: 'searchQuickActionTrustEnabled', title: 'searchQuickActionTrustTitle', description: 'searchQuickActionTrustDescription', href: 'searchQuickActionTrustHref' },
+  { label: 'Güvenlik kontrolü', hint: 'İletişim sayfasındaki güvenlik bölümü veya farklı bir bilgilendirme alanı için.', enabled: 'searchQuickActionTrustEnabled', title: 'searchQuickActionTrustTitle', description: 'searchQuickActionTrustDescription', href: 'searchQuickActionTrustHref' },
   { label: 'Destek ve iletişim', hint: 'İletişim sayfası, WhatsApp veya destek akışı için.', enabled: 'searchQuickActionSupportEnabled', title: 'searchQuickActionSupportTitle', description: 'searchQuickActionSupportDescription', href: 'searchQuickActionSupportHref' },
 ];
 

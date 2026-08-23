@@ -32,7 +32,7 @@ export const defaultSiteSettings: SiteSettings = {
   searchQuickActionServicesEnabled: true, searchQuickActionServicesTitle: 'Tüm hizmetler',
   searchQuickActionServicesDescription: 'Mobil ödeme, dijital kod ve cüzdan seçeneklerini inceleyin.', searchQuickActionServicesHref: '/hizmetler',
   searchQuickActionTrustEnabled: true, searchQuickActionTrustTitle: 'Güvenlik kontrolü',
-  searchQuickActionTrustDescription: 'İşlem öncesi resmi kanalları ve güvenlik notlarını kontrol edin.', searchQuickActionTrustHref: '/guven-merkezi',
+  searchQuickActionTrustDescription: 'İşlem öncesi resmî kanalları ve güvenlik notlarını kontrol edin.', searchQuickActionTrustHref: '/iletisim#guvenlik',
   searchQuickActionSupportEnabled: true, searchQuickActionSupportTitle: 'Destek ve iletişim',
   searchQuickActionSupportDescription: 'Resmi iletişim kanallarına ve destek seçeneklerine ulaşın.', searchQuickActionSupportHref: '/iletisim',
   savedItemsLabel: '★ Kaydettiklerim',

@@ -57,7 +57,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const journeyLinks = [
     { href: '/araclar#oran-hesapla', label: 'Yaklaşık ödeme hesaplayın', note: 'Tutarı ve oran aralığını birlikte görün.' },
     { href: '/bilgi-merkezi', label: 'Bilgi Merkezi rehberleri', note: 'Kullanım, bölge ve güvenlik notlarını okuyun.' },
-    { href: '/guven-merkezi', label: 'Güvenlik kontrolü', note: 'İşlem öncesi paylaşılmaması gerekenleri kontrol edin.' },
+    { href: '/iletisim#guvenlik', label: 'Güvenlik kontrolü', note: 'İşlem öncesi paylaşılmaması gerekenleri kontrol edin.' },
     { href: '/iletisim', label: 'Stok ve uygunluk sorun', note: 'Güncel katalog durumunu yazılı olarak teyit edin.' },
   ];
 

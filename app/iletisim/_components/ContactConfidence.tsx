@@ -40,7 +40,7 @@ export default function ContactConfidence() {
           {neverShare.map((item, index) => <div key={item} className="contact-danger-item"><i aria-hidden="true">{String(index + 1).padStart(2, '0')}</i><span>{item}</span><b aria-hidden="true">×</b></div>)}
         </div>
         <div className="contact-redline-rule contact-redline-rule--258"><span>ŞÜPHELİ TALEPTE</span><p>Görüşmeyi sonlandırın. Bu sayfayı yeniden açın ve resmî iletişim noktasından teyit alın.</p></div>
-        <Link href="/guven-merkezi#sorun-cozucu" className="focus-ring mt-5 inline-flex items-center gap-2 text-xs font-black text-rose-200 transition hover:text-white">Şüpheli durumu kontrol et <span aria-hidden="true">→</span></Link>
+        <Link href="/iletisim#guvenlik" className="focus-ring mt-5 inline-flex items-center gap-2 text-xs font-black text-rose-200 transition hover:text-white">Şüpheli durumu kontrol et <span aria-hidden="true">→</span></Link>
       </aside>
     </section>
   );

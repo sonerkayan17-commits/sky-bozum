@@ -62,7 +62,7 @@ export default function ReferencesPage() {
         <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-600">Deneyimden sonra</p>
         <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-bold text-slate-400">
           <Link href="/hizmetler" className="transition hover:text-rose-300">Hizmet ve oranları incele</Link>
-          <Link href="/guven-merkezi" className="transition hover:text-rose-300">Güven standardını gör</Link>
+          <Link href="/iletisim#guvenlik" className="transition hover:text-rose-300">Güvenli iletişimi gör</Link>
           <Link href="/bilgi-merkezi" className="transition hover:text-rose-300">İşlem rehberlerini oku</Link>
           <Link href="/iletisim" className="transition hover:text-rose-300">Resmî iletişim kanalları</Link>
         </div>

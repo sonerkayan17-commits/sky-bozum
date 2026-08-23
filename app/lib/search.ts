@@ -18,8 +18,7 @@ const pages:SearchItem[]=[
   {title:'Referanslar',description:'Onaylı ziyaretçi geri bildirimlerini inceleyin.',href:'/referanslar',type:'Sayfa',keywords:['yorum','referans','deneyim']},
   {title:'İş Ortaklığı',description:'Toplu kod, kurumsal iş birliği, reklam, yayıncı, kariyer, bayilik ve geri bildirim başvuruları.',href:'/is-ortakligi',type:'Sayfa',keywords:['iş ortaklığı','kurumsal başvuru','bayilik','reklam','yayıncı','toplu kod']},
   {title:'Sık Sorulan Sorular',description:'İşlem, güvenlik ve ödeme hakkında cevaplar.',href:'/sss',type:'Sayfa',keywords:['soru','yardım','destek']},
-  {title:'Güven Merkezi',description:'Güvenli işlem ilkeleri, resmi iletişim ve dolandırıcılıktan korunma.',href:'/guven-merkezi',type:'Sayfa',keywords:['güven','dolandırıcılık','resmi whatsapp','işlem güvenliği']},
-  {title:'İletişim',description:'WhatsApp, telefon ve e-posta iletişim bilgileri.',href:'/iletisim',type:'Sayfa',keywords:['whatsapp','telefon','iletişim']},
+  {title:'İletişim ve Güvenlik',description:'Resmî WhatsApp, telefon ve e-posta kanallarıyla güvenli işlem kontrolleri.',href:'/iletisim',type:'Sayfa',keywords:['whatsapp','telefon','iletişim','güven','dolandırıcılık','resmi whatsapp','işlem güvenliği']},
   {title:'Hakkımızda',description:'Sky Bozum hizmet yaklaşımı ve işlem ilkeleri.',href:'/hakkimizda',type:'Sayfa',keywords:['kurumsal','hakkımızda','3 yıl']},
 ];
 export const searchItems:SearchItem[]=[
@@ -38,7 +37,7 @@ export const featuredSearchItems:SearchItem[]=[
   searchItems.find(item=>item.href==='/bilgi-merkezi/mobil-odeme-guvenli-mi'),
   searchItems.find(item=>item.href==='/bilgi-merkezi/mobil-odeme-nasil-acilir'),
   searchItems.find(item=>item.href==='/araclar'),
-  searchItems.find(item=>item.href==='/guven-merkezi'),
+  searchItems.find(item=>item.href==='/iletisim'),
 ].filter((item):item is SearchItem=>Boolean(item));
 
 function normalize(value:string){return value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ı/g,'i')}

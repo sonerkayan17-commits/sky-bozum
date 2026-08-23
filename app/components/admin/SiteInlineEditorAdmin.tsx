@@ -383,7 +383,6 @@ function pageLabel(pathname: string) {
     '/bilgi-merkezi': 'Bilgi Merkezi',
     '/topluluk': 'Forum',
     '/iletisim': 'İletişim',
-    '/guven-merkezi': 'Güven Merkezi',
     '/sss': 'Sık Sorulan Sorular',
   };
   return labels[pathname] || 'Site sayfası';

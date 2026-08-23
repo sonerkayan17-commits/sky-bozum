@@ -42,7 +42,7 @@ export default function FinalCta() {
         </a>
         <nav aria-label="Destek bağlantıları">
           <Link href="/iletisim">Tüm iletişim kanalları <span aria-hidden="true">→</span></Link>
-          <Link href="/guven-merkezi">Güven standardımız <span aria-hidden="true">→</span></Link>
+          <Link href="/iletisim#guvenlik">Güvenli iletişim standardımız <span aria-hidden="true">→</span></Link>
         </nav>
       </div>
 

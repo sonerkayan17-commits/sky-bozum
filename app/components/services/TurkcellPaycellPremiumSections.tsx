@@ -132,7 +132,7 @@ export default function TurkcellPaycellPremiumSections({ mode }: { mode: BrandMo
               <p className={`text-xs font-extrabold uppercase tracking-[0.18em] ${tone.text}`}>İşlem öncesi kontrol</p>
               <h2 className="mt-3 text-3xl font-black tracking-tight">Dört kritik noktayı netleştirin</h2>
               <p className="mt-4 text-sm leading-7 text-slate-400">Bu kontroller tamamlanmadan ürün satın almak, kart bilgisini girmek veya kod paylaşmak gereksiz risk oluşturabilir.</p>
-              <Link href="/guven-merkezi" className={`focus-ring mt-6 inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-extrabold text-slate-200 ${tone.border} ${tone.hoverText}`}>Güven merkezini açın</Link>
+              <Link href="/iletisim#guvenlik" className={`focus-ring mt-6 inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-extrabold text-slate-200 ${tone.border} ${tone.hoverText}`}>Güvenlik kontrolünü açın</Link>
             </div>
             <div className="grid sm:grid-cols-2">
               {item.controls.map(([title, text], index) => (

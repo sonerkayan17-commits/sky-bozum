@@ -21,7 +21,6 @@ const items = [
   ['Rehber', '/bilgi-merkezi'],
   ['Forum', '/topluluk'],
   ['Referanslar', '/referanslar'],
-  ['Güven', '/guven-merkezi'],
   ['S.S.S.', '/sss'],
   ['İletişim', '/iletisim'],
 ] as const;

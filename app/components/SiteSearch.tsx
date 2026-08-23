@@ -40,6 +40,7 @@ function dynamicSearch(items: SearchItem[], query: string, limit = 14) {
 
 function safeQuickActionHref(value: string, fallback: string) {
   const href = value.trim();
+  if (href === '/guven-merkezi' || href.startsWith('/guven-merkezi#')) return '/iletisim#guvenlik';
   return href.startsWith('/') || /^https:\/\//i.test(href) ? href : fallback;
 }
 
@@ -88,7 +89,7 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
   const quickSearchItems = useMemo<SearchItem[]>(() => [
     settings.searchQuickActionRateEnabled ? { title: settings.searchQuickActionRateTitle, description: settings.searchQuickActionRateDescription, href: safeQuickActionHref(settings.searchQuickActionRateHref, '/araclar#oran-hesapla'), type: 'Araç', keywords: ['oran', 'hesapla', 'hesap makinesi'] } : null,
     settings.searchQuickActionServicesEnabled ? { title: settings.searchQuickActionServicesTitle, description: settings.searchQuickActionServicesDescription, href: safeQuickActionHref(settings.searchQuickActionServicesHref, '/hizmetler'), type: 'Sayfa', keywords: ['hizmet', 'bozum'] } : null,
-    settings.searchQuickActionTrustEnabled ? { title: settings.searchQuickActionTrustTitle, description: settings.searchQuickActionTrustDescription, href: safeQuickActionHref(settings.searchQuickActionTrustHref, '/guven-merkezi'), type: 'Sayfa', keywords: ['güven', 'dolandırıcılık', 'kontrol'] } : null,
+    settings.searchQuickActionTrustEnabled ? { title: settings.searchQuickActionTrustTitle, description: settings.searchQuickActionTrustDescription, href: safeQuickActionHref(settings.searchQuickActionTrustHref, '/iletisim#guvenlik'), type: 'Sayfa', keywords: ['güven', 'dolandırıcılık', 'kontrol'] } : null,
     settings.searchQuickActionSupportEnabled ? { title: settings.searchQuickActionSupportTitle, description: settings.searchQuickActionSupportDescription, href: safeQuickActionHref(settings.searchQuickActionSupportHref, '/iletisim'), type: 'Sayfa', keywords: ['destek', 'iletişim', 'yardım'] } : null,
   ].filter((item): item is SearchItem => Boolean(item)), [settings]);
   const defaultResults = useMemo(() => {

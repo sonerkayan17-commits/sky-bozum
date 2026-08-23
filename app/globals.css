@@ -120,12 +120,10 @@ main:has(.service-section-anchor)>section.service-section-anchor.border-y{paddin
 .article-editorial-close{margin-top:3rem!important}
 .knowledge-center-page>section{margin-bottom:0}
 
-/* Forum, güven merkezi ve iletişim: no large empty canvas around compact content. */
+/* Forum and contact: no large empty canvas around compact content. */
 .forum-directory{padding-top:2.1rem!important;padding-bottom:2.8rem!important}
 .forum-groups{margin-top:1.1rem!important}
 .forum-section-page,.forum-category-page,.forum-topic-page{padding-top:2.1rem;padding-bottom:3.6rem}
-.trust-v1-hero{padding:24px 0 32px}
-.trust-v1-section{padding:38px 0}
 .contact-hero{padding-block:2.2rem!important}
 
 @media(min-width:768px){
@@ -148,7 +146,6 @@ main:has(.service-section-anchor)>section.service-section-anchor.border-y{paddin
   .services-directory-page .services-directory-groups>div+div{margin-top:1.8rem!important}
   main:has(.service-section-anchor)>section.content-shell{padding-bottom:2.8rem!important}
   .article-content-section{padding-block:2rem!important}
-  .trust-v1-section{padding:30px 0}
   .contact-hero{padding-block:1.6rem!important}
 }
 @media(max-width:560px){

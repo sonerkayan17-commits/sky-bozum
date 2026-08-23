@@ -100,7 +100,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Kno
   const entryRoutes = [
     { eyebrow: 'Hizmete göre', title: 'Hangi bakiyeyi kullanacağınızı biliyorsanız', description: 'Vodafone, Turkcell, Türk Telekom, Paycell, Pokus ve dijital kod hizmetlerinden doğru başlangıç noktasını seçin.', href: '/hizmetler', action: 'Hizmetleri incele', number: '01' },
     { eyebrow: 'Soruna göre', title: 'İşlem tamamlanmıyor veya hata veriyorsa', description: 'Limit, SMS, kart ve kod sorunlarında tekrar denemeden önce güvenli kontrol sırasını uygulayın.', href: '/bilgi-merkezi/sorun-cozme', action: 'Sorunu çöz', number: '02' },
-    { eyebrow: 'Güvenliğe göre', title: 'İşlem öncesi kanalı doğrulamak istiyorsanız', description: 'Paylaşılmaması gereken bilgileri, resmî kanalları ve güvenli işlem standardını kontrol edin.', href: '/guven-merkezi', action: 'Güvenlik kontrolü', number: '03' },
+    { eyebrow: 'Güvenliğe göre', title: 'İşlem öncesi kanalı doğrulamak istiyorsanız', description: 'Paylaşılmaması gereken bilgileri, resmî kanalları ve güvenli işlem standardını kontrol edin.', href: '/iletisim#guvenlik', action: 'Güvenlik kontrolü', number: '03' },
     { eyebrow: 'Sonuca göre', title: 'Yaklaşık ödeme karşılığını görmek istiyorsanız', description: 'Hizmet ve tutar seçerek güncel taban oran üzerinden yaklaşık sonucu hesaplayın.', href: '/araclar#oran-hesapla', action: 'Hesaplamaya geç', number: '04' },
   ];
   const schema = { '@context': 'https://schema.org', '@graph': [
