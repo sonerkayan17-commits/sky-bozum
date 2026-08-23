@@ -129,73 +129,6 @@
   background: linear-gradient(145deg, rgba(20,22,30,.86), rgba(9,11,17,.82));
 }
 
-/* Compact service-guide cards: the artwork supports the content instead of
-   turning each card into a mostly empty billboard. */
-.home-flow .experience-grid--five .experience-card {
-  display: flex;
-  min-height: 0 !important;
-  flex-direction: column;
-  padding: 18px !important;
-}
-
-.home-flow .experience-grid--five .experience-artwork {
-  height: 108px !important;
-  margin-top: 12px;
-  border-radius: 16px;
-}
-
-.home-flow .experience-artwork-grid {
-  background-size: 18px 18px;
-  opacity: .16;
-}
-
-.home-flow .experience-artwork-glow {
-  width: 88px;
-  height: 88px;
-  filter: blur(25px);
-}
-
-.home-flow .experience-artwork-orbit--one { width: 120px; height: 62px; }
-.home-flow .experience-artwork-orbit--two { width: 90px; height: 90px; }
-.home-flow .experience-artwork-logos { gap: 6px; padding: 10px 12px 25px; }
-
-.home-flow .experience-logo {
-  width: 72px;
-  height: 54px;
-  border-radius: 13px;
-  transform: rotate(-1.5deg);
-}
-
-.home-flow .experience-logo:nth-child(2) { transform: translateY(2px) rotate(1deg); }
-.home-flow .experience-logo:nth-child(3) { transform: rotate(1.5deg); }
-.home-flow .experience-logo img { padding: 9px; }
-.home-flow .experience-logo--razer { width: 108px; height: 66px; }
-.home-flow .experience-logo--razer img { padding: 11px; }
-.home-flow .experience-logo--apple { width: 80px; height: 72px; }
-.home-flow .experience-logo--apple img { padding: 14px; }
-.home-flow .experience-logo--steam { width: 82px; height: 66px; }
-.home-flow .experience-artwork--operators .experience-logo { width: 58px; height: 52px; }
-.home-flow .experience-artwork--operators .experience-logo img { padding: 8px; }
-.home-flow .experience-artwork--wallets .experience-logo { width: 84px; height: 58px; }
-.home-flow .experience-artwork--cards .experience-logo { width: 84px; height: 56px; }
-
-.home-flow .experience-artwork-status { left: 10px; bottom: 8px; font-size: 6.5px; }
-.home-flow .experience-artwork-code { right: 9px; bottom: 7px; }
-.home-flow .experience-grid--five .experience-tag { margin-top: 13px; }
-.home-flow .experience-grid--five .experience-card h3 { margin-top: 6px; }
-.home-flow .experience-grid--five .experience-quote {
-  min-height: 0;
-  margin-top: 9px;
-  font-size: .72rem;
-  line-height: 1.55;
-}
-
-.home-flow .experience-grid--five .experience-card-footer {
-  margin-top: auto;
-  padding-top: 13px;
-  font-size: .62rem;
-}
-
 .home-flow .home-trust-editorial::before,
 .home-flow .home-trust-editorial::after,
 .home-flow .experience-showcase::before,
@@ -237,33 +170,6 @@ body:has(.home-page) .site-footer {
   .home-flow .home-calculator-band { padding: 2.5rem 0; }
   .home-flow .experience-showcase { padding: 3rem 0 !important; }
   .home-flow .home-final-section { padding-top: 2.75rem !important; padding-bottom: 3.25rem !important; }
-
-  .home-flow .experience-grid--five .experience-card {
-    min-height: 310px !important;
-    padding: 14px !important;
-  }
-
-  .home-flow .experience-grid--five .experience-artwork {
-    height: 96px !important;
-    margin-top: 10px;
-  }
-
-  .home-flow .experience-logo--razer { width: 96px; height: 58px; }
-  .home-flow .experience-logo--apple { width: 70px; height: 64px; }
-  .home-flow .experience-logo--steam { width: 72px; height: 58px; }
-  .home-flow .experience-artwork--operators .experience-logo { width: 52px; height: 46px; }
-  .home-flow .experience-artwork--wallets .experience-logo,
-  .home-flow .experience-artwork--cards .experience-logo { width: 72px; height: 50px; }
-  .home-flow .experience-grid--five .experience-tag { margin-top: 10px !important; }
-  .home-flow .experience-grid--five .experience-quote {
-    font-size: .66rem !important;
-    line-height: 1.48 !important;
-  }
-
-  .home-flow .experience-grid--five .experience-card-footer {
-    margin-top: auto;
-    padding-top: 10px;
-  }
 
   .home-flow .credibility-band__inner { padding: 1.45rem 0; }
 
