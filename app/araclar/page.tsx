@@ -66,6 +66,26 @@ export default function Page() {
             <div><span>02</span><b>Karşılaştır</b><small>Farklı hizmetler</small></div>
             <div><span>03</span><b>Yönünü bul</b><small>Doğru işlem adımı</small></div>
           </div>
+          <figure className="tc2-hero-art">
+            <svg className="tc2-hero-lightning" viewBox="0 0 400 500" aria-hidden="true">
+              <defs>
+                <linearGradient id="tc2-electric-gradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#52f7c2" />
+                  <stop offset=".5" stopColor="#fb5f92" />
+                  <stop offset="1" stopColor="#ffb44b" />
+                </linearGradient>
+              </defs>
+              <path d="M33 176 82 149l-15 41 54-17-34 51 52 5" />
+              <path d="m300 76-31 62 42-14-29 58 58-26" />
+              <path d="m74 382 49-28-10 42 62-24-33 58" />
+              <path d="m267 351 35-42-2 36 55-28-29 59" />
+            </svg>
+            <picture>
+              <source type="image/avif" srcSet="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-480.avif 480w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-768.avif 768w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-1200.avif 1200w" sizes="(max-width: 700px) 62vw, 330px" />
+              <source type="image/webp" srcSet="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-480.webp 480w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-768.webp 768w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-1200.webp 1200w" sizes="(max-width: 700px) 62vw, 330px" />
+              <Image src="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-1200.webp" alt="Razer Gold, Apple, Steam, Google Play, mobil ödeme ve TL hesaplama kompozisyonu" width={1200} height={1500} sizes="(max-width: 700px) 62vw, 330px" priority />
+            </picture>
+          </figure>
         </div>
         <div id="oran-hesapla" className="tc2-featured-calculator scroll-mt-24">
           <div className="tc2-panel-heading"><span className="tc2-panel-icon">+</span><h2>Mobil ödeme hesaplama</h2></div>
