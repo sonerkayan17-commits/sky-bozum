@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import TrustIncidentResolver from '../components/TrustIncidentResolver';
 import TrustQuickDock from '../components/TrustQuickDock';
@@ -40,7 +41,11 @@ export default function TrustCenterPage() {
             <p className="trust-v1-lead">Resmî kanalı doğrulayın, net ödemeyi yazılı görün ve hassas bilgilerinizi koruyun.</p>
             <div className="trust-v1-actions"><a href="#kontrol" className="trust-v1-primary">Kontrolü başlat <b>→</b></a><a href={buildWhatsAppUrl('Merhaba, Güven Merkezi üzerinden resmî kanalı doğrulamak istiyorum.')} target="_blank" rel="noopener noreferrer" className="trust-v1-secondary">Resmî WhatsApp <b>↗</b></a></div>
           </div>
-          <aside className="trust-v1-channel-card"><div className="trust-v1-card-head"><span>RESMÎ KANAL</span><b><i /> KONTROL EDİLEBİLİR</b></div><div className="trust-v1-channel-row"><small>Alan adı</small><strong>{siteConfig.domain}</strong></div><div className="trust-v1-channel-row"><small>WhatsApp</small><strong>{siteConfig.phone}</strong></div><div className="trust-v1-channel-row"><small>E-posta</small><strong>{siteConfig.email}</strong></div><p>Şifre, SMS kodu ve ekran erişimi istenmez.</p></aside>
+          <div className="trust-v1-hero-visual">
+            <Image src="/images/guven-merkezi/guven-merkezi-hero-v1.webp" alt="Telefon, güvenlik kalkanı, doğrulama rozeti ve kilitten oluşan dijital işlem güvenliği görseli" fill priority sizes="(max-width: 800px) 100vw, 52vw" />
+            <i className="trust-v1-visual-shine" aria-hidden="true" />
+            <aside className="trust-v1-visual-channel"><div><span>RESMÎ KANAL</span><b><i /> DOĞRULANABİLİR</b></div><dl><div><dt>Alan adı</dt><dd>{siteConfig.domain}</dd></div><div><dt>WhatsApp</dt><dd>{siteConfig.phone}</dd></div></dl><p>Şifre, SMS kodu ve ekran erişimi istenmez.</p></aside>
+          </div>
         </div>
       </div>
     </section>
