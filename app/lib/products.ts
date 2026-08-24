@@ -21,6 +21,8 @@ export type ProductItem = {
   intro: string;
   tone: ProductTone;
   coverImage: string;
+  heroImage?: string;
+  packImage?: string;
   brandLogo?: string;
   brandIntegrated?: boolean;
   coverVideo?: string;
@@ -48,6 +50,8 @@ export const products: ProductItem[] = [
     intro: 'Paket seçmeden önce hesabınızın bölgesini, oyuncu kimliğini ve teslim koşullarını kontrol edin. UC, oyun içi içeriklerde kullanılan bir bakiyedir; nakit para yerine geçmez.',
     tone: 'pubg',
     coverImage: '/products/pubg-mobile-uc-vatan-cover.jpeg',
+    heroImage: '/products/real-heroes-v1/pubg-mobile-uc-hero.webp',
+    packImage: '/products/real-heroes-v1/pubg-mobile-uc-pack.webp',
     coverVideo: '/products/videos/pubg-mobile-uc.mp4',
     coverPosition: '50% 46%',
     coverLabel: 'PUBG',
@@ -92,6 +96,8 @@ export const products: ProductItem[] = [
     intro: 'Mobile Legends yüklemelerinde oyuncu ID’si, sunucu ID’si, hesap bölgesi ve seçilen elmas paketi birlikte doğrulanmalıdır. Hatalı hesaba yapılan doğrudan yükleme geri alınamayabilir.',
     tone: 'mlbb',
     coverImage: '/products/mobile-legends-bang-bang-cover.webp',
+    heroImage: '/products/real-heroes-v1/mobile-legends-diamond-hero.webp',
+    packImage: '/products/real-heroes-v1/mobile-legends-diamond-pack.webp',
     coverVideo: '/products/videos/mobile-legends-bang-bang.mp4',
     coverPosition: '50% 44%',
     coverLabel: 'MOBILE LEGENDS',
@@ -136,6 +142,8 @@ export const products: ProductItem[] = [
     intro: 'VP, Valorant mağazasında kullanılan oyun içi para birimidir. Paket seçerken Riot hesabının bölgesini, tutarı ve teslim biçimini kontrol etmek önemlidir.',
     tone: 'valorant',
     coverImage: '/products/valorant-vatan-cover.webp',
+    heroImage: '/products/real-heroes-v1/valorant-vp-hero.webp',
+    packImage: '/products/real-heroes-v1/valorant-vp-pack.webp',
     coverVideo: '/products/videos/valorant-vp.mp4',
     coverPosition: '50% 42%',
     coverLabel: 'VALORANT',
@@ -180,6 +188,8 @@ export const products: ProductItem[] = [
     intro: 'RP, League of Legends mağazasında kullanılan oyun içi para birimidir. Ürün seçerken sunucu ve hesap bölgesi uyumluluğunu kontrol etmek, yanlış ürün alımını önler.',
     tone: 'lol',
     coverImage: '/products/league-of-legends-vatan-cover.webp',
+    heroImage: '/products/real-heroes-v1/league-of-legends-rp-hero.webp',
+    packImage: '/products/real-heroes-v1/league-of-legends-rp-pack.webp',
     coverVideo: '/products/videos/league-of-legends-rp.mp4',
     coverPosition: '50% 42%',
     coverLabel: 'LEAGUE',
@@ -224,6 +234,8 @@ export const products: ProductItem[] = [
     intro: 'Bu sayfada yalnız Rise Online World PC Cash ve Premium ürünleri bulunur. Gold Bar, item, karakter, NFT ve mobil sürüm ürünleri kataloğa dahil değildir.',
     tone: 'rise',
     coverImage: '/products/rise-online-cover.webp',
+    heroImage: '/products/real-heroes-v1/rise-online-cash-premium-hero.webp',
+    packImage: '/products/real-heroes-v1/rise-online-cash-premium-pack.webp',
     coverVideo: '/products/videos/rise-online.mp4',
     coverPosition: '50% 43%',
     coverLabel: 'RISE ONLINE',
@@ -271,6 +283,8 @@ export const products: ProductItem[] = [
     intro: 'Bu sayfada Knight Online Cash ESN ile Bronze, Gold ve Platinum Premium ürünleri bulunur. Item, Gold Bar ve hesap satışları kataloğa dahil değildir.',
     tone: 'knight',
     coverImage: '/products/knight-online-cover.webp',
+    heroImage: '/products/real-heroes-v1/knight-online-cash-premium-hero.webp',
+    packImage: '/products/real-heroes-v1/knight-online-cash-premium-pack.webp',
     coverVideo: '/products/videos/knight-online.mp4',
     coverPosition: '50% 44%',
     coverLabel: 'KNIGHT ONLINE',
@@ -318,6 +332,8 @@ export const products: ProductItem[] = [
     intro: 'Ejder Parası, Metin2 mağazasında kullanılan oyun içi bakiyedir. Paket seçmeden önce sunucu, karakter ve yükleme koşullarını doğru belirlemek gerekir.',
     tone: 'metin2',
     coverImage: '/products/metin2-vatan-cover.webp',
+    heroImage: '/products/real-heroes-v1/metin2-ejder-parasi-hero.webp',
+    packImage: '/products/real-heroes-v1/metin2-ejder-parasi-pack.webp',
     coverVideo: '/products/videos/metin2-ejder-parasi.mp4',
     coverPosition: '72% 46%',
     coverLabel: 'METİN2',

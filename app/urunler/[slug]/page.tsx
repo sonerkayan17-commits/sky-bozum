@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: product.name,
     description: `${product.description} Paket, bölge, kullanım ve stok koşullarını adım adım inceleyin.`,
     path: `/urunler/${product.slug}`,
-    image: product.coverImage,
+    image: product.heroImage ?? product.coverImage,
     imageAlt: `${product.name} ürün kapağı`,
     keywords: [product.name, `${product.shortName} satın al`, `${product.shortName} paketleri`, `${product.shortName} fiyat`, `${product.shortName} rehberi`, 'dijital ürün stok durumu'],
   });
@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         '@id': `${canonical}#product`,
         name: product.name,
         description: `${product.description} ${product.intro}`,
-        image: absoluteUrl(product.coverImage),
+        image: absoluteUrl(product.heroImage ?? product.coverImage),
         category: product.category,
         brand: { '@type': 'Brand', name: product.shortName },
         url: canonical,

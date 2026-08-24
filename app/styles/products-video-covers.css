@@ -268,6 +268,18 @@
   z-index: 5;
 }
 
+/* Ürün detayında ve paket kartında ilgili kullanım alanı için üretilen yatay
+   görseli doğrudan doldur; portre kapaklara gereken bulanık dolgu burada yok. */
+.products-page .product-detail-hero__cover .product-cover--static-hero.product-cover--purpose-art .product-cover__image,
+.products-page .product-pack__media .product-cover--purpose-art .product-cover__image {
+  object-fit: cover;
+  transform: none;
+}
+
+.products-page .product-detail-hero__cover .product-cover--purpose-art .product-cover__backdrop {
+  display: none;
+}
+
 .products-page .product-detail-hero__cover:hover .product-cover--has-video .product-cover__video {
   transform: scale(.985);
 }

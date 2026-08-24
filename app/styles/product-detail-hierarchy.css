@@ -282,6 +282,8 @@
 }
 
 @media (max-width: 820px) {
+  .products-page .product-catalog__layout { grid-template-columns: minmax(0, 1fr); }
+  .products-page .product-selection { position: static; width: 100%; }
   .products-page .product-detail-hero__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .products-page .product-detail-hero__facts > div { padding: 15px 16px; }
   .products-page .product-detail-hero__facts > div:first-child { padding-left: 16px; }
