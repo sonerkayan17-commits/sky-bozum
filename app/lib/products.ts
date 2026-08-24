@@ -17,12 +17,14 @@ export type ProductItem = {
   tone: ProductTone;
   coverImage: string;
   brandLogo?: string;
+  brandIntegrated?: boolean;
   coverVideo?: string;
   coverPosition?: string;
   coverLabel: string;
   coverNote: string;
   packs: ProductPack[];
   guide: { title: string; text: string; sourceLabel: string; sourceUrl: string };
+  details: { title: string; text: string }[];
   howTo: { title: string; text: string }[];
   faq: { question: string; answer: string }[];
   related: string[];
@@ -51,6 +53,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'PUBG Mobile yardım merkezinde UC bilgisini aç',
       sourceUrl: 'https://pubgmobile.helpshift.com/hc/en/3-pubg-mobile/faq/35-what-is-uc-in-pubg-mobile/?contact=1',
     },
+    details: [
+      { title: 'UC nedir, ne için kullanılır?', text: 'Unknown Cash (UC), PUBG Mobile mağazasında Royale Pass, sandık, kozmetik ve dönemsel oyun içi içeriklerde kullanılan premium bakiyedir. Nakit para değildir; paket kapsamı ve kullanılabilir içerikler oyunun güncel mağazasına göre değişir.' },
+      { title: 'Teslimat hangi bilgiyle yapılır?', text: 'Doğrudan yüklemede oyuncu ID’si ve desteklenen hesap bölgesi hedefi belirler. Kod teslimi sunulan ürünlerde ise kod kullanıcı tarafından etkinleştirilir. Sipariş ekranında hangi yöntemin kullanıldığını görmeden işlem tamamlanmamalıdır.' },
+      { title: 'Satın almadan önce kontrol listesi', text: 'Paket miktarını, toplam tutarı, hesap bölgesini ve teslim yöntemini birlikte doğrulayın. Bakiye görünmezse ikinci kez satın almayın; sipariş kaydını saklayın. Hesap şifresi, SMS kodu ve cihaz onayı hiçbir yükleme adımında paylaşılmamalıdır.' },
+    ],
     packs: ['60', '325', '660', '1.800', '3.850', '8.100'].map((label) => ({ id: label, label: `${label} UC`, description: `PUBG Mobile ${label} UC paketi` })),
     howTo: [
       { title: 'Oyuncu ID’sini doğrulayın', text: 'Oyundaki profil ekranından ID ve kullanıcı adını birlikte kontrol edin; yalnızca kullanıcı adına güvenmeyin.' },
@@ -90,6 +97,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Mobile Legends resmî sitesini aç',
       sourceUrl: 'https://www.mobilelegends.com/',
     },
+    details: [
+      { title: 'Elmas ve Weekly Diamonds farkı', text: 'Elmas, Mobile Legends mağazasındaki desteklenen içeriklerde kullanılan premium bakiyedir. Weekly Diamonds ise belirli süreye ve teslim planına bağlı ayrı bir üründür; tek seferlik elmas paketiyle aynı kapsamda değerlendirilmemelidir.' },
+      { title: 'Oyuncu ID’si neden tek başına yetmez?', text: 'Doğrudan yüklemelerde oyuncu ID’si ile parantez içinde görülen sunucu veya zone ID’si birlikte kullanılır. Bu iki değer farklı hesapları ayırt eder; kullanıcı adı tek başına güvenilir teslim bilgisi değildir.' },
+      { title: 'Etkinlik ve bonuslarda dikkat', text: 'İlk yükleme bonusu, Weekly Diamonds ve etkinlik ödülleri dönemsel koşullara bağlı olabilir. Satın alma öncesinde oyun içindeki güncel kapsamı kontrol edin. Yükleme için şifre, doğrulama kodu veya cihaz erişimi paylaşmayın.' },
+    ],
     packs: ['Weekly Diamonds', '16 Elmas', '24 Elmas', '44 Elmas', '88 Elmas', '133 Elmas', '221 Elmas', '354 Elmas', '562 Elmas', '715 Elmas', '1.041 Elmas', '1.535 Elmas'].map((label) => ({ id: label.toLowerCase().replace(/\s|\./g, '-'), label, description: `Mobile Legends ${label} paketi` })),
     howTo: [
       { title: 'Oyuncu ve sunucu ID’sini alın', text: 'Profil ekranındaki oyuncu ID’si ile parantez içindeki sunucu ID’sini ayrı ayrı doğrulayın.' },
@@ -129,6 +141,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Riot kod kullanma sayfasını aç',
       sourceUrl: 'https://shop.riotgames.com/redeem',
     },
+    details: [
+      { title: 'VP ile Radianite aynı değildir', text: 'Valorant Points (VP), mağazadaki görünüm, paket ve Battle Pass gibi desteklenen içeriklerde kullanılan premium para birimidir. Radianite Points ayrı bir oyun içi kaynaktır. VP satın almak rekabetçi bir oyun avantajı sağlamaz.' },
+      { title: 'Bölge ve para birimi neden önemlidir?', text: 'Ön ödemeli Riot kodları satın alındıkları bölge veya para birimiyle sınırlı olabilir. Kodun bölgesi ile Riot hesabının kayıtlı bölgesi eşleşmediğinde etkinleştirme reddedilebilir; bu nedenle yalnız tutarı değil bölge bilgisini de kontrol edin.' },
+      { title: 'Kodu güvenli biçimde kullanın', text: 'Kod tek kullanımlıdır ve etkinleştirme sırasında açık olan Riot hesabına uygulanır. Onaydan önce hesap adını kontrol edin; tam kodu mesajlarda paylaşmayın. Riot hesabı şifresi ve iki aşamalı doğrulama kodu satış veya destek için istenmemelidir.' },
+    ],
     packs: ['375', '825', '1.700', '2.925', '4.325', '8.900'].map((label) => ({ id: label, label: `${label} VP`, description: `Valorant ${label} VP paketi` })),
     howTo: [
       { title: 'Riot hesabı ve bölgeyi kontrol edin', text: 'Kodun para birimi ile Valorant hesabının bölgesinin uyumlu olduğundan emin olun.' },
@@ -168,6 +185,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Riot kod kullanma sayfasını aç',
       sourceUrl: 'https://shop.riotgames.com/redeem',
     },
+    details: [
+      { title: 'RP ile Mavi Öz aynı değildir', text: 'Riot Points (RP), League of Legends mağazasında kostüm, etkinlik kartı ve desteklenen diğer dijital içeriklerde kullanılan premium para birimidir. Mavi Öz oyun içinde kazanılan ayrı bir kaynaktır; RP oyun gücü satın almaz.' },
+      { title: 'Sunucu ve hesap bölgesi eşleşmesi', text: 'Ön ödemeli RP kodlarında bölge ve para birimi kısıtı bulunabilir. Kodun satıldığı ülke ile Riot hesabının bölgesi farklıysa kullanım reddedilebilir. İşlemden önce hesabın aktif sunucusunu ve kod koşulunu birlikte doğrulayın.' },
+      { title: 'Etkinleştirme ve kayıt güvenliği', text: 'Kod, giriş yapılan Riot hesabına tek seferde uygulanır ve iki hesaba bölünemez. Kodun tamamını, hesap şifresini veya doğrulama bilgisini kimseyle paylaşmayın; hata durumunda satın alma belgesini saklayarak resmî desteğe başvurun.' },
+    ],
     packs: ['460', '1.005', '2.105', '3.625', '5.295', '10.875'].map((label) => ({ id: label, label: `${label} RP`, description: `League of Legends ${label} RP paketi` })),
     howTo: [
       { title: 'Riot ID ve bölgeyi doğrulayın', text: 'RP kodunun para birimi ile hesabınızın bölge koşulunu işlem öncesinde eşleştirin.' },
@@ -207,6 +229,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Rise Online World resmî sitesini aç',
       sourceUrl: 'https://www.riseonlineworld.com/',
     },
+    details: [
+      { title: 'Cash ve Premium aynı ürün değildir', text: 'Cash, Rise Online World mağazasında kullanılan dijital bakiyedir. Premium ise seçilen türe ve süreye göre belirli hesap avantajlarını etkinleştiren ayrı bir üründür. Elite, Farm, XP, Battle, Craft ve Complete paketlerinin kapsamları birbirinden farklıdır.' },
+      { title: 'Teslimat hesap ve sürüme bağlıdır', text: 'Bu katalog yalnız Rise Online World PC ürünlerini içerir. Kod veya doğrudan teslim seçeneği sunuluyorsa hedef hesabın, oyun sürümünün ve seçilen paketin uyumu kontrol edilmelidir. Mobil ürünler, item ve Gold Bar bu sayfanın kapsamı dışındadır.' },
+      { title: 'Süre, stok ve hesap güvenliği', text: 'Premium süresi ürün açıklamasında belirtilen kapsamla başlar; dönemsel avantajlar değişebilir. Siparişten önce stok ve süreyi okuyun. Hesap şifresi, doğrulama kodu veya uzaktan erişim paylaşmadan yalnız resmî kullanım alanlarında ilerleyin.' },
+    ],
     packs: [
       '500 Cash', '1.020 Cash', '2.050 Cash', '3.090 Cash', '4.140 Cash', '5.200 Cash', '10.500 Cash',
       'Elite Premium', 'Farm Premium', 'XP Premium', 'Battle Premium', 'Craft Premium', 'Complete Premium',
@@ -249,6 +276,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Knight Online resmî sitesini aç',
       sourceUrl: 'https://www.nttgame.com/knight/en/',
     },
+    details: [
+      { title: 'Cash ve Premium ne sağlar?', text: 'Knight Cash, oyun mağazasındaki desteklenen dijital içerikler için kullanılan bakiyedir. Bronze, Gold ve Platinum Premium ise süreli üyelik seçenekleridir. Premium kapsamı ve güncel avantajları ürün türüne göre değiştiği için yalnız ada bakarak seçim yapılmamalıdır.' },
+      { title: 'Hesap ve oyun sürümü eşleşmesi', text: 'MGAME/NTTGame ve Steam sürümü için sunulan ürün koşulları aynı olmayabilir. Cash ESN veya Premium almadan önce oynadığınız istemciyi, hesabın bölgesini, paket süresini ve kodun hangi sürümde geçerli olduğunu doğrulayın.' },
+      { title: 'ESN kodu tesliminde güvenlik', text: 'ESN kodu tek kullanımlıktır. Tam kodu forumda veya mesaj ekranında paylaşmayın; yalnız resmî etkinleştirme alanına girin. Hesap şifresi, tek kullanımlık doğrulama kodu ve uzaktan bağlantı erişimi hiçbir kod tesliminde gerekli değildir.' },
+    ],
     packs: [
       '400 Cash ESN', '800 Cash ESN', '1.200 Cash ESN', '1.600 Cash ESN', '2.000 Cash ESN', '2.400 Cash ESN', '3.200 Cash ESN',
       '30 Gün Bronze Premium', '30 Gün Gold Premium', '30 Gün Platinum Premium',
@@ -291,6 +323,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Gameforge Metin2 Wiki’de Ejderha Parası bilgisini aç',
       sourceUrl: 'https://tr-wiki.metin2.gameforge.com/index.php?stable=1&title=EM',
     },
+    details: [
+      { title: 'EP, Yang ve Ejderha Markası farkı', text: 'Ejder Parası (EP), Metin2 Nesne Market’te kullanılan premium kredidir. Yang oyun dünyasında kazanılan ve kullanılan ayrı para birimidir. Ejderha Markası da EP ile aynı bakiye değildir; uygun EP harcamaları veya dönemsel sistemler üzerinden ayrı biçimde oluşabilir.' },
+      { title: 'Nesne Market ve kupon kullanımı', text: 'Doğrudan EP yüklemesi ile EP kuponu aynı teslim biçimi değildir. Kupon veya kod sunuluyorsa resmî hesap alanında tek kez kullanılır; paket miktarı ve olası kullanım süresi ürün açıklamasından kontrol edilir. Nesne Market içeriği zaman içinde değişebilir.' },
+      { title: 'Bonus saatleri ve hesap güvenliği', text: 'Happy Hour gibi ek EP kampanyaları yalnız resmî duyuruda belirtilen tarih ve saatlerde geçerlidir; satın almadan hemen önce kampanyanın aktif olduğunu kontrol edin. Hesap şifresi ve doğrulama kodu paylaşmayın, yalnız hesabınıza uygun TR istemcisi ve paket türüyle ilerleyin.' },
+    ],
     packs: ['300', '750', '1.750', '4.800', '11.250'].map((label) => ({ id: label.replace('.', '-'), label: `${label} EP`, description: `Metin2 ${label} Ejder Parası paketi` })),
     howTo: [
       { title: 'Hesap ve sunucu bilgisini doğrulayın', text: 'Yükleme yapılacak Gameforge hesabını ve sunucuyu işlem öncesinde açıkça belirtin.' },
@@ -319,8 +356,9 @@ export const products: ProductItem[] = [
     description: 'TL ve USD PIN seçeneklerini bölgenize göre inceleyin.',
     intro: 'Razer Gold PIN kodlarında tutar kadar para birimi, bölge ve kullanılmamış olma şartı da önemlidir. Kodunuzu hesabınıza yüklemeden önce ürün bilgisini doğrulayın.',
     tone: 'razer',
-    coverImage: '/products/razer-gold-sky-cover.webp',
+    coverImage: '/products/razer-gold-centered-v2.webp',
     brandLogo: '/brands/razer/razer.svg',
+    brandIntegrated: true,
     coverPosition: '50% 50%',
     coverLabel: 'RAZER',
     coverNote: 'GOLD · TL / USD',
@@ -330,6 +368,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Razer Gold resmî yardım merkezini aç',
       sourceUrl: 'https://gold.razer.com/us/en/help?section=0',
     },
+    details: [
+      { title: 'PIN ile cüzdan bakiyesi farkı', text: 'Razer Gold PIN, kullanılmadan önce tek kullanımlı bir koddur. Doğru bölgedeki Razer Gold hesabında etkinleştirildiğinde cüzdan bakiyesine dönüşür. TL ve USD PIN’ler aynı ürün değildir; para birimi ve cüzdan bölgesi birlikte eşleşmelidir.' },
+      { title: 'Kullanım ve bozum iki ayrı akıştır', text: 'Kodu oyun veya dijital içerik için kullanacaksanız resmî Razer Gold yükleme alanında etkinleştirin. Kodu bozum için iletecekseniz önce yazılı uygunluk ve oran alın; PIN’i kendi cüzdanınıza yüklemeyin. Kullanılmış bakiye, kullanılmamış PIN gibi incelenemez.' },
+      { title: 'PIN güvenliği ve hata kontrolü', text: 'Seri numarası ile PIN aynı bilgi değildir. Tam PIN’i yalnız işlem için gerekli güvenli adımda kullanın; ekran görüntüsünü ve kodu herkese açık paylaşmayın. Bölge, kullanım durumu veya PIN hatasında satın alma belgesiyle resmî yardım kanalına başvurun.' },
+    ],
     packs: ['50 TL', '100 TL', '250 TL', '500 TL', '1.000 TL', '1.500 TL', '5 USD', '10 USD', '20 USD', '50 USD', '100 USD', '200 USD'].map((label) => ({ id: label.toLowerCase().replace(/\s/g, '-'), label, description: `Razer Gold ${label} PIN` })),
     howTo: [
       { title: 'TL / USD ve bölgeyi doğrulayın', text: 'PIN’in para birimi ile Razer Gold cüzdan bölgesinin eşleştiğini kontrol edin.' },
@@ -358,8 +401,9 @@ export const products: ProductItem[] = [
     description: 'Cüzdan kodlarını bölge ve para birimine göre inceleyin.',
     intro: 'Steam cüzdan kodları tek kullanımlıdır ve hesap mağaza bölgesiyle para birimi uyumu önemlidir. Kodu satın almadan önce hesabınızın bölgesini ve ürünün para birimini kontrol edin.',
     tone: 'steam',
-    coverImage: '/products/steam-wallet-sky-cover.webp',
+    coverImage: '/products/steam-wallet-centered-v2.webp',
     brandLogo: '/brands/steam/steam.svg',
+    brandIntegrated: true,
     coverPosition: '50% 50%',
     coverLabel: 'STEAM',
     coverNote: 'CÜZDAN KODU',
@@ -369,6 +413,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Steam resmî hediye kartı sayfasını aç',
       sourceUrl: 'https://store.steampowered.com/digitalgiftcards/',
     },
+    details: [
+      { title: 'Cüzdan kodu ve dijital hediye farkı', text: 'Steam Cüzdan Kodu, uyumlu hesapta etkinleştirilen ön ödemeli bir koddur. Steam Dijital Hediye Kartı ise Steam üzerinden başka bir kullanıcıya gönderilen ayrı bir teslim yöntemidir. İki ürünün gönderim, bölge ve ödeme koşulları aynı değildir.' },
+      { title: 'Mağaza bölgesi ve para birimi', text: 'Steam mağaza ülkesi, hesabın kullandığı para birimini ve bazı kodların uyumluluğunu etkiler. USD kod dahil her ürünün hesap bölgenizde geçerli olduğunu satın almadan önce doğrulayın; yalnız döviz karşılığına bakarak seçim yapmayın.' },
+      { title: 'Etkinleştirme ve hata durumları', text: 'Kod doğru Steam hesabında tek kez kullanılmalıdır. Kodu girmeden önce hesap adını kontrol edin. Kullanılmış, geçersiz veya bölge uyumsuzluğu hatasında tam kodu paylaşmadan satın alma belgesi ve hata görüntüsüyle Steam desteğine başvurun.' },
+    ],
     packs: ['5 USD', '10 USD', '20 USD', '50 USD', '100 USD'].map((label) => ({ id: label.toLowerCase().replace(/\s/g, '-'), label, description: `Steam Cüzdan Kodu ${label}` })),
     howTo: [
       { title: 'Mağaza bölgesini kontrol edin', text: 'Steam hesabınızın mağaza ülkesi ile kodun bölge ve para birimini karşılaştırın.' },
@@ -397,8 +446,9 @@ export const products: ProductItem[] = [
     description: 'Gift Card seçeneklerini hesap bölgenizle eşleştirin.',
     intro: 'Apple Gift Card kodları ülke veya bölgeye bağlıdır. Kodun para birimi ile Apple Hesabı ülkesinin uyumlu olduğundan emin olmadan etkinleştirme yapmayın.',
     tone: 'apple',
-    coverImage: '/products/apple-gift-card-sky-cover.webp',
+    coverImage: '/products/apple-gift-card-centered-v2.webp',
     brandLogo: '/brands/apple/apple.svg',
+    brandIntegrated: true,
     coverPosition: '50% 50%',
     coverLabel: 'APPLE',
     coverNote: 'GIFT CARD · iTUNES',
@@ -408,6 +458,11 @@ export const products: ProductItem[] = [
       sourceLabel: 'Apple resmî kod kullanma rehberini aç',
       sourceUrl: 'https://support.apple.com/tr-tr/118242',
     },
+    details: [
+      { title: 'Apple Gift Card neye dönüşür?', text: 'Uyumlu bir Apple Hesabında kullanılan hediye kartı, kart türü ve ülkeye bağlı olarak Apple Hesabı bakiyesine eklenir. Bu bakiye desteklenen uygulama, oyun, abonelik veya Apple hizmetlerinde kullanılabilir; nakit para ve banka bakiyesi değildir.' },
+      { title: 'Ülke ve bölge neden kritiktir?', text: 'Apple hediye kartları satın alındıkları ülke veya bölgeyle sınırlıdır. Kartın para birimi ile Apple Hesabının mağaza ülkesi eşleşmelidir. Mevcut bakiye ve abonelikler hesap ülkesini değiştirmeyi kısıtlayabileceği için kodu etkinleştirmeden önce bölgeyi kontrol edin.' },
+      { title: 'Dolandırıcılık ve kod güvenliği', text: 'Apple Gift Card; vergi, borç, kargo, banka işlemi veya tanımadığınız bir kişiye ödeme yöntemi değildir. Böyle bir talep dolandırıcılık işareti olabilir. Tam kodu ve kart görüntüsünü paylaşmayın; Apple Hesabı şifresi ile doğrulama kodunu kimseye vermeyin.' },
+    ],
     packs: ['25 TL', '50 TL', '100 TL', '250 TL', '500 TL', '1.000 TL'].map((label) => ({ id: label.toLowerCase().replace(/\s|\./g, '-'), label, description: `Apple Gift Card ${label}` })),
     howTo: [
       { title: 'Apple Hesabı ülkesini kontrol edin', text: 'Kartın ülkesi ve para birimi Apple Hesabınızın mağaza bölgesiyle aynı olmalıdır.' },

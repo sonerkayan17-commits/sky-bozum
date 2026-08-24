@@ -2,13 +2,15 @@ import type { ProductItem } from '../../lib/products';
 import Image from 'next/image';
 import ProductCoverVideo from './ProductCoverVideo';
 
-export default function ProductCover({ product, compact = false, priority = false }: { product: ProductItem; compact?: boolean; priority?: boolean }) {
+export default function ProductCover({ product, compact = false, priority = false, disableVideo = false }: { product: ProductItem; compact?: boolean; priority?: boolean; disableVideo?: boolean }) {
+  const hasVideo = Boolean(product.coverVideo && !compact && !disableVideo);
+
   return (
     <div
-      className={`product-cover product-cover--${product.tone} ${product.brandLogo ? 'product-cover--brand-art' : ''} ${product.coverVideo && !compact ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
+      className={`product-cover product-cover--${product.tone} ${product.brandLogo || product.brandIntegrated ? 'product-cover--brand-art' : ''} ${hasVideo ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
       aria-hidden="true"
     >
-      {product.coverVideo && !compact ? (
+      {hasVideo ? (
         <Image
           src={product.coverImage}
           alt=""
@@ -28,8 +30,8 @@ export default function ProductCover({ product, compact = false, priority = fals
         className="product-cover__image"
         style={{ objectPosition: product.coverPosition ?? '50% 50%' }}
       />
-      {product.coverVideo && !compact ? <ProductCoverVideo src={product.coverVideo} objectPosition={product.coverPosition} priority={priority} /> : null}
-      {product.brandLogo ? <span className="product-cover__brand-plate"><Image src={product.brandLogo} alt="" width={280} height={100} className="product-cover__brand-mark" /></span> : null}
+      {hasVideo && product.coverVideo ? <ProductCoverVideo src={product.coverVideo} objectPosition={product.coverPosition} priority={priority} /> : null}
+      {product.brandLogo && !product.brandIntegrated ? <span className="product-cover__brand-plate"><Image src={product.brandLogo} alt="" width={280} height={100} className="product-cover__brand-mark" /></span> : null}
       <span className="product-cover__glow" />
       <span className="product-cover__orb product-cover__orb--one" />
       <span className="product-cover__orb product-cover__orb--two" />

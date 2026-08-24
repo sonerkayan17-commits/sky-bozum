@@ -47,6 +47,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         brand: { '@type': 'Brand', name: product.shortName },
         url: canonical,
       },
+      {
+        '@type': 'FAQPage',
+        '@id': `${canonical}#faq`,
+        mainEntity: product.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      },
       breadcrumbSchema([
         { name: 'Ana Sayfa', path: '/' },
         { name: 'Ürünler', path: '/urunler' },
@@ -73,12 +82,31 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <h1>{product.name}</h1>
             <p className="product-detail-hero__summary">{product.description} Ürün bilgilerini, paket seçeneklerini ve kullanım öncesi kontrolleri tek sayfada inceleyin.</p>
           </div>
-          <div className="product-detail-hero__cover"><ProductCover product={product} priority /></div>
+          <div className="product-detail-hero__cover"><ProductCover product={product} priority disableVideo /></div>
         </div>
       </section>
 
       <div className="products-shell">
         <ProductCatalog product={product} />
+
+        <section className="product-explainer" aria-labelledby="product-explainer-title">
+          <div className="product-explainer__heading">
+            <div>
+              <p className="product-kicker">Ürünü tanıyın</p>
+              <h2 id="product-explainer-title">{product.shortName} hakkında temel bilgiler</h2>
+            </div>
+            <p>Satın alma veya bozum kararından önce ürünün kullanım biçimini, teslim koşulunu ve güvenlik sınırlarını birlikte değerlendirin.</p>
+          </div>
+          <div className="product-explainer__grid">
+            {product.details.map((item, index) => (
+              <article key={item.title}>
+                <span>0{index + 1}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
         {product.slug === 'razer-gold' ? <section className="razer-sell-panel" aria-labelledby="razer-sell-title">
           <div className="razer-sell-panel__intro"><p className="product-kicker">Razer Gold kod bozum merkezi</p><h2 id="razer-sell-title">Kodu canlı gönderin, her kontrol ve ödeme adımını hesabınızdan izleyin.</h2><p>Kullanılmamış TL veya USD PIN’i üye alanındaki şifreli kasaya gönderin. Yönetici kodları tek tek kontrol eder; kabul edilen kodlar için net tutarı onaylar ve seçtiğiniz ödeme hedefinde kayıtlı bir hareket oluşturur.</p><div><Link href="/hesabim/talepler?service=razer-gold-tl">TL kod satışı başlat →</Link><Link href="/hesabim/talepler?service=razer-gold-usd">USD kod satışı başlat</Link></div></div>
