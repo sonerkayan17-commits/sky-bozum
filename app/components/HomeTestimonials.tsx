@@ -111,7 +111,7 @@ function ServiceArtwork({ items, visual }: { items: readonly ArtworkItem[]; visu
 
 export default function HomeTestimonials() {
   return (
-    <section className="experience-showcase" aria-labelledby="experience-title">
+    <section className="experience-showcase experience-showcase--compact" aria-labelledby="experience-title">
       <div className="content-wide experience-shell">
         <div className="experience-heading">
           <div>
@@ -135,7 +135,7 @@ export default function HomeTestimonials() {
               <p className="experience-quote">{item.quote}</p>
               <div className="experience-card-footer">
                 <span className="experience-check"><ShieldCheck /></span>
-                <span>Detaylı rehberi aç</span><span className="ml-auto" aria-hidden="true">→</span>
+                <span>Rehberi incele</span><span className="ml-auto" aria-hidden="true">→</span>
               </div>
             </Link>
           ))}

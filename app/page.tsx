@@ -26,6 +26,7 @@ import './styles/home-trust-showcase.css';
 import './styles/credibility-band.css';
 import './styles/quality-80-pass.css';
 import './styles/homepage-flow.css';
+import './styles/home-experience-cards.css';
 
 export default function Home() {
   return (
@@ -48,7 +49,7 @@ export default function Home() {
           </section>
         </DeferredViewportSection>
 
-        <DeferredViewportSection className="render-later home-flow-band home-flow-band--experience" desktopHeight={850} mobileHeight={864}><HomeTestimonials /></DeferredViewportSection>
+        <DeferredViewportSection className="render-later home-flow-band home-flow-band--experience" desktopHeight={1020} mobileHeight={1230}><HomeTestimonials /></DeferredViewportSection>
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--closing" desktopHeight={760} mobileHeight={1242}>
           <section className="home-final-section content-wide rhythm-md">
             <div className="grid gap-6 lg:grid-cols-2">
