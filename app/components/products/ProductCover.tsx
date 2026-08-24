@@ -8,6 +8,16 @@ export default function ProductCover({ product, compact = false, priority = fals
       className={`product-cover product-cover--${product.tone} ${product.coverVideo && !compact ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
       aria-hidden="true"
     >
+      {product.coverVideo && !compact ? (
+        <Image
+          src={product.coverImage}
+          alt=""
+          fill
+          loading="lazy"
+          sizes="(max-width: 560px) 100vw, (max-width: 820px) 50vw, 560px"
+          className="product-cover__backdrop"
+        />
+      ) : null}
       <Image
         src={product.coverImage}
         alt=""

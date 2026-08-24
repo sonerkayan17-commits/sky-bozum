@@ -76,10 +76,23 @@
 
 .products-page .product-directory-card__cover {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-bottom: 1px solid rgba(var(--product-accent), .24);
   background: #0a0f1b;
+}
+
+.products-page .product-cover__backdrop {
+  position: absolute !important;
+  z-index: 0;
+  inset: -14px !important;
+  width: calc(100% + 28px) !important;
+  height: calc(100% + 28px) !important;
+  opacity: .84;
+  object-fit: cover;
+  filter: blur(15px) brightness(.42) saturate(.9);
+  transform: scale(1.08);
+  pointer-events: none;
 }
 
 /* Katalog kartında poster/video karesinin tamamı görünür; bilgi kart gövdesindedir. */
@@ -105,7 +118,7 @@
 }
 
 .products-page .product-cover--has-video .product-cover__image {
-  z-index: 0;
+  z-index: 1;
 }
 
 .products-page .product-cover--razer {
@@ -171,7 +184,7 @@
 
 .products-page .product-cover__video {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   inset: 0;
   width: 100%;
   height: 100%;
