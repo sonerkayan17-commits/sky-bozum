@@ -4,13 +4,14 @@ import ProductCoverVideo from './ProductCoverVideo';
 
 export default function ProductCover({ product, compact = false, priority = false, disableVideo = false }: { product: ProductItem; compact?: boolean; priority?: boolean; disableVideo?: boolean }) {
   const hasVideo = Boolean(product.coverVideo && !compact && !disableVideo);
+  const showBackdrop = hasVideo || disableVideo;
 
   return (
     <div
-      className={`product-cover product-cover--${product.tone} ${product.brandLogo || product.brandIntegrated ? 'product-cover--brand-art' : ''} ${hasVideo ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
+      className={`product-cover product-cover--${product.tone} ${product.brandLogo || product.brandIntegrated ? 'product-cover--brand-art' : ''} ${hasVideo ? 'product-cover--has-video' : ''} ${disableVideo ? 'product-cover--static-hero' : ''} ${compact ? 'product-cover--compact' : ''}`}
       aria-hidden="true"
     >
-      {hasVideo ? (
+      {showBackdrop ? (
         <Image
           src={product.coverImage}
           alt=""
