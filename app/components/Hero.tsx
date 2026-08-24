@@ -9,6 +9,7 @@ import usePublishedRates from './personalization/usePublishedRates';
 import { rateFreshnessNotice } from '../lib/rates';
 import { prefersReducedMotion } from '../lib/motion';
 import { independentPurchaseGuideLabel, isIndependentPurchaseGuide } from '../lib/independentPurchaseGuides';
+import CredibilityBand from './CredibilityBand';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
 const logos: Record<string, string> = {
@@ -276,6 +277,10 @@ export default function Hero() {
           <p className="hero-pro-disclaimer"><span>i</span> Operatör ve cüzdan satırları bağımsız satın alma rehberidir. {rateFreshnessNotice || 'Kod oranları işlem öncesinde yazılı olarak paylaşılır.'}</p>
           <Link href="/hizmetler" className="hero-pro-rates-cta">Tüm rehber ve hizmet detayları <span>→</span></Link>
         </aside>
+
+        <div className="hero-pro-credibility">
+          <CredibilityBand compact />
+        </div>
       </div>
     </section>
   );

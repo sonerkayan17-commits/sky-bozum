@@ -24,7 +24,7 @@ export default function CredibilityBand({ compact = false }: { compact?: boolean
         </div>
         <div className="credibility-band__intro-links">
           <span>Uygun ve kullanılmamış kodu kendi hesabınızda kullanabilir veya değerlendirme için sunabilirsiniz.</span>
-          <Link href="/iletisim#guvenlik">Açıklamanın tamamı →</Link>
+          <Link href="/iletisim#hizmet-modeli">Açıklamanın tamamı →</Link>
         </div>
       </div>
       <div className="credibility-band__stats">{managedProofPoints.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>

@@ -20,5 +20,43 @@
 .credibility-band__security a { color: #dfe3e9; font-size: 9px; font-weight: 900; white-space: nowrap; }
 .credibility-band__security a:hover { color: #fecdd3; }
 .credibility-band.is-compact .credibility-band__inner { padding: 22px 0; }
+
+/* The compact trust band belongs to the hero's lower row. It uses the empty
+   width under the three primary columns instead of adding another page band. */
+.hero-pro-credibility { grid-column: 1 / -1; width: 100%; min-width: 0; margin-top: -18px; align-self: end; }
+.hero-pro-credibility .credibility-band { overflow: hidden; border: 1px solid rgba(251,113,133,.15); border-radius: 18px; background: linear-gradient(100deg,rgba(225,29,91,.055),rgba(8,10,15,.25) 44%,rgba(232,194,122,.035)); }
+.hero-pro-credibility .credibility-band__inner { width: 100%; grid-template-columns: minmax(0,1.18fr) minmax(420px,.82fr); gap: 9px 22px; padding: 12px 17px; }
+.hero-pro-credibility .credibility-band__intro p { font-size: 7px; }
+.hero-pro-credibility .credibility-band__intro h2 { margin-top: 3px; font-size: clamp(18px,1.55vw,24px); }
+.hero-pro-credibility .credibility-band__summary { margin-top: 4px; font-size: 8px; line-height: 1.45; }
+.hero-pro-credibility .credibility-band__intro-links { margin-top: 4px; font-size: 7px; }
+.hero-pro-credibility .credibility-band__intro a { font-size: 7px; }
+.hero-pro-credibility .credibility-band__stats div { min-height: 48px; padding: 3px 11px 0; }
+.hero-pro-credibility .credibility-band__stats strong { font-size: clamp(18px,1.65vw,24px); }
+.hero-pro-credibility .credibility-band__stats span { margin-top: 2px; font-size: 7px; }
+.hero-pro-credibility .credibility-band__security { min-height: 34px; grid-template-columns: 25px minmax(0,1fr) auto; gap: 8px; border-radius: 10px; padding: 5px 8px; }
+.hero-pro-credibility .credibility-band__security > span { width: 24px; height: 24px; border-radius: 7px; font-size: 11px; }
+.hero-pro-credibility .credibility-band__security p { font-size: 7px; line-height: 1.4; }
+.hero-pro-credibility .credibility-band__security a { font-size: 7px; }
+
+@media (max-width: 1080px) {
+  .hero-pro-credibility .credibility-band__inner { grid-template-columns: 1fr; }
+  .hero-pro-credibility .credibility-band__stats { grid-template-columns: repeat(4,minmax(0,1fr)); }
+}
+
+@media (max-width: 800px) {
+  .hero-pro-credibility { order: 4; margin-top: -8px; }
+  .hero-pro-credibility .credibility-band { border-radius: 16px; }
+  .hero-pro-credibility .credibility-band__inner { gap: 9px; padding: 12px; }
+  .hero-pro-credibility .credibility-band__summary { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .hero-pro-credibility .credibility-band__intro-links > span { display: none; }
+  .hero-pro-credibility .credibility-band__stats { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .hero-pro-credibility .credibility-band__stats div { min-height: 43px; padding-inline: 5px; }
+  .hero-pro-credibility .credibility-band__stats strong { font-size: 17px; }
+  .hero-pro-credibility .credibility-band__stats span { font-size: 6.5px; }
+  .hero-pro-credibility .credibility-band__security { grid-template-columns: 25px minmax(0,1fr); }
+  .hero-pro-credibility .credibility-band__security p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  .hero-pro-credibility .credibility-band__security > a { grid-column: 1/-1; padding-top: 5px; }
+}
 @media (max-width: 1080px) { .credibility-band__inner { grid-template-columns: minmax(0, 1fr) minmax(380px, .8fr); } .credibility-band__stats { grid-template-columns: repeat(2, 1fr); } .credibility-band__stats div { min-height: 49px; padding-top: 0; } }
 @media (max-width: 850px) { .credibility-band__inner { grid-template-columns: 1fr; gap: 15px; padding: 21px 0; } .credibility-band__summary { font-size: 10px; } .credibility-band__intro-links { align-items: flex-start; flex-direction: column; gap: 5px; } .credibility-band__stats { border-left: 0; } .credibility-band__stats div { min-height: 52px; padding: 0 10px; } .credibility-band__stats span { font-size: 9px; } .credibility-band__security { grid-template-columns: 28px minmax(0,1fr); gap: 9px; } .credibility-band__security > a { grid-column: 1/-1; border-top: 1px solid rgba(255,255,255,.07); padding-top: 7px; text-align: center; } }
