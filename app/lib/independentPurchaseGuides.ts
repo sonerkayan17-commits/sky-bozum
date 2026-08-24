@@ -13,12 +13,24 @@ export function isIndependentPurchaseGuide(slug: string) {
 }
 
 export const independentPurchaseGuideLabels: Record<(typeof independentPurchaseGuideSlugs)[number], string> = {
-  'vodafone-mobil-odeme': 'Vodafone ile dijital ürün satın al',
-  'turkcell-mobil-odeme': 'Turkcell ile dijital kod satın al',
-  'turk-telekom-mobil-odeme': 'Türk Telekom dijital ürün alım rehberi',
-  paycell: 'Paycell ile dijital ürün satın al',
-  pokus: 'Pokus ile dijital ürün satın al',
+  'vodafone-mobil-odeme': 'Vodafone mobil ödeme bozdur rehberi',
+  'turkcell-mobil-odeme': 'Turkcell mobil ödeme bozdur rehberi',
+  'turk-telekom-mobil-odeme': 'Türk Telekom mobil ödeme bozdur rehberi',
+  paycell: 'Paycell bozdur ve dijital kod rehberi',
+  pokus: 'Pokus bozdur ve dijital ürün rehberi',
 };
+
+export const independentPurchaseGuideSearchTerms: Record<(typeof independentPurchaseGuideSlugs)[number], string[]> = {
+  'vodafone-mobil-odeme': ['vodafone mobil ödeme bozdur', 'vodafone mobil ödeme bozum', 'vodafone pay nakite çevirme'],
+  'turkcell-mobil-odeme': ['turkcell mobil ödeme bozdur', 'turkcell mobil ödeme bozdurma', 'turkcell mobil bozum'],
+  'turk-telekom-mobil-odeme': ['türk telekom mobil ödeme bozdur', 'türk telekom mobil ödeme bozdurma', 'türk telekom mobil bozum'],
+  paycell: ['paycell bozdur', 'paycell nakite çevirme', 'paycell bakiye bozum'],
+  pokus: ['pokus bozdur', 'pokus nakite çevirme', 'pokus mobil ödeme bozum'],
+};
+
+export function independentPurchaseGuideKeywords(slug: string) {
+  return independentPurchaseGuideSearchTerms[slug as keyof typeof independentPurchaseGuideSearchTerms] ?? [];
+}
 
 export function independentPurchaseGuideLabel(slug: string) {
   return independentPurchaseGuideLabels[slug as keyof typeof independentPurchaseGuideLabels] ?? 'Dijital ürün alım rehberi';

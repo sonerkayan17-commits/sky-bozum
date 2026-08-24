@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import ServiceDetail from '../../components/services/ServiceDetail';
 import { getService, services } from '../../lib/site';
 import { breadcrumbSchema, createMetadata, jsonLd, serviceSchema } from '../../lib/seo';
-import { isIndependentPurchaseGuide } from '../../lib/independentPurchaseGuides';
+import { independentPurchaseGuideKeywords, isIndependentPurchaseGuide } from '../../lib/independentPurchaseGuides';
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const isPurchaseGuide = isIndependentPurchaseGuide(service.slug);
 
   return createMetadata({
-    title: isPurchaseGuide ? `${service.name} | Bağımsız Satın Alma Rehberi` : `${service.name} | Güncel Oran ve İşlem Rehberi`,
+    title: isPurchaseGuide ? service.name : `${service.name} | Güncel Oran ve İşlem Rehberi`,
     description: service.summary,
     keywords: isPurchaseGuide
-      ? [service.name, service.shortName, `${service.shortName} dijital urun satin alma`, `${service.shortName} mobil odeme limiti`, `${service.shortName} guvenli alisveris`, service.category, 'dijital kod satin alma', 'mobil odeme rehberi']
+      ? [service.name, service.shortName, ...independentPurchaseGuideKeywords(service.slug), `${service.shortName} dijital urun satin alma`, `${service.shortName} mobil odeme limiti`, `${service.shortName} guvenli alisveris`, service.category, 'dijital kod satin alma', 'mobil odeme rehberi']
       : [service.name, service.shortName, `${service.shortName} bozum`, `${service.shortName} bozdurma`, `${service.shortName} oran`, `${service.shortName} islem suresi`, service.category, 'bozum orani', 'net odeme hesaplama', 'islem rehberi'],
     path: `/hizmetler/${service.slug}`,
     image: service.logo,

@@ -17,9 +17,9 @@ export const featuredArticles = [
       { label: 'Mobil ödeme bozum nedir?', href: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
       { label: 'Mobil bozum dolandırıcılığı rehberi', href: '/bilgi-merkezi/mobil-bozum-yaparken-dolandirilabilir-miyim' },
       { label: 'Güncel bozum oranı nasıl öğrenilir?', href: '/bilgi-merkezi/guncel-bozum-orani-nasil-ogrenilir' },
-      { label: 'Vodafone ile dijital ürün satın alma rehberi', href: '/hizmetler/vodafone-mobil-odeme' },
-      { label: 'Turkcell ile dijital ürün satın alma rehberi', href: '/hizmetler/turkcell-mobil-odeme' },
-      { label: 'Türk Telekom ile dijital ürün satın alma rehberi', href: '/hizmetler/turk-telekom-mobil-odeme' },
+      { label: 'Vodafone mobil ödeme bozdur ve kod rehberi', href: '/hizmetler/vodafone-mobil-odeme' },
+      { label: 'Turkcell mobil ödeme bozdur ve Paycell rehberi', href: '/hizmetler/turkcell-mobil-odeme' },
+      { label: 'Türk Telekom mobil ödeme bozdur ve Pokus rehberi', href: '/hizmetler/turk-telekom-mobil-odeme' },
       { label: 'Razer Gold TL kod bozum hizmeti', href: '/hizmetler/razer-gold-tl' },
       { label: 'Sky Bozum resmî iletişim ve güvenlik bilgileri', href: '/iletisim#guvenlik' },
     ],
@@ -189,9 +189,9 @@ export const featuredArticles = [
           { title: 'Türk Telekom ve Pokus', paragraphs: ['Türk Telekom mobil ödeme limiti ile Pokus kart bakiyesi ayrı değerlendirilmelidir. Kodun bölgesi, para birimi ve kullanılmamış olma şartı satın alma tamamlanmadan önce kontrol edilmelidir.'] }
         ],
         relatedLinks: [
-          { label: 'Turkcell ile dijital ürün satın alma rehberi', href: '/hizmetler/turkcell-mobil-odeme' },
-          { label: 'Vodafone ile dijital ürün satın alma rehberi', href: '/hizmetler/vodafone-mobil-odeme' },
-          { label: 'Türk Telekom ile dijital ürün satın alma rehberi', href: '/hizmetler/turk-telekom-mobil-odeme' },
+          { label: 'Turkcell mobil ödeme bozdur ve Paycell rehberi', href: '/hizmetler/turkcell-mobil-odeme' },
+          { label: 'Vodafone mobil ödeme bozdur ve kod rehberi', href: '/hizmetler/vodafone-mobil-odeme' },
+          { label: 'Türk Telekom mobil ödeme bozdur ve Pokus rehberi', href: '/hizmetler/turk-telekom-mobil-odeme' },
           { label: 'Paycell kullanım ve dijital ürün rehberi', href: '/bilgi-merkezi/konu/paycell' },
           { label: 'Pokus kullanım ve dijital ürün rehberi', href: '/bilgi-merkezi/konu/pokus' }
         ]
