@@ -10,7 +10,6 @@ import HomeTestimonials from './components/HomeTestimonials';
 import FinalCta from './components/FinalCta';
 import CredibilityBand from './components/CredibilityBand';
 import DeferredViewportSection from './components/home/DeferredViewportSection';
-import IndependentServiceNotice from './components/IndependentServiceNotice';
 
 // Keep the complete page in the server HTML for SEO, while splitting interactive
 // below-the-fold islands out of the first client bundle.
@@ -53,10 +52,9 @@ export default function Home() {
   return (
     <main className="home-page">
       <Hero />
-      <IndependentServiceNotice />
       <div className="home-flow">
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--brands" desktopHeight={430} mobileHeight={646}><BrandStrip /></DeferredViewportSection>
-        <DeferredViewportSection className="render-later home-flow-band home-flow-band--proof" desktopHeight={280} mobileHeight={365}><CredibilityBand /></DeferredViewportSection>
+        <DeferredViewportSection className="render-later home-flow-band home-flow-band--proof" desktopHeight={235} mobileHeight={430}><CredibilityBand /></DeferredViewportSection>
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--services" desktopHeight={650} mobileHeight={1075}><HomeServices /></DeferredViewportSection>
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--trust" desktopHeight={590} mobileHeight={699}><HomeTrust /></DeferredViewportSection>
 

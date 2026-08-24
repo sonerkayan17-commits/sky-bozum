@@ -16,7 +16,17 @@ export default function CredibilityBand({ compact = false }: { compact?: boolean
   const managedProofPoints = [[experienceValue, 'yılı aşkın tecrübe'], [settings.proofTransactions, 'tamamlanan işlem'], proofPoints[2], proofPoints[3]] as const;
   return <section className={`credibility-band ${compact ? 'is-compact' : ''}`} aria-label="Sky Bozum deneyim ve içerik göstergeleri">
     <div className="credibility-band__inner">
-      <div className="credibility-band__intro"><p>GÜVENİ KANITLAYAN VERİLER</p><h2>Deneyim, işlem ve bilgi<br /><span>aynı yerde.</span></h2><Link href="/iletisim#guvenlik">Güvenli iletişimi incele →</Link></div>
+      <div className="credibility-band__intro">
+        <p>HİZMET MODELİ + GÜVEN STANDARDI</p>
+        <h2>Bağımsız rehber, <span>açık süreç.</span></h2>
+        <div className="credibility-band__summary">
+          Sky Bozum operatör veya dijital cüzdan bakiyesini doğrudan satın almaz. Turkcell, Vodafone, Türk Telekom, Paycell, Pokus ve Vodafone Pay sayfaları; dijital ürün/EPIN satın alma adımlarını açıklayan bağımsız rehberlerdir. Bu markalarla ortaklık ya da yetkili satıcılık ilişkimiz yoktur.
+        </div>
+        <div className="credibility-band__intro-links">
+          <span>Uygun ve kullanılmamış kodu kendi hesabınızda kullanabilir veya değerlendirme için sunabilirsiniz.</span>
+          <Link href="/iletisim#guvenlik">Açıklamanın tamamı →</Link>
+        </div>
+      </div>
       <div className="credibility-band__stats">{managedProofPoints.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
       <aside className="credibility-band__security" aria-label="Önemli güvenlik uyarısı">
         <span aria-hidden="true">!</span>
