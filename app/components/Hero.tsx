@@ -26,7 +26,7 @@ const logos: Record<string, string> = {
 const referenceAssetNames = Array.from({ length: 15 }, (_, index) => {
   const id = String(index + 1).padStart(2, '0');
   return `reference-verified-${id}-r3.webp`;
-});
+}).filter((assetName) => assetName !== 'reference-verified-08-r3.webp');
 
 const referenceSlides = referenceAssetNames.map((assetName, index) => ({
   src: `/references/${assetName}`,
