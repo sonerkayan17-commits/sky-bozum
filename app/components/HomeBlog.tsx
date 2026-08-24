@@ -1,6 +1,13 @@
 import Image from 'next/image';
 import Link from './DeferredLink';
 
+const featuredGuide = {
+  slug: 'guvenilir-mobil-bozum-sitesi-nasil-secilir',
+  eyebrow: '2026 Güvenlik Rehberi',
+  title: 'En güvenilir mobil bozum sitesi nasıl seçilir?',
+  description: 'Alan adı, net ödeme, kod teslimi ve 10 temel güvenlik kontrolü.',
+} as const;
+
 const cards = [
   {
     slug: 'mobil-odeme-nasil-acilir',
@@ -45,6 +52,19 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
             </div>
             <Link href="/bilgi-merkezi" className="group/all inline-flex shrink-0 items-center gap-2 rounded-full border border-[#f1c43d]/15 bg-[#f1c43d]/[0.055] px-3 py-1.5 text-[10px] font-black text-[#f1c43d] transition hover:border-[#f1c43d]/30 hover:bg-[#f1c43d]/[0.09]">Tüm rehberler <span className="transition group-hover/all:translate-x-0.5">→</span></Link>
           </div>
+
+          <Link
+            href={`/bilgi-merkezi/${featuredGuide.slug}`}
+            className="group/featured mb-3 grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[15px] border border-rose-400/20 bg-[linear-gradient(105deg,rgba(244,63,114,.12),rgba(245,190,54,.045)_68%,rgba(255,255,255,.025))] px-3.5 py-2.5 transition hover:border-rose-300/35 hover:bg-[linear-gradient(105deg,rgba(244,63,114,.16),rgba(245,190,54,.065)_68%,rgba(255,255,255,.035))]"
+            aria-label={`${featuredGuide.title} rehberini okuyun`}
+          >
+            <span className="min-w-0">
+              <span className="block text-[8px] font-black uppercase tracking-[.17em] text-rose-300/85">{featuredGuide.eyebrow}</span>
+              <strong className="mt-0.5 block truncate text-[12px] font-black text-white sm:text-[13px]">{featuredGuide.title}</strong>
+              <span className="mt-0.5 hidden truncate text-[9px] text-white/48 sm:block">{featuredGuide.description}</span>
+            </span>
+            <span className="inline-flex items-center gap-1 text-[9px] font-black text-[#f1c43d]">Öne çıkan <b className="transition group-hover/featured:translate-x-0.5">→</b></span>
+          </Link>
 
           <div className={`${sidebar ? 'grid min-h-0 flex-1 grid-rows-2 gap-3' : 'grid gap-3 md:grid-cols-2'} home-blog-grid`}>
             {cards.map((card) => (

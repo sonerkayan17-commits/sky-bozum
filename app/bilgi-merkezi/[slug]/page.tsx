@@ -171,6 +171,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 <div className="article-section-copy mt-5 space-y-5 text-slate-300">{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
                 {section.bullets && <ul className="article-bullet-list">{section.bullets.map((bullet) => <li key={bullet}><span aria-hidden="true">✓</span><p>{bullet}</p></li>)}</ul>}
                 {section.subsections?.map((subsection) => <div key={subsection.title} className="article-subsection"><h3>{subsection.title}</h3><div>{subsection.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></div>)}
+                {'relatedLinks' in section && Array.isArray(section.relatedLinks) && section.relatedLinks.length ? (
+                  <nav className="article-context-links" aria-label={`${section.title} ile ilgili rehberler`}>
+                    <span>İlgili bağlantılar</span>
+                    <div>{section.relatedLinks.map((item) => <Link key={item.href} href={item.href} className="focus-ring">{item.label}<b aria-hidden="true">→</b></Link>)}</div>
+                  </nav>
+                ) : null}
               </section>
               {index === infographicAfterSection ? <ArticleInfographic article={article} template={editorialTemplate} label={editorialLabels.infographicLabel} /> : null}
               {index === curatedVisualAfterSection ? <ArticleVisual article={article} index={0} /> : null}
