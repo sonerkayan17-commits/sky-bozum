@@ -23,6 +23,7 @@ function normalizeKnowledgeParams(params: KnowledgeSearchParams) {
   const kategori = firstParam(params.kategori, 'Tümü', 50);
   const requestedSort = firstParam(params.sirala, 'popular', 20);
   const requestedTopic = firstParam(params.konu, 'Tümü', 40);
+  const requestedPage = Number.parseInt(firstParam(params.sayfa, '1', 4), 10);
 
   return {
     q,
@@ -33,6 +34,7 @@ function normalizeKnowledgeParams(params: KnowledgeSearchParams) {
     konu: allowedTopics.includes(requestedTopic as (typeof allowedTopics)[number])
       ? requestedTopic as (typeof allowedTopics)[number]
       : 'Tümü',
+    sayfa: Number.isFinite(requestedPage) ? Math.max(1, Math.min(requestedPage, 99)) : 1,
   };
 }
 
@@ -47,15 +49,18 @@ export async function generateMetadata({
   const hasTopicFilter = params.konu !== 'Tümü';
   const hasSortFilter = params.sirala !== 'popular';
   const hasFilteredView = hasSearchQuery || hasCategoryFilter || hasTopicFilter || hasSortFilter;
+  const isPaginatedView = params.sayfa > 1;
+  const pageSuffix = isPaginatedView ? ` – Sayfa ${params.sayfa}` : '';
+  const canonical = isPaginatedView ? `/bilgi-merkezi?sayfa=${params.sayfa}` : '/bilgi-merkezi';
 
   return {
-    title: 'Bilgi Merkezi',
+    title: `Bilgi Merkezi${pageSuffix}`,
     description: 'Mobil ödeme, Paycell, Pokus, Razer Gold ve dijital bakiye rehberleri.',
-    alternates: { canonical: '/bilgi-merkezi', types: { 'application/rss+xml': '/feed.xml' } },
+    alternates: { canonical, types: { 'application/rss+xml': '/feed.xml' } },
     openGraph: {
-      title: 'Sky Bozum Bilgi Merkezi',
+      title: `Sky Bozum Bilgi Merkezi${pageSuffix}`,
       description: 'Mobil ödeme, dijital cüzdanlar, hediye kartları ve güvenli işlem rehberleri.',
-      url: '/bilgi-merkezi',
+      url: canonical,
       type: 'website',
       images: [{ url: '/images/bilgi-merkezi/v40-guide-system/guide-hub-hero.webp', width: 1600, height: 1000, alt: 'Sky Bozum mobil ödeme, operatör bakiyesi ve dijital kod rehberleri' }],
     },
@@ -82,7 +87,7 @@ export async function generateMetadata({
 }
 
 export default async function Page({ searchParams }: { searchParams: Promise<KnowledgeSearchParams> }) {
-  const { q, kategori, sirala, konu } = normalizeKnowledgeParams(await searchParams);
+  const { q, kategori, sirala, konu, sayfa } = normalizeKnowledgeParams(await searchParams);
   const visibleArticles = mergeManagedArticles(articles, await getManagedContentArticles());
   const explorerArticles = visibleArticles.map((article) => ({
     slug: article.slug,
@@ -133,7 +138,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Kno
         <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[.18em] text-rose-400">Tek soruyla başlayın</p><h2 id="knowledge-entry-title" className="mt-2 text-2xl font-black tracking-tight sm:text-4xl">Bugün neyi çözmek istiyorsunuz?</h2></div><p className="max-w-xl text-sm leading-7 text-slate-400">Makale listesinde kaybolmadan ihtiyacınıza en yakın yolu seçin; ilgili hizmete, kontrole veya araca doğrudan geçin.</p></div>
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-2 xl:grid-cols-4">{entryRoutes.map((route) => <Link key={route.href} href={route.href} className="focus-ring knowledge-entry-card group flex min-h-48 flex-col rounded-2xl border border-white/8 bg-[linear-gradient(155deg,rgba(255,255,255,.045),rgba(9,12,17,.96))] p-3 transition hover:-translate-y-1 hover:border-rose-400/30 sm:min-h-64 sm:rounded-3xl sm:p-6"><div className="flex items-center justify-between gap-2"><span className="text-[8px] font-extrabold uppercase tracking-[.12em] text-rose-400 sm:text-xs sm:tracking-[.16em]">{route.eyebrow}</span><span className="text-[10px] font-black text-slate-700 sm:text-sm">{route.number}</span></div><h3 className="mt-4 text-sm font-black leading-5 text-white sm:mt-8 sm:text-xl sm:leading-7">{route.title}</h3><p className="mt-2 line-clamp-3 text-[10px] leading-4 text-slate-500 sm:mt-3 sm:text-sm sm:leading-6">{route.description}</p><span className="mt-auto pt-3 text-[10px] font-black text-slate-200 transition group-hover:text-rose-300 sm:pt-6 sm:text-sm">{route.action} →</span></Link>)}</div>
       </section>
-      <section className="content-shell py-10 sm:py-16"><DeferredArticleExplorer articles={explorerArticles} initialQuery={q} initialCategory={kategori} initialSort={sirala} initialTopic={konu} /></section>
+      <section className="content-shell py-10 sm:py-16"><DeferredArticleExplorer articles={explorerArticles} initialQuery={q} initialCategory={kategori} initialSort={sirala} initialTopic={konu} initialPage={sayfa} /></section>
     </main>
   );
 }

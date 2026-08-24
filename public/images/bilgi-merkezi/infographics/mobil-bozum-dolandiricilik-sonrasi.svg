@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mobil bozum dolandırıcılığı sonrası güvenli hareket planı</title>
+  <desc id="desc">İşlemi durdurma, kayıtları koruma, hesapları güvene alma ve resmî başvuru adımlarını gösteren Sky Bozum bilgi grafiği.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090b12"/><stop offset=".52" stop-color="#15101b"/><stop offset="1" stop-color="#0b1118"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#f43f6f"/><stop offset="1" stop-color="#ff914d"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="900" rx="44" fill="url(#bg)"/>
+  <g opacity=".18" stroke="#fb7185"><path d="M0 160h1600M0 450h1600M0 740h1600"/><path d="M220 0v900M800 0v900M1380 0v900"/></g>
+  <circle cx="1310" cy="120" r="250" fill="#f43f5e" opacity=".08"/><circle cx="170" cy="790" r="300" fill="#fb923c" opacity=".06"/>
+  <text x="100" y="112" fill="#fb7185" font-family="Arial,sans-serif" font-size="25" font-weight="800" letter-spacing="7">SKY BOZUM GÜVENLİK REHBERİ</text>
+  <text x="100" y="190" fill="#fff" font-family="Arial,sans-serif" font-size="56" font-weight="900">Şüphe oluştuysa önce kaybı durdurun.</text>
+  <text x="100" y="240" fill="#9ca3af" font-family="Arial,sans-serif" font-size="24">Yeni ödeme yapmadan, kanıtları silmeden ve yalnız resmî kanalları kullanarak ilerleyin.</text>
+  <path d="M220 455h1160" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+  <g font-family="Arial,sans-serif">
+    <g transform="translate(85 320)"><rect width="330" height="320" rx="30" fill="#111620" stroke="#fb7185" stroke-opacity=".5"/><circle cx="54" cy="56" r="27" fill="#fb7185"/><text x="54" y="65" text-anchor="middle" fill="#fff" font-size="25" font-weight="900">1</text><text x="35" y="125" fill="#fff" font-size="30" font-weight="900">İŞLEMİ DURDUR</text><text x="35" y="174" fill="#aeb6c3" font-size="21"><tspan x="35" dy="0">Yeni kod, para veya</tspan><tspan x="35" dy="32">doğrulama bilgisi</tspan><tspan x="35" dy="32">göndermeyin.</tspan></text></g>
+    <g transform="translate(452 320)"><rect width="330" height="320" rx="30" fill="#111620" stroke="#fb7185" stroke-opacity=".5"/><circle cx="54" cy="56" r="27" fill="#fb7185"/><text x="54" y="65" text-anchor="middle" fill="#fff" font-size="25" font-weight="900">2</text><text x="35" y="125" fill="#fff" font-size="30" font-weight="900">KAYDI KORU</text><text x="35" y="174" fill="#aeb6c3" font-size="21"><tspan x="35" dy="0">Mesaj, alan adı, işlem</tspan><tspan x="35" dy="32">saati ve banka hareketini</tspan><tspan x="35" dy="32">değiştirmeden saklayın.</tspan></text></g>
+    <g transform="translate(819 320)"><rect width="330" height="320" rx="30" fill="#111620" stroke="#fb923c" stroke-opacity=".5"/><circle cx="54" cy="56" r="27" fill="#fb923c"/><text x="54" y="65" text-anchor="middle" fill="#fff" font-size="25" font-weight="900">3</text><text x="35" y="125" fill="#fff" font-size="30" font-weight="900">HESABI KORU</text><text x="35" y="174" fill="#aeb6c3" font-size="21"><tspan x="35" dy="0">Parolaları değiştirin,</tspan><tspan x="35" dy="32">oturumları kapatın ve</tspan><tspan x="35" dy="32">bankanızı bilgilendirin.</tspan></text></g>
+    <g transform="translate(1186 320)"><rect width="330" height="320" rx="30" fill="#111620" stroke="#fb923c" stroke-opacity=".5"/><circle cx="54" cy="56" r="27" fill="#fb923c"/><text x="54" y="65" text-anchor="middle" fill="#fff" font-size="25" font-weight="900">4</text><text x="35" y="125" fill="#fff" font-size="30" font-weight="900">RESMÎ BİLDİRİM</text><text x="35" y="174" fill="#aeb6c3" font-size="21"><tspan x="35" dy="0">Olayın türüne göre</tspan><tspan x="35" dy="32">operatör, banka ve</tspan><tspan x="35" dy="32">yetkili kuruma başvurun.</tspan></text></g>
+  </g>
+  <rect x="100" y="715" width="1400" height="95" rx="24" fill="#fb7185" opacity=".08" stroke="#fb7185" stroke-opacity=".35"/>
+  <text x="145" y="772" fill="#ffd1da" font-family="Arial,sans-serif" font-size="24" font-weight="700">Şifre, SMS kodu, kart PIN’i ve uzaktan erişim yetkisi hiçbir standart kontrolün parçası değildir.</text>
+</svg>

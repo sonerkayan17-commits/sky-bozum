@@ -134,7 +134,7 @@ console.log('OK: Küratörlü infografikler kırpılmıyor; uzun yan menü kayd�
 
 
 const focusTargets = [
-  ['app/bilgi-merkezi/page.tsx', 'focus-ring group flex min-h-64 flex-col rounded-3xl'],
+  ['app/bilgi-merkezi/page.tsx', 'focus-ring knowledge-entry-card group flex min-h-48 flex-col rounded-2xl'],
   ['app/bilgi-merkezi/arama-niyeti/page.tsx', 'focus-ring rounded-2xl'],
   ['app/bilgi-merkezi/sorun-cozme/page.tsx', 'focus-ring group rounded-3xl'],
   ['app/components/articles/LearningPathShowcase.tsx', 'focus-ring knowledge-learning-card'],

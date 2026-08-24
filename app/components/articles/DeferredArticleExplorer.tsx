@@ -19,6 +19,7 @@ type Props = {
   initialCategory?: string;
   initialSort?: SortMode;
   initialTopic?: Topic;
+  initialPage?: number;
 };
 
 export default function DeferredArticleExplorer({
@@ -27,8 +28,9 @@ export default function DeferredArticleExplorer({
   initialCategory = 'Tümü',
   initialSort = 'popular',
   initialTopic = 'Tümü',
+  initialPage = 1,
 }: Props) {
-  const hasInitialFilter = Boolean(initialQuery.trim()) || initialCategory !== 'Tümü' || initialSort !== 'popular' || initialTopic !== 'Tümü';
+  const hasInitialFilter = Boolean(initialQuery.trim()) || initialCategory !== 'Tümü' || initialSort !== 'popular' || initialTopic !== 'Tümü' || initialPage > 1;
   const [ready, setReady] = useState(hasInitialFilter);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +46,7 @@ export default function DeferredArticleExplorer({
   }, [ready]);
 
   if (ready) {
-    return <ArticleExplorer articles={articles} initialQuery={initialQuery} initialCategory={initialCategory} initialSort={initialSort} initialTopic={initialTopic} />;
+    return <ArticleExplorer articles={articles} initialQuery={initialQuery} initialCategory={initialCategory} initialSort={initialSort} initialTopic={initialTopic} initialPage={initialPage} />;
   }
 
   return (

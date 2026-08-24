@@ -59,7 +59,9 @@ collectArrayRefs('app/lib/learningPaths.ts', 'articleSlugs');
 collectArrayRefs('app/lib/troubleshooting.ts', 'relatedArticleSlugs');
 
 for (const file of ['app/lib/featuredArticles.ts', 'app/lib/hepsipayArticles.ts']) {
-  for (const slug of extract(read(file), /\/bilgi-merkezi\/([a-z0-9-]+)/g)) {
+  // Only treat quoted, root-relative article URLs as links. Image paths such as
+  // /images/bilgi-merkezi/... must not be interpreted as article references.
+  for (const slug of extract(read(file), /['"]\/bilgi-merkezi\/([a-z0-9-]+)/g)) {
     if (!['kategori', 'konu', 'sorun-cozme', 'arama-niyeti'].includes(slug)) articleRefs.push(`${file}: ${slug}`);
   }
 }

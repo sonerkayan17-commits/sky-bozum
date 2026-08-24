@@ -519,5 +519,213 @@ export const featuredArticles = [
         ]
       }
     ]
+  },
+  {
+    slug: 'mobil-odeme-bozdurma-dolandiriciligi-sonrasi-ne-yapilmali',
+    title: 'Mobil Ödeme Bozdurma Dolandırıcılığı Sonrası Ne Yapılmalı?',
+    seoTitle: 'Mobil Bozum Dolandırıcılığı Sonrası Ne Yapılmalı? 2026 Rehberi',
+    metaDescription: 'Mobil ödeme bozdurma dolandırıcılığı şüphesinde delilleri koruma, banka ve operatörle iletişim, resmî başvuru ve hesap güvenliği adımlarını öğrenin.',
+    excerpt: 'Kod, para veya hesap bilgisi paylaştıktan sonra dolandırıcılık şüphesi oluştuysa ilk dakikalarda uygulanacak güvenli kontrol sırası.',
+    category: 'Güvenlik',
+    readTime: '10 dk',
+    publishedAt: '2026-08-25',
+    updatedAt: '2026-08-25',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
+    coverAlt: 'Mobil bozum dolandırıcılığı şüphesinde kanıt, banka ve resmî başvuru kontrol adımları',
+    media: [
+      { src: '/images/bilgi-merkezi/infographics/mobil-bozum-dolandiricilik-sonrasi.svg', alt: 'Dolandırıcılık şüphesinde işlemi durdurma, kayıtları koruma, hesapları güvene alma ve resmî bildirim akışı', caption: 'Öncelik yeni kaybı durdurmak, kayıtları değiştirmeden saklamak ve olayın türüne uygun resmî kanala başvurmaktır.' },
+    ],
+    keywords: ['mobil ödeme bozdurma dolandırıcılığı', 'mobil bozum dolandırıcılığı', 'bozumda dolandırıldım', 'dijital kod dolandırıcılığı', 'sahte bozum sitesi'],
+    links: [
+      { label: 'Güvenilir mobil bozum sitesi seçim rehberi', href: '/bilgi-merkezi/guvenilir-mobil-bozum-sitesi-nasil-secilir' },
+      { label: 'Mobil bozumda dolandırıcılık işaretleri', href: '/bilgi-merkezi/mobil-bozum-yaparken-dolandirilabilir-miyim' },
+      { label: 'Resmî iletişim ve güvenlik bilgileri', href: '/iletisim#guvenlik' },
+    ],
+    sources: [
+      { label: 'Dijital mecralardaki dolandırıcılık girişimlerine karşı uyarı', href: 'https://ticaret.gov.tr/haberler/ticaret-bakanligi-sosyal-medya-ve-dijital-mecralardaki-dolandiricilik-girisimlerine-karsi-vatandaslari-uyariyor', publisher: 'T.C. Ticaret Bakanlığı' },
+      { label: 'Alo 175 Tüketici Danışma Hattı', href: 'https://www.ticaret.gov.tr/tuketici/alo-175', publisher: 'T.C. Ticaret Bakanlığı' },
+      { label: 'Mobil hizmetlerde tüketici başvuruları', href: 'https://tuketici.btk.gov.tr/mobil', publisher: 'Bilgi Teknolojileri ve İletişim Kurumu' },
+    ],
+    faq: [
+      { question: 'Dolandırıldığımı düşünüyorsam önce kimi aramalıyım?', answer: 'Duruma göre bankanız veya ödeme kuruluşunuz, mobil operatörünüz ve işlem yaptığınız platformla gecikmeden iletişim kurun. Yetkisiz işlem varsa ilgili hesabı güvene alın; olayın niteliğine göre kolluk birimlerine ve uygun resmî başvuru kanalına başvurun.' },
+      { question: 'Mesajları ve dekontları silmeli miyim?', answer: 'Hayır. Görüşme kayıtları, profil ve alan adı bilgileri, sipariş numarası, işlem tarihi, banka hareketi ve kod teslim zamanını değiştirmeden saklayın. Kişisel verileri herkese açık paylaşmayın.' },
+      { question: 'Kod gönderildiyse geri alınabilir mi?', answer: 'Dijital kodlar kullanıldıktan sonra çoğu zaman geri döndürülemez. Yine de kodu sağlayan mağazaya ve ilgili platforma hemen bildirim yapmak, kodun durumunun incelenebilmesi için önemlidir; sonuç garantisi verilemez.' },
+      { question: 'Sky Bozum adına yazan hesabı nasıl doğrularım?', answer: 'Mesajdaki bağlantıya güvenmek yerine bozumcu.net adresini kendiniz açın ve iletişim bağlantısını buradan başlatın. Farklı numaraya yönlendirme, şifre veya uzaktan erişim talebi varsa görüşmeyi durdurun.' },
+    ],
+    sections: [
+      {
+        title: 'İlk dakikalarda yapılacaklar: işlemi durdurun ve erişimi kesin',
+        paragraphs: [
+          'Mobil ödeme bozdurma, dijital kod satışı veya benzeri bir görüşmede beklenmeyen bir talep fark ettiyseniz yeni kod, para ya da kişisel bilgi göndermeyi bırakın. Karşı tarafın “işlemi tamamlamak için son bir ödeme” veya “iade için doğrulama kodu” istemesi, zararı büyütebilecek ikinci bir adımdır. Görüşmeyi sürdürmek yerine kullandığınız hesapların güvenliğini kontrol edin.',
+          'Banka kartı, e-posta, operatör hesabı veya dijital mağaza parolası paylaşıldıysa aynı parolayı kullandığınız diğer hesapları da değiştirin. Açık oturumları kapatın ve mümkünse iki aşamalı doğrulamayı etkinleştirin. Telefonunuza uzaktan erişim uygulaması kurulduysa bağlantıyı kesin; uygulamayı kaldırmadan önce olay kaydını koruyacak ekran görüntülerini güvenli biçimde alın.',
+        ],
+        bullets: ['Yeni ödeme veya kod göndermeyin.', 'Şifreleri güvenilir bir cihazdan değiştirin.', 'Açık oturumları ve bağlı cihazları kontrol edin.', 'Banka ve operatör bildirimlerini inceleyin.'],
+      },
+      {
+        title: 'Delilleri silmeden düzenli bir olay kaydı oluşturun',
+        paragraphs: [
+          'Bir başvurunun anlaşılabilmesi için yalnız “dolandırıldım” demek yerine olayın zaman çizelgesini hazırlayın. Görüşmenin başladığı tarih ve saat, kullanılan telefon numarası veya kullanıcı adı, yönlendirilen alan adı, vaat edilen oran, gönderilen tutar ve işlem açıklaması aynı dosyada yer alsın. Mesajları kırparak anlamını değiştirmeyin; mümkünse konuşmanın tamamını saklayın.',
+          'Banka hareketi ile yalnızca dekont görseli aynı şey değildir. Hesabınızdaki gerçek hareketi, alıcı adını, IBAN’ı, tutarı ve işlem zamanını kaydedin. Dijital kod söz konusuysa sipariş numarası, mağaza adı, ürün bölgesi ve kodun hangi anda kime iletildiği önemlidir. Kodun tamamını şikâyet sitelerinde ya da sosyal medyada yayımlamayın.',
+        ],
+      },
+      {
+        title: 'Banka, ödeme kuruluşu, operatör ve mağazaya ayrı ayrı bildirin',
+        paragraphs: [
+          'Para transferi veya kart işlemi varsa bankanızın resmî kanalını gecikmeden kullanın ve işlemin durumunu sorun. Bankanın yapabileceği işlem; transfer türüne, zamana ve olayın niteliğine göre değişir. “Para kesin geri gelir” veya “IBAN hemen bloke edilir” gibi garantili ifadeler gerçeği yansıtmaz.',
+          'Mobil hat üzerinden onayınız dışında bir ücret oluştuğunu düşünüyorsanız operatörünüzden işlem kaydını ve hizmet bilgisini isteyin. BTK Tüketici Sitesi, onaysız katma değerli hizmet şüphesinde önce hizmet alınan işletmeciye başvurulabileceğini belirtir. Dijital ürün mağazasında ise sipariş ve teslimat kaydıyla mağazanın resmî desteğine ulaşın.',
+        ],
+      },
+      {
+        title: 'Resmî başvuru yolunu olayın türüne göre seçin',
+        paragraphs: [
+          'Tüketici uyuşmazlığı ile ceza şüphesi aynı başvuru değildir. Satıcı veya hizmet sağlayıcıyla çözülemeyen tüketici uyuşmazlıklarında parasal sınırlar ve olayın niteliğine göre Tüketici Hakem Heyeti ya da tüketici mahkemesi yolu değerlendirilebilir. Ticaret Bakanlığı Alo 175 hattı, tüketiciyi uygun başvuru kanalına yönlendirmek için bilgi sunar.',
+          'Kimlik avı, sahte hesap, yetkisiz erişim veya dolandırıcılık şüphesinde elinizdeki kayıtlarla kolluk birimlerine ya da savcılığa başvurma seçeneğini değerlendirin. Bu rehber hukuki danışmanlık yerine geçmez; hangi yolun uygun olduğu olayın ayrıntılarına bağlıdır. Başvuruda yalnız doğrulayabildiğiniz bilgileri kullanın ve kişisel verileri kamuya açık biçimde yayımlamayın.',
+        ],
+      },
+      {
+        title: 'Taklit hesap ile gerçek Sky Bozum kanalını ayırın',
+        paragraphs: [
+          'Logo, profil fotoğrafı ve işletme adı kolayca kopyalanabilir. Doğrulama için size gönderilen bağlantıyı açmak yerine tarayıcıya bozumcu.net yazın. Telefon veya WhatsApp bağlantısını yalnız bu alan adındaki iletişim bölümünden başlatın. Görüşme sırasında son anda değişen numara, IBAN veya alan adı varsa işlemi yeniden doğrulayın.',
+          'Sky Bozum; operatör hesabı şifresi, banka parolası, kart PIN’i, e-posta şifresi veya cihazınıza uzaktan erişim istemez. Kullanılmamış dijital kod işlemlerinde bile ürün, bölge, tutar ve tahmini net ödeme yazılı olarak netleşmeden kod gönderilmemelidir. Önleyici kontrol için güvenilir mobil bozum sitesi seçim rehberini işlemden önce kullanın.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'mobil-odeme-bozdurmada-hiz-ve-guven',
+    title: 'Mobil Ödeme Bozdurmada Hız ve Güven: İşlem Süresi Nasıl Değerlendirilir?',
+    seoTitle: 'Mobil Ödeme Bozdurma Hız ve Güven Rehberi | İşlem Süresi',
+    metaDescription: 'Mobil ödeme bozdurma süresini etkileyen kod doğrulama, bölge, stok, banka aktarımı ve yoğunluk adımlarını; hız ile güven dengesini öğrenin.',
+    excerpt: 'Hızlı işlem vaadi yerine doğrulama, net tutar ve ödeme kaydını birlikte değerlendirerek gerçekçi işlem süresini anlayın.',
+    category: 'Mobil Ödeme',
+    readTime: '8 dk',
+    publishedAt: '2026-08-25',
+    updatedAt: '2026-08-25',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/bozum-talebi-guvenli-akis.webp',
+    coverAlt: 'Mobil ödeme bozdurmada doğrulama, işlem süresi ve güvenli ödeme akışı',
+    media: [
+      { src: '/images/bilgi-merkezi/infographics/mobil-bozum-hiz-guven-akisi.svg', alt: 'Mobil bozumda ürün uygunluğu, yazılı net tutar, kod kontrolü ve banka hareketi doğrulama akışı', caption: 'Hız; güvenlik adımlarını atlamak değil, doğru bilgiyi baştan hazırlayarak kontrol zincirini kesintisiz ilerletmektir.' },
+    ],
+    keywords: ['mobil ödeme bozdurma hız', 'mobil bozum ne kadar sürer', 'hızlı mobil bozum', 'mobil ödeme bozdurma süresi', 'güvenli mobil bozum'],
+    links: [
+      { label: 'Mobil ödeme bozum nedir?', href: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
+      { label: 'Güncel oran nasıl öğrenilir?', href: '/bilgi-merkezi/guncel-bozum-orani-nasil-ogrenilir' },
+      { label: 'Oran hesaplama aracını açın', href: '/araclar#oran-hesapla' },
+    ],
+    faq: [
+      { question: 'Mobil bozum kaç dakika sürer?', answer: 'Tek bir sabit süre yoktur. Ürünün türü, kod doğrulaması, bölge uyumu, stok, destek yoğunluğu ve banka aktarımı süreyi değiştirir. İşlem öncesinde tahmini süre ve kontrol sırası yazılı olarak sorulmalıdır.' },
+      { question: 'En hızlı ödeme yapan yer en güvenli midir?', answer: 'Hayır. Hız tek başına güven kanıtı değildir. Resmî alan adı, yazılı net tutar, kod teslim sırası ve hesabınızdaki gerçek ödeme hareketi birlikte değerlendirilmelidir.' },
+      { question: 'Kod kontrolü neden bekleyebilir?', answer: 'Kodun para birimi, bölgesi, kullanılmamış olması ve ürün türü doğrulanabilir. Eksik sipariş bilgisi veya yoğunluk da süreyi uzatabilir.' },
+    ],
+    sections: [
+      {
+        title: 'Hızlı mobil bozum ne anlama gelmeli?',
+        paragraphs: [
+          'Hızlı işlem; kontrol adımlarını atlamak değil, gerekli bilgilerin baştan doğru toplanmasıdır. Hizmet adı, tutar, para birimi, bölge ve ödeme hesabı netse gereksiz mesaj trafiği azalır. Buna karşılık yalnız “saniyeler içinde ödeme” sözü veren fakat ürün ve net tutarı açıklamayan bir sayfa, hız iddiasını doğrulanabilir bir süreçle desteklemiyor olabilir.',
+          'Gerçekçi süre, işlemin hangi aşamada başladığına göre konuşulmalıdır. İlk mesajın gönderilmesi, uygunluk onayı, dijital kodun teslimi, kod kontrolünün bitmesi ve banka aktarımının hesaba geçmesi farklı zamanlardır. Kullanıcı hangi sürenin vaat edildiğini açıkça sormalıdır.',
+        ],
+      },
+      {
+        title: 'İşlem süresini etkileyen beş temel aşama',
+        paragraphs: [
+          'İlk aşama ürün uygunluğudur. Razer Gold, Apple Gift Card veya Steam kodunun tutarı, bölgesi ve para birimi desteklenmiyorsa işlem ilerlemez. İkinci aşama sipariş kaydıdır; eksik veya yanlış ürün bilgisi kontrolü uzatır. Üçüncü aşama kodun kullanılmamış olduğunun doğrulanmasıdır.',
+          'Dördüncü aşama güncel stok ve talep durumudur. Aynı ürün farklı günlerde farklı koşullarla değerlendirilebilir. Beşinci aşama banka aktarımıdır. Gönderim yapılmış olsa bile bankalar arası hareketin hesabınıza yansıması banka altyapısına göre değişebilir. Bu nedenle yalnız ekran görüntüsüne değil hesabınızdaki gerçek harekete bakın.',
+        ],
+        bullets: ['Ürün, tutar ve bölge uygunluğu', 'Sipariş ve teslimat kaydı', 'Kodun kullanılmamış olması', 'Güncel stok ve talep', 'Banka aktarımının hesaba yansıması'],
+      },
+      {
+        title: 'Turkcell, Vodafone ve Türk Telekom için önce doğru satın alma yolunu bulun',
+        paragraphs: [
+          'Operatör adı geçen işlemlerde hattın bakiyesi doğrudan satın alınmış gibi düşünülmemelidir. Sky Bozum operatör bakiyesini satın almaz; Turkcell, Vodafone ve Türk Telekom sayfaları desteklenen mağazalardan dijital ürün satın alma adımlarını açıklayan bağımsız rehberlerdir. Önce kendi operatörünüzün güncel limit ve mobil ödeme durumunu resmî kanalından kontrol edin.',
+          'Ardından satın almayı düşündüğünüz dijital ürünün Sky Bozum tarafından o anda desteklenip desteklenmediğini sorun. Bu sıra tersine çevrilirse kullanıcı desteklenmeyen, yanlış bölgeli veya farklı para birimindeki bir kodu satın alabilir. Hızın en önemli kaynağı, satın alma öncesi uygunluk teyididir.',
+        ],
+      },
+      {
+        title: 'Hız uğruna atlanmaması gereken güvenlik kontrolleri',
+        paragraphs: [
+          'Alan adı ve iletişim numarası doğrulanmadan kod gönderilmemelidir. Tahmini net ödeme yazılı değilse, yalnız yüzde oran üzerinden karar verilmemelidir. Kodun tamamı herkese açık mesajda paylaşılmamalı; banka parolası, kart PIN’i, operatör şifresi, e-posta parolası veya uzaktan erişim yetkisi hiçbir aşamada verilmemelidir.',
+          'Ödeme yapıldığı söylendiğinde dekont görseli sonuç değildir. Banka hesabınızdaki kullanılabilir bakiye ve işlem hareketi kontrol edilmelidir. Hızlı fakat kayıtsız bir süreç yerine birkaç dakikalık doğrulama, geri döndürülemeyen dijital kodlarda daha değerlidir.',
+        ],
+      },
+      {
+        title: 'İşlemi hızlandıran hazırlık listesi',
+        paragraphs: [
+          'Destek görüşmesine başlamadan ürünün tam adını, nominal tutarını, para birimini, bölgesini ve satın alınacağı mağazayı hazırlayın. Kodu henüz satın almadıysanız bunu açıkça belirtin. Uygunluk ve güncel oran teyidi aldıktan sonra sipariş verin; teslimat e-postası ile sipariş numarasını saklayın.',
+          'IBAN paylaşmadan önce hesap sahibinin ödeme alabilecek durumda olduğunu kontrol edin. Görüşme boyunca aynı resmî kanalda kalın. Bu düzen, hem yanıt süresini kısaltır hem de yanlış ürün ve taklit hesap riskini azaltır.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'en-dusuk-komisyonlu-mobil-odeme-bozum-nasil-karsilastirilir',
+    title: 'En Düşük Komisyonlu Mobil Ödeme Bozum Nasıl Karşılaştırılır?',
+    seoTitle: 'En Düşük Komisyonlu Mobil Ödeme Bozum: Net Ödeme Rehberi',
+    metaDescription: 'Mobil ödeme bozum oranı, komisyon, ürün maliyeti ve net ödemeyi aynı hesapta karşılaştırın; gerçekçi olmayan yüksek oran tekliflerini ayırt edin.',
+    excerpt: '“Komisyonsuz” veya “en yüksek oran” sözlerine değil, bütün masraflardan sonra hesabınıza geçecek net tutara göre karşılaştırma yapın.',
+    category: 'Mobil Ödeme',
+    readTime: '9 dk',
+    publishedAt: '2026-08-25',
+    updatedAt: '2026-08-25',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/guncel-bozum-orani-ekosistem-v2.webp',
+    coverAlt: 'Mobil ödeme bozum oranı, komisyon ve net ödeme karşılaştırma ekranı',
+    media: [
+      { src: '/images/bilgi-merkezi/infographics/mobil-bozum-net-odeme-karsilastirma.svg', alt: 'Başlangıç bütçesi, ürün maliyeti, bozum oranı ve net ödeme karşılaştırması', caption: 'Teklifleri yalnız yüzde oranla değil, aynı ürün ve tarih için hesabınıza geçecek tahmini net tutarla karşılaştırın.' },
+    ],
+    keywords: ['en düşük komisyonlu mobil ödeme bozum', 'mobil bozum komisyon', 'mobil ödeme bozdurma oranı', 'mobil bozum net ödeme', 'bozum oranı hesaplama'],
+    links: [
+      { label: 'Güncel bozum oranı rehberi', href: '/bilgi-merkezi/guncel-bozum-orani-nasil-ogrenilir' },
+      { label: 'Bozum oranı hesaplama aracı', href: '/araclar#oran-hesapla' },
+      { label: 'Tüm hizmet ve ürün rehberleri', href: '/hizmetler' },
+    ],
+    faq: [
+      { question: 'Komisyonsuz mobil bozum gerçekten kesintisiz midir?', answer: 'Her zaman değil. Ayrı komisyon yazılmasa bile kullanılan oran, dijital ürünün satın alma fiyatı veya transfer maliyeti net sonucu düşürebilir. Karşılaştırma net ödeme üzerinden yapılmalıdır.' },
+      { question: 'Yüksek oran her zaman daha iyi midir?', answer: 'Hayır. Oranın hangi ürün, tutar, bölge ve tarih için geçerli olduğu; ayrıca ek masraf bulunup bulunmadığı açıklanmalıdır. Gerçekçi olmayan teklif güvenlik riski de olabilir.' },
+      { question: 'Net ödeme nasıl hesaplanır?', answer: 'Başlangıç bütçesinden dijital ürünün gerçek satın alma maliyetini ve varsa ücretleri belirleyin; ardından kabul edilen kod tutarına uygulanan güncel oranla tahmini ödemeyi hesaplayın. Kesin tutarı işlem öncesi yazılı teyit edin.' },
+    ],
+    sections: [
+      {
+        title: 'Oran, komisyon ve net ödeme aynı şey değildir',
+        paragraphs: [
+          'Bozum oranı, kabul edilen dijital ürün değerinin ne kadarının ödeme olarak hesaplandığını anlatır. Komisyon ayrıca belirtilen hizmet veya transfer kesintisi olabilir. Net ödeme ise tüm koşullar uygulandıktan sonra banka hesabınıza geçmesi beklenen tutardır. Kullanıcı açısından karşılaştırılması gereken asıl sayı net ödemedir.',
+          'Örneğin iki tekliften biri daha yüksek oran gösterip ek masraf uygulayabilir; diğeri daha düşük görünen oranla ek kesinti yapmayabilir. Yalnız başlıktaki yüzdeye bakmak hangi teklifin daha iyi olduğunu göstermez. Ürün maliyeti, kabul edilen nominal tutar ve nihai ödeme aynı satırda yazılmalıdır.',
+        ],
+      },
+      {
+        title: 'Dört rakamı aynı tabloda karşılaştırın',
+        paragraphs: [
+          'İlk rakam başlangıç bütçesidir. İkinci rakam dijital ürünü satın alırken ödediğiniz gerçek tutardır; kampanya, mağaza fiyatı veya ödeme ücreti bunu değiştirebilir. Üçüncü rakam kabul edilen kodun nominal değeridir. Dördüncü rakam ise bütün koşullardan sonra bildirilen tahmini net ödemedir.',
+          'Karşılaştırmayı aynı ürün, aynı bölge ve aynı gün için yapın. Bir sitedeki Razer Gold TL oranını başka yerdeki USD kod oranıyla karşılaştırmak yanıltıcıdır. Benzer şekilde farklı tutarlar için oran değişebileceğinden teklifin hangi nominal değer için verildiğini sorun.',
+        ],
+        bullets: ['Başlangıç bütçesi', 'Ürünün gerçek satın alma maliyeti', 'Kabul edilen kodun nominal tutarı', 'Banka hesabına geçecek tahmini net ödeme'],
+      },
+      {
+        title: '“En düşük komisyon” iddiasını nasıl doğrularsınız?',
+        paragraphs: [
+          'İddianın ölçülebilmesi için güncel tarih, ürün adı, tutar, bölge, oran ve varsa ek masraf açık olmalıdır. Bu bilgiler olmadan “en düşük”, “kesintisiz” veya “en yüksek” gibi ifadeler karşılaştırılabilir değildir. Teklifin ekran görüntüsünü değil, aynı görüşmedeki yazılı işlem özetini esas alın.',
+          'Ayrıca fiyatın ne kadar süre geçerli olduğunu sorun. Dijital ürün talebi ve stok durumu değişebileceği için geçmiş bir oran bugünkü işlemi bağlamaz. Sky Bozum’daki oranlar başlangıç bilgisidir; kesin uygunluk ve tahmini net tutar işlemden önce yazılı olarak doğrulanır.',
+        ],
+      },
+      {
+        title: 'Operatör rehberi ile kod bozum hizmetini birbirine karıştırmayın',
+        paragraphs: [
+          'Turkcell, Vodafone, Türk Telekom, Paycell ve Pokus bakiyeleri aynı ürün değildir. Sky Bozum bu bakiyeleri doğrudan satın almaz. İlgili sayfalar, kullanıcının desteklenen mağazadan dijital ürün satın alma seçeneklerini ve güvenlik kontrollerini anlamasına yardımcı olan bağımsız rehberlerdir.',
+          'Bozum değerlendirmesi, önceden uygunluğu teyit edilmiş kullanılmamış dijital kod üzerinden yapılır. Bu nedenle operatör limitinizin tamamı ile kod nominal değeri ve net ödeme birbirinden farklı olabilir. Satın alma yapmadan önce ürün, tutar ve bölgeyi teyit etmek yanlış maliyet hesabını önler.',
+        ],
+      },
+      {
+        title: 'Gerçekçi olmayan oran tekliflerinde kırmızı bayraklar',
+        paragraphs: [
+          'Piyasanın belirgin biçimde üzerindeki oran, karar vermek için birkaç dakika süre tanınması, net tutarın yazılmaması ve kodun kontrol bahanesiyle hemen istenmesi birlikte görülüyorsa işlemi durdurun. Yüksek oran, alan adı ve ödeme disiplininin yerine geçmez.',
+          'İletişim numarasını resmî siteden açın; son anda değişen hesap veya IBAN bilgisini yeniden doğrulayın. Ödeme tamamlandı denildiğinde yalnız dekonta bakmayın. Hesabınızdaki gerçek hareketi kontrol edin ve işlem kaydını saklayın.',
+        ],
+      },
+      {
+        title: 'Sky Bozum’da teklif karşılaştırma sırası',
+        paragraphs: [
+          'Önce hizmet ve ürünü seçin, ardından tutar ile bölge bilgisini iletin. Güncel uygunluk doğrulandıktan sonra oran ve tahmini net ödeme yazılı biçimde paylaşılır. Ürünü henüz almadıysanız onay gelmeden satın alma yapmayın. Böylece desteklenmeyen ürün veya yanlış bölge nedeniyle oluşabilecek kayıp azaltılır.',
+          'Hesaplama aracındaki sonuç bilgilendirme amaçlıdır; kesin ödeme değildir. Nihai değerlendirme ürünün doğrulanması ve güncel koşulların teyidiyle yapılır. Karşılaştırırken yalnız yüzdeyi değil, bütün süreci ve hesabınıza geçecek tutarı birlikte değerlendirin.',
+        ],
+      },
+    ],
   }
 ];

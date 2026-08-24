@@ -16,6 +16,7 @@ export type ArticleExplorerItem = Pick<ArticleItem,
 > & { searchText: string };
 
 const topicOptions: Topic[] = ['Tümü', 'Mobil Ödeme', 'Operatörler', 'Dijital Kodlar', 'Güvenlik', 'Kart İşlemleri'];
+const archivePageSize = 18;
 
 const featuredArticleSlugs = [
   'guvenilir-mobil-bozum-sitesi-nasil-secilir',
@@ -197,7 +198,7 @@ export function CompactArticleLink({ article, index }: { article: ArticleItem; i
   return <Link href={`/bilgi-merkezi/${article.slug}`} aria-labelledby={titleId} className="focus-ring group flex min-h-[84px] items-center gap-4 rounded-2xl border border-white/8 bg-white/[.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[.04]"><span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/[.05] text-sm font-black text-slate-400 group-hover:text-rose-300">{String(index + 1).padStart(2, '0')}</span><span className="min-w-0"><strong id={titleId} className="line-clamp-2 text-sm font-black leading-5 text-white">{article.title}</strong><span className="mt-1 block text-xs font-bold text-slate-500">{article.category} · {article.readTime}</span></span><span aria-hidden="true" className="ml-auto shrink-0 text-rose-400 transition group-hover:translate-x-1">→</span></Link>;
 }
 
-export default function ArticleExplorer({ articles, initialQuery = '', initialCategory = 'Tümü', initialSort = 'popular', initialTopic = 'Tümü', hideCategoryFilter = false }: { articles: ArticleExplorerItem[]; initialQuery?: string; initialCategory?: string; initialSort?: SortMode; initialTopic?: Topic; hideCategoryFilter?: boolean }) {
+export default function ArticleExplorer({ articles, initialQuery = '', initialCategory = 'Tümü', initialSort = 'popular', initialTopic = 'Tümü', initialPage = 1, hideCategoryFilter = false }: { articles: ArticleExplorerItem[]; initialQuery?: string; initialCategory?: string; initialSort?: SortMode; initialTopic?: Topic; initialPage?: number; hideCategoryFilter?: boolean }) {
   const categories = useMemo(() => ['Tümü', ...new Set(articles.map((article) => article.category))], [articles]);
   const categoryHubs = useMemo(() => getArticleCategories(articles), [articles]);
   const [query, setQuery] = useState(initialQuery);
@@ -205,7 +206,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
   const [sort, setSort] = useState<SortMode>(sortOptions.some((item) => item.value === initialSort) ? initialSort : 'popular');
   const [topic, setTopic] = useState<Topic>(topicOptions.includes(initialTopic) ? initialTopic : 'Tümü');
   const [hasResultInteraction, setHasResultInteraction] = useState(false);
-  const [archiveVisibleCount, setArchiveVisibleCount] = useState(9);
+  const [archivePage, setArchivePage] = useState(Math.max(1, Math.floor(initialPage)));
   const deferredQuery = useDeferredValue(query);
   const canonicalDeferredQuery = canonicalizeQuery(deferredQuery);
   const searchIsPending = canonicalizeQuery(query) !== canonicalDeferredQuery;
@@ -214,8 +215,9 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
   const suppressNextUrlSyncRef = useRef(false);
   const urlSyncTimerRef = useRef<number | null>(null);
   const hasMountedUrlSyncRef = useRef(false);
-  const filterStateRef = useRef({ query, category, sort, topic });
-  filterStateRef.current = { query, category, sort, topic };
+  const hasMountedArchiveResetRef = useRef(false);
+  const filterStateRef = useRef({ query, category, sort, topic, archivePage });
+  filterStateRef.current = { query, category, sort, topic, archivePage };
   queryRef.current = query;
 
   useEffect(() => {
@@ -256,12 +258,14 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
       const requestedCategory = (params.get('kategori') ?? 'Tümü').slice(0, 50);
       const requestedSort = params.get('sirala') ?? 'popular';
       const requestedTopic = params.get('konu') ?? 'Tümü';
+      const requestedPage = Number.parseInt(params.get('sayfa') ?? '1', 10);
 
       const nextCategory = categories.includes(requestedCategory) ? requestedCategory : 'Tümü';
       const nextSort = sortOptions.some((item) => item.value === requestedSort) ? requestedSort as SortMode : 'popular';
       const nextTopic = topicOptions.includes(requestedTopic as Topic) ? requestedTopic as Topic : 'Tümü';
+      const nextPage = Number.isFinite(requestedPage) ? Math.max(1, requestedPage) : 1;
       const current = filterStateRef.current;
-      const stateWillChange = current.query !== nextQuery || current.category !== nextCategory || current.sort !== nextSort || current.topic !== nextTopic;
+      const stateWillChange = current.query !== nextQuery || current.category !== nextCategory || current.sort !== nextSort || current.topic !== nextTopic || current.archivePage !== nextPage;
 
       // Her geçmiş navigasyonu, state aynı görünse bile eski bir URL yazımını iptal etmelidir.
       if (urlSyncTimerRef.current !== null) {
@@ -276,6 +280,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
       if (current.category !== nextCategory) setCategory(nextCategory);
       if (current.sort !== nextSort) setSort(nextSort);
       if (current.topic !== nextTopic) setTopic(nextTopic);
+      if (current.archivePage !== nextPage) setArchivePage(nextPage);
     };
 
     window.addEventListener('popstate', restoreStateFromUrl);
@@ -299,6 +304,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
     if (category !== 'Tümü') preflightParams.set('kategori', category); else preflightParams.delete('kategori');
     if (sort !== 'popular') preflightParams.set('sirala', sort); else preflightParams.delete('sirala');
     if (topic !== 'Tümü') preflightParams.set('konu', topic); else preflightParams.delete('konu');
+    if (archivePage > 1) preflightParams.set('sayfa', String(archivePage)); else preflightParams.delete('sayfa');
     const preflightUrl = `${window.location.pathname}${preflightParams.size ? `?${preflightParams.toString()}` : ''}${window.location.hash}`;
     const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     if (preflightUrl === currentUrl) return;
@@ -310,6 +316,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
       if (category !== 'Tümü') params.set('kategori', category); else params.delete('kategori');
       if (sort !== 'popular') params.set('sirala', sort); else params.delete('sirala');
       if (topic !== 'Tümü') params.set('konu', topic); else params.delete('konu');
+      if (archivePage > 1) params.set('sayfa', String(archivePage)); else params.delete('sayfa');
       const nextUrl = `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}${window.location.hash}`;
       const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
       if (nextUrl !== currentUrl) window.history.replaceState(window.history.state, '', nextUrl);
@@ -323,7 +330,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
         urlSyncTimerRef.current = null;
       }
     };
-  }, [category, query, sort, topic]);
+  }, [archivePage, category, query, sort, topic]);
 
   const indexedArticles = useMemo(() => articles.map((article, originalIndex) => {
     return {
@@ -380,9 +387,11 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
   const popular = discoveryMode ? discoveryRemainder.slice(0, 5) : [];
   const latest = useMemo(() => indexedArticles.slice().sort((a, b) => b.originalIndex - a.originalIndex).slice(0, 5).map(({ article }) => article), [indexedArticles]);
   const gridResults = discoveryMode ? discoveryRemainder.slice(6) : results;
-  const visibleGridResults = gridResults.slice(0, archiveVisibleCount);
-  const displayedArchiveCount = Math.min(archiveVisibleCount, gridResults.length);
-  const hasMoreArchiveResults = archiveVisibleCount < gridResults.length;
+  const archivePageCount = Math.max(1, Math.ceil(gridResults.length / archivePageSize));
+  const safeArchivePage = Math.min(archivePage, archivePageCount);
+  const archiveStartIndex = (safeArchivePage - 1) * archivePageSize;
+  const visibleGridResults = gridResults.slice(archiveStartIndex, archiveStartIndex + archivePageSize);
+  const displayedArchiveCount = visibleGridResults.length;
   const activeFilters = Boolean(hasQuery || category !== 'Tümü' || topic !== 'Tümü' || sort !== 'popular');
   const activeSortLabel = sortOptions.find((item) => item.value === sort)?.label ?? 'En Çok Sorulanlar';
   const resultStatus = !hasResultInteraction || searchIsPending
@@ -435,7 +444,23 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
     revealAndFocus(() => archiveRef.current, 'start');
   }
 
-  useEffect(() => { setArchiveVisibleCount(9); }, [canonicalDeferredQuery, category, sort, topic]);
+  useEffect(() => {
+    if (!hasMountedArchiveResetRef.current) {
+      hasMountedArchiveResetRef.current = true;
+      return;
+    }
+    setArchivePage(1);
+  }, [canonicalDeferredQuery, category, sort, topic]);
+
+  useEffect(() => {
+    if (archivePage > archivePageCount) setArchivePage(archivePageCount);
+  }, [archivePage, archivePageCount]);
+
+  function goToArchivePage(page: number) {
+    setHasResultInteraction(true);
+    setArchivePage(Math.max(1, Math.min(page, archivePageCount)));
+    revealAndFocus(() => archiveRef.current, 'start');
+  }
 
   return <div>
     <p id="article-result-status" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{resultStatus}</p>
@@ -461,7 +486,7 @@ export default function ArticleExplorer({ articles, initialQuery = '', initialCa
 
     <section ref={archiveRef} id="article-archive" tabIndex={-1} aria-labelledby="article-archive-title" aria-busy={searchIsPending} className="render-later mt-12 scroll-mt-28 rounded-2xl outline-none">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-extrabold uppercase tracking-[.16em] text-slate-500">Arşiv</p><h2 id="article-archive-title" className="mt-2 text-2xl font-black">{discoveryMode ? 'Tüm rehberler' : sort === 'newest' ? 'Yeni eklenen rehberler' : sort === 'az' ? 'A’dan Z’ye rehberler' : 'Arama sonuçları'}</h2></div><p className="text-sm font-bold text-slate-400">{searchIsPending ? 'Güncelleniyor…' : <><strong className="text-white">{displayedArchiveCount}</strong> gösteriliyor <span className="text-slate-600">/</span> toplam <strong className="text-white">{gridResults.length}</strong></>}</p></div>
-      {searchIsPending ? <div className="premium-card mt-5 p-10 text-center"><div className="mx-auto size-8 animate-spin rounded-full border-2 border-white/10 border-t-rose-400 motion-reduce:animate-none" aria-hidden="true"/><h2 className="mt-4 text-xl font-black">Sonuçlar güncelleniyor</h2><p className="mt-2 text-sm text-slate-400">Yeni arama sorgunuza uygun rehberler hazırlanıyor.</p></div> : gridResults.length > 0 ? <><div className="render-later mt-5 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleGridResults.map((article) => <ArchiveArticleCard key={article.slug} article={article}/>)}</div>{hasMoreArchiveResults && <div className="mt-6 flex justify-center"><button type="button" onClick={() => setArchiveVisibleCount((count) => Math.min(count + 9, gridResults.length))} aria-controls="article-archive" className="focus-ring rounded-xl border border-white/10 bg-white/[.035] px-5 py-3 text-sm font-extrabold text-slate-200 transition hover:border-rose-400/30 hover:bg-white/[.055] hover:text-white">9 rehber daha göster <span aria-hidden="true">↓</span></button></div>}</> : <div className="premium-card mt-5 p-10 text-center"><div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-white/[.04] text-xl" aria-hidden="true">⌕</div><h2 className="mt-4 text-xl font-black">Sonuç bulunamadı</h2><p className="mt-2 text-sm text-slate-400">Farklı bir kelime deneyin veya aşağıdaki popüler konulardan birini seçin.</p><div className="mt-5 flex flex-wrap justify-center gap-2">{(['Mobil Ödeme','Operatörler','Dijital Kodlar'] as Exclude<Topic, 'Tümü'>[]).map((item) => <button key={item} type="button" onClick={() => openTopic(item)} aria-controls="article-archive" aria-pressed={topic === item} className="focus-ring rounded-full border border-white/10 px-4 py-2 text-xs font-extrabold text-slate-300 hover:border-rose-400/30 hover:text-white">{item}</button>)}<button type="button" onClick={clearFilters} aria-controls="article-archive" className="focus-ring rounded-full border border-rose-400/25 bg-rose-400/10 px-4 py-2 text-xs font-extrabold text-rose-200 hover:bg-rose-400/15 hover:text-white">Tüm rehberleri göster</button></div></div>}
+      {searchIsPending ? <div className="premium-card mt-5 p-10 text-center"><div className="mx-auto size-8 animate-spin rounded-full border-2 border-white/10 border-t-rose-400 motion-reduce:animate-none" aria-hidden="true"/><h2 className="mt-4 text-xl font-black">Sonuçlar güncelleniyor</h2><p className="mt-2 text-sm text-slate-400">Yeni arama sorgunuza uygun rehberler hazırlanıyor.</p></div> : gridResults.length > 0 ? <><div className="render-later mt-5 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleGridResults.map((article) => <ArchiveArticleCard key={article.slug} article={article}/>)}</div>{archivePageCount > 1 && <nav className="mt-7 flex flex-wrap items-center justify-center gap-2" aria-label="Bilgi Merkezi sayfaları"><button type="button" onClick={() => goToArchivePage(safeArchivePage - 1)} disabled={safeArchivePage === 1} className="focus-ring min-h-11 rounded-xl border border-white/10 px-4 text-xs font-extrabold text-slate-300 transition hover:border-rose-400/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-35">← Önceki</button>{Array.from({ length: archivePageCount }, (_, index) => index + 1).map((page) => <button key={page} type="button" onClick={() => goToArchivePage(page)} aria-current={page === safeArchivePage ? 'page' : undefined} className={`focus-ring size-11 rounded-xl border text-xs font-black transition ${page === safeArchivePage ? 'border-rose-400 bg-rose-500 text-white' : 'border-white/10 bg-white/[.025] text-slate-400 hover:border-rose-400/30 hover:text-white'}`}>{page}</button>)}<button type="button" onClick={() => goToArchivePage(safeArchivePage + 1)} disabled={safeArchivePage === archivePageCount} className="focus-ring min-h-11 rounded-xl border border-white/10 px-4 text-xs font-extrabold text-slate-300 transition hover:border-rose-400/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-35">Sonraki →</button></nav>}</> : <div className="premium-card mt-5 p-10 text-center"><div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-white/[.04] text-xl" aria-hidden="true">⌕</div><h2 className="mt-4 text-xl font-black">Sonuç bulunamadı</h2><p className="mt-2 text-sm text-slate-400">Farklı bir kelime deneyin veya aşağıdaki popüler konulardan birini seçin.</p><div className="mt-5 flex flex-wrap justify-center gap-2">{(['Mobil Ödeme','Operatörler','Dijital Kodlar'] as Exclude<Topic, 'Tümü'>[]).map((item) => <button key={item} type="button" onClick={() => openTopic(item)} aria-controls="article-archive" aria-pressed={topic === item} className="focus-ring rounded-full border border-white/10 px-4 py-2 text-xs font-extrabold text-slate-300 hover:border-rose-400/30 hover:text-white">{item}</button>)}<button type="button" onClick={clearFilters} aria-controls="article-archive" className="focus-ring rounded-full border border-rose-400/25 bg-rose-400/10 px-4 py-2 text-xs font-extrabold text-rose-200 hover:bg-rose-400/15 hover:text-white">Tüm rehberleri göster</button></div></div>}
     </section>
 
     {!searchIsPending && recommendations.length > 0 && <section className="render-later mt-14 border-t border-white/8 pt-10"><div><p className="text-xs font-extrabold uppercase tracking-[.16em] text-violet-300">Keşfetmeye devam edin</p><h2 className="mt-2 text-2xl font-black">Bunlar da ilginizi çekebilir</h2><p className="mt-2 text-sm text-slate-500">Seçtiğiniz konuya yakın, popüler rehberlerden öneriler.</p></div><div className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">{recommendations.map((article) => <ArticleCard key={article.slug} article={article}/>)}</div></section>}
