@@ -73,12 +73,15 @@
 
 .home-page .hero-pro { border-bottom: 0 !important; }
 
-.home-flow .brand-strip { padding: 3.25rem 0 3.5rem; }
-.home-flow .home-services { padding: 4.25rem 0; }
-.home-flow .home-trust-editorial { padding-block: 4.25rem; }
-.home-flow .home-calculator-band { padding: 3.75rem 0; }
-.home-flow .experience-showcase { padding: 4.5rem 0; }
-.home-flow .home-final-section { padding-top: 4rem !important; padding-bottom: 4.5rem !important; }
+/* Adjacent sections used to contribute both a large bottom and a large top
+   gutter. Keep one compact transition rhythm so the page reads continuously. */
+.home-page .hero-pro { padding-bottom: 1rem; }
+.home-flow .brand-strip { padding: 1.65rem 0 1.2rem; }
+.home-flow .home-services { padding: 1.65rem 0 2rem; }
+.home-flow .home-trust-editorial { padding-block: 2rem; }
+.home-flow .home-calculator-band { padding: 2rem 0; }
+.home-flow .experience-showcase { padding: 2.25rem 0; }
+.home-flow .home-final-section { padding-top: 2rem !important; padding-bottom: 2.75rem !important; }
 
 /* Section wrappers contain layout only; they never paint full-width bands. */
 .home-flow-band--brands::before,
@@ -164,12 +167,13 @@ body:has(.home-page) .site-footer {
     width: min(calc(100% - 1.25rem), var(--home-flow-shell));
   }
 
-  .home-flow .brand-strip { padding: 2.45rem 0 2.7rem; }
-  .home-flow .home-services { padding: 3rem 0; }
-  .home-flow .home-trust-editorial { padding-block: 3rem !important; }
-  .home-flow .home-calculator-band { padding: 2.5rem 0; }
-  .home-flow .experience-showcase { padding: 3rem 0 !important; }
-  .home-flow .home-final-section { padding-top: 2.75rem !important; padding-bottom: 3.25rem !important; }
+  .home-page .hero-pro { padding-bottom: .75rem; }
+  .home-flow .brand-strip { padding: 1.35rem 0 1rem; }
+  .home-flow .home-services { padding: 1.35rem 0 1.75rem; }
+  .home-flow .home-trust-editorial { padding-block: 1.75rem !important; }
+  .home-flow .home-calculator-band { padding: 1.75rem 0; }
+  .home-flow .experience-showcase { padding: 1.8rem 0 !important; }
+  .home-flow .home-final-section { padding-top: 1.7rem !important; padding-bottom: 2.4rem !important; }
 
   .home-flow .credibility-band__inner { padding: 1.45rem 0; }
 

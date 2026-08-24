@@ -1,6 +1,6 @@
 /* Ana sayfa hizmet rehberleri: içerik kadar yükseklik, güçlü marka alanı ve tutarlı ritim. */
 .home-page .experience-showcase--compact {
-  padding: 54px 0 !important;
+  padding: 32px 0 36px !important;
 }
 
 .home-page .experience-showcase--compact .experience-heading {
@@ -160,7 +160,7 @@
 
 @media (max-width: 640px) {
   .home-page .experience-showcase--compact {
-    padding: 40px 0 !important;
+    padding: 28px 0 32px !important;
   }
 
   .home-page .experience-showcase--compact .experience-heading {
