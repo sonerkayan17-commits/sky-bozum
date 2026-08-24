@@ -14,6 +14,7 @@ import {
 
 export type MemberRole = 'member' | 'editor' | 'publisher' | 'moderator' | 'operator' | 'admin';
 export type MemberStatus = 'pending' | 'active' | 'banned';
+export type MemberRestrictionKey = 'community' | 'messaging' | 'code_sale' | 'store_purchase' | 'wallet';
 
 export type AdminMember = {
   id: string;
@@ -24,9 +25,13 @@ export type AdminMember = {
   balance: number;
   points: number;
   permissions: string[];
+  restrictions: MemberRestrictionKey[];
   banReason: string;
   bannedBy: string;
   bannedAt: Date | null;
+  bannedUntil: Date | null;
+  approvedBy: string;
+  approvedAt: Date | null;
   createdAt: Date | null;
 };
 
@@ -62,24 +67,38 @@ export type MemberLedgerEvent = {
   createdAt: Date | null;
 };
 
-type MemberDocument = Omit<AdminMember, 'id' | 'createdAt' | 'bannedAt'> & { createdAt?: Timestamp; bannedAt?: Timestamp };
+type MemberDocument = Omit<AdminMember, 'id' | 'createdAt' | 'bannedAt' | 'bannedUntil' | 'approvedAt'> & {
+  createdAt?: Timestamp;
+  bannedAt?: Timestamp;
+  bannedUntil?: Timestamp;
+  approvedAt?: Timestamp;
+};
 type CommentDocument = Omit<AdminComment, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type ContentAuditDocument = Omit<ContentAuditEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 type MemberLedgerDocument = Omit<MemberLedgerEvent, 'id' | 'createdAt'> & { createdAt?: Timestamp };
 
 function asMember(id: string, value: MemberDocument): AdminMember {
+  const bannedUntil = value.bannedUntil?.toDate() ?? null;
+  const storedStatus = value.status || 'pending';
+  const status = storedStatus === 'banned' && bannedUntil && bannedUntil.getTime() <= Date.now()
+    ? 'active'
+    : storedStatus;
   return {
     id,
     displayName: value.displayName || 'İsimsiz üye',
     email: value.email || 'E-posta yok',
     role: value.role || 'member',
-    status: value.status || 'pending',
+    status,
     balance: Number(value.balance) || 0,
     points: Number(value.points) || 0,
     permissions: Array.isArray(value.permissions) ? value.permissions : [],
+    restrictions: Array.isArray(value.restrictions) ? value.restrictions : [],
     banReason: value.banReason || '',
     bannedBy: value.bannedBy || '',
     bannedAt: value.bannedAt?.toDate() ?? null,
+    bannedUntil,
+    approvedBy: value.approvedBy || '',
+    approvedAt: value.approvedAt?.toDate() ?? null,
     createdAt: value.createdAt?.toDate() ?? null,
   };
 }
@@ -177,20 +196,50 @@ export async function setMemberStatus(firestore: Firestore, memberId: string, st
     banReason: status === 'banned' ? 'Yönetici kararıyla erişim engellendi.' : '',
     bannedBy: status === 'banned' ? actorId : '',
     bannedAt: status === 'banned' ? serverTimestamp() : null,
+    bannedUntil: null,
+    approvedBy: status === 'active' ? actorId : '',
+    approvedAt: status === 'active' ? serverTimestamp() : null,
     updatedAt: serverTimestamp(),
   });
   await writeAdminAudit(firestore, `member-status:${status}`, memberId, actorId);
 }
 
-export async function banMember(firestore: Firestore, memberId: string, reason: string, actorId: string) {
+export async function banMember(
+  firestore: Firestore,
+  memberId: string,
+  reason: string,
+  actorId: string,
+  durationHours: number | null = null,
+) {
+  if (durationHours !== null && (!Number.isInteger(durationHours) || durationHours < 1 || durationHours > 24 * 365)) {
+    throw new Error('Uzaklaştırma süresi geçersiz.');
+  }
   await updateDoc(doc(firestore, 'members', memberId), {
     status: 'banned',
     banReason: reason.trim().slice(0, 240) || 'Yönetici kararıyla erişim engellendi.',
     bannedBy: actorId,
     bannedAt: serverTimestamp(),
+    bannedUntil: durationHours === null ? null : new Date(Date.now() + durationHours * 60 * 60 * 1000),
     updatedAt: serverTimestamp(),
   });
-  await writeAdminAudit(firestore, 'member-status:banned', memberId, actorId);
+  await writeAdminAudit(firestore, durationHours === null ? 'member-status:banned' : `member-status:suspended-${durationHours}h`, memberId, actorId);
+}
+
+export async function setMemberRestrictions(
+  firestore: Firestore,
+  memberId: string,
+  restrictions: MemberRestrictionKey[],
+  actorId: string,
+) {
+  const allowed: MemberRestrictionKey[] = ['community', 'messaging', 'code_sale', 'store_purchase', 'wallet'];
+  const normalized = [...new Set(restrictions)].filter((item): item is MemberRestrictionKey => allowed.includes(item));
+  await updateDoc(doc(firestore, 'members', memberId), {
+    restrictions: normalized,
+    restrictionsUpdatedBy: actorId,
+    restrictionsUpdatedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  await writeAdminAudit(firestore, `member-restrictions:${normalized.join(',') || 'none'}`, memberId, actorId);
 }
 
 export async function setMemberAccess(

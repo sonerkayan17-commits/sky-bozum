@@ -20,6 +20,8 @@ const checks = [
   ['Her kod için ayrı inceleme sonucu var', files.admin.includes('reviewCode(operation, index') && files.admin.includes('approvedCodeCount') && files.admin.includes('rejectedCodeCount')],
   ['Ödeme öncesi tüm kodlar inceleniyor', files.admin.includes('operation.codeReviews.length !== operation.codeCount')],
   ['Bakiye ödemesi tek transaction içinde', files.admin.includes('runTransaction') && files.admin.includes("`code-sale-${operation.id}`") && files.admin.includes("payoutState: 'paid'")],
+  ['IBAN ödeme tamamlama güncel kayıtla transaction içinde', files.admin.includes("payoutMethod !== 'iban'") && files.admin.includes("current.payoutMethod !== 'iban'") && files.admin.includes("transaction.update(operationRef, { status: 'completed', payoutState: 'paid'")],
+  ['Kod incelemesi eş zamanlı admin yazımlarını birleştiriyor', files.admin.includes('const byHash = new Map') && files.admin.includes('transaction.update(operationRef, { codeReviews')],
   ['Üye inceleme ve ödeme sonucunu izliyor', files.member.includes('member-code-review-result') && files.member.includes('payoutReference')],
   ['Üye güvenli işlem zaman çizelgesini izliyor', files.member.includes("collection(client.db!, 'operationEvents')") && files.member.includes('member-operation-timeline')],
   ['İşlem hareketleri iç ekip notlarından ayrılıyor', files.rules.includes('match /operationEvents/{eventId}') && files.rules.includes('resource.data.memberId == request.auth.uid') && files.admin.includes("collection(db, 'operationEvents')")],

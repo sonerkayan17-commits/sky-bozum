@@ -9,6 +9,21 @@ type ProductCoverVideoProps = {
 };
 
 const PRODUCT_VIDEO_ACTIVE_EVENT = 'sky-product-video-active';
+type MobileVideoCandidate = { ratio: number; centerDistance: number; activate: () => void };
+const mobileVideoCandidates = new Map<string, MobileVideoCandidate>();
+let mobileSelectionFrame = 0;
+let lastMobileInteractionAt = 0;
+
+function scheduleMobileSelection() {
+  if (Date.now() - lastMobileInteractionAt < 10_000 || mobileSelectionFrame) return;
+  mobileSelectionFrame = window.requestAnimationFrame(() => {
+    mobileSelectionFrame = 0;
+    const selected = [...mobileVideoCandidates.values()]
+      .filter((candidate) => candidate.ratio >= .62)
+      .sort((left, right) => right.ratio - left.ratio || left.centerDistance - right.centerDistance)[0];
+    selected?.activate();
+  });
+}
 
 export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: ProductCoverVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,13 +44,22 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
     const mayAutoPlayInView = usesInViewPlayback && !prefersReducedMotion && !connection?.saveData;
+    let holdTimer: number | null = null;
+    let pointerStart = { x: 0, y: 0 };
+    let pointerMoved = false;
+    let suppressNextClick = false;
+    let touchActivated = false;
 
     const start = () => {
       setSourceEnabled(true);
       window.dispatchEvent(new CustomEvent(PRODUCT_VIDEO_ACTIVE_EVENT, { detail: playbackId }));
+      touchActivated = true;
       setActive(true);
     };
-    const stop = () => setActive(false);
+    const stop = () => {
+      touchActivated = false;
+      setActive(false);
+    };
     const stopAfterFocus = (event: FocusEvent) => {
       if (!trigger.contains(event.relatedTarget as Node | null)) stop();
     };
@@ -45,6 +69,51 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
     };
     const handlePointerLeave = () => {
       if (!usesInViewPlayback) stop();
+    };
+    const clearHoldTimer = () => {
+      if (holdTimer !== null) window.clearTimeout(holdTimer);
+      holdTimer = null;
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!usesInViewPlayback || event.pointerType === 'mouse') return;
+      lastMobileInteractionAt = Date.now();
+      pointerStart = { x: event.clientX, y: event.clientY };
+      pointerMoved = false;
+      clearHoldTimer();
+      holdTimer = window.setTimeout(() => {
+        suppressNextClick = true;
+        start();
+      }, 1000);
+    };
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!usesInViewPlayback || event.pointerType === 'mouse') return;
+      if (Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 10) {
+        pointerMoved = true;
+        clearHoldTimer();
+      }
+    };
+    const handlePointerUp = (event: PointerEvent) => {
+      if (!usesInViewPlayback || event.pointerType === 'mouse') return;
+      clearHoldTimer();
+      // Kaydırmada son temas edilen kartı aktif tut. Kısa dokunuşta ilk temas
+      // videoyu oynatır; aynı karta ikinci dokunuş ürün bağlantısını açar.
+      if (pointerMoved) {
+        start();
+      } else if (!touchActivated) {
+        suppressNextClick = true;
+        start();
+      }
+    };
+    const handlePointerCancel = () => clearHoldTimer();
+    const handleClickCapture = (event: MouseEvent) => {
+      if (!suppressNextClick) return;
+      suppressNextClick = false;
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    const handleContextMenu = (event: Event) => {
+      if (!usesInViewPlayback) return;
+      event.preventDefault();
     };
     const handleAnotherVideo = (event: Event) => {
       if ((event as CustomEvent<string>).detail === playbackId) return;
@@ -57,22 +126,42 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
 
     trigger.addEventListener('pointerenter', handlePointerEnter);
     trigger.addEventListener('pointerleave', handlePointerLeave);
+    trigger.addEventListener('pointerdown', handlePointerDown);
+    trigger.addEventListener('pointermove', handlePointerMove);
+    trigger.addEventListener('pointerup', handlePointerUp);
+    trigger.addEventListener('pointercancel', handlePointerCancel);
+    trigger.addEventListener('click', handleClickCapture, true);
+    trigger.addEventListener('contextmenu', handleContextMenu);
     trigger.addEventListener('focusin', start);
     trigger.addEventListener('focusout', stopAfterFocus);
     window.addEventListener(PRODUCT_VIDEO_ACTIVE_EVENT, handleAnotherVideo);
 
     const observer = mayAutoPlayInView
       ? new IntersectionObserver(([entry]) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.62) start();
-          else if (!entry.isIntersecting || entry.intersectionRatio < 0.24) stop();
+          const bounds = entry.boundingClientRect;
+          mobileVideoCandidates.set(playbackId, {
+            ratio: entry.isIntersecting ? entry.intersectionRatio : 0,
+            centerDistance: Math.abs(bounds.left + bounds.width / 2 - window.innerWidth / 2),
+            activate: start,
+          });
+          if (!entry.isIntersecting || entry.intersectionRatio < 0.24) stop();
+          scheduleMobileSelection();
         }, { threshold: [0, 0.24, 0.62, 0.82], rootMargin: '-8% 0px -10%' })
       : null;
     observer?.observe(trigger);
 
     return () => {
       observer?.disconnect();
+      mobileVideoCandidates.delete(playbackId);
+      clearHoldTimer();
       trigger.removeEventListener('pointerenter', handlePointerEnter);
       trigger.removeEventListener('pointerleave', handlePointerLeave);
+      trigger.removeEventListener('pointerdown', handlePointerDown);
+      trigger.removeEventListener('pointermove', handlePointerMove);
+      trigger.removeEventListener('pointerup', handlePointerUp);
+      trigger.removeEventListener('pointercancel', handlePointerCancel);
+      trigger.removeEventListener('click', handleClickCapture, true);
+      trigger.removeEventListener('contextmenu', handleContextMenu);
       trigger.removeEventListener('focusin', start);
       trigger.removeEventListener('focusout', stopAfterFocus);
       window.removeEventListener(PRODUCT_VIDEO_ACTIVE_EVENT, handleAnotherVideo);

@@ -283,7 +283,19 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     if (operation.currency === 'TRY' && payout > acceptedFaceValue) { setNotice('TL ödeme tutarı yalnız geçerli bulunan kodların toplam değerini aşamaz.'); return; }
     setPaymentSavingId(operation.id);
     try {
-      await updateDoc(doc(db, 'operations', operation.id), { payout, status: 'awaiting_payment', payoutState: 'approved', updatedBy: actorId, updatedAt: serverTimestamp() });
+      const operationRef = doc(db, 'operations', operation.id);
+      await runTransaction(db, async (transaction) => {
+        const snapshot = await transaction.get(operationRef);
+        if (!snapshot.exists()) throw new Error('İşlem kaydı bulunamadı.');
+        const current = snapshot.data();
+        if (current.status === 'completed' || current.payoutState === 'paid') throw new Error('Bu ödeme daha önce tamamlanmış.');
+        if (!Array.isArray(current.codeReviews) || current.codeReviews.length !== Number(current.codeCount)) throw new Error('Tüm kodların güncel incelemesi tamamlanmadan ödeme onaylanamaz.');
+        const approvedCount = Number(current.approvedCodeCount) || 0;
+        if (approvedCount < 1) throw new Error('Ödeme için geçerli kod bulunamadı.');
+        const currentAcceptedFaceValue = (Number(current.codeValue) || 0) * approvedCount;
+        if (current.currency === 'TRY' && payout > currentAcceptedFaceValue) throw new Error('Ödeme, kabul edilen kodların toplam değerini aşamaz.');
+        transaction.update(operationRef, { payout, status: 'awaiting_payment', payoutState: 'approved', updatedBy: actorId, updatedAt: serverTimestamp() });
+      });
       await addTimelineEntry(
         operation.id,
         'status',
@@ -343,7 +355,16 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     if (reference.length < 4) { setNotice('Banka hareketi veya dekont referansını girin.'); return; }
     setPaymentSavingId(operation.id);
     try {
-      await updateDoc(doc(db, 'operations', operation.id), { status: 'completed', payoutState: 'paid', payoutReference: reference.slice(0, 120), paidAt: serverTimestamp(), updatedBy: actorId, updatedAt: serverTimestamp() });
+      const operationRef = doc(db, 'operations', operation.id);
+      await runTransaction(db, async (transaction) => {
+        const snapshot = await transaction.get(operationRef);
+        if (!snapshot.exists()) throw new Error('İşlem kaydı bulunamadı.');
+        const current = snapshot.data();
+        if (current.status === 'completed' || current.payoutState === 'paid') throw new Error('Bu ödeme daha önce tamamlanmış.');
+        if (current.status !== 'awaiting_payment' || current.payoutState !== 'approved' || current.payoutMethod !== 'iban') throw new Error('Ödeme henüz IBAN aktarımına hazır değil.');
+        if ((Number(current.payout) || 0) <= 0) throw new Error('Onaylanmış ödeme tutarı bulunamadı.');
+        transaction.update(operationRef, { status: 'completed', payoutState: 'paid', payoutReference: reference.slice(0, 120), paidAt: serverTimestamp(), updatedBy: actorId, updatedAt: serverTimestamp() });
+      });
       await addTimelineEntry(
         operation.id,
         'status',
@@ -368,15 +389,26 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     if (!codeHash) { setNotice('Kod kimliği bulunamadı; işlem kaydını kontrol edin.'); return; }
     const reasonKey = `${operation.id}:${index}`;
     const reason = status === 'rejected' ? (rejectionReasonDrafts[reasonKey] || 'Geçersiz veya kullanılmış kod') : '';
-    const byHash = new Map(operation.codeReviews.map((item) => [item.codeHash, item]));
-    byHash.set(codeHash, { codeHash, status, reason });
-    const codeReviews = operation.codeHashes.flatMap((hash) => byHash.get(hash) || []);
-    const approvedCodeCount = codeReviews.filter((item) => item.status === 'approved').length;
-    const rejectedCodeCount = codeReviews.filter((item) => item.status === 'rejected').length;
-    const reviewState = codeReviews.length === operation.codeCount ? 'complete' : 'in_progress';
     setPaymentSavingId(operation.id);
     try {
-      await updateDoc(doc(db, 'operations', operation.id), { codeReviews, approvedCodeCount, rejectedCodeCount, reviewState, status: 'checking', updatedBy: actorId, updatedAt: serverTimestamp() });
+      const operationRef = doc(db, 'operations', operation.id);
+      let approvedCodeCount = 0;
+      let rejectedCodeCount = 0;
+      let reviewState: Operation['reviewState'] = 'in_progress';
+      await runTransaction(db, async (transaction) => {
+        const snapshot = await transaction.get(operationRef);
+        if (!snapshot.exists()) throw new Error('İşlem kaydı bulunamadı.');
+        const current = snapshot.data() as Operation;
+        if (current.status === 'awaiting_payment' || current.status === 'completed') throw new Error('Ödeme aşamasındaki kod incelemesi değiştirilemez.');
+        if (!current.codeHashes.includes(codeHash)) throw new Error('Kod kimliği güncel işlemde bulunamadı.');
+        const byHash = new Map((current.codeReviews || []).map((item) => [item.codeHash, item]));
+        byHash.set(codeHash, { codeHash, status, reason });
+        const codeReviews = current.codeHashes.flatMap((hash) => byHash.get(hash) || []);
+        approvedCodeCount = codeReviews.filter((item) => item.status === 'approved').length;
+        rejectedCodeCount = codeReviews.filter((item) => item.status === 'rejected').length;
+        reviewState = codeReviews.length === current.codeCount ? 'complete' : 'in_progress';
+        transaction.update(operationRef, { codeReviews, approvedCodeCount, rejectedCodeCount, reviewState, status: 'checking', updatedBy: actorId, updatedAt: serverTimestamp() });
+      });
       if (reviewState === 'complete') {
         await addTimelineEntry(
           operation.id,

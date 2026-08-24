@@ -10,22 +10,22 @@ const featuredGuide = {
 
 const cards = [
   {
-    slug: 'mobil-odeme-nasil-acilir',
-    eyebrow: 'Operatör Rehberi',
-    title: 'Mobil Ödeme Rehberi',
-    description: 'Limit, kullanım ve güvenli işlem adımlarını tek rehberde öğrenin.',
-    tags: ['Turkcell', 'Türk Telekom', 'Vodafone'],
-    cover: '/blog-covers/operatorler-premium.svg',
-    coverAlt: 'Turkcell, Türk Telekom ve Vodafone premium marka kompozisyonu',
+    slug: 'mobil-odeme-bozdurmada-hiz-ve-guven',
+    eyebrow: 'İşlem Süresi ve Güven',
+    title: 'Mobil bozum ne kadar sürer?',
+    description: 'Ürün uygunluğu, yazılı net tutar, kod kontrolü ve banka aktarımının süreyi nasıl etkilediğini görün.',
+    tags: ['Hız', 'Kod kontrolü', 'Ödeme kaydı'],
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/bozum-talebi-guvenli-akis.webp',
+    coverAlt: 'Mobil bozum işleminde uygunluk, kod kontrolü ve ödeme adımlarını gösteren rehber kapağı',
   },
   {
-    slug: 'dijital-kod-hediye-karti-rehberi',
-    eyebrow: 'Dijital Kod Rehberi',
-    title: 'Dijital Kod Rehberi',
-    description: 'Kod teslimi, kontrol süreci ve ödeme adımlarını güvenle takip edin.',
-    tags: ['iTunes / Apple', 'Razer Gold', 'Steam'],
-    cover: '/blog-covers/dijital-kodlar-premium.svg',
-    coverAlt: 'Apple, Razer Gold ve Steam premium marka kompozisyonu',
+    slug: 'mobil-odeme-bozdurma-dolandiriciligi-sonrasi-ne-yapilmali',
+    eyebrow: 'Acil Güvenlik Rehberi',
+    title: 'Dolandırıcılık şüphesinde ne yapılmalı?',
+    description: 'Yeni kaybı durdurun; görüşme, banka ve kod kayıtlarını koruyup doğru resmî başvuru sırasına geçin.',
+    tags: ['Kanıtları koru', 'Hesabı güvene al', 'Resmî bildirim'],
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
+    coverAlt: 'Mobil bozum dolandırıcılığı şüphesinde kanıt ve hesap güvenliği kontrolleri',
   },
 ] as const;
 
@@ -81,7 +81,7 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
                     alt={card.coverAlt}
                     fill
                     sizes={sidebar ? '(max-width: 639px) 94px, 260px' : '(min-width: 768px) 160px, 100vw'}
-                    className="object-contain p-3.5 transition duration-700 ease-out group-hover:scale-[1.018]"
+                    className="object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/10" />
                 </div>

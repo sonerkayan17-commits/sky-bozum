@@ -21,25 +21,59 @@ service cloud.firestore {
     }
 
     function canModerate() {
-      return isAdmin() || staffRole() == "moderator";
+      return isAdmin() || (approvedMember() && notBanned() && staffRole() == "moderator");
     }
 
     function canManageContent() {
-      return isAdmin() || staffRole() == "editor" || staffRole() == "publisher";
+      return isAdmin() || (
+        approvedMember()
+        && notBanned()
+        && (staffRole() == "editor" || staffRole() == "publisher")
+      );
     }
 
     function canOperate() {
-      return isAdmin() || staffRole() == "operator" || staffRole() == "moderator";
+      return isAdmin() || (
+        approvedMember()
+        && notBanned()
+        && (staffRole() == "operator" || staffRole() == "moderator")
+      );
     }
 
     function notBanned() {
       return !signedIn()
         || !exists(/databases/$(database)/documents/members/$(request.auth.uid))
-        || get(/databases/$(database)/documents/members/$(request.auth.uid)).data.status != "banned";
+        || get(/databases/$(database)/documents/members/$(request.auth.uid)).data.status != "banned"
+        || (
+          get(/databases/$(database)/documents/members/$(request.auth.uid)).data.get("bannedUntil", null) is timestamp
+          && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.bannedUntil <= request.time
+        );
+    }
+
+    function capabilityAllowed(capability) {
+      return !signedIn()
+        || !exists(/databases/$(database)/documents/members/$(request.auth.uid))
+        || !get(/databases/$(database)/documents/members/$(request.auth.uid)).data.get("restrictions", []).hasAny([capability]);
+    }
+
+    function approvedMember() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/members/$(request.auth.uid))
+        && (
+          get(/databases/$(database)/documents/members/$(request.auth.uid)).data.status == "active"
+          || (
+            get(/databases/$(database)/documents/members/$(request.auth.uid)).data.status == "banned"
+            && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.get("bannedUntil", null) is timestamp
+            && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.bannedUntil <= request.time
+          )
+        );
     }
 
     function verifiedMember() {
-      return signedIn() && request.auth.token.email_verified == true && notBanned();
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && approvedMember()
+        && notBanned();
     }
 
     // Yonetici hesabi, e-posta dogrulama kaydi eski bir oturumda henuz
@@ -81,6 +115,8 @@ service cloud.firestore {
         && (request.resource.data.uid == null || (signedIn() && request.resource.data.uid == request.auth.uid))
         && validAuthor()
         && notBanned()
+        && (!signedIn() || isAdmin() || approvedMember())
+        && capabilityAllowed("community")
         && request.resource.data["service"] is string
         && request.resource.data["service"].size() >= 2
         && request.resource.data["service"].size() <= 100
@@ -317,7 +353,7 @@ service cloud.firestore {
 
     match /memberPrivate/{memberId} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == memberId);
-      allow create, update: if verifiedMember() && request.auth.uid == memberId
+      allow create, update: if verifiedMember() && capabilityAllowed("wallet") && request.auth.uid == memberId
         && request.resource.data.keys().hasOnly(["accountHolder", "bankName", "iban", "updatedAt"])
         && request.resource.data.accountHolder is string
         && request.resource.data.accountHolder.size() >= 2
@@ -382,7 +418,7 @@ service cloud.firestore {
     match /memberPosts/{postId} {
       allow read: if canModerate() || validPublicForumPost(resource.data)
         || (signedIn() && resource.data.uid == request.auth.uid);
-      allow create: if verifiedMemberOrAdmin()
+      allow create: if verifiedMemberOrAdmin() && (isAdmin() || capabilityAllowed("community"))
         && request.resource.data.uid == request.auth.uid
         && validForumDraft(request.resource.data)
         && (isAdmin() || request.resource.data.status == "pending")
@@ -396,7 +432,7 @@ service cloud.firestore {
         && request.resource.data.body.size() >= 10
         && request.resource.data.body.size() <= 30000
         && request.resource.data.createdAt == request.time;
-      allow update: if canModerate() || (verifiedMember()
+      allow update: if canModerate() || (verifiedMember() && capabilityAllowed("community")
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
@@ -501,14 +537,14 @@ service cloud.firestore {
 
     match /profileLikes/{likeId} {
       allow read: if true;
-      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
+      allow create: if verifiedMember() && capabilityAllowed("community") && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 
     match /pointGifts/{giftId} {
       allow get: if ownsScopedDocument(giftId) || (signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid));
       allow list: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
-      allow create: if verifiedMember()
+      allow create: if verifiedMember() && capabilityAllowed("community")
         && giftId == request.auth.uid + "_" + request.resource.data.receiverId
         && request.resource.data.keys().hasOnly(["senderId", "receiverId", "amount", "createdAt"])
         && request.resource.data.senderId == request.auth.uid
@@ -527,7 +563,7 @@ service cloud.firestore {
       allow read: if true;
       allow create, delete: if isAdmin();
       allow update: if isAdmin() || (
-        verifiedMember()
+        verifiedMember() && capabilityAllowed("store_purchase")
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["stockCount", "lastOrderId", "updatedAt"])
         && request.resource.data.lastOrderId is string
         && request.resource.data.updatedAt == request.time
@@ -539,10 +575,10 @@ service cloud.firestore {
       );
 
       match /codes/{codeId} {
-        allow read: if isAdmin() || verifiedMember();
+        allow read: if isAdmin() || (verifiedMember() && capabilityAllowed("store_purchase"));
         allow create, delete: if isAdmin();
         allow update: if isAdmin() || (
-          verifiedMember()
+          verifiedMember() && capabilityAllowed("store_purchase")
           && resource.data.status == "available"
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "deliveredTo", "deliveredAt", "orderId"])
           && request.resource.data.status == "delivered"
@@ -558,7 +594,7 @@ service cloud.firestore {
 
     match /productOrders/{orderId} {
       allow get, list: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
-      allow create: if verifiedMember()
+      allow create: if verifiedMember() && capabilityAllowed("store_purchase") && capabilityAllowed("wallet")
         && request.resource.data.keys().hasOnly(["userId", "userEmail", "productSlug", "productName", "packId", "packLabel", "catalogKey", "codeId", "codeEncrypted", "priceMinor", "status", "createdAt", "deliveredAt"])
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.userEmail == request.auth.token.email
@@ -579,7 +615,7 @@ service cloud.firestore {
 
     match /messages/{messageId} {
       allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
-      allow create: if verifiedMember() && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && freshCreateTimestamp(request.resource.data.createdAt);
+      allow create: if verifiedMember() && capabilityAllowed("messaging") && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && freshCreateTimestamp(request.resource.data.createdAt);
       allow update, delete: if false;
     }
 
@@ -652,7 +688,7 @@ service cloud.firestore {
         && request.resource.data.balanceAfter is number
         && request.resource.data.performedBy == request.auth.uid
         && request.resource.data.createdAt == request.time)
-        || (verifiedMember()
+        || (verifiedMember() && capabilityAllowed("community")
           && request.resource.data.giftId is string
           && (entryId == "gift-" + request.resource.data.giftId + "-sender" || entryId == "gift-" + request.resource.data.giftId + "-receiver")
           && request.resource.data.keys().hasOnly(["memberId", "kind", "amount", "balanceAfter", "note", "performedBy", "giftId", "createdAt"])
@@ -668,7 +704,7 @@ service cloud.firestore {
               && request.resource.data.amount == -5
               && request.resource.data.balanceAfter == getAfter(/databases/$(database)/documents/members/$(request.auth.uid)).data.points)
             || (request.resource.data.memberId == getAfter(/databases/$(database)/documents/pointGifts/$(request.resource.data.giftId)).data.receiverId && request.resource.data.amount == 5)))
-        || (verifiedMember()
+        || (verifiedMember() && capabilityAllowed("store_purchase") && capabilityAllowed("wallet")
           && request.resource.data.orderId is string
           && entryId == "store-" + request.resource.data.orderId
           && request.resource.data.keys().hasOnly(["memberId", "kind", "amount", "balanceAfter", "note", "orderId", "performedBy", "createdAt"])
@@ -837,6 +873,8 @@ service cloud.firestore {
           || (request.resource.data.memberId == request.auth.uid
             && request.resource.data.createdBy == request.auth.uid
             && request.resource.data.updatedBy == request.auth.uid
+            && capabilityAllowed("code_sale")
+            && capabilityAllowed("wallet")
             && request.resource.data.operationType == "code_sale"
             && request.resource.data.productLabel == "Razer Gold"
             && request.resource.data["service"] in ["razer-gold-tl", "razer-gold-usd"]
@@ -948,7 +986,7 @@ service cloud.firestore {
     match /codeSaleClaims/{claimId} {
       allow get: if canOperate();
       allow list: if false;
-      allow create: if verifiedMember()
+      allow create: if verifiedMember() && capabilityAllowed("code_sale") && capabilityAllowed("wallet")
         && request.resource.data.keys().hasOnly(["operationId", "memberId", "createdAt"])
         && request.resource.data.memberId == request.auth.uid
         && request.resource.data.operationId is string

@@ -22,7 +22,7 @@ for (const file of sourceFiles.filter((file) => file.endsWith(`${path.sep}page.t
 
 const site = fs.readFileSync(path.join(app, 'lib', 'site.ts'), 'utf8');
 const slugs = [...site.matchAll(/slug:\s*["']([^"']+)["']/g)].map((match) => match[1]);
-const knownDynamicPrefixes = ['/bilgi-merkezi/', '/hizmetler/', '/bilgi-merkezi/kategori/', '/bilgi-merkezi/konu/'];
+const knownDynamicPrefixes = ['/bilgi-merkezi/', '/hizmetler/', '/bilgi-merkezi/kategori/', '/bilgi-merkezi/konu/', '/topluluk/forum/'];
 const hrefs = [];
 for (const file of sourceFiles) {
   const source = fs.readFileSync(file, 'utf8');

@@ -5,6 +5,10 @@ const account = read('app/components/AccountAccess.tsx');
 const memberOps = read('app/components/member/MemberOperations.tsx');
 const messages = read('app/components/member/MemberMessages.tsx');
 const bank = read('app/components/member/MemberBankInfo.tsx');
+const memberHub = read('app/components/member/MemberHub.tsx');
+const admin = read('app/lib/admin.ts');
+const adminConsole = read('app/yonetim/AdminConsole.tsx');
+const productVideo = read('app/components/products/ProductCoverVideo.tsx');
 const rules = read('firestore.rules');
 
 const checks = [
@@ -15,6 +19,11 @@ const checks = [
   ['Member profile/bank path is private', bank.includes('memberPrivate') && rules.includes('match /memberPrivate/{memberId}')],
   ['Messages are owner-scoped', messages.includes('messages') && rules.includes('resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid')],
   ['Request/operation create is guarded', memberOps.includes('operations') && rules.includes('request.resource.data.memberId == request.auth.uid')],
+  ['Member approval is enforced in data rules', rules.includes('function approvedMember()') && rules.includes('&& approvedMember()')],
+  ['Member approval persists in live account UI', memberHub.includes("label: 'Onaylı üye'") && memberHub.includes("onSnapshot(doc(db, 'members'"),],
+  ['Timed bans and capability restrictions exist', admin.includes('bannedUntil') && admin.includes('setMemberRestrictions') && rules.includes('function capabilityAllowed(capability)')],
+  ['Admin member view follows persisted member snapshot', adminConsole.includes('members.find((member) => member.id === current.id)')],
+  ['Mobile product video selects touched card', productVideo.includes('handlePointerDown') && productVideo.includes('suppressNextClick') && productVideo.includes('centerDistance')],
   ['No raw password persistence', !/setDoc\([^)]*password/i.test(account)],
 ];
 

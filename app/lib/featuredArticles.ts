@@ -12,7 +12,7 @@ export const featuredArticles = [
     serviceSlug: 'sms-mobil-odeme',
     cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
     coverAlt: 'Mobil bozum sitesi seçerken alan adı, resmî kanal, oran ve ödeme güvenliği kontrollerini gösteren rehber kapağı',
-    keywords: ['güvenilir mobil bozum siteleri', 'güvenilir mobil bozum sitesi', 'mobil bozum sitesi', 'mobil bozumcu', 'mobil bozum', 'mobil ödeme bozdurma', 'mobil ödeme bozdur', 'mobil ödeme bozum', 'mobil ödeme bozdurma güvenli mi', 'mobil bozum dolandırıcılığı'],
+    keywords: ['güvenilir mobil bozum siteleri', 'güvenilir mobil bozum sitesi', 'mobil ödeme güvenli siteler', 'mobil ödeme güvenli mi', 'mobil ödeme yasal mı', 'mobil bozum sitesi', 'mobil bozumcu', 'mobil bozum', 'mobil ödeme bozdurma', 'mobil ödeme bozdur', 'mobil ödeme bozum', 'mobil ödeme bozdurma güvenli mi', 'mobil bozum dolandırıldım', 'mobil bozum dolandırıcılığı'],
     links: [
       { label: 'Mobil ödeme bozum nedir?', href: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
       { label: 'Mobil bozum dolandırıcılığı rehberi', href: '/bilgi-merkezi/mobil-bozum-yaparken-dolandirilabilir-miyim' },
@@ -28,6 +28,7 @@ export const featuredArticles = [
       { label: 'Sosyal medya ve dijital mecralardaki dolandırıcılık girişimleri', href: 'https://ticaret.gov.tr/haberler/ticaret-bakanligi-sosyal-medya-ve-dijital-mecralardaki-dolandiricilik-girisimlerine-karsi-vatandaslari-uyariyor', publisher: 'T.C. Ticaret Bakanlığı' },
       { label: 'Bireysel Siber Güvenlik Önlemleri', href: 'https://dsy.usom.gov.tr/usom/23/07/230704142928_Bireysel%20Siber%20Gu%CC%88venlik%20O%CC%88nlemleri.pdf', publisher: 'USOM' },
       { label: 'TT Mobil Ödeme kullanım ve güvenlik koşulları', href: 'https://bireysel.turktelekom.com.tr/dijital-servisler/tt-mobil-odeme', publisher: 'Türk Telekom' },
+      { label: 'Faaliyet izni bulunan ödeme ve elektronik para kuruluşları', href: 'https://www.tcmb.gov.tr/wps/wcm/connect/tr/tcmb%2Btr/main%2Bmenu/temel%2Bfaaliyetler/odeme%2Bhizmetleri/elektronik%2Bpara%2Bkuruluslari', publisher: 'Türkiye Cumhuriyet Merkez Bankası' },
       { label: 'Güvenli olmayan sitelere ilişkin tarayıcı uyarıları', href: 'https://support.google.com/chrome/answer/99020?hl=tr', publisher: 'Google Chrome Yardım' },
     ],
     faq: [
@@ -70,6 +71,18 @@ export const featuredArticles = [
         relatedLinks: [
           { label: 'Mobil ödeme nasıl açılır ve limit nasıl kontrol edilir?', href: '/bilgi-merkezi/mobil-odeme-nasil-acilir' },
           { label: 'Desteklenen hizmetleri ve dijital kod gruplarını karşılaştırın', href: '/hizmetler' }
+        ]
+      },
+      {
+        title: 'Mobil ödeme güvenli mi, mobil ödeme yasal mı?',
+        paragraphs: [
+          'Mobil ödeme, operatörün ve yetkili ödeme hizmeti sağlayıcısının resmî akışında; hizmet adı, satıcı ve toplam tutar kullanıcıya açıkça gösterilerek kullanıldığında mevzuatla düzenlenen bir ödeme yöntemidir. Buna karşılık internette “mobil ödeme bozdur” veya “nakite çevir” şeklinde sunulan her yöntem aynı hukuki ve teknik yapıya sahip değildir. Bir sitenin Google’da görünmesi, reklam vermesi ya da güven rozeti kullanması tek başına yetki veya güven kanıtı sayılmaz.',
+          'Türkiye Cumhuriyet Merkez Bankası, ödeme hizmeti veya elektronik para ihracı sunan kuruluşların faaliyet iznine tabi olduğunu ve izinli kuruluşların güncel listesini yayımlar. Sky Bozum kendisini ödeme ya da elektronik para kuruluşu olarak tanıtmaz; operatör ve cüzdan bakiyesini doğrudan nakde çevirmez. Bu sayfalarda kullanıcıların kendi hesaplarıyla dijital ürün satın alma yolları açıklanır; bozum değerlendirmesi yalnız önceden uygunluğu doğrulanan kullanılmamış dijital kodlar için yapılır.',
+          'Güvenlik açısından doğru alan adı, yazılı ürün ve net tutar, tek kullanımlık kodların yalnız resmî ödeme ekranında kullanılması ve banka hareketinin kullanıcı tarafından kontrol edilmesi birlikte değerlendirilmelidir. İşlem modeli belirsizse, şifre veya uzaktan erişim isteniyorsa ya da kullanıcı beklenmedik bir kişisel hesaba yönlendiriliyorsa işlem durdurulmalıdır.'
+        ],
+        relatedLinks: [
+          { label: 'Sky Bozum hizmet modelini ve resmî kanalları doğrulayın', href: '/iletisim#hizmet-modeli' },
+          { label: 'Mobil bozum dolandırıcılığı sonrası yapılacakları okuyun', href: '/bilgi-merkezi/mobil-odeme-bozdurma-dolandiriciligi-sonrasi-ne-yapilmali' }
         ]
       },
       {
@@ -282,7 +295,7 @@ export const featuredArticles = [
     serviceSlug: 'sms-mobil-odeme',
     cover: '/blog-covers/mobil-odeme-nasil-acilir.svg',
     coverAlt: 'Telefon, operatör sinyali ve güvenli mobil ödeme akışını gösteren modern fintech illüstrasyonu',
-    keywords: ['mobil ödeme nasıl açılır', 'mobil ödeme açma', 'vodafone mobil ödeme açma', 'turkcell mobil ödeme açma', 'türk telekom mobil ödeme açma', 'mobil ödeme limiti', 'mobil ödeme bozum', 'paycell', 'pokus'],
+    keywords: ['mobil ödeme nasıl açılır', 'mobil ödeme açma', 'vodafone mobil ödeme açma', 'turkcell mobil ödeme açma', 'türk telekom mobil ödeme açma', 'turkcell mobil ödeme bozdurma', 'paycell nakite çevirme', 'türk telekom mobil ödeme bozdurma', 'pokus mobil ödeme nakite çevirme', 'vodafone mobil ödeme bozum', 'vodafone pay nakite çevirme', 'mobil ödeme limiti', 'mobil ödeme bozum', 'paycell', 'pokus'],
     links: [
       { label: 'Vodafone mobil ödeme hizmeti', href: '/hizmetler/vodafone-mobil-odeme' },
       { label: 'Turkcell mobil ödeme hizmeti', href: '/hizmetler/turkcell-mobil-odeme' },
@@ -324,7 +337,8 @@ export const featuredArticles = [
           'Vodafone mobil ödeme ile dijital ürün almayı planlıyorsanız, satın alma öncesinde ürünün bölgesini, teslim biçimini ve toplam fiyatını kontrol edin. Bozum amacıyla işlem yapacaksanız, ürünü satın almadan önce Sky Bozum üzerinden uygunluk ve güncel oran teyidi alın. Böylece desteklenmeyen ürün, yanlış bölge veya beklenenden farklı ödeme tutarı riskini azaltabilirsiniz.'
         ],
         subsections: [
-          { title: 'Vodafone için hızlı kontrol listesi', paragraphs: ['Vodafone Yanımda uygulamasında mobil ödeme durumunu kontrol edin. Kullanılabilir limit ile satın alacağınız ürünün toplam tutarını karşılaştırın. Onay SMS’inde hizmet adı ve tutarı doğrulayın. İşlem planınız Vodafone bakiyesi değerlendirmeye yönelikse, satın almadan önce ilgili Vodafone hizmet sayfasındaki güncel süreci inceleyin.'] }
+          { title: 'Vodafone için hızlı kontrol listesi', paragraphs: ['Vodafone Yanımda uygulamasında mobil ödeme durumunu kontrol edin. Kullanılabilir limit ile satın alacağınız ürünün toplam tutarını karşılaştırın. Onay SMS’inde hizmet adı ve tutarı doğrulayın. İşlem planınız Vodafone bakiyesi değerlendirmeye yönelikse, satın almadan önce ilgili Vodafone hizmet sayfasındaki güncel süreci inceleyin.'] },
+          { title: 'Vodafone mobil ödeme bozum ve Vodafone Pay nakite çevirme aramalarında doğru işlem nedir?', paragraphs: ['Sky Bozum Vodafone hattı veya Vodafone Pay bakiyesini doğrudan nakde çevirmez. Bu ifadelerle arama yapan kullanıcılar için doğru yol; önce ödeme kaynağını belirlemek, ardından desteklenen mağazadan alınabilecek dijital ürünü ve bölgesini kontrol etmektir. Kullanılmamış bir kodun Sky Bozum tarafından değerlendirilip değerlendirilemeyeceği satın alma öncesinde yazılı olarak sorulmalıdır.'] }
         ]
       },
       {
@@ -335,7 +349,8 @@ export const featuredArticles = [
           'Turkcell mobil ödeme ile dijital kod alırken mağazanın güvenilirliği, kodun TL veya yabancı para birimi olması ve teslimat süresi kontrol edilmelidir. Bozum işlemine konu olacak Razer Gold veya benzeri ürünlerde, satın alma yapılmadan önce hangi tutar ve bölgenin kabul edildiğini sorun. Güncel oran ve stok koşulları değişebildiği için önce teyit almak gereksiz harcamayı önler.'
         ],
         subsections: [
-          { title: 'Paycell kullanıcıları için önemli ayrım', paragraphs: ['Paycell kart bakiyesi, Turkcell mobil ödeme limiti ve hat faturası birbirinden farklı kaynaklar olabilir. Ödeme ekranında kullanılan kaynağı kontrol edin. Kart bilgilerini, uygulama şifresini ve gelen doğrulama kodlarını üçüncü kişilerle paylaşmayın. İlgili hizmete geçmeden önce Turkcell mobil ödeme sayfasındaki işlem modelini okuyun.'] }
+          { title: 'Paycell kullanıcıları için önemli ayrım', paragraphs: ['Paycell kart bakiyesi, Turkcell mobil ödeme limiti ve hat faturası birbirinden farklı kaynaklar olabilir. Ödeme ekranında kullanılan kaynağı kontrol edin. Kart bilgilerini, uygulama şifresini ve gelen doğrulama kodlarını üçüncü kişilerle paylaşmayın. İlgili hizmete geçmeden önce Turkcell mobil ödeme sayfasındaki işlem modelini okuyun.'] },
+          { title: 'Turkcell mobil ödeme bozdurma ve Paycell nakite çevirme aramalarında doğru işlem nedir?', paragraphs: ['Sky Bozum Turkcell mobil ödeme limitini veya Paycell bakiyesini doğrudan satın almaz. Rehber, bu kaynaklarla desteklenen mağazadan dijital kod alınırken ürün adı, bölge, para birimi ve toplam tutarın nasıl kontrol edileceğini açıklar. Kod değerlendirme düşünülüyorsa kabul edilen ürün ve güncel net ödeme satın alma tamamlanmadan önce yazılı olarak doğrulanmalıdır.'] }
         ]
       },
       {
@@ -346,7 +361,8 @@ export const featuredArticles = [
           'Hat yeni açıldıysa, numara taşıma veya SIM değişikliği yapıldıysa güvenlik nedeniyle geçici kısıt uygulanabilir. Ayrıca gecikmiş borç, düşük kullanılabilir limit veya belirli hizmet kategorilerinin kapalı olması işlemi engelleyebilir. Aynı işlemi art arda denemek yerine önce hesap durumunu doğrulayın ve gerekiyorsa resmi destekten kısıt nedenini öğrenin.'
         ],
         subsections: [
-          { title: 'Pokus ile işlem yaparken', paragraphs: ['Pokus kartın internet alışverişine açık olduğundan, bakiyenin yeterli olduğundan ve ürünün dijital teslimat koşullarının uygun olduğundan emin olun. Dijital kod satın alacaksanız bağımsız satın alma rehberindeki mağaza, bölge ve güvenlik kontrollerini inceleyin.'] }
+          { title: 'Pokus ile işlem yaparken', paragraphs: ['Pokus kartın internet alışverişine açık olduğundan, bakiyenin yeterli olduğundan ve ürünün dijital teslimat koşullarının uygun olduğundan emin olun. Dijital kod satın alacaksanız bağımsız satın alma rehberindeki mağaza, bölge ve güvenlik kontrollerini inceleyin.'] },
+          { title: 'Türk Telekom mobil ödeme bozdurma ve Pokus nakite çevirme aramalarında doğru işlem nedir?', paragraphs: ['Sky Bozum Türk Telekom hattındaki limiti veya Pokus bakiyesini doğrudan nakde çevirmez. Bu arama niyetindeki kullanıcı için güvenli yol; mobil ödeme limiti ile Pokus kart bakiyesini ayırmak, desteklenen satıcı ve dijital ürünü kontrol etmek ve kullanılmamış kodun uygunluğunu satın alma öncesinde teyit etmektir.'] }
         ]
       },
       {
@@ -404,7 +420,7 @@ export const featuredArticles = [
     serviceSlug: 'razer-gold-tl',
     cover: '/blog-covers/dijital-kod-hediye-karti.svg',
     coverAlt: 'Dijital hediye kartları, oyun kodları ve güvenli teslimatı gösteren premium fintech illüstrasyonu',
-    keywords: ['razer gold bozdur', 'razer gold bozdurma', 'itunes bozum', 'apple gift card bozdurma', 'steam cüzdan kodu', 'dijital kod bozdurma', 'hediye kartı'],
+    keywords: ['razer gold bozdur', 'razer gold bozdurma', 'razer gold satılan siteler', 'itunes bozum', 'itunes bozan siteler', 'apple gift card bozdurma', 'steam cüzdan kodu', 'dijital kod bozdurma', 'hediye kartı'],
     links: [
       { label: 'Razer Gold hizmeti', href: '/bilgi-merkezi/konu/razer-gold-tl' },
       { label: 'Apple Gift Card hizmeti', href: '/bilgi-merkezi/konu/itunes-apple' },
@@ -430,7 +446,7 @@ export const featuredArticles = [
         ]
       },
       {
-        title: 'Razer Gold kodu nasıl alınır ve bozdurulur?',
+        title: 'Razer Gold satılan siteler nasıl değerlendirilir, kod nasıl bozdurulur?',
         paragraphs: [
           'Razer Gold, oyun ve dijital içerik ekosisteminde kullanılan bir bakiye sistemidir. Kod satın alırken önce hangi para birimine ve bölgeye ihtiyacınız olduğunu belirleyin. Türkiye hesabı için TL kodu, yabancı bölge hesabı için ilgili ülke veya USD kodu gerekebilir. Ürün sayfasında “global” ifadesi yer alsa bile desteklenen ülkeler listesini okumadan ödeme yapmayın.',
           'Kod satın alınacak satıcının ürün açıklaması, teslimat biçimi, iade koşulları ve doğrulanabilir işlem kaydı incelenmelidir. Pazar yerindeki her mağaza aynı güven düzeyine sahip değildir. Piyasanın belirgin biçimde altındaki fiyatlar, belirsiz ürün bölgesi ve yalnız mesajla teslimat gibi durumlar ek kontrol gerektirir.',
@@ -455,7 +471,7 @@ export const featuredArticles = [
         ]
       },
       {
-        title: 'iTunes bozum ve Apple Gift Card bozdurma nasıl değerlendirilir?',
+        title: 'iTunes bozan siteler ve Apple Gift Card bozdurma nasıl değerlendirilir?',
         paragraphs: [
           'Kullanılmamış ve desteklenen bölgeye ait Apple Gift Card veya iTunes kodları, güncel uygunluk koşullarına göre değerlendirilebilir. Kodun daha önce bir Apple hesabına yüklenmemiş olması gerekir. Hesaba tanımlanmış bakiye ile henüz kullanılmamış kod aynı değildir; yüklenmiş bakiye çoğu durumda yeniden koda çevrilemez.',
           'Satış öncesinde kart tutarı, para birimi, satın alındığı ülke ve teslim biçimi açıkça belirtilmelidir. Fiziksel kartlarda satın alma fişi veya aktivasyon belgesi istenebilir. Dijital kartlarda sipariş kaydı ve teslim e-postası faydalıdır. Kodun tamamını oran almadan göndermemek güvenlik açısından önemlidir.',

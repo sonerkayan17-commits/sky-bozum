@@ -38,6 +38,7 @@ import {
   moderateComment,
   removeComment,
   setMemberAccess,
+  setMemberRestrictions,
   setMemberStatus,
   subscribeToContentAudit,
   subscribeToMemberLedger,
@@ -48,6 +49,7 @@ import {
   type ContentAuditEvent,
   type MemberLedgerEvent,
   type MemberRole,
+  type MemberRestrictionKey,
 } from "../lib/admin";
 
 type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "inventory" | "settings";
@@ -59,6 +61,13 @@ const permissions = [
   "İçerik taslağı",
   "Yayınlama",
   "Özel kampanyalar",
+];
+const restrictionOptions: Array<{ key: MemberRestrictionKey; label: string; detail: string }> = [
+  { key: "community", label: "Topluluk etkileşimi", detail: "Konu, yorum, beğeni ve puan gönderimini kapatır." },
+  { key: "messaging", label: "Özel mesaj", detail: "Diğer üyelere mesaj göndermeyi kapatır." },
+  { key: "code_sale", label: "Kod satışı", detail: "Şifreli kod satış talebi oluşturmayı kapatır." },
+  { key: "store_purchase", label: "Ürün satın alma", detail: "Stoktan kod satın alma ve teslim alma akışını kapatır." },
+  { key: "wallet", label: "Cüzdan ve ödeme", detail: "Bakiye harcama, IBAN ve ödeme hedefi işlemlerini kapatır." },
 ];
 const bootstrapAdminEmail = "sonerkayan17@gmail.com";
 
@@ -199,6 +208,8 @@ export default function AdminConsole({
   const [valueKind, setValueKind] = useState<"balance" | "points">("balance");
   const [note, setNote] = useState("");
   const [banReason, setBanReason] = useState("");
+  const [banDuration, setBanDuration] = useState("permanent");
+  const [actionBusy, setActionBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [clientReady, setClientReady] = useState(false);
@@ -270,6 +281,13 @@ export default function AdminConsole({
       stopMemberLedger();
     };
   }, [db, isAdmin]);
+
+  useEffect(() => {
+    setSelectedMember((current) => {
+      if (!current) return null;
+      return members.find((member) => member.id === current.id) || current;
+    });
+  }, [members]);
 
   useEffect(() => {
     if (!db || !isAdmin) return;
@@ -384,6 +402,8 @@ export default function AdminConsole({
   }
 
   async function run(action: () => Promise<void>, success: string) {
+    if (actionBusy) return;
+    setActionBusy(true);
     setError("");
     setMessage("");
     try {
@@ -393,6 +413,8 @@ export default function AdminConsole({
       setError(
         nextError instanceof Error ? nextError.message : "İşlem tamamlanamadı.",
       );
+    } finally {
+      setActionBusy(false);
     }
   }
 
@@ -792,7 +814,7 @@ export default function AdminConsole({
                       {member.points} puan
                     </b>
                     <small>{formatDate(member.createdAt)}</small>
-                    <button onClick={() => { setSelectedMember(member); setBanReason(member.banReason || ''); }}>
+                    <button onClick={() => { setSelectedMember(member); setBanReason(member.banReason || ''); setBanDuration('permanent'); }}>
                       Yönet →
                     </button>
                   </article>
@@ -1183,9 +1205,12 @@ export default function AdminConsole({
             <span>ÜYE İŞLEMİ</span>
             <h2 id="member-title">{selectedMember.displayName}</h2>
             <p>{selectedMember.email}</p>
-            {selectedMember.status === "banned" && <p className="admin-status status-banned">Ban nedeni: {selectedMember.banReason || "Belirtilmedi"}{selectedMember.bannedAt ? ` · ${formatDate(selectedMember.bannedAt)}` : ""}</p>}
+            {selectedMember.status === "active" && <p className="admin-status status-approved">✓ Onaylı üye{selectedMember.approvedAt ? ` · ${formatDate(selectedMember.approvedAt)}` : ""}</p>}
+            {selectedMember.status === "pending" && <p className="admin-status status-pending">Onay bekliyor</p>}
+            {selectedMember.status === "banned" && <p className="admin-status status-banned">{selectedMember.bannedUntil ? `Geçici uzaklaştırma · ${formatDate(selectedMember.bannedUntil)} tarihine kadar` : "Kalıcı olarak banlı"} · {selectedMember.banReason || "Gerekçe belirtilmedi"}</p>}
             <div className="admin-modal-actions">
-              <button
+              {selectedMember.status !== "active" && <button
+                disabled={actionBusy}
                 onClick={() =>
                   run(
                     () => setMemberStatus(db!, selectedMember.id, "active", user.uid),
@@ -1193,20 +1218,31 @@ export default function AdminConsole({
                   )
                 }
               >
-                Üyeyi onayla
-              </button>
+                {selectedMember.status === "banned" ? "Engeli kaldır ve etkinleştir" : "Üyeyi onayla"}
+              </button>}
               <button
+                disabled={actionBusy || selectedMember.status === "banned"}
                 onClick={() =>
                   confirmAction(
                     `${selectedMember.displayName} adlı üyenin erişimi engellenecek. Devam edilsin mi?`,
-                    () => banMember(db!, selectedMember.id, banReason, user.uid),
-                    "Üye banlandı.",
+                    () => banMember(db!, selectedMember.id, banReason, user.uid, banDuration === 'permanent' ? null : Number(banDuration)),
+                    banDuration === 'permanent' ? "Üye kalıcı olarak banlandı." : "Üye seçilen süre boyunca uzaklaştırıldı.",
                   )
                 }
               >
-                Üyeyi banla
+                {selectedMember.status === "banned" ? "Üye zaten engelli" : "Uzaklaştır / banla"}
               </button>
             </div>
+            <label>
+              Uzaklaştırma süresi
+              <select value={banDuration} onChange={(event) => setBanDuration(event.target.value)} disabled={selectedMember.status === "banned"}>
+                <option value="24">24 saat</option>
+                <option value="168">7 gün</option>
+                <option value="720">30 gün</option>
+                <option value="2160">90 gün</option>
+                <option value="permanent">Kalıcı ban</option>
+              </select>
+            </label>
             <label>
               Ban gerekçesi
               <textarea value={banReason} onChange={(event) => setBanReason(event.target.value)} maxLength={240} rows={3} placeholder="Örn. topluluk kurallarına aykırı tekrar eden içerik" />
@@ -1259,19 +1295,43 @@ export default function AdminConsole({
                   required
                 />
               </label>
-              <button className="admin-primary" type="submit">
+              <button className="admin-primary" type="submit" disabled={actionBusy}>
                 İşlem defterine kaydet →
               </button>
             </form>
+            <div className="admin-permission-list admin-restriction-list">
+              <h3>Hesap özelliklerini kısıtla</h3>
+              <p>Seçilen özellik güvenlik kurallarında da engellenir; yalnızca düğme gizlenmez.</p>
+              {restrictionOptions.map((restriction) => (
+                <label key={restriction.key}>
+                  <input
+                    type="checkbox"
+                    checked={selectedMember.restrictions.includes(restriction.key)}
+                    disabled={actionBusy}
+                    onChange={(event) => {
+                      const next = event.target.checked
+                        ? [...selectedMember.restrictions, restriction.key]
+                        : selectedMember.restrictions.filter((item) => item !== restriction.key);
+                      void run(
+                        () => setMemberRestrictions(db!, selectedMember.id, next, user.uid),
+                        "Üye özellik kısıtları güncellendi.",
+                      );
+                    }}
+                  />
+                  <span><strong>{restriction.label}</strong><small>{restriction.detail}</small></span>
+                </label>
+              ))}
+            </div>
             <div className="admin-permission-list">
               <h3>Paylaşım yetkileri</h3>
               {permissions.map((permission) => (
                 <label key={permission}>
                   <input
                     type="checkbox"
-                    defaultChecked={selectedMember.permissions.includes(
+                    checked={selectedMember.permissions.includes(
                       permission,
                     )}
+                    disabled={actionBusy}
                     onChange={(event) => {
                       const next = event.target.checked
                         ? [...selectedMember.permissions, permission]
