@@ -20,7 +20,7 @@ const editableFields: { key: keyof SiteSettings; label: string; hint: string; mu
   { key: 'heroTitle', label: 'Ana sayfa başlığı', hint: 'İlk ekranın ana mesajı.', multiline: true },
   { key: 'heroLead', label: 'Ana sayfa açıklaması', hint: 'Başlığın altında görünen açıklama.', multiline: true },
   { key: 'heroPrimaryCta', label: 'Ana sayfa ana düğmesi', hint: 'WhatsApp yönlendirme düğmesinin metni.' },
-  { key: 'proofExperience', label: 'Deneyim göstergesi', hint: 'Örn. 10 yıl' },
+  { key: 'proofExperience', label: 'Deneyim göstergesi', hint: 'Örn. 10+ yıl' },
   { key: 'proofTransactions', label: 'İşlem göstergesi', hint: 'Örn. 10.000+' },
   { key: 'announcementText', label: 'Duyuru metni', hint: 'Tüm sitede gösterilecek kısa duyuru.' },
   { key: 'announcementHref', label: 'Duyuru bağlantısı', hint: 'Örn. /bilgi-merkezi veya tam bir HTTPS bağlantısı.' },

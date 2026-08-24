@@ -10,5 +10,12 @@
 .credibility-band__stats strong, .credibility-band__stats span { display: block; }
 .credibility-band__stats strong { color: #f1f3f5; font-size: clamp(20px, 2.4vw, 30px); letter-spacing: -.04em; }
 .credibility-band__stats span { margin-top: 7px; color: #89939e; font-size: 10px; line-height: 1.35; }
+.credibility-band__security { display: grid; grid-column: 1 / -1; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 11px; border: 1px solid rgba(251,113,133,.19); border-radius: 13px; background: linear-gradient(100deg,rgba(120,20,45,.19),rgba(255,255,255,.018)); padding: 9px 11px; }
+.credibility-band__security > span { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid rgba(251,113,133,.28); border-radius: 9px; background: rgba(251,113,133,.08); color: #fb7185; font-size: 13px; font-weight: 950; }
+.credibility-band__security p { margin: 0; color: #99a3af; font-size: 9.5px; line-height: 1.55; }
+.credibility-band__security p strong { color: #ff879e; font-weight: 950; letter-spacing: .045em; text-transform: uppercase; }
+.credibility-band__security p b { color: #f3cc8b; font-weight: 900; }
+.credibility-band__security a { color: #dfe3e9; font-size: 9px; font-weight: 900; white-space: nowrap; }
+.credibility-band__security a:hover { color: #fecdd3; }
 .credibility-band.is-compact .credibility-band__inner { padding: 22px 0; }
-@media (max-width: 850px) { .credibility-band__inner { grid-template-columns: 1fr; gap: 22px; padding: 25px 0; } .credibility-band__stats { border-left: 0; } .credibility-band__stats div { padding: 0 10px; } .credibility-band__stats span { font-size: 9px; } }
+@media (max-width: 850px) { .credibility-band__inner { grid-template-columns: 1fr; gap: 18px; padding: 25px 0; } .credibility-band__stats { border-left: 0; } .credibility-band__stats div { padding: 0 10px; } .credibility-band__stats span { font-size: 9px; } .credibility-band__security { grid-template-columns: 28px minmax(0,1fr); gap: 9px; } .credibility-band__security > a { grid-column: 1/-1; border-top: 1px solid rgba(255,255,255,.07); padding-top: 7px; text-align: center; } }
