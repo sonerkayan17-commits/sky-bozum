@@ -7,10 +7,10 @@ export type CategoryVisual = {
 
 const categoryVisuals: Record<string, CategoryVisual> = {
   'mobil-odeme': {
-    card: '/images/bilgi-merkezi/mobil-odeme/category/mobil-odeme-category-card.webp',
-    hero: '/images/bilgi-merkezi/mobil-odeme/category/mobil-odeme-category-hero.webp',
-    cardAlt: 'Telefon, dijital ödeme kartı ve güvenlik öğeleriyle mobil ödeme kategori görseli',
-    heroAlt: 'Mobil ödeme, cihaz, dijital kart ve güvenli işlem ekosistemini gösteren premium kategori hero görseli',
+    card: '/images/bilgi-merkezi/category-covers-v47/mobil-odeme-category-card-v2.webp',
+    hero: '/images/bilgi-merkezi/category-covers-v47/mobil-odeme-category-card-v2.webp',
+    cardAlt: 'Telefon, SIM kart ve güvenli ödeme terminaliyle mobil ödeme kategori görseli',
+    heroAlt: 'Mobil ödeme bakiyesinin güvenli doğrulama terminaline aktarılmasını gösteren premium kategori görseli',
   },
   'cihaz-finansmani': {
     card: '/images/bilgi-merkezi/cihaz-finansmani/category/cihaz-finansmani-category-card.webp',
@@ -61,10 +61,10 @@ const categoryVisuals: Record<string, CategoryVisual> = {
     heroAlt: 'Kredim başvuru, limit ve kullanım sürecini anlatan kategori görseli',
   },
   'razer-gold': {
-    card: '/blog-covers/razer-gold-strateji.webp',
-    hero: '/blog-covers/razer-gold-strateji.webp',
-    cardAlt: 'Razer Gold kodu, bakiye ve kullanım kontrolünü gösteren kategori görseli',
-    heroAlt: 'Razer Gold kod satın alma, kullanım ve güvenli değerlendirme sürecini anlatan kategori görseli',
+    card: '/images/bilgi-merkezi/category-covers-v47/razer-gold-category-card-v2.webp',
+    hero: '/images/bilgi-merkezi/category-covers-v47/razer-gold-category-card-v2.webp',
+    cardAlt: 'Razer Gold kodu ve güvenli PIN kontrolünü gösteren premium kategori görseli',
+    heroAlt: 'Razer Gold kod doğrulama ve güvenli değerlendirme sürecini anlatan premium kategori görseli',
   },
   'ulasim-kartlari': {
     card: '/images/bilgi-merkezi/editorial-covers-v46/istanbulkart-bakiye-uygunluk.webp',

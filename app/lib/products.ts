@@ -6,6 +6,11 @@ export type ProductPack = {
   description: string;
 };
 
+export type ProductFact = {
+  label: string;
+  value: string;
+};
+
 export type ProductItem = {
   slug: string;
   name: string;
@@ -486,4 +491,71 @@ export const products: ProductItem[] = [
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
+}
+
+const productFacts: Record<ProductTone, ProductFact[]> = {
+  pubg: [
+    { label: 'Hesap kontrolü', value: 'Oyuncu ID + bölge' },
+    { label: 'Teslim biçimi', value: 'Doğrudan yükleme / kod' },
+    { label: 'Kullanım alanı', value: 'PUBG Mobile UC' },
+    { label: 'Güvenlik', value: 'Şifre istenmez' },
+  ],
+  mlbb: [
+    { label: 'Hesap kontrolü', value: 'Oyuncu + sunucu ID' },
+    { label: 'Teslim biçimi', value: 'Doğrudan yükleme' },
+    { label: 'Kullanım alanı', value: 'Elmas / Weekly' },
+    { label: 'Güvenlik', value: 'Şifre istenmez' },
+  ],
+  valorant: [
+    { label: 'Bölge kontrolü', value: 'Riot hesap bölgesi' },
+    { label: 'Teslim biçimi', value: 'Tek kullanımlık kod' },
+    { label: 'Kullanım alanı', value: 'Valorant Points' },
+    { label: 'Güvenlik', value: 'Kod gizli tutulur' },
+  ],
+  lol: [
+    { label: 'Bölge kontrolü', value: 'Riot hesap bölgesi' },
+    { label: 'Teslim biçimi', value: 'Tek kullanımlık kod' },
+    { label: 'Kullanım alanı', value: 'League of Legends RP' },
+    { label: 'Güvenlik', value: 'Kod gizli tutulur' },
+  ],
+  rise: [
+    { label: 'Hesap kontrolü', value: 'Sunucu + hesap uyumu' },
+    { label: 'Ürün türü', value: 'Cash / Premium' },
+    { label: 'Teslim biçimi', value: 'Dijital kod' },
+    { label: 'Güvenlik', value: 'Resmî istemci' },
+  ],
+  knight: [
+    { label: 'Hesap kontrolü', value: 'Sunucu + hesap uyumu' },
+    { label: 'Ürün türü', value: 'Cash / Premium' },
+    { label: 'Teslim biçimi', value: 'Dijital kod' },
+    { label: 'Güvenlik', value: 'Resmî istemci' },
+  ],
+  metin2: [
+    { label: 'Hesap kontrolü', value: 'Sunucu + bölge' },
+    { label: 'Ürün türü', value: 'Ejder Parası (EP)' },
+    { label: 'Teslim biçimi', value: 'Dijital kod' },
+    { label: 'Güvenlik', value: 'Resmî istemci' },
+  ],
+  razer: [
+    { label: 'Bölge kontrolü', value: 'TL / USD ürün' },
+    { label: 'Teslim biçimi', value: 'Kullanılmamış PIN' },
+    { label: 'Kullanım alanı', value: 'Razer Gold cüzdanı' },
+    { label: 'Güvenlik', value: 'Kullanmadan kontrol' },
+  ],
+  steam: [
+    { label: 'Bölge kontrolü', value: 'Mağaza para birimi' },
+    { label: 'Teslim biçimi', value: 'Cüzdan kodu' },
+    { label: 'Kullanım alanı', value: 'Steam mağazası' },
+    { label: 'Güvenlik', value: 'Tek kullanımlık kod' },
+  ],
+  apple: [
+    { label: 'Bölge kontrolü', value: 'Apple Hesabı ülkesi' },
+    { label: 'Teslim biçimi', value: 'Dijital hediye kodu' },
+    { label: 'Kullanım alanı', value: 'App Store / servisler' },
+    { label: 'Güvenlik', value: 'Tek kullanımlık kod' },
+  ],
+};
+
+export function getProductFacts(product: ProductItem) {
+  return productFacts[product.tone];
 }

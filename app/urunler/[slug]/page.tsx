@@ -3,11 +3,12 @@ import Link from '../../components/DeferredLink';
 import { notFound } from 'next/navigation';
 import ProductCover from '../../components/products/ProductCover';
 import ProductCatalog from '../../components/products/ProductCatalog';
-import { getProduct, products } from '../../lib/products';
+import { getProduct, getProductFacts, products } from '../../lib/products';
 import { absoluteUrl, breadcrumbSchema, createMetadata, jsonLd } from '../../lib/seo';
 import '../../styles/products-performance.css';
 import '../../styles/products-quality-pass.css';
 import '../../styles/products-video-covers.css';
+import '../../styles/product-detail-hierarchy.css';
 import '../../styles/razer-commerce.css';
 
 export function generateStaticParams() {
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     path: `/urunler/${product.slug}`,
     image: product.coverImage,
     imageAlt: `${product.name} ürün kapağı`,
-    keywords: [product.name, `${product.shortName} paketleri`, `${product.shortName} rehberi`, 'dijital ürün stok durumu'],
+    keywords: [product.name, `${product.shortName} satın al`, `${product.shortName} paketleri`, `${product.shortName} fiyat`, `${product.shortName} rehberi`, 'dijital ürün stok durumu'],
   });
 }
 
@@ -46,6 +47,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         category: product.category,
         brand: { '@type': 'Brand', name: product.shortName },
         url: canonical,
+      },
+      {
+        '@type': 'HowTo',
+        '@id': `${canonical}#howto`,
+        name: `${product.shortName} nasıl kullanılır?`,
+        description: product.guide.text,
+        inLanguage: 'tr-TR',
+        step: product.howTo.map((item, index) => ({
+          '@type': 'HowToStep',
+          position: index + 1,
+          name: item.title,
+          text: item.text,
+        })),
       },
       {
         '@type': 'FAQPage',
@@ -70,29 +84,36 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     { href: '/iletisim#guvenlik', label: 'Güvenlik kontrolü', note: 'İşlem öncesi paylaşılmaması gerekenleri kontrol edin.' },
     { href: '/iletisim', label: 'Stok ve uygunluk sorun', note: 'Güncel katalog durumunu yazılı olarak teyit edin.' },
   ];
+  const facts = getProductFacts(product);
 
   return (
-    <main className="products-page">
+    <main className={`products-page products-page--${product.tone}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(productSchema) }} />
       <section className="product-detail-hero">
         <div className="products-shell product-detail-hero__grid">
-          <div>
+          <div className="product-detail-hero__copy">
             <nav className="product-detail-hero__crumb" aria-label="Sayfa yolu"><Link href="/">Ana Sayfa</Link><span>/</span><Link href="/urunler">Ürünler</Link><span>/</span><span aria-current="page">{product.shortName}</span></nav>
             <p className="products-kicker" style={{ marginTop: 28 }}>{product.category} · {product.eyebrow}</p>
             <h1>{product.name}</h1>
             <p className="product-detail-hero__summary">{product.description} Ürün bilgilerini, paket seçeneklerini ve kullanım öncesi kontrolleri tek sayfada inceleyin.</p>
+            <nav className="product-detail-hero__nav" aria-label="Ürün sayfası bölümleri">
+              <a href="#paketler">Paketler</a><a href="#urun-bilgisi">Ürün bilgisi</a><a href="#kullanim-rehberi">Kullanım rehberi</a><a href="#sss">S.S.S.</a>
+            </nav>
           </div>
           <div className="product-detail-hero__cover"><ProductCover product={product} priority disableVideo /></div>
+          <dl className="product-detail-hero__facts" aria-label={`${product.shortName} hızlı ürün bilgileri`}>
+            {facts.map((fact) => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+          </dl>
         </div>
       </section>
 
       <div className="products-shell">
         <ProductCatalog product={product} />
 
-        <section className="product-explainer" aria-labelledby="product-explainer-title">
+        <section id="urun-bilgisi" className="product-explainer" aria-labelledby="product-explainer-title">
           <div className="product-explainer__heading">
             <div>
-              <p className="product-kicker">Ürünü tanıyın</p>
+              <p className="product-kicker">02 / Ürünü tanıyın</p>
               <h2 id="product-explainer-title">{product.shortName} hakkında temel bilgiler</h2>
             </div>
             <p>Satın alma veya bozum kararından önce ürünün kullanım biçimini, teslim koşulunu ve güvenlik sınırlarını birlikte değerlendirin.</p>
@@ -115,10 +136,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <p className="razer-sell-panel__notice">Hesap şifresi, SMS doğrulama kodu veya banka parolası istenmez. Kodun kullanılmamış ve size ait olması gerekir; ödeme yalnız doğrulanan kodlar için oluşturulur.</p>
         </section> : null}
 
-        <section className="product-info" aria-labelledby="product-info-title">
+        <section id="kullanim-rehberi" className="product-info" aria-labelledby="product-info-title">
           <div className="product-info__grid">
             <div className="product-info__about">
-              <p className="product-kicker">Adım adım rehber</p>
+              <p className="product-kicker">03 / Adım adım rehber</p>
               <h2 id="product-info-title">{product.guide.title}</h2>
               <p>{product.guide.text}</p>
               <p>{product.intro}</p>
@@ -129,8 +150,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
 
-          <section className="product-faq" aria-labelledby="product-faq-title">
-            <p className="product-kicker">Sık sorulanlar</p>
+          <section id="sss" className="product-faq" aria-labelledby="product-faq-title">
+            <p className="product-kicker">04 / Sık sorulanlar</p>
             <h2 id="product-faq-title">{product.shortName} hakkında merak edilenler</h2>
             <div className="product-faq__list">{product.faq.map((item) => <details key={item.question}><summary>{item.question}</summary><p>{item.answer}</p></details>)}</div>
           </section>

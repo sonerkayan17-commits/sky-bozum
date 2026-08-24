@@ -132,9 +132,9 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
     window.setTimeout(() => setCopied(false), 1600);
   }
 
-  return <section className="product-catalog" aria-labelledby="product-packs-title">
+  return <section id="paketler" className="product-catalog" aria-labelledby="product-packs-title">
     <div className="product-catalog__heading">
-      <div><p className="product-kicker">Seçilebilir ürünler</p><h2 id="product-packs-title">{product.shortName} seçenekleri</h2><p>{product.intro}</p></div>
+      <div><p className="product-kicker">01 / Ürününü seç</p><h2 id="product-packs-title">{product.shortName} seçenekleri</h2><p>{product.intro}</p></div>
       <span className="product-catalog__note">Fiyat ve stok bilgisi satın alma öncesinde anlık doğrulanır.</span>
     </div>
     <div className="product-catalog__layout">
@@ -144,7 +144,7 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
           const isSelected = pack.id === selected?.id;
           const inStock = entry?.active === true && entry.stockCount > 0 && entry.priceMinor !== null;
           return <button key={pack.id} type="button" className={`product-pack ${isSelected ? 'is-selected' : ''}`} onClick={() => { setSelectedId(pack.id); setDelivered(null); setNotice(''); }} aria-pressed={isSelected}>
-            <ProductCover product={product} compact />
+            <span className="product-pack__media"><ProductCover product={product} compact /><span className="product-pack__amount">{pack.label}</span></span>
             <span className="product-pack__title">{pack.label}</span><span className="product-pack__description">{pack.description}</span>
             <span className={`product-pack__stock ${inStock ? 'is-available' : ''}`}>{loading && !entry ? 'Stok kontrol ediliyor…' : inStock ? `${entry.stockCount} adet stokta` : 'Stok yok'}</span>
             <strong className="product-pack__price">{inStock ? formatStoreMoney(entry.priceMinor) : '—'}</strong>
