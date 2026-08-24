@@ -22,7 +22,7 @@ export const defaultSiteSettings: SiteSettings = {
   defaultSeoTitle: 'Sky Bozum - Mobil Ödeme Bozdurma ve Mobil Bozum',
   defaultSeoDescription: 'Mobil ödeme bozdurma, mobil bozum ve dijital bakiye işlemleri için güncel bilgi, hesaplama araçları ve yazılı destek.',
   heroEyebrow: '10 yıl kurucu deneyimi · 7/24 destek', heroTitle: 'Mobil ödeme bozdurma ve dijital bakiye bozum işlemleri.',
-  heroLead: 'Vodafone, Turkcell ve Türk Telekom için mobil ödeme bozdurma seçeneklerini; Paycell, Pokus ve dijital kodlar için mobil bozum oranlarını işlem öncesinde inceleyin.',
+  heroLead: 'Mobil bozum ve mobil ödeme bozdurma sürecini öğrenin; operatör ve cüzdanlarla dijital ürün satın alma rehberlerini, desteklenen kod oranlarını işlem öncesinde inceleyin.',
   heroPrimaryCta: 'Mobil ödeme bozdur', proofExperience: '10 yıl', proofTransactions: '10.000+',
   announcementEnabled: false, announcementText: '', announcementHref: '/bilgi-merkezi',
   searchPlaceholder: 'Hizmet, operatör, rehber veya araç ara...', searchQuickAccessTitle: 'Hızlı erişim ve rehberler',

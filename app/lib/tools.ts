@@ -79,7 +79,7 @@ const definitions: Record<ToolId, ToolDefinition> = {
     title: 'Bozum Oranı Karşılaştırma Hesaplama',
     shortTitle: 'Oran Karşılaştırma',
     description: 'Aynı tutarın tüm hizmetlerdeki tahmini karşılığını sıralayın.',
-    seoDescription: 'Razer Gold, Apple, Steam, Paycell, Pokus ve mobil ödeme başlangıç oranlarını aynı tutar üzerinden karşılaştırın.',
+    seoDescription: 'Razer Gold, Apple, Steam ve desteklenen diğer dijital kod başlangıç oranlarını aynı tutar üzerinden karşılaştırın.',
     href: '/araclar/oran-karsilastirma',
     keywords: ['oran karşılaştırma', 'bozum karşılaştır', 'komisyon hesaplama'],
     eyebrow: 'Hizmet karşılaştırma aracı',

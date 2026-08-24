@@ -1,9 +1,155 @@
 export const featuredArticles = [
   {
+    slug: 'guvenilir-mobil-bozum-sitesi-nasil-secilir',
+    title: 'Güvenilir Mobil Bozum Sitesi Nasıl Seçilir? 2026 Kontrol Rehberi',
+    seoTitle: 'Güvenilir Mobil Bozum Siteleri 2026: Seçim ve Kontrol Rehberi',
+    metaDescription: 'Güvenilir mobil bozum sitesi seçerken alan adı, işletme bilgisi, oran, net ödeme, SMS onayı, dijital kod güvenliği ve dolandırıcılık işaretlerini kontrol edin.',
+    excerpt: 'Mobil bozum sitesi seçmeden önce alan adı, resmî iletişim, yazılı net tutar, kod güvenliği ve ödeme kaydını nasıl doğrulayacağınızı öğrenin.',
+    category: 'Güvenlik',
+    readTime: '12 dk',
+    publishedAt: '2026-08-24',
+    updatedAt: '2026-08-24',
+    serviceSlug: 'sms-mobil-odeme',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
+    coverAlt: 'Mobil bozum sitesi seçerken alan adı, resmî kanal, oran ve ödeme güvenliği kontrollerini gösteren rehber kapağı',
+    keywords: ['güvenilir mobil bozum siteleri', 'güvenilir mobil bozum sitesi', 'mobil bozum sitesi', 'mobil bozumcu', 'mobil ödeme bozdurma güvenli mi', 'mobil bozum dolandırıcılığı'],
+    links: [
+      { label: 'Mobil ödeme bozum nedir?', href: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
+      { label: 'Mobil bozum dolandırıcılığı rehberi', href: '/bilgi-merkezi/mobil-bozum-yaparken-dolandirilabilir-miyim' },
+      { label: 'Güncel bozum oranı nasıl öğrenilir?', href: '/bilgi-merkezi/guncel-bozum-orani-nasil-ogrenilir' },
+      { label: 'Sky Bozum resmî iletişim ve güvenlik bilgileri', href: '/iletisim#guvenlik' },
+    ],
+    sources: [
+      { label: 'ETBİS kayıtlı site sorgulama ve güvenlik uyarısı', href: 'https://etbis.ticaret.gov.tr/tr/SiteSorgulama', publisher: 'T.C. Ticaret Bakanlığı' },
+      { label: 'Sosyal medya ve dijital mecralardaki dolandırıcılık girişimleri', href: 'https://ticaret.gov.tr/haberler/ticaret-bakanligi-sosyal-medya-ve-dijital-mecralardaki-dolandiricilik-girisimlerine-karsi-vatandaslari-uyariyor', publisher: 'T.C. Ticaret Bakanlığı' },
+      { label: 'Bireysel Siber Güvenlik Önlemleri', href: 'https://dsy.usom.gov.tr/usom/23/07/230704142928_Bireysel%20Siber%20Gu%CC%88venlik%20O%CC%88nlemleri.pdf', publisher: 'USOM' },
+      { label: 'TT Mobil Ödeme kullanım ve güvenlik koşulları', href: 'https://bireysel.turktelekom.com.tr/dijital-servisler/tt-mobil-odeme', publisher: 'Türk Telekom' },
+      { label: 'Güvenli olmayan sitelere ilişkin tarayıcı uyarıları', href: 'https://support.google.com/chrome/answer/99020?hl=tr', publisher: 'Google Chrome Yardım' },
+    ],
+    faq: [
+      { question: 'Bir mobil bozum sitesinin üst sıralarda çıkması güvenilir olduğunu kanıtlar mı?', answer: 'Hayır. Organik sıralama veya reklam görünürlüğü tek başına işletme kimliğini, ödeme disiplinini ya da işlem güvenliğini kanıtlamaz. Alan adı, resmî iletişim, yazılı işlem koşulları ve bağımsız kayıtlar ayrıca kontrol edilmelidir.' },
+      { question: 'ETBİS kaydı bulunan her site güvenilir midir?', answer: 'Hayır. Ticaret Bakanlığı, ETBİS kaydının ilgili kayıt yükümlülüklerinin yerine getirildiğini gösterdiğini; sitenin güvenli veya hukuka aykırı faaliyette bulunmayacağının garantisi olmadığını açıkça belirtir. ETBİS yalnız kontrol noktalarından biridir.' },
+      { question: 'HTTPS ve kilit simgesi siteyi güvenilir yapar mı?', answer: 'HTTPS, tarayıcı ile site arasındaki bağlantıyı şifreler; işletmenin dürüstlüğünü tek başına doğrulamaz. Doğru alan adı, işletme ve iletişim bilgileri, işlem metni ve ödeme koşulları da incelenmelidir.' },
+      { question: 'Mobil bozum işleminde SMS kodu paylaşılır mı?', answer: 'Doğrulama veya onay kodu mesajla bir kişiye gönderilmemelidir. Yalnız sizin başlattığınız, hizmet adı ve tutarı açıkça görünen resmî operatör ya da ödeme ekranında kullanılması gereken kod yine o resmî ekrana girilmelidir. Beklenmeyen onay taleplerinde işlemi durdurun.' },
+      { question: 'En yüksek oranı veren siteyi seçmek doğru mu?', answer: 'Tek başına oranla karar vermek risklidir. Oranın hangi ürün, tutar, bölge ve ödeme süresi için geçerli olduğu; net alacağınız tutar ve olası kesintiler işlemden önce yazılı olmalıdır. Gerçekçi görünmeyen teklif yeniden doğrulanmalıdır.' },
+      { question: 'Sorun yaşarsam hangi kayıtları saklamalıyım?', answer: 'Alan adı, resmî iletişim bilgisi, tarih, ürün ve tutar, yazılı oran teklifi, sipariş kaydı ve banka hareketi saklanmalıdır. Kodu açık alanda yayımlamadan ilgili işletme, operatör veya ödeme kuruluşunun resmî desteğine başvurun.' },
+    ],
+    sections: [
+      {
+        title: 'Güvenilir mobil bozum sitesi ne demektir?',
+        paragraphs: [
+          'Güvenilir mobil bozum sitesi; yalnız yüksek oran veya hızlı ödeme söylemi kullanan değil, işlemin kimle, hangi alan adı üzerinden, hangi ürün ve tutarla ilerleyeceğini baştan açıklayan platformdur. Kullanıcı satın alma ya da kod teslimi yapmadan önce tahmini net ödemeyi, kontrol sırasını ve resmî iletişim kanalını görebilmelidir.',
+          'İnternette kalıcı ve herkes için geçerli bir “en güvenilir siteler” sıralaması yoktur. Bir işletmenin sitesi, ekibi, iletişim bilgileri ve çalışma koşulları zamanla değişebilir. Bu nedenle marka listesinden daha yararlı olan şey, her işlemde yeniden uygulanabilen doğrulama yöntemidir.',
+          'Tek bir rozet, yorum, alan adı yaşı veya tasarım güven garantisi sayılmaz. Sağlıklı karar; işletme kimliği, doğru URL, açık işlem koşulları, bilgi güvenliği ve gerçek ödeme kaydının birlikte değerlendirilmesiyle verilir.'
+        ]
+      },
+      {
+        title: 'İlk kontrol: doğru alan adı ve işletme bilgisi',
+        paragraphs: [
+          'Siteyi size mesajla gönderilen kısaltılmış bağlantıdan açmak yerine alan adını tarayıcıya kendiniz yazın veya daha önce doğruladığınız kaynaktan girin. Harf eklenmiş, eksiltilmiş ya da farklı uzantıya taşınmış taklit adreslere dikkat edin. HTTPS bağlantısı önemlidir; ancak yalnız kilit simgesi işletmenin kimliğini doğrulamaz.',
+          'İletişim sayfasındaki telefon, e-posta ve varsa ticari bilgiler birbiriyle tutarlı olmalıdır. Sitedeki WhatsApp düğmesinin açtığı numara ile sonradan size yazan numara farklıysa devam etmeden önce resmî kanaldan yeniden doğrulayın.',
+          'Faaliyetin niteliğine göre ETBİS kaydı kontrol edilebilir. Fakat Ticaret Bakanlığı, ETBİS kaydının bir sitenin güvenli olduğunu garanti etmediğini özellikle belirtir. Benzer şekilde yeni bir alan adı tek başına dolandırıcılık; eski bir alan adı da tek başına güven kanıtı değildir.'
+        ],
+        bullets: [
+          'Alan adını harf harf kontrol edin.',
+          'İletişim numarasını doğrudan resmî siteden açın.',
+          'İşletme ve destek bilgilerinin sayfalar arasında tutarlı olduğuna bakın.',
+          'Tarayıcı güvenlik uyarısı veriyorsa işleme devam etmeyin.'
+        ]
+      },
+      {
+        title: 'Oran değil, yazılı net ödeme karşılaştırılmalı',
+        paragraphs: [
+          '“Yüzde 70 oran” ifadesi tek başına yeterli değildir. Hangi bakiye veya kod türü için, hangi nominal tutarda, hangi masraflar düşüldükten sonra hesabınıza kaç lira geçeceği yazılı olmalıdır. Kullanıcı brüt oranı değil, eline geçecek net tutarı karşılaştırmalıdır.',
+          'Oranlar ürün stokuna, bölgeye, para birimine, tutara ve piyasa koşullarına göre değişebilir. Bu nedenle eski bir ekran görüntüsü veya başka bir kullanıcıya verilen teklif yeni işlem için bağlayıcı kabul edilmemelidir. Satın alma yapmadan önce güncel ürün uygunluğu ve net ödeme yeniden teyit edilmelidir.',
+          'İşlem başladıktan sonra açıklamasız kesinti yapılması, ürünün son anda değiştirilmesi veya daha önce konuşulmayan bir hesaba yönlendirme önemli uyarılardır. Koşul değişirse kullanıcı da kodu ya da ürünü göndermeden önce yeniden karar verebilmelidir.'
+        ],
+        bullets: [
+          'Ürün adı, tutar ve bölge',
+          'Uygulanacak oran veya kesinti',
+          'Hesaba geçecek tahmini net tutar',
+          'Kontrol ve ödeme sırası',
+          'Ödemenin yapılacağı yöntem'
+        ]
+      },
+      {
+        title: 'Şifre, SMS kodu ve uzaktan erişim sınırı',
+        paragraphs: [
+          'Operatör hesabı parolası, banka şifresi, kart PIN’i, e-posta parolası ve cihazınıza uzaktan erişim yetkisi standart bir mobil bozum kontrolünün parçası değildir. Bu bilgilerden biri istenirse işlemi durdurun. Ekran paylaşımı sırasında bildirimler ve finansal bilgiler de görünebileceği için cihaz kontrolünü karşı tarafa vermeyin.',
+          'Mobil ödeme işlemlerinde operatörün resmî onay adımı bulunabilir. Buradaki ayrım önemlidir: Kod veya onay yalnız sizin başlattığınız, hizmet adı ile toplam tutarı gördüğünüz resmî ödeme ekranında kullanılmalıdır; sohbet üzerinden bir kişiye iletilmemelidir. Beklemediğiniz bir mobil ödeme mesajı gelirse onay vermeden operatörünüzle görüşün.',
+          '“Kontrol için gerekli” denilerek banka uygulamasına giriş, SIM kart yönetimi veya hesap kurtarma kodu istenmesi işlemin kapsamıyla uyumlu değildir. Güvenilir süreç yalnız değerlendirilmesi gereken ürün ve ödeme için zorunlu bilgileri ister.'
+        ]
+      },
+      {
+        title: 'Dijital kod ve ödeme teslim sırası nasıl olmalı?',
+        paragraphs: [
+          'Razer Gold, Apple Gift Card veya Steam gibi kodlarda ürün kullanıldığında geri alma imkânı bulunmayabilir. Bu yüzden kod gönderilmeden önce marka, nominal tutar, para birimi, bölge, kullanılmamış olma durumu ve net ödeme yazılı olarak netleşmelidir. Kodu açık yorum alanına veya birden fazla alıcıya aynı anda göndermeyin.',
+          'Kod kontrolü tamamlandığında ödeme bildirimi ile banka hesabındaki gerçek hareketi birbirinden ayırın. Dekont görüntüsü tek başına paranın hesaba geçtiğini göstermez; alıcı adı, tutar ve işlem hareketi banka uygulamasından kontrol edilmelidir.',
+          'Her işletmenin kontrol süresi aynı değildir. Beş, on beş veya otuz dakika gibi tek bir eşik güvenilirlik ölçüsü olamaz. Önemli olan tahmini sürenin baştan açıklanması, gecikme olduğunda ulaşılabilir bir kanal bulunması ve sürecin kayıtlı biçimde ilerlemesidir.'
+        ],
+        bullets: [
+          'Kodu kişisel hesabınıza yüklemeden önce kullanım amacını netleştirin.',
+          'Sipariş ve ürün bilgilerini kodla karşılaştırın.',
+          'Tam kodu yalnız doğrulanmış resmî görüşmede paylaşın.',
+          'Ödeme için dekont yerine gerçek banka hareketini esas alın.'
+        ]
+      },
+      {
+        title: 'Yorumlar, şikâyetler ve Google sonuçları nasıl okunmalı?',
+        paragraphs: [
+          'Google’da üst sırada görünmek, reklam vermek veya çok sayıda takipçiye sahip olmak bir işletmenin güvenilirliğini tek başına kanıtlamaz. Arama sonuçları keşif için kullanılabilir; son karar için alan adı, ticari bilgiler ve işlem koşulları ayrıca doğrulanmalıdır.',
+          'Yorumlarda yalnız yıldız ortalamasına bakmayın. Tarih dağılımını, tekrar eden ifadeleri, işletmenin sorunlara nasıl cevap verdiğini ve şikâyetlerin çözümle sonuçlanıp sonuçlanmadığını inceleyin. Yalnız kusursuz ve birbirine çok benzeyen kısa yorumlar da dikkatle değerlendirilmelidir.',
+          'Bir şikâyetin bulunması tek başına hüküm vermek için yeterli değildir; ancak aynı konuda çok sayıda güncel ve cevapsız kayıt önemli bir sinyaldir. Sosyal medya profili, forum yorumu veya ekran görüntüsü doğrulanmış ödeme kaydı yerine geçmez.'
+        ]
+      },
+      {
+        title: 'Uzak durulması gereken kırmızı bayraklar',
+        paragraphs: [
+          'Aşağıdaki işaretlerden biri tek başına kesin hüküm vermeyebilir; birden fazlasının birlikte görülmesi riski belirgin biçimde artırır. Özellikle kimlik, hesap erişimi veya geri alınamayacak dijital kod söz konusuysa acele etmek yerine işlemi durdurup resmî kanaldan doğrulama yapmak gerekir.'
+        ],
+        bullets: [
+          'Resmî sitedekinden farklı telefon veya alan adına yönlendirme',
+          'Piyasa koşullarından belirgin biçimde kopuk ve açıklamasız yüksek oran',
+          'Net ödemenin yazılı verilmemesi veya işlem sırasında değiştirilmesi',
+          'Operatör, banka ya da e-posta parolası isteme',
+          'SMS doğrulama kodunu sohbet üzerinden talep etme',
+          'Ekran paylaşımı ya da uzaktan erişim uygulaması kurdurma',
+          'Kodun tamamını koşullar netleşmeden isteme',
+          'Son anda farklı IBAN, hesap veya kişiye yönlendirme',
+          'İletişim, gizlilik ve işlem koşullarının bulunmaması',
+          'Tarayıcının kimlik avı veya zararlı site uyarısı vermesi',
+          'Soru sormayı engelleyen baskı ve sürekli acele ettirme',
+          'Ödeme yapıldığı söylenmesine rağmen banka hareketinin görünmemesi'
+        ]
+      },
+      {
+        title: 'Beş dakikalık mobil bozum sitesi kontrolü',
+        paragraphs: [
+          'İşleme başlamadan önce kısa bir kontrol, geri alınması güç hataları azaltır. Önce doğru alan adını ve resmî iletişim numarasını doğrulayın. Ardından ürün, tutar, bölge, oran ve tahmini net ödemeyi aynı yazılı görüşmede netleştirin.',
+          'Talep edilen her bilginin işlem için neden gerekli olduğunu sorgulayın. Şifre, uzaktan erişim veya sohbet üzerinden doğrulama kodu isteniyorsa devam etmeyin. Dijital kod gönderecekseniz sipariş kaydını saklayın; ödeme bildirildiğinde banka hareketini kendiniz kontrol edin.',
+          'Bu kontrol listesi yüzde yüz garanti vermez; amacı gözle görülebilen riskleri işlemden önce yakalamaktır. Şüphe devam ediyorsa küçük tutarla deneme yapmak yerine işlemi ertelemek ve operatör ya da ödeme kuruluşunun resmî desteğinden bilgi almak daha güvenlidir.'
+        ],
+        subsections: [
+          { title: 'İşlem öncesi', paragraphs: ['Alan adı, telefon, ürün, bölge, net tutar ve ödeme yöntemi aynı görüşmede doğrulanmalı; koşulların ekran görüntüsü veya yazılı kaydı saklanmalıdır.'] },
+          { title: 'İşlem sırasında', paragraphs: ['Onay ekranındaki hizmet adı ve tutar okunmalı; kod yalnız doğrulanmış kanalda paylaşılmalı; beklenmeyen yönlendirmede işlem durdurulmalıdır.'] },
+          { title: 'İşlem sonrasında', paragraphs: ['Banka hareketi kontrol edilmeli; sipariş, konuşma ve ödeme kaydı olası bir uyuşmazlık için saklanmalıdır.'] }
+        ]
+      },
+      {
+        title: 'Sorun yaşanırsa hangi sırayla hareket edilmeli?',
+        paragraphs: [
+          'Önce yeni bir ödeme veya kod gönderimini durdurun. Site adresi, iletişim numarası, tarih, ürün, tutar, yazışma ve banka hareketi gibi kayıtları değiştirmeden saklayın. Tam dijital kodu herkese açık bir şikâyet metninde paylaşmayın.',
+          'Mobil ödeme onayıyla ilgili şüphe varsa operatörünüzün; banka transferi veya kart işlemiyle ilgili şüphe varsa bankanızın resmî kanalına başvurun. İşletmeye yaptığınız bildirimi yazılı tutun. Olayın niteliğine göre Ticaret Bakanlığı tüketici kanalları veya yetkili merciler üzerinden başvuru seçeneklerini değerlendirin.',
+          'Sky Bozum adına açılmış taklit bir hesapla karşılaşırsanız yalnız bozumcu.net alan adında yayımlanan iletişim bilgilerini esas alın. Farklı numara, alan adı veya sosyal medya hesabından gelen talebi doğrulamadan hiçbir işlem yapmayın.'
+        ]
+      }
+    ]
+  },
+  {
     slug: 'mobil-odeme-nasil-acilir',
     title: 'Mobil Ödeme Nasıl Açılır? Vodafone, Turkcell ve Türk Telekom Rehberi',
     seoTitle: 'Mobil Ödeme Nasıl Açılır? Operatörlere Göre Adım Adım Rehber',
-    metaDescription: 'Mobil ödeme nasıl açılır? Vodafone, Turkcell ve Türk Telekom hatlarında mobil ödeme açma, limit kontrolü, güvenlik ve mobil ödeme bozum öncesi dikkat edilmesi gerekenler.',
+    metaDescription: 'Mobil ödeme nasıl açılır? Vodafone, Turkcell ve Türk Telekom hatlarında mobil ödeme açma, limit kontrolü, dijital ürün satın alma ve güvenlik adımlarını öğrenin.',
     excerpt: 'Vodafone, Turkcell ve Türk Telekom hatlarında mobil ödeme özelliğini açma, limit kontrolü, güvenlik ve kullanım adımlarını tek rehberde öğrenin.',
     category: 'Mobil Ödeme',
     readTime: '14 dk',
@@ -75,7 +221,7 @@ export const featuredArticles = [
           'Hat yeni açıldıysa, numara taşıma veya SIM değişikliği yapıldıysa güvenlik nedeniyle geçici kısıt uygulanabilir. Ayrıca gecikmiş borç, düşük kullanılabilir limit veya belirli hizmet kategorilerinin kapalı olması işlemi engelleyebilir. Aynı işlemi art arda denemek yerine önce hesap durumunu doğrulayın ve gerekiyorsa resmi destekten kısıt nedenini öğrenin.'
         ],
         subsections: [
-          { title: 'Pokus ile işlem yaparken', paragraphs: ['Pokus kartın internet alışverişine açık olduğundan, bakiyenin yeterli olduğundan ve ürünün dijital teslimat koşullarının uygun olduğundan emin olun. Bozum amacıyla dijital kod alınacaksa Türk Telekom hizmet sayfasındaki yönlendirmeyi ve güncel uygunluk koşullarını inceleyin.'] }
+          { title: 'Pokus ile işlem yaparken', paragraphs: ['Pokus kartın internet alışverişine açık olduğundan, bakiyenin yeterli olduğundan ve ürünün dijital teslimat koşullarının uygun olduğundan emin olun. Dijital kod satın alacaksanız bağımsız satın alma rehberindeki mağaza, bölge ve güvenlik kontrollerini inceleyin.'] }
         ]
       },
       {

@@ -6,7 +6,7 @@ const content = {
   turkcell: {
     eyebrow: 'Turkcell işlem rotası',
     title: 'Hat, limit ve ödeme adımlarını tek yerde yönetin',
-    description: 'Turkcell mobil ödeme yolculuğunu bilgi, limit kontrolü, hesaplama ve sorun çözme adımlarıyla Sky Bozum içinde tamamlayın.',
+    description: 'Turkcell mobil ödeme ile dijital kod satın alırken bilgi, limit, mağaza ve güvenlik kontrollerini tek akışta tamamlayın.',
     accent: 'yellow',
     routes: [
       {
@@ -22,10 +22,10 @@ const content = {
         href: '/bilgi-merkezi/sorun-cozme/turkcell-mobil-odeme-hata-veriyor',
       },
       {
-        eyebrow: 'Hızlı hesaplama',
-        title: 'Yaklaşık ödeme aralığını görün',
-        description: 'İşlem tutarını girerek güncel taban oran aralığına göre tahmini sonucu hesaplayın.',
-        href: '/oran-hesapla?service=turkcell-mobil-odeme',
+        eyebrow: 'Satın alma rehberi',
+        title: 'Turkcell ile dijital kod satın alın',
+        description: 'Mağaza, ürün bölgesi, teslimat ve SMS onayı kontrollerini satın alma öncesinde uygulayın.',
+        href: '/bilgi-merkezi/turkcell-mobil-odeme-nasil-kullanilir',
       },
     ],
     controls: [
@@ -43,7 +43,7 @@ const content = {
   paycell: {
     eyebrow: 'Paycell işlem rotası',
     title: 'Kart ayarından kod teslimine kadar bütün adımlar',
-    description: 'Paycell kart, kullanılabilir bakiye, internet alışverişi ve Razer Gold değerlendirme sürecini tek akışta yönetin.',
+    description: 'Paycell kart, kullanılabilir bakiye, internet alışverişi ve Razer Gold satın alma sürecini tek akışta yönetin.',
     accent: 'orange',
     routes: [
       {
@@ -59,10 +59,10 @@ const content = {
         href: '/bilgi-merkezi/paycell-ile-razer-gold-nasil-alinir',
       },
       {
-        eyebrow: 'Hızlı hesaplama',
-        title: 'Yaklaşık ödeme aralığını görün',
-        description: 'İşlem tutarını girerek Paycell için güncel taban oran aralığını hesaplayın.',
-        href: '/oran-hesapla?service=paycell',
+        eyebrow: 'Güvenli alışveriş',
+        title: 'Satıcı ve ürün kontrollerini uygulayın',
+        description: 'Satıcı güveni, ürün bölgesi, teslimat biçimi ve ödeme ekranını birlikte doğrulayın.',
+        href: '/bilgi-merkezi/paycell-ile-razer-gold-nasil-alinir',
       },
     ],
     controls: [

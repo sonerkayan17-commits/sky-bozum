@@ -10,6 +10,7 @@ import HomeTestimonials from './components/HomeTestimonials';
 import FinalCta from './components/FinalCta';
 import CredibilityBand from './components/CredibilityBand';
 import DeferredViewportSection from './components/home/DeferredViewportSection';
+import IndependentServiceNotice from './components/IndependentServiceNotice';
 
 // Keep the complete page in the server HTML for SEO, while splitting interactive
 // below-the-fold islands out of the first client bundle.
@@ -29,7 +30,7 @@ import './styles/quality-80-pass.css';
 import './styles/homepage-flow.css';
 import './styles/home-experience-cards.css';
 
-const homeSeoDescription = 'Vodafone, Turkcell ve Türk Telekom için mobil ödeme bozdurma; Paycell, Pokus ve dijital kodlar için güncel mobil bozum oranlarını inceleyin.';
+const homeSeoDescription = 'Mobil ödeme bozdurma ve mobil bozum rehberlerini; operatörlerle dijital ürün satın alma adımlarını ve desteklenen dijital kod oranlarını inceleyin.';
 
 export const metadata: Metadata = {
   title: { absolute: 'Mobil Ödeme Bozdurma ve Mobil Bozum | Sky Bozum' },
@@ -52,6 +53,7 @@ export default function Home() {
   return (
     <main className="home-page">
       <Hero />
+      <IndependentServiceNotice />
       <div className="home-flow">
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--brands" desktopHeight={430} mobileHeight={646}><BrandStrip /></DeferredViewportSection>
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--proof" desktopHeight={210} mobileHeight={247}><CredibilityBand /></DeferredViewportSection>

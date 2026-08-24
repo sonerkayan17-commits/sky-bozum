@@ -5,9 +5,9 @@ import ServiceCard from '../components/services/ServiceCard';
 import { articles, services } from '../lib/site';
 
 export const metadata: Metadata = {
-  keywords: ['mobil odeme bozum', 'mobil odeme bozdurma', 'Razer Gold bozum', 'Paycell bozum', 'Pokus bozum', 'iTunes hediye karti bozum', 'Steam cuzdan kodu bozum', 'bozum islem rehberi'],
+  keywords: ['mobil odeme bozum', 'mobil odeme bozdurma', 'Razer Gold bozum', 'Paycell dijital urun satin alma', 'Pokus dijital urun satin alma', 'iTunes hediye karti bozum', 'Steam cuzdan kodu bozum', 'bozum islem rehberi'],
   title: 'Hizmetler',
-  description: 'Mobil ödeme, Razer Gold, Paycell, Pokus, Apple, Steam ve kart hizmetlerini inceleyin.',
+  description: 'Genel mobil bozum rehberlerini, operatör ve cüzdanlarla dijital ürün satın alma adımlarını, Razer Gold, Apple ve Steam kod hizmetlerini inceleyin.',
   alternates: { canonical: '/hizmetler' },
 };
 
@@ -64,7 +64,7 @@ const groupCopy: Record<string, string> = {
 
 const groupDescription: Record<string, string> = {
   'Dijital Kodlar': 'Razer Gold, Apple Gift Card ve Steam kodları için bölge, para birimi ve kullanılmamış kod şartlarını inceleyin.',
-  'Mobil Ödeme': 'Vodafone, Turkcell, Türk Telekom, Paycell ve Pokus işlemlerinde izlenecek yöntemi operatörünüze göre seçin.',
+  'Mobil Ödeme': 'Genel mobil bozum bilgisini ve Vodafone, Turkcell, Türk Telekom, Paycell ile Pokus için bağımsız dijital ürün satın alma rehberlerini inceleyin.',
   'Kart Çözümleri': 'Desteklenen kartlarla dijital ürün satın almadan önce mağaza, ürün ve uygunluk koşullarını doğrulayın.',
 };
 
@@ -80,7 +80,7 @@ export default function ServicesPage() {
             <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-rose-400">{services.length} Sky Bozum hizmeti</p>
             <h1>Hizmetinizi seçin.</h1>
           </div>
-          <p className="services-directory-hero__summary">Dijital kod, mobil ödeme veya kart yönteminizi bulun; koşulları ve güncel oran aralığını tek sayfada inceleyin.</p>
+          <p className="services-directory-hero__summary">Dijital kod hizmetini veya operatör ve cüzdan satın alma rehberini bulun; kullanım koşullarını tek sayfada inceleyin.</p>
           <a href="#tum-hizmetler" className="services-directory-hero__action focus-ring">Hizmetleri görüntüle <span aria-hidden="true">↓</span></a>
         </div>
       </section>

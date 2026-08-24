@@ -8,6 +8,7 @@ export type ArticleVisualMeta = {
 };
 
 const visualMap: Record<string, ArticleVisualMeta> = {
+  'guvenilir-mobil-bozum-sitesi-nasil-secilir': { family: 'security', label: 'Site Kontrolü', accent: '#fb7185', priority: true },
   'dijital-kod-satin-almadan-once-kontrol-listesi': { family: 'security', label: '10 Nokta Kontrolü', accent: '#c87555', priority: true },
   'kredi-karti-sanal-kart-islem-reddedildi': { family: 'security', label: 'Kart Güvenliği', accent: '#4f7cff', priority: true },
   'paycell-limit-bakiye-farki': { family: 'wallet', label: 'Paycell Kontrol', accent: '#22d3c5', priority: true },

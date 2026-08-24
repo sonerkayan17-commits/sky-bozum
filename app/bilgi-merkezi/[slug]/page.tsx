@@ -180,6 +180,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
           {article.faq?.length ? <section className="article-faq"><p>SIK SORULAN SORULAR</p><h2>{article.title} hakkında sık sorulan sorular</h2><div>{article.faq.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div></section> : null}
 
+          {article.sources?.length ? <section className="article-resource-links" aria-labelledby="article-sources-title"><p>RESMÎ KAYNAKLAR</p><h2 id="article-sources-title">Kontrollerde kullanılan kaynaklar</h2><div>{article.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer"><span><strong>{source.publisher}</strong> · {source.label}</span><span aria-hidden="true">↗</span></a>)}</div></section> : null}
+
           <ArticleFeedback slug={article.slug} />
           <DeferredContentEngagement targetId={article.slug} title={article.title} />
 

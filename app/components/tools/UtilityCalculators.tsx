@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { calculatePayout, parseTurkishAmount, rateItems, validateAmount, type RateItem } from '../../lib/rates';
 import useRememberedRate from '../personalization/useRememberedRate';
 import usePublishedRates from '../personalization/usePublishedRates';
+import { excludeIndependentPurchaseGuides } from '../../lib/independentPurchaseGuides';
 
 const money = (value: number) => value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const quickAmounts = ['500', '1000', '2500', '5000'];
@@ -49,7 +50,8 @@ function ContextNote({ serviceName }: { serviceName: string }) {
 export function TargetPayoutCalculator() {
   const [serviceName, setServiceName] = useRememberedRate();
   const [target, setTarget] = useState('1000');
-  const publishedRates = usePublishedRates();
+  const allPublishedRates = usePublishedRates();
+  const publishedRates = useMemo(() => excludeIndependentPurchaseGuides(allPublishedRates), [allPublishedRates]);
   const selected = publishedRates.find((item) => item.name === serviceName) ?? publishedRates[0];
   const numericTarget = parseTurkishAmount(target);
   const error = amountError(target, serviceName, publishedRates);
@@ -60,7 +62,8 @@ export function TargetPayoutCalculator() {
 
 export function RateComparisonCalculator() {
   const [amount, setAmount] = useState('1000');
-  const publishedRates = usePublishedRates();
+  const allPublishedRates = usePublishedRates();
+  const publishedRates = useMemo(() => excludeIndependentPurchaseGuides(allPublishedRates), [allPublishedRates]);
   const numericAmount = parseTurkishAmount(amount);
   const error = amountError(amount);
   const rows = useMemo(() => publishedRates.map(item => ({ item, low: error ? 0 : calculatePayout(numericAmount, item.rate), high: error ? 0 : calculatePayout(numericAmount, item.maxRate) })).sort((a,b)=>b.low-a.low), [numericAmount, error, publishedRates]);
@@ -89,7 +92,8 @@ export function CodeCountCalculator() {
 }
 
 export function CategoryPayoutCalculator({ category, title }: { category: 'Mobil Ödeme' | 'Kod'; title: string }) {
-  const publishedRates = usePublishedRates();
+  const allPublishedRates = usePublishedRates();
+  const publishedRates = useMemo(() => excludeIndependentPurchaseGuides(allPublishedRates), [allPublishedRates]);
   const options = publishedRates.filter(item=>item.category===category);
   const [service, setService] = useState(options[0]?.name ?? rateItems[0].name);
   const [amount, setAmount] = useState('1000');
@@ -113,7 +117,7 @@ export function DeviceCostCalculator() {
 const wizardData = {
   'mobil-odeme': { title:'Mobil ödeme bakiyesi', text:'Önce operatörünüzü seçip tahmini karşılığı görün. Hat limiti ile kullanılabilir işlem tutarının aynı şey olmadığını unutmayın.', tool:'/araclar/mobil-odeme-hesaplama', guide:'/operatorler', caution:'İşlem onayı vermeden önce ekranda görünen tutarı ve operatörü yeniden kontrol edin.' },
   'gift-card': { title:'Dijital kod / gift card', text:'Markayı, kod değerini, para birimini ve mağaza bölgesini netleştirerek başlayın.', tool:'/araclar/gift-card-hesaplama', guide:'/bilgi-merkezi/magaza-hediye-kartlari-rehberi', caution:'Bölgesi belirsiz veya daha önce kullanılmış kod satın almayın.' },
-  'cuzdan': { title:'Dijital cüzdan bakiyesi', text:'Paycell veya Pokus bakiyeniz varsa ana hesaplayıcıdan hizmeti seçin; cüzdan bakiyesi ile mobil ödeme limitini karıştırmayın.', tool:'/araclar#oran-hesapla', guide:'/bilgi-merkezi/paycell-nedir-nasil-kullanilir', caution:'Kullanılabilir bakiye ve günlük işlem limitini uygulama içinden kontrol edin.' },
+  'cuzdan': { title:'Dijital cüzdanla ürün satın alma', text:'Paycell veya Pokus kullanıyorsanız kartın internet alışverişine açıklığını, mağazayı, ürün bölgesini ve toplam tutarı kontrol edin.', tool:'/operatorler', guide:'/bilgi-merkezi/paycell-nedir-nasil-kullanilir', caution:'Sky Bozum cüzdan bakiyesini satın almaz; bu yol bağımsız dijital ürün satın alma rehberine götürür.' },
   'cihaz': { title:'Faturaya ek cihaz', text:'Peşin fiyat, peşinat, vade ve aylık ek bedeli ayrı ayrı girerek toplam maliyeti görün.', tool:'/araclar/faturaya-ek-cihaz-hesaplama', guide:'/bilgi-merkezi/kategori/cihaz-finansmani', caution:'Son kararı operatörün sözleşme ve ödeme planını gördükten sonra verin.' },
   'emin-degilim': { title:'Ürün türünü netleştirin', text:'Elinizdeki bakiyenin adını, uygulamayı veya kod markasını biliyorsanız hizmetler sayfasından başlayın; emin değilseniz iletişim kanalından yalnızca ürün türünü sorun.', tool:'/hizmetler', guide:'/iletisim', caution:'Kart bilgisi, şifre, SMS kodu veya kişisel doğrulama bilgisi paylaşmayın.' },
 } as const;

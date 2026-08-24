@@ -8,6 +8,7 @@ import { InlineEditableImage, InlineEditableText } from './admin/SiteInlineEdito
 import usePublishedRates from './personalization/usePublishedRates';
 import { rateFreshnessNotice } from '../lib/rates';
 import { prefersReducedMotion } from '../lib/motion';
+import { independentPurchaseGuideLabel, isIndependentPurchaseGuide } from '../lib/independentPurchaseGuides';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
 const logos: Record<string, string> = {
@@ -212,7 +213,7 @@ export default function Hero() {
       <div className="content-shell hero-pro-shell">
         <div className="hero-pro-copy">
           <InlineEditableText contentKey="home.hero.title" defaultValue={settings.heroTitle} as="h1" id="hero-title" multiline />
-          <InlineEditableText contentKey="home.hero.lead" defaultValue={settings.heroLead} as="p" className="hero-pro-lead" multiline />
+          <InlineEditableText contentKey="home.hero.lead.purchase-guides-v1" defaultValue={settings.heroLead} as="p" className="hero-pro-lead" multiline />
           <p className="hero-pro-assurance">10+ yılı aşkın tecrübe · 7/24 canlı destek</p>
 
           <div className="hero-pro-actions">
@@ -245,10 +246,10 @@ export default function Hero() {
           </div>
         </div>
 
-        <aside className="hero-pro-rates" aria-label="Güncel taban oranlar">
+        <aside className="hero-pro-rates" aria-label="Dijital ürün rehberleri ve güncel kod oranları">
           <div className="hero-pro-rates-head">
-            <div><small>TABAN ORAN ARALIKLARI</small><h2>Hizmetlere göre oranlar</h2></div>
-            <span>İşlem öncesi teyit</span>
+            <div><small>REHBERLER VE KOD ORANLARI</small><h2>Doğru işlem yolunu seçin</h2></div>
+            <span>Açık bilgilendirme</span>
           </div>
           <div className="hero-pro-rates-list">
             {featuredRates.map((item) => (
@@ -256,7 +257,7 @@ export default function Hero() {
                 href={`/hizmetler/${item.serviceSlug}`}
                 className="hero-pro-rate"
                 key={item.id}
-                title={`${item.name} detaylarını görüntüle`}
+                title={isIndependentPurchaseGuide(item.serviceSlug) ? independentPurchaseGuideLabel(item.serviceSlug) : `${item.name} oran ve hizmet detaylarını görüntüle`}
               >
                 <span className={`hero-pro-logo hero-pro-logo--${item.id} ${item.id === 'apple' ? 'hero-pro-logo--light' : ''}`}>
                   <Image src={logos[item.id]} alt={`${item.name} logosu`} width={78} height={26} />
@@ -266,12 +267,14 @@ export default function Hero() {
                   <small>{item.category}</small>
                   <span className="hero-pro-rate-detail" aria-hidden="true">Detayları görüntüle <i>→</i></span>
                 </span>
-                <strong>{item.range}</strong>
+                <strong className={isIndependentPurchaseGuide(item.serviceSlug) ? 'hero-pro-rate-guide' : undefined}>
+                  {isIndependentPurchaseGuide(item.serviceSlug) ? independentPurchaseGuideLabel(item.serviceSlug) : item.range}
+                </strong>
               </Link>
             ))}
           </div>
-          <p className="hero-pro-disclaimer"><span>i</span> {rateFreshnessNotice || 'Kesin oran; hizmet, tutar ve stok kontrolünden sonra işlem öncesinde yazılı olarak paylaşılır.'}</p>
-          <Link href="/hizmetler" className="hero-pro-rates-cta">Tüm hizmet ve oran detayları <span>→</span></Link>
+          <p className="hero-pro-disclaimer"><span>i</span> Operatör ve cüzdan satırları bağımsız satın alma rehberidir. {rateFreshnessNotice || 'Kod oranları işlem öncesinde yazılı olarak paylaşılır.'}</p>
+          <Link href="/hizmetler" className="hero-pro-rates-cta">Tüm rehber ve hizmet detayları <span>→</span></Link>
         </aside>
       </div>
     </section>

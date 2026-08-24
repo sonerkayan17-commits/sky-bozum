@@ -6,6 +6,7 @@ import { calculatePayout, parseTurkishAmount, rateDisclaimer, validateAmount } f
 import { siteConfig } from '../lib/site-config';
 import useRememberedRate from './personalization/useRememberedRate';
 import usePublishedRates from './personalization/usePublishedRates';
+import { excludeIndependentPurchaseGuides } from '../lib/independentPurchaseGuides';
 
 const quickAmounts = [500, 1000, 2500, 5000];
 const serviceChecks: Record<string, string> = {
@@ -25,7 +26,8 @@ const serviceChecks: Record<string, string> = {
 export default function Calculator({ embedded = false }: { embedded?: boolean }) {
   const [serviceName, setServiceName] = useRememberedRate();
   const [amount, setAmount] = useState('1000');
-  const publishedRates = usePublishedRates();
+  const allPublishedRates = usePublishedRates();
+  const publishedRates = useMemo(() => excludeIndependentPurchaseGuides(allPublishedRates), [allPublishedRates]);
   const selected = publishedRates.find((item) => item.name === serviceName) ?? publishedRates[0];
   const numericAmount = parseTurkishAmount(amount);
   const error = amount.trim() ? validateAmount(numericAmount, selected) : 'Tutar alanını boş bırakmayın.';

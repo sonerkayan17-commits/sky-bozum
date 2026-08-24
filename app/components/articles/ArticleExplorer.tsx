@@ -18,10 +18,10 @@ export type ArticleExplorerItem = Pick<ArticleItem,
 const topicOptions: Topic[] = ['Tümü', 'Mobil Ödeme', 'Operatörler', 'Dijital Kodlar', 'Güvenlik', 'Kart İşlemleri'];
 
 const featuredArticleSlugs = [
+  'guvenilir-mobil-bozum-sitesi-nasil-secilir',
   'mobil-odeme-bozum-nedir',
   'mobil-odeme-guvenli-mi',
   'mobil-odeme-limiti-nasil-ogrenilir',
-  'mobil-bozum-yaparken-dolandirilabilir-miyim',
   'dijital-kod-bolge-hatasi-nedir',
 ] as const;
 const sortOptions: { value: SortMode; label: string }[] = [

@@ -5,6 +5,7 @@ import { calculatePayout, parseTurkishAmount, validateAmount } from '../lib/rate
 import { siteConfig } from '../lib/site-config';
 import useRememberedRate from './personalization/useRememberedRate';
 import usePublishedRates from './personalization/usePublishedRates';
+import { excludeIndependentPurchaseGuides } from '../lib/independentPurchaseGuides';
 
 function formatAmountInput(value: string) {
   const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
@@ -42,7 +43,8 @@ export default function QuickCalculator({ compact = false }: { compact?: boolean
   const [menuOpen, setMenuOpen] = useState(false);
   const amountHelpId = useId();
   const menuRef = useRef<HTMLDivElement>(null);
-  const publishedRates = usePublishedRates();
+  const allPublishedRates = usePublishedRates();
+  const publishedRates = useMemo(() => excludeIndependentPurchaseGuides(allPublishedRates), [allPublishedRates]);
 
   const selected = publishedRates.find((item) => item.name === serviceName) ?? publishedRates[0];
   const numericAmount = parseTurkishAmount(amount);

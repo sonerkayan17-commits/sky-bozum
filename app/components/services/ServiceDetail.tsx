@@ -14,6 +14,8 @@ import CardSmsPremiumSections from './CardSmsPremiumSections';
 import ServiceSupportLink from './ServiceSupportLink';
 import DeferredContentEngagement from '../community/DeferredContentEngagement';
 import PublishedRateLabel from './PublishedRateLabel';
+import IndependentServiceNotice from '../IndependentServiceNotice';
+import { independentPurchaseGuideLabel, isIndependentPurchaseGuide } from '../../lib/independentPurchaseGuides';
 
 const safetyChecks = [
   'Ürün veya kodu satın almadan önce hizmetin uygunluğunu yazılı olarak doğrulayın.',
@@ -22,14 +24,28 @@ const safetyChecks = [
   'Başkasına ait ödeme aracı, hesap, kod veya kimlik bilgisiyle işlem yapmayın.',
 ];
 
+const purchaseGuideSafetyChecks = [
+  'Satın alacağınız ürünün adını, değerini, bölgesini ve mağaza koşullarını kontrol edin.',
+  'SMS onay ekranındaki ürün ve tutar bilgisini okumadan işlemi onaylamayın.',
+  'Şifre, ekran paylaşımı veya uzaktan erişim isteyen kişi ve bağlantılardan uzak durun.',
+  'Satın aldığınız kodu yalnız güvenilir ve doğrulanmış kanallarda kullanın veya değerlendirin.',
+];
+
 const journeyLinks = [
   { label: 'Güncel oranları hesapla', href: '/araclar#oran-hesapla', description: 'Tutarınızı girip yaklaşık ödeme aralığını görün.' },
   { label: 'Sorun çözme merkezine git', href: '/bilgi-merkezi/sorun-cozme', description: 'Limit, kart, SMS veya kod sorunlarını adım adım kontrol edin.' },
   { label: 'Tüm rehberleri keşfet', href: '/bilgi-merkezi', description: 'Mobil ödeme, dijital kod ve kart rehberlerine ulaşın.' },
 ];
 
+const purchaseGuideJourneyLinks = [
+  { label: 'Dijital ürün rehberlerini aç', href: '/bilgi-merkezi', description: 'Mağaza, ürün, bölge ve teslimat kontrollerini inceleyin.' },
+  { label: 'Sorun çözme merkezine git', href: '/bilgi-merkezi/sorun-cozme', description: 'Limit, kart, SMS veya kod sorunlarını adım adım kontrol edin.' },
+  { label: 'Güvenli iletişim kanallarını doğrula', href: '/iletisim#guvenlik', description: 'Resmî alan adını ve destek kanallarını kontrol edin.' },
+];
+
 export default function ServiceDetail({ service }: { service: ServiceItem }) {
   const isRazerGold = service.slug === 'razer-gold-tl' || service.slug === 'razer-gold-usd';
+  const isPurchaseGuide = isIndependentPurchaseGuide(service.slug);
   const related = guidesForService(service.slug, 4);
   const troubleshooting = troubleshootingGuides.filter((guide) => guide.serviceSlug === service.slug).slice(0, 3);
   const alternatives = services.filter((item) => item.slug !== service.slug && item.category === service.category).slice(0, 3);
@@ -46,8 +62,8 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
             <p className="mt-5 max-w-2xl text-base leading-8 text-slate-400">{service.summary}</p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               {isRazerGold && <Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006] shadow-[0_14px_35px_rgba(68,214,44,.16)]">Kodu güvenli sat</Link>}
-              <ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="hero" label="Güncel oran alın" />
-              <Link href={`/oran-hesapla?service=${service.slug}`} className="btn-secondary focus-ring">Yaklaşık hesaplayın</Link>
+              <ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="hero" label={isPurchaseGuide ? 'Satın alma rehberini sorun' : 'Güncel oran alın'} />
+              {!isPurchaseGuide && <Link href={`/oran-hesapla?service=${service.slug}`} className="btn-secondary focus-ring">Yaklaşık hesaplayın</Link>}
             </div>
             <div className="mt-7 flex flex-wrap gap-2">{service.highlights.map((item) => <span key={item} className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-bold text-slate-300">✓ {item}</span>)}</div>
           </div>
@@ -55,7 +71,7 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
           <div className="premium-card relative flex min-h-72 items-center justify-center overflow-hidden p-10 sm:min-h-96">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(244,63,94,.13),transparent_58%)]" />
             <Image src={service.logo} alt={`${service.shortName} logosu`} width={560} height={240} sizes="(max-width: 1023px) 72vw, 38vw" priority className="relative z-10 max-h-52 w-[78%] object-contain drop-shadow-2xl" />
-            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-xl"><span className="text-xs font-bold text-slate-400">Güncel taban oran aralığı</span><strong className="text-xl text-rose-300"><PublishedRateLabel serviceSlug={service.slug} fallback={service.rate} /></strong></div>
+            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-xl">{isPurchaseGuide ? <><span className="text-xs font-bold text-slate-400">Bağımsız satın alma rehberi</span><strong className="max-w-[15rem] text-right text-sm text-amber-200">{independentPurchaseGuideLabel(service.slug)}</strong></> : <><span className="text-xs font-bold text-slate-400">Güncel taban oran aralığı</span><strong className="text-xl text-rose-300"><PublishedRateLabel serviceSlug={service.slug} fallback={service.rate} /></strong></>}</div>
           </div>
         </div>
       </section>
@@ -63,26 +79,28 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
       <nav aria-label="Hizmet içi hızlı erişim" className="sticky top-[var(--site-header-height)] z-30 border-b border-white/8 bg-[#090b10]/90 backdrop-blur-xl">
         <div className="content-shell flex gap-2 overflow-x-auto py-3 text-xs font-extrabold [scrollbar-width:none]">
           <a href="#nasil-calisir" className="focus-ring whitespace-nowrap rounded-full border border-white/10 px-4 py-2 text-slate-300 hover:border-rose-400/30 hover:text-rose-300">Nasıl çalışır?</a>
-          <a href="#hesapla" className="focus-ring whitespace-nowrap rounded-full border border-white/10 px-4 py-2 text-slate-300 hover:border-rose-400/30 hover:text-rose-300">Hızlı hesapla</a>
+          {!isPurchaseGuide && <a href="#hesapla" className="focus-ring whitespace-nowrap rounded-full border border-white/10 px-4 py-2 text-slate-300 hover:border-rose-400/30 hover:text-rose-300">Hızlı hesapla</a>}
           <a href="#rehberler" className="focus-ring whitespace-nowrap rounded-full border border-white/10 px-4 py-2 text-slate-300 hover:border-rose-400/30 hover:text-rose-300">İlgili rehberler</a>
           <a href="#sorun-cozme" className="focus-ring whitespace-nowrap rounded-full border border-white/10 px-4 py-2 text-slate-300 hover:border-rose-400/30 hover:text-rose-300">Sorun çözme</a>
-          <a href="#islem-baslat" className="focus-ring whitespace-nowrap rounded-full border border-rose-400/25 bg-rose-400/10 px-4 py-2 text-rose-300">İşlem başlat</a>
+          <a href="#islem-baslat" className="focus-ring whitespace-nowrap rounded-full border border-rose-400/25 bg-rose-400/10 px-4 py-2 text-rose-300">{isPurchaseGuide ? 'Rehberi tamamla' : 'İşlem başlat'}</a>
         </div>
       </nav>
 
       <section id="nasil-calisir" className="service-section-anchor content-shell py-12">
-        <div className="mb-7 max-w-2xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Tek sayfada bütün süreç</p><h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Nasıl çalışır?</h2><p className="mt-3 text-sm leading-7 text-slate-400">Kullanıcıyı başka sitelere dağıtmadan, uygunluk kontrolünden hesaplamaya ve destek akışına kadar bütün adımları Sky Bozum içinde tamamlayın.</p></div>
+        <div className="mb-7 max-w-2xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Tek sayfada bütün süreç</p><h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Nasıl çalışır?</h2><p className="mt-3 text-sm leading-7 text-slate-400">{isPurchaseGuide ? 'Operatör veya cüzdan koşulunu, mağazayı, ürünü ve güvenlik adımlarını satın alma öncesinde kontrol edin.' : 'Uygunluk kontrolünden hesaplamaya ve destek akışına kadar bütün adımları Sky Bozum içinde tamamlayın.'}</p></div>
         <div className="grid gap-4 md:grid-cols-3">
           {service.steps.map((step, index) => (
             <article key={step.title} className="premium-card relative overflow-hidden p-6"><span className="text-xs font-black text-rose-400">0{index + 1}</span><h3 className="mt-3 text-lg font-black">{step.title}</h3><p className="mt-2 text-sm leading-7 text-slate-400">{step.text}</p><span aria-hidden="true" className="absolute -bottom-5 -right-2 text-7xl font-black text-white/[0.025]">{index + 1}</span></article>
           ))}
         </div>
-        <p className="mt-4 text-xs leading-6 text-slate-500">Oranlar ve uygunluk işlem anında değişebilir. Kod satın almadan veya paylaşmadan önce yazılı onay alın.</p>
+        <p className="mt-4 text-xs leading-6 text-slate-500">{isPurchaseGuide ? 'Mağaza, ürün, bölge ve operatör koşulları değişebilir. Satın alma ve SMS onayı öncesinde ekrandaki tutarı ve hizmet adını okuyun.' : 'Oranlar ve uygunluk işlem anında değişebilir. Kod satın almadan veya paylaşmadan önce yazılı onay alın.'}</p>
       </section>
 
-      <section id="hesapla" className="service-section-anchor content-shell pb-14">
+      {isPurchaseGuide && <section className="content-shell pb-14"><IndependentServiceNotice compact /></section>}
+
+      {!isPurchaseGuide && <section id="hesapla" className="service-section-anchor content-shell pb-14">
         <ServiceMiniCalculator serviceSlug={service.slug} serviceName={service.shortName} />
-      </section>
+      </section>}
 
       {isRazerGold && <section className="content-shell pb-14" aria-labelledby="razer-code-sale-title"><div className="overflow-hidden rounded-[1.6rem] border border-[#44d62c]/20 bg-[radial-gradient(circle_at_90%_0%,rgba(68,214,44,.12),transparent_34%),linear-gradient(145deg,#101710,#0b0e12)] p-6 sm:p-8"><div className="grid gap-7 lg:grid-cols-[.7fr_1.3fr]"><div><p className="text-[11px] font-black uppercase tracking-[.18em] text-[#8ee97d]">Üye kod satış merkezi</p><h2 id="razer-code-sale-title" className="mt-3 text-3xl font-black tracking-tight">Kodu gönderin; kontrol ve ödemeyi hesabınızdan izleyin.</h2><p className="mt-4 text-sm leading-7 text-slate-400">Tam PIN şifreli kasaya alınır. Yönetici kodu kontrol eder, net tutarı onaylar ve seçiminize göre Sky Bozum bakiyesine veya kayıtlı IBAN’a ödeme kaydı oluşturur.</p><Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring mt-6 inline-flex rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006]">Şifreli kod formunu aç →</Link></div><div className="grid gap-3 sm:grid-cols-2"><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">01</span><h3 className="mt-3 font-black">Para birimi ve değeri seçin</h3><p className="mt-2 text-xs leading-6 text-slate-500">TL veya USD kodu ile her PIN’in değerini doğru seçin.</p></article><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">02</span><h3 className="mt-3 font-black">Kodları şifreli gönderin</h3><p className="mt-2 text-xs leading-6 text-slate-500">Her satıra bir kullanılmamış tam PIN girin; tekrarlar engellenir.</p></article><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">03</span><h3 className="mt-3 font-black">Kontrol sonucunu izleyin</h3><p className="mt-2 text-xs leading-6 text-slate-500">Talep, kod kontrolü ve net ödeme aşamaları hesabınıza yansır.</p></article><article className="rounded-2xl border border-white/8 bg-black/20 p-5"><span className="text-xs font-black text-[#8ee97d]">04</span><h3 className="mt-3 font-black">Bakiye veya IBAN’a alın</h3><p className="mt-2 text-xs leading-6 text-slate-500">Onaylanan ödeme seçtiğiniz hedefe işlem referansıyla kaydedilir.</p></article></div></div></div></section>}
 
@@ -125,10 +143,10 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
                   <span className="mt-3 inline-flex text-xs font-black text-rose-300">Rehberi aç →</span>
                 </Link>
               ))}
-              <Link href={`/oran-hesapla?service=${service.slug}`} className="focus-ring group rounded-2xl border border-white/8 bg-white/[0.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[0.045]">
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">Hızlı araç</span>
-                <strong className="mt-2 block text-sm leading-6 text-slate-200 transition group-hover:text-rose-200">{service.shortName} için yaklaşık tutarı hesaplayın</strong>
-                <span className="mt-3 inline-flex text-xs font-black text-rose-300">Hesaplamaya geç →</span>
+              <Link href={isPurchaseGuide ? '/bilgi-merkezi' : `/oran-hesapla?service=${service.slug}`} className="focus-ring group rounded-2xl border border-white/8 bg-white/[0.025] p-4 transition hover:border-rose-400/25 hover:bg-white/[0.045]">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">{isPurchaseGuide ? 'Satın alma bilgisi' : 'Hızlı araç'}</span>
+                <strong className="mt-2 block text-sm leading-6 text-slate-200 transition group-hover:text-rose-200">{isPurchaseGuide ? `${service.shortName} için mağaza, ürün ve güvenlik rehberlerini inceleyin` : `${service.shortName} için yaklaşık tutarı hesaplayın`}</strong>
+                <span className="mt-3 inline-flex text-xs font-black text-rose-300">{isPurchaseGuide ? 'Rehberlere geç →' : 'Hesaplamaya geç →'}</span>
               </Link>
             </div>
           </section>
@@ -136,8 +154,8 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
 
         <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
           <TrustChecklist context={service.name} />
-          <div className="premium-card p-6"><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-rose-400">İşlem öncesi güvenlik</p><h2 className="mt-3 text-xl font-black">Kodunuzu hemen göndermeyin.</h2><ul className="mt-4 space-y-3">{safetyChecks.map((check) => <li key={check} className="flex gap-3 text-xs leading-6 text-slate-400"><span aria-hidden="true" className="text-emerald-400">✓</span><span>{check}</span></li>)}</ul><ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="sidebar" label="WhatsApp ile bilgi alın" className="btn-primary focus-ring mt-5 w-full" /></div>
-          <div className="premium-card p-6"><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-500">Site içinde devam edin</p><div className="mt-4 space-y-3">{journeyLinks.map((item) => <Link key={item.href} href={item.href} className="focus-ring block rounded-xl border border-white/8 bg-white/[0.025] p-4 transition hover:border-rose-400/25"><span className="text-sm font-black text-slate-200">{item.label}</span><span className="mt-1 block text-xs leading-5 text-slate-500">{item.description}</span></Link>)}</div></div>
+          <div className="premium-card p-6"><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-rose-400">İşlem öncesi güvenlik</p><h2 className="mt-3 text-xl font-black">{isPurchaseGuide ? 'Satın almadan önce ayrıntıları okuyun.' : 'Kodunuzu hemen göndermeyin.'}</h2><ul className="mt-4 space-y-3">{(isPurchaseGuide ? purchaseGuideSafetyChecks : safetyChecks).map((check) => <li key={check} className="flex gap-3 text-xs leading-6 text-slate-400"><span aria-hidden="true" className="text-emerald-400">✓</span><span>{check}</span></li>)}</ul><ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="sidebar" label="WhatsApp ile bilgi alın" className="btn-primary focus-ring mt-5 w-full" /></div>
+          <div className="premium-card p-6"><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-slate-500">Site içinde devam edin</p><div className="mt-4 space-y-3">{(isPurchaseGuide ? purchaseGuideJourneyLinks : journeyLinks).map((item) => <Link key={item.href} href={item.href} className="focus-ring block rounded-xl border border-white/8 bg-white/[0.025] p-4 transition hover:border-rose-400/25"><span className="text-sm font-black text-slate-200">{item.label}</span><span className="mt-1 block text-xs leading-5 text-slate-500">{item.description}</span></Link>)}</div></div>
         </aside>
       </section>
 
@@ -157,12 +175,12 @@ export default function ServiceDetail({ service }: { service: ServiceItem }) {
         </div>
       </section>
 
-      {alternatives.length > 0 && <section className="border-t border-white/8 bg-[#0d1016] py-14"><div className="content-shell"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Alternatif hizmetler</p><h2 className="mt-3 text-3xl font-black">Aynı kategoride devam edin</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{alternatives.map((item) => <Link key={item.slug} href={`/hizmetler/${item.slug}`} className="premium-card focus-ring flex items-center gap-4 p-5"><div className="flex h-14 w-20 items-center justify-center rounded-xl border border-white/8 bg-white"><Image src={item.logo} alt="" width={120} height={48} className="max-h-9 w-16 object-contain" /></div><div><h3 className="font-black">{item.shortName}</h3><p className="mt-1 text-xs text-slate-500"><PublishedRateLabel serviceSlug={item.slug} fallback={item.rate} /> taban oran</p></div></Link>)}</div></div></section>}
+      {alternatives.length > 0 && <section className="border-t border-white/8 bg-[#0d1016] py-14"><div className="content-shell"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Alternatif hizmetler</p><h2 className="mt-3 text-3xl font-black">Aynı kategoride devam edin</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{alternatives.map((item) => <Link key={item.slug} href={`/hizmetler/${item.slug}`} className="premium-card focus-ring flex items-center gap-4 p-5"><div className="flex h-14 w-20 items-center justify-center rounded-xl border border-white/8 bg-white"><Image src={item.logo} alt="" width={120} height={48} className="max-h-9 w-16 object-contain" /></div><div><h3 className="font-black">{item.shortName}</h3><p className="mt-1 text-xs text-slate-500">{isIndependentPurchaseGuide(item.slug) ? 'Bağımsız dijital ürün rehberi' : <><PublishedRateLabel serviceSlug={item.slug} fallback={item.rate} /> taban oran</>}</p></div></Link>)}</div></div></section>}
 
       <section id="islem-baslat" className="service-section-anchor border-t border-white/8 py-16">
         <div className="content-shell">
           <div className="relative overflow-hidden rounded-[2rem] border border-rose-400/20 bg-[radial-gradient(circle_at_80%_20%,rgba(244,63,94,.22),transparent_35%),linear-gradient(135deg,#151019,#0b0d12)] p-7 sm:p-10">
-            <div className="relative z-10 max-w-3xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-300">Hazır olduğunuzda</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">{service.shortName} işlemini güvenli biçimde başlatın.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">Önce güncel oranı ve ürün uygunluğunu yazılı olarak doğrulayın. Satın alma veya kod paylaşma adımına onaydan sonra geçin.</p><div className="mt-7 flex flex-wrap gap-3">{isRazerGold && <Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006]">Üye kod satışını başlat</Link>}<ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="closing" label="WhatsApp ile işlem başlat" /><Link href="/iletisim" className="btn-secondary focus-ring">İletişim seçenekleri</Link></div></div>
+            <div className="relative z-10 max-w-3xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-300">Hazır olduğunuzda</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">{isPurchaseGuide ? `${service.shortName} satın alma kontrollerini tamamlayın.` : `${service.shortName} işlemini güvenli biçimde başlatın.`}</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">{isPurchaseGuide ? 'Operatör limitini, mağazayı, ürün bölgesini, teslimat biçimini ve SMS onayındaki tutarı satın alma öncesinde kontrol edin.' : 'Önce güncel oranı ve ürün uygunluğunu yazılı olarak doğrulayın. Satın alma veya kod paylaşma adımına onaydan sonra geçin.'}</p><div className="mt-7 flex flex-wrap gap-3">{isRazerGold && <Link href={`/hesabim/talepler?service=${service.slug}`} className="focus-ring rounded-xl bg-[#44d62c] px-5 py-3 text-sm font-black text-[#071006]">Üye kod satışını başlat</Link>}<ServiceSupportLink serviceName={service.name} serviceSlug={service.slug} source="closing" label={isPurchaseGuide ? 'Satın alma rehberini sorun' : 'WhatsApp ile işlem başlat'} /><Link href="/iletisim" className="btn-secondary focus-ring">İletişim seçenekleri</Link></div></div>
           </div>
         </div>
       </section>

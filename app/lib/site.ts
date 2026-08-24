@@ -151,17 +151,17 @@ export const services: ServiceItem[] = [
     name: "Paycell ile Razer Gold",
     shortName: "Paycell",
     category: "Mobil Ödeme",
-    description: "Paycell kart ile Razer Gold satın alma ve bozum rehberi.",
-    summary: "Paycell kartınızı kullanarak uygun mağazalardan Razer Gold alın ve kodunuzu Sky Bozum'a satın.",
+    description: "Paycell kart ile Razer Gold ve desteklenen dijital ürünleri satın alma rehberi.",
+    summary: "Paycell kartınızı kullanarak uygun mağazalardan Razer Gold satın alma, teslimat ve güvenlik adımlarını öğrenin.",
     logo: "/brands/paycell/paycell.svg",
     tone: "orange",
     rate: getRateRange("paycell"),
     popular: true,
-    highlights: ["Detaylı satın alma rehberi", "Razer Gold bozum", "7/24 destek"],
+    highlights: ["Detaylı satın alma rehberi", "Mağaza ve bölge kontrolü", "Bağımsız güvenlik bilgisi"],
     steps: [
       { title: "Paycell kartınızı kontrol edin", text: "Kartınızın internet alışverişine açık ve bakiyesinin yeterli olduğundan emin olun." },
       { title: "Razer Gold satın alın", text: "Hepsiburada, Trendyol veya ByNoGame üzerindeki uygun Razer Gold ürününü seçin." },
-      { title: "Kodu bize satın", text: "Teslim aldığınız kullanılmamış kod için güncel oran alın ve işlemi tamamlayın." },
+      { title: "Kodu nasıl kullanacağınızı seçin", text: "Kodu hesabınızda kullanın, bağımsız bir alıcıyla değerlendirin veya Sky Bozum'a uygunluk için sunun." },
     ],
     sections: [
       {
@@ -186,7 +186,7 @@ export const services: ServiceItem[] = [
         ],
       },
       {
-        title: "Paycell ile alınan Razer Gold kodu nasıl satılır?",
+        title: "Paycell ile alınan Razer Gold kodu nasıl değerlendirilir?",
         paragraphs: [
           "Teslim aldığınız kodu kullanmadan önce Sky Bozum'dan güncel oran alın. Oranı kabul ettiğinizde kod doğrulama için iletilir ve uygun bulunması halinde ödeme süreci tamamlanır.",
         ],
@@ -204,8 +204,8 @@ export const services: ServiceItem[] = [
     name: "Pokus ile Razer Gold",
     shortName: "Pokus",
     category: "Mobil Ödeme",
-    description: "Pokus kart ile uygun dijital ürün alımı ve bozum süreci.",
-    summary: "Pokus kartla uygun mağazalardan Razer Gold satın alıp kodunuzu değerlendirin.",
+    description: "Pokus kart ile Razer Gold ve desteklenen dijital ürünleri satın alma rehberi.",
+    summary: "Pokus kartla uygun mağazalardan Razer Gold satın alma, teslimat ve güvenlik adımlarını öğrenin.",
     logo: "/brands/pokus/pokus.svg",
     tone: "violet",
     rate: getRateRange("pokus"),
@@ -214,7 +214,7 @@ export const services: ServiceItem[] = [
     steps: [
       { title: "Kart ayarlarını kontrol edin", text: "Pokus kartın internet alışverişine açık olduğundan emin olun." },
       { title: "Uygun ürünü seçin", text: "Desteklenen mağazadan Razer Gold ürününü seçin." },
-      { title: "Kodu değerlendirin", text: "Kullanılmamış kod için güncel oran alın." },
+      { title: "Kodun kullanım yolunu seçin", text: "Kodu hesabınızda kullanın veya kullanılmamış kod için bağımsız değerlendirme seçeneklerini inceleyin." },
     ],
     sections: [
       { title: "Pokus nedir?", paragraphs: ["Pokus, kart ve dijital ödeme işlemlerinin yönetilebildiği bir finansal teknoloji uygulamasıdır. Kart bilgileri desteklenen e-ticaret sitelerinde kullanılabilir."] },
@@ -225,72 +225,72 @@ export const services: ServiceItem[] = [
   },
   {
     slug: "vodafone-mobil-odeme",
-    name: "Vodafone Mobil Ödeme Bozum",
+    name: "Vodafone ile Dijital Ürün Satın Alma",
     shortName: "Vodafone",
     category: "Mobil Ödeme",
-    description: "Vodafone mobil ödeme bakiyesini Razer Gold üzerinden değerlendirme rehberi.",
-    summary: "Vodafone mobil ödeme limitinizi güvenli kontrol, hesaplama ve Razer Gold işlem rehberiyle değerlendirin.",
+    description: "Vodafone mobil ödeme ile desteklenen mağazalardan dijital ürün satın alma rehberi.",
+    summary: "Vodafone mobil ödeme limitini, mağaza uygunluğunu, Razer Gold satın alma ve güvenlik adımlarını inceleyin.",
     logo: "/brands/vodafone/vodafone.svg",
     tone: "rose",
     rate: getRateRange("vodafone-mobil-odeme"),
     popular: true,
-    highlights: ["Vodafone odaklı işlem rotası", "Limit ve hat kontrolü", "Site içi sorun çözme", "Razer Gold değerlendirme"],
+    highlights: ["Vodafone satın alma rotası", "Limit ve hat kontrolü", "Mağaza uygunluğu", "Bağımsız güvenlik rehberi"],
     steps: [
       { title: "Hat ve limiti kontrol edin", text: "Mobil ödeme özelliğinin açık, hattın uygun ve kullanılabilir limitin yeterli olduğunu doğrulayın." },
-      { title: "Yöntemi netleştirin", text: "Tutar, ürün, bölge ve güncel oran için Sky Bozum üzerinden yazılı uygunluk alın." },
-      { title: "Uygun dijital ürünü alın", text: "Onaylanan yöntemle ürünü satın alın; kodu kullanmadan ve üçüncü kişilerle paylaşmadan saklayın." },
-      { title: "Kontrol ve ödemeyi tamamlayın", text: "Kod kontrolü tamamlandıktan sonra onaylanan tutar ödeme hesabınıza gönderilir." },
+      { title: "Mağaza ve ürünü doğrulayın", text: "Tutar, ürün, bölge ve teslimat koşullarını satıcı sayfasında kontrol edin." },
+      { title: "Uygun dijital ürünü alın", text: "Desteklenen mağazada Vodafone mobil ödeme seçeneği varsa satın alma adımlarını tamamlayın." },
+      { title: "Kodu güvenli saklayın", text: "Kodu hesabınızda kullanana veya seçtiğiniz alıcıya teslim edene kadar üçüncü kişilerle paylaşmayın." },
     ],
     sections: [
       { title: "Vodafone mobil ödeme nedir?", paragraphs: ["Vodafone mobil ödeme, desteklenen dijital alışverişlerin telefon faturasına veya hattın ödeme yöntemine yansıtılmasını sağlayan bir hizmettir."] },
       { title: "Vodafone mobil ödeme limiti nasıl kontrol edilir?", paragraphs: ["Kullanılabilir limit ve hizmet durumu Vodafone uygulaması veya operatör kanalları üzerinden kontrol edilmelidir. Limitler kullanıcıya göre değişebilir."] },
-      { title: "Vodafone mobil ödeme nasıl değerlendirilir?", paragraphs: ["Uygun satış kanalından Razer Gold satın alındıktan sonra kullanılmamış kod Sky Bozum'a satılabilir. Satın alma öncesinde güncel oran ve yöntem mutlaka teyit edilmelidir."] },
+      { title: "Vodafone ile Razer Gold nasıl alınır?", paragraphs: ["Vodafone mobil ödeme kabul eden desteklenen bir mağazada ürün bölgesi, tutarı, satıcısı ve dijital teslimat koşulları kontrol edilir. Satın alınan kod kişisel hesapta kullanılabilir veya kullanıcı tarafından seçilen bağımsız bir alıcıyla değerlendirilebilir."] },
     ],
     faq: commonFaq,
   },
   {
     slug: "turkcell-mobil-odeme",
-    name: "Turkcell Mobil Ödeme Bozum",
+    name: "Turkcell ile Dijital Kod Satın Alma",
     shortName: "Turkcell",
     category: "Mobil Ödeme",
     description: "Turkcell mobil ödeme ve Paycell kart ile Razer Gold rehberi.",
-    summary: "Turkcell mobil ödeme veya Paycell kart bakiyenizi uygun Razer Gold işlemiyle değerlendirin.",
+    summary: "Turkcell mobil ödeme veya Paycell kart ile Razer Gold ve desteklenen dijital kodları satın alma adımlarını öğrenin.",
     logo: "/brands/turkcell/turkcell.svg",
     tone: "blue",
     rate: getRateRange("turkcell-mobil-odeme"),
-    highlights: ["Turkcell limit rehberi", "Paycell kart", "Razer Gold bozum"],
+    highlights: ["Turkcell limit rehberi", "Paycell kart", "Dijital kod satın alma"],
     steps: [
       { title: "Limitinizi kontrol edin", text: "Turkcell mobil ödeme veya Paycell kullanılabilir bakiyesini kontrol edin." },
       { title: "Uygun mağazayı seçin", text: "Hepsiburada, Trendyol veya ByNoGame üzerindeki uygun ürünü inceleyin." },
-      { title: "Kod bozum", text: "Teslim alınan kullanılmamış kod için güncel oran alın." },
+      { title: "Kodun kullanım yolunu seçin", text: "Kodu hesabınızda kullanın veya kullanılmamış kod için bağımsız değerlendirme seçeneklerini inceleyin." },
     ],
     sections: [
       { title: "Turkcell mobil ödeme nedir?", paragraphs: ["Turkcell mobil ödeme, desteklenen alışverişlerde ücretin hat veya ilgili ödeme çözümü üzerinden karşılanmasına imkan tanır."] },
       { title: "Turkcell mobil ödeme ile Razer Gold nasıl alınır?", paragraphs: ["Uygun ödeme yöntemi ve mağaza belirlendikten sonra dijital Razer Gold ürünü alınabilir. Paycell kart kullanılan işlemlerde kart ayarları ve limitler kontrol edilmelidir."] },
-      { title: "Turkcell bakiyesi nasıl bozdurulur?", paragraphs: ["Alınan Razer Gold kodu kullanılmadan önce Sky Bozum'a iletilir. Güncel oran onaylandıktan sonra doğrulama ve ödeme süreci tamamlanır."] },
+      { title: "Turkcell ile alınan dijital kod nasıl değerlendirilir?", paragraphs: ["Satın alınan kullanılmamış kod kişisel hesapta kullanılabilir, Sky Bozum'a uygunluk kontrolü için sunulabilir veya kullanıcı tarafından seçilen başka bir alıcıyla değerlendirilebilir. Sky Bozum, Turkcell bakiyesini doğrudan satın almaz."] },
     ],
     faq: commonFaq,
   },
   {
     slug: "turk-telekom-mobil-odeme",
-    name: "Türk Telekom Mobil Ödeme Bozum",
+    name: "Türk Telekom Dijital Ürün Alım Rehberi",
     shortName: "Türk Telekom",
     category: "Mobil Ödeme",
     description: "Türk Telekom mobil ödeme ve Pokus kart ile Razer Gold rehberi.",
-    summary: "Türk Telekom mobil ödeme veya Pokus kart bakiyenizi uygun işlemlerle değerlendirin.",
+    summary: "Türk Telekom mobil ödeme veya Pokus kart ile desteklenen dijital ürünleri satın alma adımlarını öğrenin.",
     logo: "/brands/turktelekom/turktelekom.svg",
     tone: "blue",
     rate: getRateRange("turk-telekom-mobil-odeme"),
-    highlights: ["Türk Telekom rehberi", "Pokus kart", "Hızlı oran"],
+    highlights: ["Türk Telekom rehberi", "Pokus kart", "Mağaza ve ürün kontrolü"],
     steps: [
       { title: "Hizmet durumunu kontrol edin", text: "Mobil ödeme özelliğini ve kullanılabilir limiti kontrol edin." },
       { title: "Razer Gold alın", text: "Uygun mağaza ve ürün için işlem öncesinde bilgi alın." },
-      { title: "Kodu değerlendirin", text: "Kullanılmamış kodu güncel oranla satın." },
+      { title: "Kodu güvenli kullanın", text: "Kodu hesabınızda kullanın veya kullanılmamış kod için bağımsız değerlendirme seçeneklerini inceleyin." },
     ],
     sections: [
       { title: "Türk Telekom mobil ödeme nedir?", paragraphs: ["Türk Telekom mobil ödeme, desteklenen dijital hizmet ödemelerinin hat üzerinden yapılmasına imkan sağlayan bir yöntemdir."] },
       { title: "Pokus kart ile Razer Gold nasıl alınır?", paragraphs: ["Pokus kart internet alışverişine açık olduğunda, kartla ödeme kabul eden uygun mağazalarda Razer Gold ürünü satın alınabilir."] },
-      { title: "Türk Telekom bakiyesi nasıl değerlendirilir?", paragraphs: ["Satın alınan kullanılmamış Razer Gold kodu için Sky Bozum'dan güncel oran alınarak bozum işlemi başlatılabilir."] },
+      { title: "Türk Telekom ile alınan dijital ürün nasıl değerlendirilir?", paragraphs: ["Satın alınan kullanılmamış Razer Gold kodu kişisel hesapta kullanılabilir, Sky Bozum'a uygunluk kontrolü için sunulabilir veya kullanıcı tarafından seçilen başka bir alıcıyla değerlendirilebilir. Sky Bozum, Türk Telekom bakiyesini doğrudan satın almaz."] },
     ],
     faq: commonFaq,
   },
@@ -359,6 +359,7 @@ export type ArticleItem = {
   coverAlt?: string;
   keywords?: readonly string[];
   links?: readonly { label: string; href: string }[];
+  sources?: readonly { label: string; href: string; publisher: string }[];
   media?: readonly { src: string; alt: string; caption: string }[];
   faq?: readonly { question: string; answer: string }[];
   sections: { title: string; paragraphs: string[]; bullets?: string[]; subsections?: { title: string; paragraphs: string[] }[] }[];
@@ -389,14 +390,14 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Paycell nedir?", paragraphs: ["Paycell; kart, uygulama bakiyesi ve desteklenen ödeme seçeneklerini tek uygulamada yönetmeye yardımcı olan bir finansal hizmettir. Paycell hesabındaki bakiye, Paycell kartın harcama limiti ve Turkcell hattına tanımlı mobil ödeme limiti aynı kaynak değildir.", "Bir işlemin telefon faturasına mı, kart bakiyesine mi yoksa uygulama içindeki başka bir ödeme kaynağına mı yansıyacağını ödeme ekranından kontrol etmek gerekir. Yalnız Paycell kullanıcısı olmak, her ödemenin mobil ödeme limitiyle yapılacağı anlamına gelmez."] },
       { title: "Paycell nasıl kullanılır?", paragraphs: ["Uygulama içinde hesap doğrulaması tamamlandıktan sonra kullanılabilir özellikler hesap durumuna göre gösterilir. Kartla alışveriş yapılacaksa kartın internet işlemlerine açık olması, yeterli bakiye veya limit bulunması ve ödeme ekranındaki tutarın kontrol edilmesi gerekir.", "Menü adları, kampanyalar ve limitler zamanla değişebileceği için güncel bilgiler Paycell'in resmi uygulaması ve destek kanallarından doğrulanmalıdır."], bullets: ["Ödeme kaynağını işlem öncesinde kontrol edin.", "Tek kullanımlık doğrulama kodlarını paylaşmayın.", "İşlem tamamlandıktan sonra hareketleri uygulamadan inceleyin."] },
-      { title: "Paycell bakiyesi mobil ödeme bozum işleminde kullanılabilir mi?", paragraphs: ["Paycell bakiyesi ile Turkcell mobil ödeme limiti farklı olduğundan, bozum için uygun yöntem kullanılan bakiye türüne göre değişir. Dijital ürün satın almadan önce hangi ödeme kaynağının kullanılacağını ve ürünün kabul edilip edilmediğini teyit etmek yanlış işlem riskini azaltır.", "Güvenilir mobil bozumcu değerlendirmesinde yalnız oran değil; açık işlem sırası, resmi iletişim kanalı ve ürün uygunluğunun satın alma öncesinde yazılı olarak belirtilmesi de dikkate alınmalıdır."] },
+      { title: "Paycell bakiyesiyle dijital ürün satın alınabilir mi?", paragraphs: ["Paycell bakiyesi ile Turkcell mobil ödeme limiti farklı kaynaklardır. Dijital ürün satın almadan önce hangi ödeme kaynağının kullanılacağını, mağazanın Paycell kartı kabul edip etmediğini ve ürünün bölge koşullarını kontrol etmek gerekir.", "Sky Bozum Paycell bakiyesini doğrudan satın almaz. Bu sayfadaki bilgiler Paycell ile dijital ürün satın alma ve güvenlik kontrollerini açıklayan bağımsız bir rehberdir."] },
     ],
   },
   {
     slug: "paycell-ile-razer-gold-nasil-alinir",
     title: "Paycell ile Razer Gold Nasıl Alınır? Güvenli Satın Alma Kontrolü",
     seoTitle: "Paycell ile Razer Gold Nasıl Alınır? Adım Adım Rehber",
-    metaDescription: "Paycell kart veya uygun ödeme kaynağıyla Razer Gold alırken mağaza, bölge, para birimi, teslimat ve bozdurma uygunluğunu nasıl kontrol edeceğinizi öğrenin.",
+    metaDescription: "Paycell kart veya uygun ödeme kaynağıyla Razer Gold alırken mağaza, bölge, para birimi, teslimat ve güvenlik koşullarını nasıl kontrol edeceğinizi öğrenin.",
     excerpt: "Paycell ile Razer Gold alırken ödeme kaynağı, mağaza, bölge ve kod teslimatını doğru kontrol edin.",
     category: "Paycell",
     readTime: "7 dk",
@@ -416,15 +417,15 @@ export const articles: ArticleItem[] = [
   },
   {
     slug: "vodafone-mobil-odeme-nedir",
-    title: "Vodafone Mobil Ödeme Nedir? Limit, Onay ve Bozum Rehberi",
+    title: "Vodafone Mobil Ödeme Nedir? Dijital Ürün Satın Alma Rehberi",
     seoTitle: "Vodafone Mobil Ödeme Nedir? Limit ve Kullanım Rehberi",
-    metaDescription: "Vodafone mobil ödemenin nasıl çalıştığını, limit ve onay sürecini, işlem reddi nedenlerini ve mobil ödeme bozum öncesi kontrolleri öğrenin.",
+    metaDescription: "Vodafone mobil ödemenin nasıl çalıştığını, limit ve onay sürecini, işlem reddi nedenlerini ve dijital ürün satın alma kontrollerini öğrenin.",
     excerpt: "Vodafone mobil ödeme limitini, onay sürecini ve bakiye değerlendirme öncesindeki güvenlik kontrollerini öğrenin.",
     category: "Vodafone",
     readTime: "7 dk",
     updatedAt: "2026-07-29",
     serviceSlug: "vodafone-mobil-odeme",
-    keywords: ["vodafone mobil ödeme", "vodafone mobil ödeme bozum", "vodafone mobil ödeme limiti", "mobil ödeme bozdur"],
+    keywords: ["vodafone mobil ödeme", "vodafone dijital ürün satın alma", "vodafone mobil ödeme limiti", "vodafone ile dijital kod alma"],
     links: [
       { label: "Vodafone mobil ödeme hizmeti", href: "/hizmetler/vodafone-mobil-odeme" },
       { label: "Mobil ödeme nasıl açılır?", href: "/bilgi-merkezi/mobil-odeme-nasil-acilir" },
@@ -433,20 +434,20 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Vodafone mobil ödeme nedir?", paragraphs: ["Vodafone mobil ödeme, desteklenen dijital ürün ve hizmet bedellerinin telefon hattı üzerinden onaylanmasını sağlayan bir ödeme yöntemidir. Faturalı hatlarda tutar faturaya yansıyabilir; faturasız hatlarda ise uygun işlemler mevcut bakiyeden düşebilir.", "Mobil ödemenin açık olması her mağazada ve her tutarda işlem yapılabileceği anlamına gelmez. Hat durumu, kullanılabilir limit, ürün kategorisi ve güvenlik kontrolleri sonucu etkiler."] },
       { title: "Limit ve onay süreci nasıl çalışır?", paragraphs: ["İşlem sırasında operatör hattın mobil ödemeye açık olup olmadığını ve yeterli kullanılabilir limit bulunup bulunmadığını kontrol eder. Ardından hizmet adı ve toplam tutar gösterilerek kullanıcı onayı alınır.", "Onay mesajındaki firma, ürün veya tutar beklediğiniz işlemle uyuşmuyorsa devam etmeyin. Güncel limit ve hizmet durumu Vodafone'un resmi uygulaması veya müşteri hizmetlerinden doğrulanmalıdır."], bullets: ["Kullanılabilir limiti işlemden önce kontrol edin.", "Toplam tutarı ve varsa hizmet bedelini okuyun.", "Doğrulama kodunu yalnız ilgili ödeme ekranında kullanın."] },
-      { title: "Vodafone mobil ödeme bozum öncesinde nelere dikkat edilmeli?", paragraphs: ["Mobil ödeme bozdur amacıyla dijital ürün alınacaksa ürün türü, bölge, para birimi ve tutar satın alma öncesinde teyit edilmelidir. Desteklenmeyen bir ürünün alınması veya kodun kişisel hesaba yüklenmesi işlemi geri döndürülemez hâle getirebilir.", "Güvenilir mobil bozumcu seçerken yalnız yüksek oran vaadine değil, resmi iletişim bilgilerine, açık işlem sırasına ve ödeme koşullarının önceden belirtilmesine bakın."] },
+      { title: "Vodafone ile dijital ürün satın alırken nelere dikkat edilmeli?", paragraphs: ["Ürün türü, bölge, para birimi, toplam tutar ve teslimat biçimi satın alma öncesinde kontrol edilmelidir. Onay mesajındaki hizmet adı veya tutar beklediğiniz işlemle uyuşmuyorsa devam etmeyin.", "Sky Bozum Vodafone bakiyesini doğrudan satın almaz. Bu sayfa, desteklenen mağazalarda dijital ürün satın alma adımlarını açıklayan bağımsız bir rehberdir."] },
     ],
   },
   {
     slug: "turkcell-mobil-odeme-nasil-kullanilir",
     title: "Turkcell Mobil Ödeme Nasıl Kullanılır? Paycell ve Limit Rehberi",
     seoTitle: "Turkcell Mobil Ödeme Nasıl Kullanılır? Limit Rehberi",
-    metaDescription: "Turkcell mobil ödeme kullanımını, Paycell kart ile hat limitinin farkını, onay sürecini ve mobil ödeme bozum öncesi kontrolleri öğrenin.",
+    metaDescription: "Turkcell mobil ödeme kullanımını, Paycell kart ile hat limitinin farkını, onay sürecini ve dijital kod satın alma kontrollerini öğrenin.",
     excerpt: "Turkcell mobil ödeme limiti ile Paycell kart ve uygulama bakiyesi arasındaki farkları net biçimde öğrenin.",
     category: "Turkcell",
     readTime: "7 dk",
     updatedAt: "2026-07-29",
     serviceSlug: "turkcell-mobil-odeme",
-    keywords: ["turkcell mobil ödeme", "turkcell mobil ödeme bozum", "paycell mobil ödeme", "turkcell mobil ödeme limiti"],
+    keywords: ["turkcell mobil ödeme", "turkcell dijital kod satın alma", "paycell mobil ödeme", "turkcell mobil ödeme limiti"],
     links: [
       { label: "Turkcell mobil ödeme hizmeti", href: "/hizmetler/turkcell-mobil-odeme" },
       { label: "Paycell nedir?", href: "/bilgi-merkezi/paycell-nedir-nasil-kullanilir" },
@@ -455,20 +456,20 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Turkcell mobil ödeme nasıl çalışır?", paragraphs: ["Turkcell mobil ödeme, desteklenen dijital ürün veya hizmetlerin telefon hattı üzerinden onaylanmasına imkân verir. İşlem sırasında hat durumu, kullanılabilir limit ve ürün kategorisi kontrol edilir; ardından tutar kullanıcı onayıyla faturaya veya uygun bakiyeye yansır.", "Mobil ödeme özelliğinin açık olması, her işlem için yeterli limit bulunduğu anlamına gelmez. Kullanılabilir limit, hat geçmişi ve güvenlik değerlendirmeleri sonucu etkileyebilir."] },
       { title: "Paycell ile Turkcell mobil ödeme aynı mı?", paragraphs: ["Hayır. Paycell kart, Paycell uygulama bakiyesi ve Turkcell hattına tanımlanan mobil ödeme limiti farklı ödeme kaynaklarıdır. Satın alma ekranında hangisinin seçildiğini kontrol etmek gerekir.", "Bir Paycell kart işleminin telefon faturasına yansıyacağı varsayılmamalıdır. İşlem hareketi ve kullanılan kaynak uygulama içindeki güncel kayıtlardan doğrulanmalıdır."] },
-      { title: "Turkcell mobil ödeme bozum işleminde güvenlik", paragraphs: ["Mobil ödeme bozum amacıyla dijital kod alınacaksa ürünün kabul edilen tür, tutar, para birimi ve bölgede olması gerekir. Satın alma yapılmadan önce güncel oran ve uygunluk yazılı olarak teyit edilmelidir.", "Şifre, ekran paylaşımı veya cihazınıza uzaktan erişim isteyen kişilerle işlem yapmayın. Güvenilir süreç, yalnız işlem için gerekli bilgileri ister ve ödeme adımlarını açık biçimde anlatır."] },
+      { title: "Turkcell ile dijital kod satın alırken güvenlik", paragraphs: ["Dijital kod alınacaksa ürünün türü, tutarı, para birimi, bölgesi ve teslimat biçimi satın alma öncesinde kontrol edilmelidir. Onay ekranında mağaza ve toplam tutar açıkça okunmalıdır.", "Şifre, ekran paylaşımı veya cihazınıza uzaktan erişim isteyen kişilerle işlem yapmayın. Sky Bozum Turkcell bakiyesini doğrudan satın almaz; bu içerik bağımsız satın alma rehberidir."] },
     ],
   },
   {
     slug: "turk-telekom-mobil-odeme-rehberi",
-    title: "Türk Telekom Mobil Ödeme Rehberi: Limit, Pokus ve Bozum",
+    title: "Türk Telekom Dijital Ürün Alım Rehberi: Limit ve Pokus",
     seoTitle: "Türk Telekom Mobil Ödeme Rehberi: Limit ve Kullanım",
-    metaDescription: "Türk Telekom mobil ödeme limitini, Pokus kart ile hat bakiyesi arasındaki farkı ve mobil ödeme bozum öncesi güvenlik kontrollerini öğrenin.",
+    metaDescription: "Türk Telekom mobil ödeme limitini, Pokus kart ile hat bakiyesi arasındaki farkı ve dijital ürün satın alma kontrollerini öğrenin.",
     excerpt: "Türk Telekom mobil ödeme limiti, Pokus kart ve dijital ürün işlemleri arasındaki farkları öğrenin.",
     category: "Türk Telekom",
     readTime: "7 dk",
     updatedAt: "2026-07-29",
     serviceSlug: "turk-telekom-mobil-odeme",
-    keywords: ["türk telekom mobil ödeme", "türk telekom mobil ödeme bozum", "pokus", "mobil ödeme limiti"],
+    keywords: ["türk telekom mobil ödeme", "türk telekom dijital ürün alım rehberi", "pokus", "mobil ödeme limiti"],
     links: [
       { label: "Türk Telekom mobil ödeme hizmeti", href: "/hizmetler/turk-telekom-mobil-odeme" },
       { label: "Pokus ve Razer Gold rehberi", href: "/bilgi-merkezi/pokus-nedir-razer-gold-nasil-alinir" },
@@ -477,14 +478,14 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Türk Telekom mobil ödeme nedir?", paragraphs: ["Türk Telekom mobil ödeme, desteklenen dijital ürün ve hizmet bedellerinin telefon hattı üzerinden onaylanmasını sağlayan bir ödeme yöntemidir. Kullanılabilir seçenekler faturalı veya faturasız hat durumuna, limite ve ürün kategorisine göre değişebilir.", "Güncel aktivasyon ve limit bilgisi yalnız operatörün resmi uygulaması, çevrim içi işlem kanalı veya müşteri hizmetlerinden doğrulanmalıdır."] },
       { title: "Pokus ile mobil ödeme limiti arasındaki fark", paragraphs: ["Pokus kart veya cüzdan bakiyesi, Türk Telekom hattına tanımlanan mobil ödeme limitinden farklı bir ödeme kaynağıdır. Bir işlemde hangi kaynağın kullanıldığını ödeme ekranından kontrol etmek gerekir.", "Pokus hesabında bakiye bulunması mobil ödeme limitinin kullanılabilir olduğu; mobil ödeme limitinin bulunması da Pokus kart bakiyesi olduğu anlamına gelmez."] },
-      { title: "Türk Telekom mobil ödeme bozum nasıl değerlendirilir?", paragraphs: ["Mobil ödeme bozdurma için dijital ürün alınacaksa ürünün türü, tutarı, bölgesi ve teslim yöntemi önceden teyit edilmelidir. Kod kişisel hesaba yüklenmeden ve satın alma tamamlanmadan önce güncel uygunluk bilgisi alınmalıdır.", "İşlem sırasında onay mesajındaki hizmet adı ve tutarı okuyun. Beklenmeyen bir yönlendirme, ekran paylaşımı veya şifre talebi varsa işlemi durdurun."] },
+      { title: "Türk Telekom ile dijital ürün nasıl satın alınır?", paragraphs: ["Dijital ürün alınacaksa ürünün türü, tutarı, bölgesi, mağazası ve teslim yöntemi satın alma öncesinde kontrol edilmelidir. İşlem sırasında onay mesajındaki hizmet adı ve tutar beklediğiniz bilgiyle eşleşmelidir.", "Sky Bozum Türk Telekom bakiyesini doğrudan satın almaz. Bu sayfa bağımsız bir satın alma ve güvenlik rehberidir; beklenmeyen yönlendirme, ekran paylaşımı veya şifre talebi varsa işlemi durdurun."] },
     ],
   },
   {
     slug: "pokus-nedir-razer-gold-nasil-alinir",
     title: "Pokus Nedir? Pokus ile Razer Gold Nasıl Alınır?",
     seoTitle: "Pokus Nedir? Pokus ile Razer Gold Alma Rehberi",
-    metaDescription: "Pokus kart ve cüzdan bakiyesinin nasıl kullanıldığını, Razer Gold alırken bölge, ödeme kaynağı ve bozdurma uygunluğunun nasıl kontrol edileceğini öğrenin.",
+    metaDescription: "Pokus kart ve cüzdan bakiyesinin nasıl kullanıldığını, Razer Gold alırken bölge, ödeme kaynağı, satıcı ve teslimat koşullarını öğrenin.",
     excerpt: "Pokus kartın kullanımını ve Razer Gold satın alırken dikkat edilmesi gereken ödeme, bölge ve kod kontrollerini öğrenin.",
     category: "Pokus",
     readTime: "7 dk",
@@ -498,7 +499,7 @@ export const articles: ArticleItem[] = [
     ],
     sections: [
       { title: "Pokus nedir?", paragraphs: ["Pokus, uygun hesaplarda kart ve cüzdan özellikleri sunan bir ödeme hizmetidir. Pokus kart bakiyesi ile Türk Telekom hattına tanımlanan mobil ödeme limiti farklı kaynaklardır ve ödeme ekranında hangisinin kullanıldığı kontrol edilmelidir.", "Kullanılabilir özellikler, doğrulama seviyesi ve güncel hizmet koşullarına göre değişebilir. Kesin limit ve işlem bilgisi resmi uygulama üzerinden görülmelidir."] },
-      { title: "Pokus ile Razer Gold nasıl alınır?", paragraphs: ["Pokus kartın internet alışverişine açık olduğu ve satıcının kartla ödemeyi kabul ettiği durumlarda uygun Razer Gold ürünü satın alınabilir. Ürünün TL veya yabancı para biriminde olması, bölgesi ve kod teslim yöntemi işlem öncesinde kontrol edilmelidir.", "Razer Gold bozdur amacıyla satın alma yapılacaksa hangi tutar ve bölgenin kabul edildiğini önceden sorun. Kod teslim edildikten sonra kişisel hesaba yüklemeyin."], bullets: ["Ödeme kaynağını doğrulayın.", "Ürün bölgesi ve para birimini okuyun.", "Satıcı ve teslimat bilgilerini kontrol edin.", "Güncel oranı satın alma öncesinde teyit edin."] },
+      { title: "Pokus ile Razer Gold nasıl alınır?", paragraphs: ["Pokus kartın internet alışverişine açık olduğu ve satıcının kartla ödemeyi kabul ettiği durumlarda uygun Razer Gold ürünü satın alınabilir. Ürünün TL veya yabancı para biriminde olması, bölgesi ve kod teslim yöntemi işlem öncesinde kontrol edilmelidir.", "Satın aldığınız kodu kişisel hesabınızda kullanabilir, Sky Bozum'a uygunluk için sunabilir veya başka bir alıcıyla değerlendirebilirsiniz. Sky Bozum Pokus bakiyesini doğrudan satın almaz."], bullets: ["Ödeme kaynağını doğrulayın.", "Ürün bölgesi ve para birimini okuyun.", "Satıcı ve teslimat bilgilerini kontrol edin.", "Onay ekranındaki tutarı ve hizmet adını okuyun."] },
       { title: "Güvenli kod işlemi için dikkat edilmesi gerekenler", paragraphs: ["Kodun tamamını yalnız işlem için doğruladığınız resmi iletişim kanalında paylaşın. Sosyal medya yorumları veya açık gruplar kod göndermek için güvenli değildir.", "Ödeme tamamlandığında dekont görüntüsünden önce banka hesabınızdaki gerçek hareketi kontrol edin. Hesap şifresi, kart PIN'i veya uzaktan erişim talep eden kişilerle devam etmeyin."] },
     ],
   },
@@ -832,7 +833,7 @@ export const articles: ArticleItem[] = [
       {
         title: "Bozum talebine başlamadan önce",
         paragraphs: [
-          "Bozum talebi oluşturmak, yalnızca bir mesaj gönderip fiyat sormaktan ibaret değildir. Sağlıklı bir süreç için önce hangi ürün veya bakiye türünü değerlendirmek istediğinizi, toplam tutarı ve ürünün para birimini netleştirmeniz gerekir. Razer Gold TL, Razer Gold USD, Apple Gift Card, Steam, Paycell, Pokus veya mobil ödeme bozum taleplerinde süreç ayrıntıları farklı olabilir. Bu nedenle ilk mesajda ürün adını açık biçimde yazmak hem yanlış anlaşılmayı hem de gereksiz beklemeyi azaltır.",
+          "Bozum talebi oluşturmak, yalnızca bir mesaj gönderip fiyat sormaktan ibaret değildir. Sağlıklı bir süreç için önce hangi dijital kodu değerlendirmek istediğinizi, toplam tutarı ve ürünün para birimini netleştirmeniz gerekir. Razer Gold TL, Razer Gold USD, Apple Gift Card ve Steam kodlarında süreç ayrıntıları farklı olabilir. Paycell, Pokus veya operatör mobil ödeme seçenekleri ise doğrudan bozum ürünü değil, dijital kodun hangi yöntemle satın alındığını açıklayan bilgilerdir.",
           "Sky Bozum iletişim sayfasındaki resmi WhatsApp bağlantısını kullanmak güvenli başlangıcın en önemli adımıdır. Arama motoru reklamları, sosyal medya yorumları veya size özel mesajla gönderilen benzer isimli bağlantılar resmi kanal olmayabilir. Alan adının bozumcu.net olduğunu ve telefon numarasının iletişim sayfasındaki numarayla eşleştiğini kontrol ederek güvenli bozum sürecine başlayabilirsiniz."
         ],
         subsections: [
@@ -896,7 +897,7 @@ export const articles: ArticleItem[] = [
     ],
     sections: [
       { title: "Bozum oranı neden değişir?", paragraphs: ["Mobil ödeme bozum, dijital kod ve sanal kart işlemlerinde oranlar her zaman aynı kalmaz. Ürünün türü, para birimi, bölgesi, kullanılabilir stok, piyasa talebi ve işlem tutarı güncel oranı etkileyebilir. Bu nedenle haftalar önce görülen bir oranı bugünkü işlem için kesin kabul etmek doğru değildir. Sky Bozum üzerinden işlem yapmadan önce ürün ve tutar özelinde güncel bilgi almak gerekir.", "Oran değişkenliği özellikle Razer Gold TL ile USD, Apple Gift Card bölgeleri veya farklı mobil ödeme yöntemleri arasında belirgindir. Aynı marka altındaki iki ürün bile farklı kullanım koşullarına sahip olabilir. Güvenli bozum yaklaşımı, ürünü satın almadan veya kodu göndermeden önce güncel oranı yazılı olarak teyit etmektir."], subsections: [{ title: "Taban oran ile kesin oran arasındaki fark", paragraphs: ["Sitede gösterilen taban veya bilgilendirme oranları genel fikir verir. Kesin oran ise işlem anındaki ürün, tutar ve uygunluk kontrolünden sonra paylaşılır. Hesabınızı kesin tutar üzerinden yapmak için destek hattından güncel teyit alın."] }] },
-      { title: "Oran sormak için doğru mesaj nasıl yazılır?", paragraphs: ["‘Oran nedir?’ gibi tek cümlelik bir mesaj, hangi ürün için bilgi istendiğini açıklamaz. Daha hızlı yanıt için ürün adını, toplam tutarı, para birimini ve varsa bölgeyi aynı mesajda belirtin. Örneğin ‘3.000 TL Paycell ile alınmış Razer Gold TL kodu için güncel bozum oranı nedir?’ mesajı değerlendirme için gerekli temel bilgileri içerir.", "Mobil ödeme bozdurma talebinde operatör veya kullanılan uygulama da önemlidir. Vodafone, Turkcell, Türk Telekom, Paycell veya Pokus bilgisini belirtmek doğru rehbere yönlendirilmenizi sağlar. Kod henüz satın alınmadıysa bunu da açıkça yazın; böylece ürün uygunluğu işlem öncesinde kontrol edilebilir."], bullets: ["Ürün veya hizmet adını yazın.", "Toplam tutarı ve para birimini belirtin.", "Kodun bölgesini biliyorsanız ekleyin.", "Ürünün satın alınıp alınmadığını açıklayın."] },
+      { title: "Oran sormak için doğru mesaj nasıl yazılır?", paragraphs: ["‘Oran nedir?’ gibi tek cümlelik bir mesaj, hangi ürün için bilgi istendiğini açıklamaz. Daha hızlı yanıt için ürün adını, toplam tutarı, para birimini ve varsa bölgeyi aynı mesajda belirtin. Örneğin ‘Paycell ile satın aldığım 3.000 TL değerindeki kullanılmamış Razer Gold TL kodu için güncel kod oranı nedir?’ mesajı değerlendirme için gerekli temel bilgileri içerir.", "Paycell, Pokus veya operatör adı yalnız dijital kodun hangi ödeme yöntemiyle satın alındığını açıklar; Sky Bozum bu marka bakiyelerini doğrudan satın almaz. Kod henüz satın alınmadıysa bunu da açıkça yazın; böylece ürün ve bölge bilgisine ilişkin genel yönlendirme alınabilir."], bullets: ["Dijital kodun adını yazın.", "Toplam tutarı ve para birimini belirtin.", "Kodun bölgesini biliyorsanız ekleyin.", "Ürünün satın alınıp alınmadığını açıklayın."] },
       { title: "Oran hesaplaması nasıl yapılır?", paragraphs: ["Oran yüzde olarak verildiğinde tahmini ödeme, toplam tutarın oranla çarpılmasıyla hesaplanır. Örneğin 5.000 TL tutar için yüzde 60 oran verilirse tahmini ödeme 3.000 TL olur. Ancak işlem masrafı, ürün parçalı yapısı veya farklı koşullar varsa kesin sonuç destek mesajında açıklanmalıdır.", "Sky Bozum oran hesaplama sayfası hızlı bir tahmin sağlar; yine de bu sonuç otomatik teklif veya işlem garantisi değildir. İşleme başlamadan önce destek hattından kesin oranı ve ödenecek tutarı yazılı olarak alın. Böylece kod gönderildikten sonra tutar konusunda anlaşmazlık yaşanmaz."], subsections: [{ title: "Yuvarlama ve parçalı kodlar", paragraphs: ["Birden fazla koddan oluşan işlemlerde her kodun değeri veya bölgesi farklıysa toplam hesap değişebilir. Parçalı kodların listesini önceden belirtmek, nihai ödemenin doğru hesaplanmasına yardımcı olur."] }] },
       { title: "Sahte oran tekliflerine karşı dikkat", paragraphs: ["Piyasanın çok üzerinde görünen bir oran her zaman avantaj anlamına gelmez. Sahte hesaplar kullanıcıyı hızlı karar vermeye zorlayabilir, resmi olmayan bağlantıya yönlendirebilir veya kodu oran teyidi olmadan isteyebilir. Alan adını, telefon numarasını ve iletişim kanalını kontrol etmeden dijital kod paylaşmayın.", "Sky Bozum taklidi yapan hesaplardan korunmak için yalnız bozumcu.net üzerindeki iletişim bağlantılarını kullanın. Size farklı bir numaradan ulaşılırsa mevcut resmi konuşma üzerinden doğrulama isteyin. Şifre, SMS kodu veya kart PIN’i isteyen tekliflerden uzak durun."], bullets: ["Aşırı yüksek oranlarda resmi kanalı yeniden kontrol edin.", "Kod göndermeden önce ödeme koşulunu yazılı alın.", "Kısa süre baskısıyla karar vermeyin.", "Hesap şifresi veya doğrulama kodu paylaşmayın."] },
       { title: "Oranı ne zaman yeniden teyit etmek gerekir?", paragraphs: ["Teklif ile işlem arasında uzun süre geçtiyse oran yeniden sorulmalıdır. Piyasa ve stok koşulları kısa sürede değişebilir. Ayrıca tutar, ürün veya para birimi değiştiğinde önceki teklif geçerli sayılmamalıdır. Yeni bilgileri aynı konuşmada paylaşarak güncel hesap isteyin.", "İşlem bölündüyse veya ek kod eklendiyse toplam tutarı tekrar yazın. Ödeme öncesinde nihai tutarın iki tarafça açıkça görülmesi şeffaf işlem için önemlidir. Eski ekran görüntüsü yerine güncel konuşmadaki teyidi esas alın." ] },
@@ -943,7 +944,7 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Sky Bozum ile nasıl iletişim kurulur?", paragraphs: ["Sky Bozum ile iletişim kurmak için bozumcu.net üzerindeki resmi iletişim merkezini kullanabilirsiniz. Sayfada WhatsApp, telefon ve e-posta seçenekleri bulunur. Güncel oran, bozum talebi ve devam eden işlem desteği için işlem kaydını yazılı tutmak için WhatsApp tercih edilebilir. Kurumsal veya ayrıntılı yazılı taleplerde e-posta tercih edilebilir.", "İletişim kanalını doğrudan siteden açmak, benzer isim kullanan sahte hesaplardan korunmanıza yardımcı olur. Telefon numarasını kaydetmeden önce sayfadaki numarayla eşleştirin. Sosyal medya yorumunda veya forum mesajında gördüğünüz bir numarayı resmi kabul etmeyin."], subsections: [{ title: "Resmi kanal kontrolü", paragraphs: ["Alan adının bozumcu.net olduğuna, bağlantının güvenli biçimde açıldığına ve WhatsApp numarasının sitedeki numarayla aynı olduğuna bakın. Şüphe durumunda işlemi başlatmadan önce iletişim sayfasını yeniden açın."] }] },
       { title: "Hangi konu için hangi kanal kullanılmalı?", paragraphs: ["Bozum talebi ve güncel oran bilgisi için WhatsApp üzerinden ürün ve tutar bilgisi göndermek en pratik yöntemdir. Devam eden işlem desteği de konuşma geçmişinin korunması amacıyla aynı WhatsApp görüşmesinden yürütülmelidir. Telefon görüşmesi gerekiyorsa resmi numara aranabilir; ancak oran ve ödeme gibi kritik ayrıntıların yazılı teyidi faydalıdır.", "E-posta, iş birliği, kurumsal talepler veya ayrıntılı belge gerektiren konular için kullanılabilir. E-posta içinde kart bilgisi, şifre veya doğrulama kodu bulunmamalıdır. Hangi kanal seçilirse seçilsin, hesabınıza giriş sağlayan verileri paylaşmamak temel kuraldır."], bullets: ["Oran ve bozum talebi: WhatsApp", "Devam eden işlem: Mevcut WhatsApp konuşması", "Kurumsal ve uzun talepler: E-posta", "Acil doğrulama: Resmi telefon numarası"] },
-      { title: "Hızlı yanıt için mesaj hazırlığı", paragraphs: ["Destek ekibine yazmadan önce işlem türünü, toplam tutarı, ürünün para birimini ve ödeme yapılacak IBAN bilgisini hazırlayın. İlk mesajda kodu göndermek zorunda değilsiniz. Önce ürün uygunluğu ve güncel oran teyit edilmelidir. Açık bir mesaj, ek soru sayısını azaltır ve mobil ödeme bozdurma sürecin daha açık ilerlemesine yardımcı olur.", "Örneğin ‘Paycell ile alınmış 2.500 TL Razer Gold TL kodu için güncel oran almak istiyorum’ mesajı yeterli başlangıç bilgisini sunar. Birden fazla kod varsa adet ve değerleri de yazın. Kodların tamamını oran onayı gelmeden paylaşmayın."], subsections: [{ title: "Hazır mesaj örneği", paragraphs: ["Merhaba, [ürün/hizmet adı] için [tutar] tutarında bozum talebi oluşturmak istiyorum. Ürün [para birimi/bölge] bilgisindedir. Güncel oran ve uygunluk bilgisini paylaşabilir misiniz?"] }] },
+      { title: "Hızlı yanıt için mesaj hazırlığı", paragraphs: ["Destek ekibine yazmadan önce dijital kod türünü, toplam tutarı, ürünün para birimini ve ödeme yapılacak IBAN bilgisini hazırlayın. İlk mesajda kodu göndermek zorunda değilsiniz. Önce kod uygunluğu ve güncel oran teyit edilmelidir. Açık bir mesaj, ek soru sayısını azaltır ve kod değerlendirme sürecinin daha net ilerlemesine yardımcı olur.", "Örneğin ‘Paycell ile satın alınmış 2.500 TL Razer Gold TL kodu için güncel kod oranını öğrenmek istiyorum’ mesajı yeterli başlangıç bilgisini sunar. Paycell burada yalnız satın alma yöntemini açıklar; Sky Bozum Paycell bakiyesini doğrudan satın almaz. Birden fazla kod varsa adet ve değerleri de yazın. Kodların tamamını oran onayı gelmeden paylaşmayın."], subsections: [{ title: "Hazır mesaj örneği", paragraphs: ["Merhaba, [dijital kod adı] için [tutar] tutarında kod değerlendirme talebi oluşturmak istiyorum. Ürün [para birimi/bölge] bilgisindedir. Güncel kod oranı ve uygunluk bilgisini paylaşabilir misiniz?"] }] },
       { title: "Güvenli iletişim kuralları", paragraphs: ["Sky Bozum işlem sürecinde banka şifresi, kart PIN’i, uygulama parolası veya tek kullanımlık doğrulama kodu istemez. Bu bilgiler hesabınıza erişim sağlar ve hiçbir bozum işlemi için gerekli değildir. Bir kişi resmi destek olduğunu söyleyerek bu verileri talep ederse konuşmayı sonlandırın.", "Dijital kodlar da nakit benzeri değere sahiptir. Kodun tamamını sosyal medya, yorum alanı, forum veya birden fazla mesaj hesabında paylaşmayın. Yalnız resmi kanalı doğruladıktan ve oranı kabul ettikten sonra gerekli bilgiyi iletin. Ekran görüntülerindeki kişisel bilgileri kapatın."], bullets: ["Şifre paylaşmayın.", "SMS doğrulama kodu paylaşmayın.", "Kart PIN’i paylaşmayın.", "Dijital kodu herkese açık alanda göstermeyin."] },
       { title: "Sahte Sky Bozum hesapları nasıl anlaşılır?", paragraphs: ["Sahte hesaplar marka adına benzeyen kullanıcı adları, farklı alan adları veya geçici telefon numaraları kullanabilir. Çok yüksek oran vaadi, hemen kod gönderme baskısı ve resmi olmayan ödeme bağlantısı önemli uyarı işaretleridir. Gerçek iletişim bilgilerini yalnız bozumcu.net üzerinden kontrol edin.", "Bir hesap size ulaştığında numarayı resmi iletişim sayfasındaki numarayla karşılaştırın. Profil resmi veya marka logosu tek başına doğrulama değildir; herkes aynı görseli kullanabilir. Şüphe varsa mevcut konuşmada hiçbir kod veya kişisel bilgi paylaşmadan resmi kanala kendiniz yazın." ] },
       { title: "İşlem sonrası iletişim ve kayıt", paragraphs: ["İşlem tamamlandıktan sonra konuşma ve ödeme kaydını bir süre saklayın. Bir sorun oluşursa işlem tarihi, saati, ürün ve tutar bilgisiyle aynı resmi kanaldan destek isteyin. Yeni bir konuşma açmak yerine mevcut kayıt üzerinden devam etmek incelemeyi kolaylaştırır.", "Ödeme bildirimi aldıktan sonra banka hareketini kendi uygulamanızdan doğrulayın. Dekont veya ekran görüntüsü paylaşmanız gerektiğinde gereksiz kişisel alanları kapatın. Sky Bozum iletişim merkezi, devam eden ve tamamlanan işlemler hakkında kontrollü destek almak için kullanılabilir." ] },

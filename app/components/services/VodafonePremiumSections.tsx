@@ -14,10 +14,10 @@ const routes = [
     href: '/bilgi-merkezi/sorun-cozme/vodafone-mobil-odeme-acilmiyor',
   },
   {
-    eyebrow: 'Hızlı hesaplama',
-    title: 'Tahmini ödeme aralığını görün',
-    description: 'İşlem tutarını girerek güncel taban oran aralığına göre yaklaşık sonucu hesaplayın.',
-    href: '/oran-hesapla?service=vodafone-mobil-odeme',
+    eyebrow: 'Satın alma rehberi',
+    title: 'Vodafone ile dijital ürün alın',
+    description: 'Mağaza, ürün bölgesi, teslimat ve SMS onayı kontrollerini satın alma öncesinde uygulayın.',
+    href: '/bilgi-merkezi/vodafone-mobil-odeme-nedir',
   },
 ];
 
@@ -41,7 +41,7 @@ export default function VodafonePremiumSections() {
         <div className="mb-7 max-w-3xl">
           <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-red-400">Vodafone işlem rotası</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Aradığınız adıma doğrudan ilerleyin</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-400">Kullanıcıyı farklı sitelere göndermeden; bilgi, kontrol, hesaplama ve destek akışının tamamını Sky Bozum içinde birleştirdik.</p>
+          <p className="mt-3 text-sm leading-7 text-slate-400">Vodafone mobil ödeme ile dijital ürün satın alırken bilgi, limit, mağaza ve güvenlik kontrollerini tek rotada birleştirdik.</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           {routes.map((route, index) => (

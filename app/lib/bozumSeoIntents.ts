@@ -7,15 +7,15 @@ export const bozumSeoIntents = {
     'dijital bakiye bozdurma',
   ],
   operator: [
-    'Vodafone mobil ödeme bozdurma',
-    'Turkcell mobil ödeme bozdurma',
-    'Türk Telekom mobil ödeme bozdurma',
+    'Vodafone ile dijital ürün satın alma',
+    'Turkcell ile dijital kod satın alma',
+    'Türk Telekom dijital ürün alım rehberi',
     'mobil ödeme limiti',
   ],
   wallet: [
-    'Paycell bozdurma',
-    'Pokus bozdurma',
-    'Vodafone Pay bozdurma',
+    'Paycell ile dijital ürün satın alma',
+    'Pokus ile dijital ürün satın alma',
+    'Vodafone Pay dijital alışveriş rehberi',
   ],
   digitalCode: [
     'Razer Gold bozdurma',

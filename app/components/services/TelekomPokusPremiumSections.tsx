@@ -6,12 +6,12 @@ const content = {
   telekom: {
     eyebrow: 'Türk Telekom işlem rotası',
     title: 'Hat, limit ve doğrulama adımlarını tek akışta yönetin',
-    description: 'Türk Telekom mobil ödeme sürecini bilgi, limit kontrolü, hesaplama ve sorun çözme adımlarıyla Sky Bozum içinde tamamlayın.',
+    description: 'Türk Telekom mobil ödeme ile dijital ürün satın alırken bilgi, limit, mağaza ve güvenlik kontrollerini tek akışta tamamlayın.',
     tone: 'cyan',
     routes: [
       { eyebrow: 'Başlangıç', title: 'Türk Telekom mobil ödeme nasıl çalışır?', description: 'Hat uygunluğu, mobil ödeme servisi ve temel işlem kontrollerini öğrenin.', href: '/bilgi-merkezi/turk-telekom-mobil-odeme-rehberi' },
       { eyebrow: 'Sorun çözme', title: 'Hata, SMS ve limit sorunlarını inceleyin', description: 'Ödeme reddi, doğrulama mesajı ve kullanılabilir limit sorunlarını adım adım kontrol edin.', href: '/bilgi-merkezi/sorun-cozme/turk-telekom-mobil-odeme-calismiyor' },
-      { eyebrow: 'Hızlı hesaplama', title: 'Yaklaşık ödeme aralığını görün', description: 'İşlem tutarını girerek güncel taban oran aralığına göre tahmini sonucu hesaplayın.', href: '/oran-hesapla?service=turk-telekom-mobil-odeme' },
+      { eyebrow: 'Satın alma rehberi', title: 'Türk Telekom ile dijital ürün alın', description: 'Mağaza, ürün bölgesi, teslimat ve SMS onayı kontrollerini satın alma öncesinde uygulayın.', href: '/bilgi-merkezi/turk-telekom-mobil-odeme-rehberi' },
     ],
     controls: [
       ['Hat ve servis durumu', 'Mobil ödeme servisinin hat üzerinde açık ve işlem için uygun durumda olması gerekir.'],
@@ -28,12 +28,12 @@ const content = {
   pokus: {
     eyebrow: 'Pokus işlem rotası',
     title: 'Kart ayarından dijital kod teslimine kadar bütün adımlar',
-    description: 'Pokus kart, kullanılabilir bakiye, internet alışverişi ve dijital ürün değerlendirme sürecini tek akışta yönetin.',
+    description: 'Pokus kart, kullanılabilir bakiye, internet alışverişi ve dijital ürün satın alma sürecini tek akışta yönetin.',
     tone: 'violet',
     routes: [
       { eyebrow: 'Başlangıç', title: 'Pokus nedir, nasıl kullanılır?', description: 'Kart bilgileri, bakiye, internet alışverişi ayarı ve kullanım mantığını öğrenin.', href: '/bilgi-merkezi/pokus-nedir-razer-gold-nasil-alinir' },
       { eyebrow: 'Sorun çözme', title: 'Kart ve ödeme hatalarını inceleyin', description: 'Kart durumu, bakiye, limit ve mağaza uyumluluğunu adım adım kontrol edin.', href: '/bilgi-merkezi/sorun-cozme/pokus-kart-hata-veriyor' },
-      { eyebrow: 'Hızlı hesaplama', title: 'Yaklaşık ödeme aralığını görün', description: 'İşlem tutarını girerek Pokus için güncel taban oran aralığını hesaplayın.', href: '/oran-hesapla?service=pokus' },
+      { eyebrow: 'Güvenli alışveriş', title: 'Satıcı ve ürün kontrollerini uygulayın', description: 'Satıcı güveni, ürün bölgesi, teslimat biçimi ve ödeme ekranını birlikte doğrulayın.', href: '/bilgi-merkezi/pokus-nedir-razer-gold-nasil-alinir' },
     ],
     controls: [
       ['Kart durumu', 'Pokus kartın aktif ve internet alışverişine açık olduğunu uygulama içinden kontrol edin.'],

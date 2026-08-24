@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SkyFaqModule } from "./faq-module/components/SkyFaqModule";
 
 export const metadata: Metadata = {
-  keywords: ['mobil odeme bozum SSS', 'Razer Gold bozum sorulari', 'Paycell bozum sorulari', 'bozum guvenlik sorulari', 'mobil odeme oranlari'],
+  keywords: ['mobil odeme bozum SSS', 'Razer Gold bozum sorulari', 'Paycell dijital urun sorulari', 'bozum guvenlik sorulari', 'mobil odeme rehberleri'],
   title: "Sıkça Sorulan Sorular",
   description:
     "Sky Bozum hizmetleri, işlem süreci, oranlar, ödeme ve güvenlik hakkındaki güncel soruların net yanıtlarını inceleyin.",

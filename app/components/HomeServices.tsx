@@ -4,8 +4,8 @@ import Link from './DeferredLink';
 const services = [
   {
     name: 'Mobil Ödeme Bozum',
-    desc: 'Vodafone, Turkcell ve Türk Telekom hatları için işlem yöntemi, limit ve oran bilgisini önceden öğrenin.',
-    benefit: 'Operatöre özel yönlendirme',
+    desc: 'Genel mobil bozum sürecini öğrenin; operatör sayfalarında dijital ürün satın alma, limit ve güvenlik adımlarını inceleyin.',
+    benefit: 'Genel bilgi ve operatöre özel alım rehberi',
     href: '/operatorler',
     logos: [
       { src: '/brands/vodafone/vodafone.svg', alt: 'Vodafone' },
@@ -15,16 +15,16 @@ const services = [
     tone: 'coral',
   },
   {
-    name: 'Dijital Cüzdan Bozum',
-    desc: 'Vodafone Pay, Paycell ve Pokus bakiyeleri için uygun işlem adımlarını ve tahmini ödeme tutarını net biçimde görün.',
-    benefit: 'Anında bakiye kontrolü ve yazılı oran teyidi',
+    name: 'Dijital Cüzdanla Ürün Alımı',
+    desc: 'Vodafone Pay, Paycell ve Pokus ile desteklenen mağazalardan dijital ürün satın alma adımlarını ve kart kontrollerini görün.',
+    benefit: 'Cüzdana özel satın alma ve güvenlik rehberi',
     href: '/hizmetler/paycell',
     logos: [
       { src: '/brands/vodafone/vodafone.svg', alt: 'Vodafone Pay' },
       { src: '/brands/paycell/paycell.svg', alt: 'Paycell' },
       { src: '/brands/pokus/pokus.svg', alt: 'Pokus' },
     ],
-    badge: 'Anında Bakiye',
+    badge: 'Bağımsız Rehber',
     tone: 'violet',
   },
   {
