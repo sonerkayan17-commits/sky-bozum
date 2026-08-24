@@ -76,13 +76,97 @@
 
 .products-page .product-directory-card__cover {
   position: relative;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-bottom: 1px solid rgba(var(--product-accent), .24);
   background: #0a0f1b;
 }
 
+/* Katalog kartında poster/video karesinin tamamı görünür; bilgi kart gövdesindedir. */
+.products-page .product-directory-card .product-cover__image,
+.products-page .product-directory-card .product-cover__video {
+  object-fit: contain;
+  transform: none;
+}
+
+.products-page .product-directory-card:hover .product-cover__image,
+.products-page .product-directory-card:hover .product-cover__video {
+  transform: none;
+}
+
+.products-page .product-directory-card .product-cover__content {
+  display: none;
+}
+
+.products-page .product-detail-hero__cover .product-cover--razer .product-cover__content,
+.products-page .product-detail-hero__cover .product-cover--steam .product-cover__content,
+.products-page .product-detail-hero__cover .product-cover--apple .product-cover__content {
+  display: none;
+}
+
 .products-page .product-cover--has-video .product-cover__image {
   z-index: 0;
+}
+
+.products-page .product-cover--razer {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(68, 214, 44, .22), transparent 34%),
+    linear-gradient(145deg, #071108, #0b2110 54%, #050906);
+}
+
+.products-page .product-cover--steam {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(102, 192, 244, .22), transparent 34%),
+    linear-gradient(145deg, #07111b, #102a42 54%, #050a10);
+}
+
+.products-page .product-cover--apple {
+  background:
+    radial-gradient(circle at 44% 42%, rgba(155, 104, 255, .22), transparent 30%),
+    radial-gradient(circle at 58% 58%, rgba(236, 21, 93, .16), transparent 34%),
+    linear-gradient(145deg, #10131a, #171321 56%, #07090e);
+}
+
+.products-page .product-cover--razer::before,
+.products-page .product-cover--steam::before,
+.products-page .product-cover--apple::before {
+  z-index: 0;
+  inset: 22% 11%;
+  border: 1px solid rgba(255, 255, 255, .68);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .98), rgba(230, 234, 241, .94));
+  box-shadow: 0 22px 54px rgba(0, 0, 0, .34), inset 0 1px rgba(255, 255, 255, .9);
+}
+
+.products-page .product-cover--razer::before { border-color: rgba(126, 224, 93, .52); }
+.products-page .product-cover--steam::before { border-color: rgba(111, 188, 235, .52); }
+.products-page .product-cover--apple::before { border-color: rgba(215, 202, 232, .62); }
+
+.products-page .product-cover--razer::after,
+.products-page .product-cover--steam::after,
+.products-page .product-cover--apple::after {
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 34%, rgba(2, 5, 10, .16) 76%),
+    linear-gradient(120deg, rgba(255, 255, 255, .045), transparent 42%);
+}
+
+.products-page .product-cover--razer .product-cover__image,
+.products-page .product-cover--steam .product-cover__image,
+.products-page .product-cover--apple .product-cover__image {
+  z-index: 1;
+  object-fit: contain;
+  transform: scale(.58);
+}
+
+.products-page .product-directory-card .product-cover--steam .product-cover__image { transform: scale(.49); }
+.products-page .product-directory-card .product-cover--apple .product-cover__image { transform: scale(.43); }
+
+.products-page .product-detail-hero__cover .product-cover--razer .product-cover__image,
+.products-page .product-detail-hero__cover .product-cover--steam .product-cover__image,
+.products-page .product-detail-hero__cover .product-cover--apple .product-cover__image {
+  transform: scale(.48);
 }
 
 .products-page .product-cover__video {
@@ -102,7 +186,6 @@
   opacity: 1;
 }
 
-.products-page .product-directory-card:hover .product-cover__video,
 .products-page .product-detail-hero__cover:hover .product-cover__video {
   transform: scale(1.045);
 }
