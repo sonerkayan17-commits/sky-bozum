@@ -5,7 +5,7 @@ import ProductCoverVideo from './ProductCoverVideo';
 export default function ProductCover({ product, compact = false, priority = false }: { product: ProductItem; compact?: boolean; priority?: boolean }) {
   return (
     <div
-      className={`product-cover product-cover--${product.tone} ${product.coverVideo && !compact ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
+      className={`product-cover product-cover--${product.tone} ${product.brandLogo ? 'product-cover--brand-art' : ''} ${product.coverVideo && !compact ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
       aria-hidden="true"
     >
       {product.coverVideo && !compact ? (
@@ -29,6 +29,7 @@ export default function ProductCover({ product, compact = false, priority = fals
         style={{ objectPosition: product.coverPosition ?? '50% 50%' }}
       />
       {product.coverVideo && !compact ? <ProductCoverVideo src={product.coverVideo} objectPosition={product.coverPosition} priority={priority} /> : null}
+      {product.brandLogo ? <span className="product-cover__brand-plate"><Image src={product.brandLogo} alt="" width={280} height={100} className="product-cover__brand-mark" /></span> : null}
       <span className="product-cover__glow" />
       <span className="product-cover__orb product-cover__orb--one" />
       <span className="product-cover__orb product-cover__orb--two" />

@@ -16,6 +16,7 @@ export type ProductItem = {
   intro: string;
   tone: ProductTone;
   coverImage: string;
+  brandLogo?: string;
   coverVideo?: string;
   coverPosition?: string;
   coverLabel: string;
@@ -318,7 +319,8 @@ export const products: ProductItem[] = [
     description: 'TL ve USD PIN seçeneklerini bölgenize göre inceleyin.',
     intro: 'Razer Gold PIN kodlarında tutar kadar para birimi, bölge ve kullanılmamış olma şartı da önemlidir. Kodunuzu hesabınıza yüklemeden önce ürün bilgisini doğrulayın.',
     tone: 'razer',
-    coverImage: '/brands/razer/razer.svg',
+    coverImage: '/products/razer-gold-sky-cover.webp',
+    brandLogo: '/brands/razer/razer.svg',
     coverPosition: '50% 50%',
     coverLabel: 'RAZER',
     coverNote: 'GOLD · TL / USD',
@@ -356,7 +358,8 @@ export const products: ProductItem[] = [
     description: 'Cüzdan kodlarını bölge ve para birimine göre inceleyin.',
     intro: 'Steam cüzdan kodları tek kullanımlıdır ve hesap mağaza bölgesiyle para birimi uyumu önemlidir. Kodu satın almadan önce hesabınızın bölgesini ve ürünün para birimini kontrol edin.',
     tone: 'steam',
-    coverImage: '/brands/steam/steam.svg',
+    coverImage: '/products/steam-wallet-sky-cover.webp',
+    brandLogo: '/brands/steam/steam.svg',
     coverPosition: '50% 50%',
     coverLabel: 'STEAM',
     coverNote: 'CÜZDAN KODU',
@@ -394,7 +397,8 @@ export const products: ProductItem[] = [
     description: 'Gift Card seçeneklerini hesap bölgenizle eşleştirin.',
     intro: 'Apple Gift Card kodları ülke veya bölgeye bağlıdır. Kodun para birimi ile Apple Hesabı ülkesinin uyumlu olduğundan emin olmadan etkinleştirme yapmayın.',
     tone: 'apple',
-    coverImage: '/brands/apple/apple.svg',
+    coverImage: '/products/apple-gift-card-sky-cover.webp',
+    brandLogo: '/brands/apple/apple.svg',
     coverPosition: '50% 50%',
     coverLabel: 'APPLE',
     coverNote: 'GIFT CARD · iTUNES',
