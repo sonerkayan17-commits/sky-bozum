@@ -90,6 +90,54 @@
 .article-resource-links>h2,.article-faq>h2{font-size:clamp(1.18rem,2vw,1.45rem);line-height:1.15}
 .article-faq summary{min-height:3rem;padding:.82rem 0;font-size:.86rem;line-height:1.42;text-wrap:pretty}
 .article-faq details>p{max-width:68ch;font-size:.88rem;line-height:1.65;text-wrap:pretty}
+.article-sequence-nav{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.85rem;
+  margin-top:2.5rem;
+  padding-top:1.5rem;
+  border-top:1px solid rgba(255,255,255,.09);
+}
+.article-sequence-nav__item{
+  display:flex;
+  min-width:0;
+  min-height:6.25rem;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:.75rem;
+  padding:1rem 1.05rem;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:1rem;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  transition:border-color .2s ease,background .2s ease,transform .2s ease;
+}
+.article-sequence-nav__item:hover{
+  border-color:rgba(251,113,133,.35);
+  background:linear-gradient(145deg,rgba(244,63,94,.09),rgba(255,255,255,.018));
+  transform:translateY(-2px);
+}
+.article-sequence-nav__item span{
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  color:#e9c47f;
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.article-sequence-nav__item strong{
+  display:-webkit-box;
+  overflow:hidden;
+  color:#f8fafc;
+  font-size:.91rem;
+  line-height:1.45;
+  text-wrap:pretty;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+.article-sequence-nav__item--next{text-align:right}
+.article-sequence-nav__item--next span{justify-content:flex-end}
 .article-editorial-close{margin-top:2.75rem;padding-top:2rem}
 .article-editorial-close__header h2{font-size:clamp(1.28rem,2.2vw,1.62rem);line-height:1.12}
 .article-editorial-close__rows--polished a{min-height:3.65rem;padding-block:.75rem}
@@ -123,6 +171,12 @@
   .article-faq,.article-resource-links{margin-top:2.2rem;padding-top:1.5rem}
   .article-faq>h2{font-size:1.22rem;line-height:1.18}
   .article-faq summary{min-height:2.8rem;padding:.75rem 0;font-size:.82rem}
+  .article-sequence-nav{grid-template-columns:1fr;gap:.65rem;margin-top:2.15rem;padding-top:1.25rem}
+  .article-sequence-nav__item{min-height:5.25rem;padding:.85rem .9rem}
+  .article-sequence-nav__item strong{font-size:.84rem;line-height:1.4}
+  .article-sequence-nav__empty{display:none}
+  .article-sequence-nav__item--next{text-align:left}
+  .article-sequence-nav__item--next span{justify-content:flex-start}
   .article-editorial-close__rows--polished a{min-height:3.5rem;padding-block:.7rem}
 }
 

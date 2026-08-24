@@ -110,9 +110,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const managed = await getManagedContentArticles();
-  const article = mergeManagedArticles(articles, managed).find((item) => item.slug === slug);
+  const articlePool = mergeManagedArticles(articles, managed);
+  const article = articlePool.find((item) => item.slug === slug);
   if (!article) return notFound();
-  const related = relatedArticles(article, 2, mergeManagedArticles(articles, managed));
+  const articleIndex = articlePool.findIndex((item) => item.slug === article.slug);
+  const previousArticle = articleIndex > 0 ? articlePool[articleIndex - 1] : undefined;
+  const nextArticle = articleIndex >= 0 && articleIndex < articlePool.length - 1 ? articlePool[articleIndex + 1] : undefined;
+  const related = relatedArticles(article, 2, articlePool);
   const relatedService = serviceForArticle(article);
   const topicHub = getHubForArticle(article);
   const canonicalUrl = articleUrl(article);
@@ -190,6 +194,23 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
           <ArticleFeedback slug={article.slug} />
           <DeferredContentEngagement targetId={article.slug} title={article.title} />
+
+          {(previousArticle || nextArticle) ? (
+            <nav className="article-sequence-nav" aria-label="Makaleler arasında gezinme">
+              {previousArticle ? (
+                <Link href={`/bilgi-merkezi/${previousArticle.slug}`} className="article-sequence-nav__item article-sequence-nav__item--previous focus-ring">
+                  <span><b aria-hidden="true">←</b> Önceki makale</span>
+                  <strong>{previousArticle.title}</strong>
+                </Link>
+              ) : <span className="article-sequence-nav__empty" aria-hidden="true" />}
+              {nextArticle ? (
+                <Link href={`/bilgi-merkezi/${nextArticle.slug}`} className="article-sequence-nav__item article-sequence-nav__item--next focus-ring">
+                  <span>Sonraki makale <b aria-hidden="true">→</b></span>
+                  <strong>{nextArticle.title}</strong>
+                </Link>
+              ) : <span className="article-sequence-nav__empty" aria-hidden="true" />}
+            </nav>
+          ) : null}
 
           <section className="article-editorial-close" aria-labelledby="article-close-title">
             <div className="article-editorial-close__header"><p>SONRAKİ ADIM</p><h2 id="article-close-title">{editorialLabels.closeTitle}</h2></div>
