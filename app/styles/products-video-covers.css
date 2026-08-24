@@ -1,0 +1,132 @@
+/* Yerel hareketli ürün kapakları: poster görseli korunur, video yalnız görünürken oynar. */
+.products-page {
+  overflow: clip;
+  background:
+    radial-gradient(900px 620px at 8% 18%, rgba(45, 72, 139, .14), transparent 70%),
+    radial-gradient(760px 620px at 94% 48%, rgba(27, 183, 190, .08), transparent 72%),
+    linear-gradient(180deg, #080b13 0%, #070a10 48%, #080b10 100%);
+}
+
+.products-page .products-directory {
+  position: relative;
+  isolation: isolate;
+}
+
+.products-page .products-directory::before {
+  position: absolute;
+  z-index: -1;
+  inset: 8% -8% 2%;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(65, 91, 170, .10), transparent 38%),
+    radial-gradient(circle at 82% 72%, rgba(33, 192, 199, .055), transparent 40%);
+  filter: blur(34px);
+  content: '';
+  pointer-events: none;
+}
+
+.products-page .product-directory-card {
+  --product-accent: 91, 120, 196;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: rgba(var(--product-accent), .25);
+  background:
+    linear-gradient(160deg, rgba(var(--product-accent), .10), transparent 42%),
+    linear-gradient(180deg, rgba(15, 20, 34, .96), rgba(8, 12, 20, .98));
+  box-shadow: 0 22px 54px rgba(0, 0, 0, .26), inset 0 1px rgba(255, 255, 255, .045);
+}
+
+.products-page .product-directory-card::after {
+  position: absolute;
+  z-index: 3;
+  right: 18px;
+  bottom: 0;
+  left: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--product-accent), .72), transparent);
+  opacity: .52;
+  content: '';
+  pointer-events: none;
+}
+
+.products-page .product-directory-card--pubg { --product-accent: 220, 170, 83; }
+.products-page .product-directory-card--valorant { --product-accent: 255, 70, 91; }
+.products-page .product-directory-card--lol { --product-accent: 68, 201, 213; }
+.products-page .product-directory-card--metin2 { --product-accent: 117, 155, 210; }
+.products-page .product-directory-card--razer { --product-accent: 69, 214, 44; }
+
+.products-page .product-directory-card:hover {
+  border-color: rgba(var(--product-accent), .58);
+  background:
+    linear-gradient(160deg, rgba(var(--product-accent), .15), transparent 45%),
+    linear-gradient(180deg, rgba(18, 25, 41, .98), rgba(9, 13, 22, .98));
+  box-shadow: 0 28px 64px rgba(0, 0, 0, .34), 0 0 0 1px rgba(var(--product-accent), .08), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.products-page .product-directory-card__cover {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(var(--product-accent), .24);
+  background: #0a0f1b;
+}
+
+.products-page .product-cover--has-video .product-cover__image {
+  z-index: -2;
+}
+
+.products-page .product-cover__video {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  object-fit: cover;
+  transform: scale(1.015);
+  transition: opacity .42s ease, transform .7s cubic-bezier(.2, .8, .2, 1);
+  pointer-events: none;
+}
+
+.products-page .product-cover__video.is-ready {
+  opacity: 1;
+}
+
+.products-page .product-directory-card:hover .product-cover__video,
+.products-page .product-detail-hero__cover:hover .product-cover__video {
+  transform: scale(1.045);
+}
+
+.products-page .product-cover--has-video::before {
+  background:
+    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, .14), transparent 18%),
+    linear-gradient(180deg, rgba(5, 9, 18, .04), rgba(5, 9, 18, .18) 46%, rgba(5, 8, 15, .86));
+}
+
+.products-page .product-cover--has-video::after {
+  background:
+    linear-gradient(145deg, rgba(4, 7, 12, .01), rgba(4, 7, 12, .68) 88%),
+    linear-gradient(90deg, transparent 50%, rgba(108, 211, 221, .08));
+}
+
+.products-page .product-cover--has-video .product-cover__content {
+  width: 100%;
+  background: linear-gradient(180deg, transparent, rgba(5, 8, 15, .38));
+}
+
+@media (max-width: 560px) {
+  .products-page {
+    background:
+      radial-gradient(560px 480px at 5% 20%, rgba(45, 72, 139, .12), transparent 72%),
+      linear-gradient(180deg, #080b13, #070a10 58%, #080b10);
+  }
+
+  .products-page .product-directory-card {
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .products-page .product-cover__video {
+    display: none;
+  }
+}

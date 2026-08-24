@@ -1,10 +1,11 @@
 import type { ProductItem } from '../../lib/products';
 import Image from 'next/image';
+import ProductCoverVideo from './ProductCoverVideo';
 
 export default function ProductCover({ product, compact = false, priority = false }: { product: ProductItem; compact?: boolean; priority?: boolean }) {
   return (
     <div
-      className={`product-cover product-cover--${product.tone} ${compact ? 'product-cover--compact' : ''}`}
+      className={`product-cover product-cover--${product.tone} ${product.coverVideo && !compact ? 'product-cover--has-video' : ''} ${compact ? 'product-cover--compact' : ''}`}
       aria-hidden="true"
     >
       <Image
@@ -17,6 +18,7 @@ export default function ProductCover({ product, compact = false, priority = fals
         className="product-cover__image"
         style={{ objectPosition: product.coverPosition ?? '50% 50%' }}
       />
+      {product.coverVideo && !compact ? <ProductCoverVideo src={product.coverVideo} objectPosition={product.coverPosition} priority={priority} /> : null}
       <span className="product-cover__glow" />
       <span className="product-cover__orb product-cover__orb--one" />
       <span className="product-cover__orb product-cover__orb--two" />

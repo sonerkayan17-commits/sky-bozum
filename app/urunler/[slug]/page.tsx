@@ -7,6 +7,7 @@ import { getProduct, products } from '../../lib/products';
 import { absoluteUrl, breadcrumbSchema, createMetadata, jsonLd } from '../../lib/seo';
 import '../../styles/products-performance.css';
 import '../../styles/products-quality-pass.css';
+import '../../styles/products-video-covers.css';
 import '../../styles/razer-commerce.css';
 
 export function generateStaticParams() {
