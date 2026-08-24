@@ -156,53 +156,52 @@
 .products-page .product-cover__brand-plate {
   position: absolute;
   z-index: 6;
-  top: 52%;
-  left: 50%;
-  display: grid;
-  width: 64%;
-  max-width: 260px;
-  min-height: 52px;
-  height: 18%;
-  max-height: 82px;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .72);
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, .97), rgba(229, 234, 242, .94));
-  box-shadow: 0 18px 46px rgba(0, 0, 0, .36), inset 0 1px rgba(255, 255, 255, .96);
-  backdrop-filter: blur(8px);
-  transform: translate(-50%, -50%);
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
 }
 
 .products-page .product-cover__brand-mark {
   position: absolute;
-  inset: 18% 14%;
-  width: 72% !important;
-  height: 64% !important;
+  top: 50%;
+  left: 50%;
+  width: 68% !important;
+  height: 32% !important;
   object-fit: contain;
+  filter:
+    drop-shadow(0 4px 4px rgba(0, 0, 0, .48))
+    drop-shadow(0 0 18px rgba(255, 255, 255, .2));
+  transform: translate(-50%, -50%);
 }
 
-.products-page .product-cover--steam .product-cover__brand-plate,
-.products-page .product-cover--apple .product-cover__brand-plate {
-  width: 36%;
-  max-width: 112px;
-  min-height: 0;
-  height: auto;
-  max-height: none;
-  aspect-ratio: 1;
-  border-radius: 24%;
+.products-page .product-cover--razer .product-cover__brand-mark {
+  filter:
+    drop-shadow(0 5px 5px rgba(0, 0, 0, .6))
+    drop-shadow(0 0 22px rgba(210, 255, 170, .34));
 }
 
 .products-page .product-cover--steam .product-cover__brand-mark,
 .products-page .product-cover--apple .product-cover__brand-mark {
-  inset: 19%;
-  width: 62% !important;
-  height: 62% !important;
+  width: 48% !important;
+  height: 48% !important;
+}
+
+.products-page .product-cover--steam .product-cover__brand-mark {
+  filter:
+    drop-shadow(0 7px 8px rgba(0, 0, 0, .58))
+    drop-shadow(0 0 24px rgba(66, 174, 255, .42));
+}
+
+.products-page .product-cover--apple .product-cover__brand-mark {
+  width: 42% !important;
+  height: 42% !important;
+  filter:
+    drop-shadow(0 7px 8px rgba(0, 0, 0, .5))
+    drop-shadow(0 0 24px rgba(255, 213, 250, .48));
 }
 
 .products-page .product-cover--compact .product-cover__brand-plate {
-  min-height: 40px;
-  border-radius: 11px;
+  inset: 0;
 }
 
 @keyframes product-brand-sweep {
@@ -228,8 +227,16 @@
   opacity: 1;
 }
 
-.products-page .product-detail-hero__cover:hover .product-cover__video {
-  transform: scale(1.045);
+/* Detay kapağında portre kaynakları kırpmak yerine bütünüyle göster.
+   Arkadaki bulanık katman geniş kutunun kalan bölümünü atmosferi bozmadan doldurur. */
+.products-page .product-detail-hero__cover .product-cover--has-video .product-cover__image,
+.products-page .product-detail-hero__cover .product-cover--has-video .product-cover__video {
+  object-fit: contain;
+  transform: scale(.96);
+}
+
+.products-page .product-detail-hero__cover:hover .product-cover--has-video .product-cover__video {
+  transform: scale(.985);
 }
 
 .products-page .product-cover--has-video::before {
