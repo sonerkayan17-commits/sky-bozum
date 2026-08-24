@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import type { Metadata } from 'next';
 import Link from './components/DeferredLink';
 import Hero from './components/Hero';
 import BrandStrip from './components/BrandStrip';
@@ -27,6 +28,25 @@ import './styles/credibility-band.css';
 import './styles/quality-80-pass.css';
 import './styles/homepage-flow.css';
 import './styles/home-experience-cards.css';
+
+const homeSeoDescription = 'Vodafone, Turkcell ve Türk Telekom için mobil ödeme bozdurma; Paycell, Pokus ve dijital kodlar için güncel mobil bozum oranlarını inceleyin.';
+
+export const metadata: Metadata = {
+  title: { absolute: 'Mobil Ödeme Bozdurma ve Mobil Bozum | Sky Bozum' },
+  description: homeSeoDescription,
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: 'Mobil Ödeme Bozdurma ve Mobil Bozum | Sky Bozum',
+    description: homeSeoDescription,
+    url: '/',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mobil Ödeme Bozdurma ve Mobil Bozum | Sky Bozum',
+    description: homeSeoDescription,
+  },
+};
 
 export default function Home() {
   return (

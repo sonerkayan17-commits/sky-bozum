@@ -26,16 +26,16 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: 'Sky Bozum - Mobil Ödeme ve Dijital Bakiye Bozum', template: '%s | Sky Bozum' },
-  description: 'Razer Gold, Paycell, Pokus, Vodafone, Turkcell, Türk Telekom, Apple ve Steam işlemleri için oran hesaplama, rehber ve destek.',
+  title: { default: 'Sky Bozum - Mobil Ödeme Bozdurma ve Mobil Bozum', template: '%s | Sky Bozum' },
+  description: 'Mobil ödeme bozdurma, mobil bozum ve dijital bakiye işlemleri için güncel oran, hesaplama araçları, rehber ve yazılı destek.',
   applicationName: SITE_NAME,
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   icons: { icon: '/brand-logo.webp', apple: '/brand-logo.webp' },
   alternates: { canonical: '/', types: { 'application/rss+xml': '/feed.xml' } },
   openGraph: {
-    title: 'Sky Bozum - Dijital Bakiyeniz, Doğrudan Nakde',
-    description: 'Mobil ödeme ve dijital bakiyeler için oran hesaplama, rehber ve kontrollü destek.',
+    title: 'Sky Bozum - Mobil Ödeme Bozdurma ve Mobil Bozum',
+    description: 'Mobil ödeme bozdurma ve dijital bakiyeler için güncel oran, rehber ve kontrollü destek.',
     url: SITE_URL,
     siteName: SITE_NAME,
     locale: SITE_LOCALE,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: SITE_NAME,
-    description: 'Mobil ödeme ve dijital bakiye işlemleri için rehber ve oran bilgisi.',
+    description: 'Mobil ödeme bozdurma ve dijital bakiye işlemleri için rehber ve güncel oran bilgisi.',
     images: [DEFAULT_OG_IMAGE],
   },
   robots: ALLOW_INDEXING ? { index: true, follow: true } : { index: false, follow: false },
