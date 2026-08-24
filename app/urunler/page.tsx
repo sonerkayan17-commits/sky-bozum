@@ -9,9 +9,9 @@ import '../styles/products-video-covers.css';
 
 export const metadata: Metadata = createMetadata({
   title: 'Oyun ve dijital ürünler',
-  description: 'PUBG Mobile UC, Valorant VP, League of Legends RP, Metin2 Ejder Parası ve Razer Gold ürünlerini paket, bölge ve stok bilgileriyle inceleyin.',
+  description: 'PUBG Mobile UC, Mobile Legends Elmas, Valorant VP, League of Legends RP, Rise Online, Knight Online, Metin2 EP, Razer Gold, Steam ve iTunes ürünlerini inceleyin.',
   path: '/urunler',
-  keywords: ['PUBG Mobile UC', 'Valorant VP', 'League of Legends RP', 'Metin2 Ejder Parası', 'Razer Gold'],
+  keywords: ['PUBG Mobile UC', 'Mobile Legends Elmas', 'Valorant VP', 'League of Legends RP', 'Rise Online Cash', 'Knight Online Cash', 'Metin2 EP', 'Razer Gold', 'Steam Cüzdan Kodu', 'iTunes Gift Card'],
 });
 
 export default function ProductsPage() {
@@ -51,7 +51,7 @@ export default function ProductsPage() {
             <h1>Oyun bakiyenizi <em>tek ekranda</em> seçin.</h1>
             <p>Oyun ve dijital kod ürünlerini paket, bölge ve teslim bilgileriyle karşılaştırın. Her ürünün stok durumu ve kullanım koşulu ürün sayfasında açıkça gösterilir.</p>
             <div className="products-hero__chips" aria-label="Ürün kategorileri">
-              <span>5 ürün grubu</span><span>Güncel katalog</span><span>Stok durumu açık</span>
+              <span>10 ürün grubu</span><span>Güncel katalog</span><span>Stok durumu açık</span>
             </div>
           </div>
           <aside className="products-hero__aside" aria-label="Ürün kataloğunu kullanma adımları">
@@ -69,7 +69,7 @@ export default function ProductsPage() {
       <section className="products-directory products-shell" aria-labelledby="products-directory-title">
         <div className="products-directory__heading">
           <div><p className="products-kicker">Ürün grupları</p><h2 id="products-directory-title">İhtiyacınız olan ürünü bulun.</h2></div>
-          <p>GTA VI ön siparişi bu katalogda yer almıyor. Diğer ürün grupları için paket detaylarını ve sık sorulan soruları inceleyebilirsiniz.</p>
+          <p>Yalnız desteklenen oyun bakiyesi ve dijital kod grupları gösterilir. Her sayfada paket kapsamı, bölge koşulu, rehber ve sık sorulan sorular birlikte bulunur.</p>
         </div>
         <ProductDirectory />
       </section>

@@ -16,7 +16,7 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%', pri
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!video) return;
 
     const observer = new IntersectionObserver(([entry]) => {
       const visible = entry?.isIntersecting === true;
@@ -40,6 +40,7 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%', pri
       ref={videoRef}
       className={`product-cover__video ${ready ? 'is-ready' : ''}`}
       style={{ objectPosition }}
+      autoPlay
       muted
       loop
       playsInline

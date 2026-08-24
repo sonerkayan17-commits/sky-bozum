@@ -50,10 +50,21 @@
 }
 
 .products-page .product-directory-card--pubg { --product-accent: 220, 170, 83; }
+.products-page .product-directory-card--mlbb { --product-accent: 59, 198, 208; }
 .products-page .product-directory-card--valorant { --product-accent: 255, 70, 91; }
 .products-page .product-directory-card--lol { --product-accent: 68, 201, 213; }
+.products-page .product-directory-card--rise { --product-accent: 87, 130, 185; }
+.products-page .product-directory-card--knight { --product-accent: 196, 142, 68; }
 .products-page .product-directory-card--metin2 { --product-accent: 117, 155, 210; }
 .products-page .product-directory-card--razer { --product-accent: 69, 214, 44; }
+.products-page .product-directory-card--steam { --product-accent: 74, 151, 204; }
+.products-page .product-directory-card--apple { --product-accent: 190, 105, 224; }
+
+.products-page .product-cover--mlbb { --cover-a: #183a52; --cover-b: #236f77; }
+.products-page .product-cover--rise { --cover-a: #172a42; --cover-b: #365d7f; }
+.products-page .product-cover--knight { --cover-a: #2b2118; --cover-b: #8a5929; }
+.products-page .product-cover--steam { --cover-a: #14293b; --cover-b: #28577a; }
+.products-page .product-cover--apple { --cover-a: #3a204b; --cover-b: #8752a2; }
 
 .products-page .product-directory-card:hover {
   border-color: rgba(var(--product-accent), .58);
@@ -122,11 +133,5 @@
 
   .products-page .product-directory-card {
     box-shadow: 0 14px 34px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .04);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .products-page .product-cover__video {
-    display: none;
   }
 }
