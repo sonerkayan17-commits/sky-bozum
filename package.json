@@ -26,6 +26,7 @@
     "audit:visuals": "node scripts/audit-visuals.mjs",
     "audit:premium-covers": "node scripts/audit-premium-covers.mjs",
     "audit:bilgi-merkezi": "node scripts/audit-bilgi-merkezi.mjs",
+    "audit:article-seo-architecture": "node scripts/audit-article-seo-architecture.mjs",
     "audit:v33-5": "node scripts/audit-v33-5-services.mjs",
     "audit:v33-6": "node scripts/audit-v33-6-services.mjs",
     "audit:v33-8": "node scripts/audit-v33-8-final.mjs",

@@ -168,6 +168,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div className="mt-4 grid gap-8 lg:mt-0 lg:grid-cols-[minmax(0,820px)_280px] lg:justify-center">
         <article className="article-reading-surface">
           <ArticleLearningPath article={article} />
+          {article.links?.length ? (
+            <nav className="article-context-links article-context-links--overview" aria-label="Makaledeki ilgili konu ve hizmet bağlantıları">
+              <span>Bu rehberle bağlantılı konular</span>
+              <div>{article.links.slice(0, 6).map((item) => <Link key={item.href} href={item.href} className="focus-ring">{item.label}<b aria-hidden="true">→</b></Link>)}</div>
+            </nav>
+          ) : null}
           {article.sections.map((section, index) => (
             <div key={section.title}>
               <section className="article-content-section">

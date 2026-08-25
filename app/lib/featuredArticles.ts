@@ -446,7 +446,7 @@ export const featuredArticles = [
         ]
       },
       {
-        title: 'Razer Gold satılan siteler nasıl değerlendirilir, kod nasıl bozdurulur?',
+        title: 'Razer Gold kodu nasıl alınır ve bozdurulur?',
         paragraphs: [
           'Razer Gold, oyun ve dijital içerik ekosisteminde kullanılan bir bakiye sistemidir. Kod satın alırken önce hangi para birimine ve bölgeye ihtiyacınız olduğunu belirleyin. Türkiye hesabı için TL kodu, yabancı bölge hesabı için ilgili ülke veya USD kodu gerekebilir. Ürün sayfasında “global” ifadesi yer alsa bile desteklenen ülkeler listesini okumadan ödeme yapmayın.',
           'Kod satın alınacak satıcının ürün açıklaması, teslimat biçimi, iade koşulları ve doğrulanabilir işlem kaydı incelenmelidir. Pazar yerindeki her mağaza aynı güven düzeyine sahip değildir. Piyasanın belirgin biçimde altındaki fiyatlar, belirsiz ürün bölgesi ve yalnız mesajla teslimat gibi durumlar ek kontrol gerektirir.',
@@ -471,7 +471,7 @@ export const featuredArticles = [
         ]
       },
       {
-        title: 'iTunes bozan siteler ve Apple Gift Card bozdurma nasıl değerlendirilir?',
+        title: 'iTunes bozum ve Apple Gift Card bozdurma nasıl değerlendirilir?',
         paragraphs: [
           'Kullanılmamış ve desteklenen bölgeye ait Apple Gift Card veya iTunes kodları, güncel uygunluk koşullarına göre değerlendirilebilir. Kodun daha önce bir Apple hesabına yüklenmemiş olması gerekir. Hesaba tanımlanmış bakiye ile henüz kullanılmamış kod aynı değildir; yüklenmiş bakiye çoğu durumda yeniden koda çevrilemez.',
           'Satış öncesinde kart tutarı, para birimi, satın alındığı ülke ve teslim biçimi açıkça belirtilmelidir. Fiziksel kartlarda satın alma fişi veya aktivasyon belgesi istenebilir. Dijital kartlarda sipariş kaydı ve teslim e-postası faydalıdır. Kodun tamamını oran almadan göndermemek güvenlik açısından önemlidir.',

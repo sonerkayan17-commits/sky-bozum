@@ -84,6 +84,8 @@
 }
 .article-context-links a:hover{color:#ffd999;text-decoration-color:#ffd999}
 .article-context-links b{font-size:.7rem;text-decoration:none}
+.article-context-links--overview{margin:1.15rem 0 .15rem;padding:.9rem 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.article-context-links--overview>span{color:#9aa6b7}
 .article-inline-visual{margin-top:1.75rem}
 .article-inline-visual figcaption{max-width:68ch;color:var(--article-muted-color);text-wrap:pretty}
 .article-faq,.article-resource-links{margin-top:2.5rem;padding-top:1.75rem}

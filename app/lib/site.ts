@@ -2,6 +2,7 @@ import { getRateRange } from './rates';
 import { featuredArticles } from './featuredArticles';
 import { hepsipayArticles } from './hepsipayArticles';
 import { v21ExtendedArticles } from './v21ExtendedArticles';
+import { enrichArticlesForSeo } from './articleSeoArchitecture';
 
 export { siteConfig } from './site-config';
 
@@ -371,10 +372,10 @@ export type ArticleItem = {
   sources?: readonly { label: string; href: string; publisher: string }[];
   media?: readonly { src: string; alt: string; caption: string }[];
   faq?: readonly { question: string; answer: string }[];
-  sections: { title: string; paragraphs: string[]; bullets?: string[]; subsections?: { title: string; paragraphs: string[] }[] }[];
+  sections: { title: string; paragraphs: string[]; bullets?: string[]; subsections?: { title: string; paragraphs: string[] }[]; relatedLinks?: { label: string; href: string }[] }[];
 };
 
-export const articles: ArticleItem[] = [
+const baseArticles: ArticleItem[] = [
   ...featuredArticles,
   ...hepsipayArticles,
   ...v21ExtendedArticles,
@@ -962,6 +963,8 @@ export const articles: ArticleItem[] = [
   },
 
 ];
+
+export const articles: ArticleItem[] = enrichArticlesForSeo(baseArticles);
 
 export function getArticle(slug: string) {
   return articles.find((article) => article.slug === slug);
