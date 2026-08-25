@@ -20,10 +20,10 @@ export default function CredibilityBand({ compact = false }: { compact?: boolean
         <p>HİZMET MODELİ + GÜVEN STANDARDI</p>
         <h2>Bağımsız rehber, <span>açık süreç.</span></h2>
         <div className="credibility-band__summary">
-          Sky Bozum operatör veya dijital cüzdan bakiyesini doğrudan satın almaz. Turkcell, Vodafone, Türk Telekom, Paycell, Pokus ve Vodafone Pay sayfaları; dijital ürün/EPIN satın alma adımlarını açıklayan bağımsız rehberlerdir. Bu markalarla ortaklık ya da yetkili satıcılık ilişkimiz yoktur.
+          Sky Bozum operatör mobil ödeme limitini veya dijital cüzdan bakiyesini doğrudan nakde çevirmez. Bu sayfalar, ilgili ödeme yöntemiyle Razer Gold ve benzeri dijital kodların güvenli biçimde nasıl satın alınacağını açıklar. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum&apos;a satabilirsiniz. Adı geçen markalarla ortaklık ya da yetkili satıcılık ilişkimiz yoktur.
         </div>
         <div className="credibility-band__intro-links">
-          <span>Uygun ve kullanılmamış kodu kendi hesabınızda kullanabilir veya değerlendirme için sunabilirsiniz.</span>
+          <span>Uygun ve kullanılmamış kodu hesabınızda kullanabilir veya yazılı stok onayından sonra Sky Bozum&apos;a satabilirsiniz.</span>
           <Link href="/iletisim#hizmet-modeli">Açıklamanın tamamı →</Link>
         </div>
       </div>

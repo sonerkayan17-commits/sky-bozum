@@ -152,7 +152,7 @@ export const services: ServiceItem[] = [
     shortName: "Paycell",
     category: "Mobil Ödeme",
     description: "Paycell bozdur aramasından gelenler için Razer Gold ve desteklenen dijital ürün satın alma rehberi.",
-    summary: "Sky Bozum Paycell bakiyesini doğrudan satın almaz. Paycell kartla uygun mağazalardan Razer Gold veya desteklenen dijital kod satın alma ve kullanılmamış kodu değerlendirme adımlarını öğrenin.",
+    summary: "Sky Bozum Paycell bakiyesini doğrudan nakde çevirmez. Bu rehber, Paycell kartla güvenli biçimde Razer Gold veya desteklenen başka bir dijital kod satın alma adımlarını açıklar. Aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz.",
     logo: "/brands/paycell/paycell.svg",
     tone: "orange",
     rate: getRateRange("paycell"),
@@ -161,7 +161,7 @@ export const services: ServiceItem[] = [
     steps: [
       { title: "Paycell kartınızı kontrol edin", text: "Kartınızın internet alışverişine açık ve bakiyesinin yeterli olduğundan emin olun." },
       { title: "Razer Gold satın alın", text: "Hepsiburada, Trendyol veya ByNoGame üzerindeki uygun Razer Gold ürününü seçin." },
-      { title: "Kodu nasıl kullanacağınızı seçin", text: "Kodu hesabınızda kullanın, bağımsız bir alıcıyla değerlendirin veya Sky Bozum'a uygunluk için sunun." },
+      { title: "Kodu kullanın veya satışını yapın", text: "Kodu hesabınıza yükleyebilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz." },
     ],
     sections: [
       {
@@ -192,9 +192,9 @@ export const services: ServiceItem[] = [
         ],
       },
       {
-        title: "Paycell bozdur ve Paycell nakite çevirme aramalarında süreç nedir?",
+        title: "Paycell bozdur veya Paycell nakite çevirme aramasında ne yapılır?",
         paragraphs: [
-          "Sky Bozum Paycell bakiyesini veya Paycell hesabındaki parayı doğrudan satın almaz. Paycell kartla uygun mağazadan Razer Gold gibi desteklenen bir dijital kod alınabilir. Kullanılmamış kod kişisel hesapta kullanılabilir veya stok ve uygunluk onayı sonrasında Sky Bozum'a değerlendirme için sunulabilir.",
+          "Sky Bozum Paycell bakiyesini veya Paycell hesabındaki parayı doğrudan nakde çevirmez. Bu sayfa, Paycell kartla desteklenen bir mağazadan Razer Gold gibi dijital kodların nasıl güvenli biçimde alınacağını adım adım gösterir. Satın aldığınız kullanılmamış kodu kendi hesabınızda kullanabilir veya kodun türü, bölgesi ve stok durumu onaylandıktan sonra Sky Bozum'a satabilirsiniz.",
         ],
       },
     ],
@@ -211,7 +211,7 @@ export const services: ServiceItem[] = [
     shortName: "Pokus",
     category: "Mobil Ödeme",
     description: "Pokus bozdur aramasından gelenler için Razer Gold ve desteklenen dijital ürün satın alma rehberi.",
-    summary: "Sky Bozum Pokus bakiyesini doğrudan satın almaz. Pokus kartla uygun mağazalardan Razer Gold satın alma ve kullanılmamış kodu değerlendirme adımlarını öğrenin.",
+    summary: "Sky Bozum Pokus bakiyesini doğrudan nakde çevirmez. Bu rehber, Pokus kartla güvenli biçimde Razer Gold kodu satın alma adımlarını açıklar. Aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz.",
     logo: "/brands/pokus/pokus.svg",
     tone: "violet",
     rate: getRateRange("pokus"),
@@ -220,12 +220,12 @@ export const services: ServiceItem[] = [
     steps: [
       { title: "Kart ayarlarını kontrol edin", text: "Pokus kartın internet alışverişine açık olduğundan emin olun." },
       { title: "Uygun ürünü seçin", text: "Desteklenen mağazadan Razer Gold ürününü seçin." },
-      { title: "Kodun kullanım yolunu seçin", text: "Kodu hesabınızda kullanın veya kullanılmamış kod için bağımsız değerlendirme seçeneklerini inceleyin." },
+      { title: "Kodu kullanın veya satışını yapın", text: "Kodu hesabınıza yükleyebilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz." },
     ],
     sections: [
       { title: "Pokus nedir?", paragraphs: ["Pokus, kart ve dijital ödeme işlemlerinin yönetilebildiği bir finansal teknoloji uygulamasıdır. Kart bilgileri desteklenen e-ticaret sitelerinde kullanılabilir."] },
       { title: "Pokus ile Razer Gold nasıl alınır?", paragraphs: ["Kartla ödeme kabul eden uygun dijital ürün mağazasında Razer Gold ürünü seçilir. Satıcı, teslimat ve ürün bölgesi kontrol edildikten sonra Pokus kart bilgileriyle ödeme yapılır."] },
-      { title: "Pokus bozdur ve Pokus nakite çevirme aramalarında süreç nedir?", paragraphs: ["Sky Bozum Pokus bakiyesini veya Pokus hesabındaki parayı doğrudan satın almaz. Pokus kartla uygun mağazadan Razer Gold gibi desteklenen bir dijital ürün alınabilir. Kullanılmamış kod kişisel hesapta kullanılabilir veya stok ve uygunluk onayı sonrasında Sky Bozum'a değerlendirme için sunulabilir."] },
+      { title: "Pokus bozdur veya Pokus nakite çevirme aramasında ne yapılır?", paragraphs: ["Sky Bozum Pokus bakiyesini veya Pokus hesabındaki parayı doğrudan nakde çevirmez. Bu sayfa, Pokus kartla desteklenen bir mağazadan Razer Gold kodunun nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu kendi hesabınızda kullanabilir veya kodun bölgesi ve stok durumu onaylandıktan sonra Sky Bozum'a satabilirsiniz."] },
     ],
     faq: commonFaq,
   },
@@ -235,7 +235,7 @@ export const services: ServiceItem[] = [
     shortName: "Vodafone",
     category: "Mobil Ödeme",
     description: "Vodafone mobil ödeme bozdur ve Vodafone Pay nakite çevirme aramalarına yönelik bağımsız dijital kod rehberi.",
-    summary: "Sky Bozum Vodafone bakiyesini doğrudan satın almaz. Mobil ödeme ile uygun mağazadan Razer Gold veya desteklenen dijital ürün satın alma ve kullanılmamış kodu değerlendirme adımlarını inceleyin.",
+    summary: "Sky Bozum Vodafone mobil ödeme limitini veya Vodafone Pay bakiyesini doğrudan nakde çevirmez. Bu rehber, Vodafone ile güvenli biçimde Razer Gold veya desteklenen başka bir dijital kod satın alma adımlarını açıklar. Aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz.",
     logo: "/brands/vodafone/vodafone.svg",
     tone: "rose",
     rate: getRateRange("vodafone-mobil-odeme"),
@@ -251,7 +251,7 @@ export const services: ServiceItem[] = [
       { title: "Vodafone mobil ödeme nedir?", paragraphs: ["Vodafone mobil ödeme, desteklenen dijital alışverişlerin telefon faturasına veya hattın ödeme yöntemine yansıtılmasını sağlayan bir hizmettir."] },
       { title: "Vodafone mobil ödeme limiti nasıl kontrol edilir?", paragraphs: ["Kullanılabilir limit ve hizmet durumu Vodafone uygulaması veya operatör kanalları üzerinden kontrol edilmelidir. Limitler kullanıcıya göre değişebilir."] },
       { title: "Vodafone ile Razer Gold nasıl alınır?", paragraphs: ["Vodafone mobil ödeme kabul eden desteklenen bir mağazada ürün bölgesi, tutarı, satıcısı ve dijital teslimat koşulları kontrol edilir. Satın alınan kod kişisel hesapta kullanılabilir veya kullanıcı tarafından seçilen bağımsız bir alıcıyla değerlendirilebilir."] },
-      { title: "Vodafone mobil ödeme bozdur ve Vodafone Pay nakite çevirme nasıl ele alınır?", paragraphs: ["Sky Bozum Vodafone veya Vodafone Pay bakiyesini doğrudan satın almaz. Bu aramalardan gelen kullanıcılar için rehberimiz; desteklenen mağazadan Razer Gold ya da uygun bir dijital kod satın alma ve kullanılmamış kodu ayrı bir ürün olarak değerlendirme sürecini açıklar."] },
+      { title: "Vodafone mobil ödeme bozdur veya Vodafone Pay nakite çevirme aramasında ne yapılır?", paragraphs: ["Sky Bozum Vodafone mobil ödeme limitini veya Vodafone Pay bakiyesini doğrudan nakde çevirmez. Bu sayfa, Vodafone ile desteklenen bir mağazadan Razer Gold veya başka bir dijital kodun nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu kendi hesabınızda kullanabilir veya ürün ve stok uygunluğu onaylandıktan sonra Sky Bozum'a satabilirsiniz."] },
     ],
     faq: commonFaq,
   },
@@ -261,7 +261,7 @@ export const services: ServiceItem[] = [
     shortName: "Turkcell",
     category: "Mobil Ödeme",
     description: "Turkcell mobil ödeme bozdur ve Paycell nakite çevirme aramalarına yönelik bağımsız dijital kod rehberi.",
-    summary: "Sky Bozum Turkcell veya Paycell bakiyesini doğrudan satın almaz. Uygun mağazadan Razer Gold ya da desteklenen dijital kod satın alma ve kullanılmamış kodu değerlendirme adımlarını öğrenin.",
+    summary: "Sky Bozum Turkcell mobil ödeme limitini veya Paycell bakiyesini doğrudan nakde çevirmez. Bu rehber, Turkcell veya Paycell ile güvenli biçimde Razer Gold ve desteklenen dijital kodları satın alma adımlarını açıklar. Aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz.",
     logo: "/brands/turkcell/turkcell.svg",
     tone: "blue",
     rate: getRateRange("turkcell-mobil-odeme"),
@@ -269,13 +269,13 @@ export const services: ServiceItem[] = [
     steps: [
       { title: "Limitinizi kontrol edin", text: "Turkcell mobil ödeme veya Paycell kullanılabilir bakiyesini kontrol edin." },
       { title: "Uygun mağazayı seçin", text: "Hepsiburada, Trendyol veya ByNoGame üzerindeki uygun ürünü inceleyin." },
-      { title: "Kodun kullanım yolunu seçin", text: "Kodu hesabınızda kullanın veya kullanılmamış kod için bağımsız değerlendirme seçeneklerini inceleyin." },
+      { title: "Kodu kullanın veya satışını yapın", text: "Kodu hesabınıza yükleyebilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz." },
     ],
     sections: [
       { title: "Turkcell mobil ödeme nedir?", paragraphs: ["Turkcell mobil ödeme, desteklenen alışverişlerde ücretin hat veya ilgili ödeme çözümü üzerinden karşılanmasına imkan tanır."] },
       { title: "Turkcell mobil ödeme ile Razer Gold nasıl alınır?", paragraphs: ["Uygun ödeme yöntemi ve mağaza belirlendikten sonra dijital Razer Gold ürünü alınabilir. Paycell kart kullanılan işlemlerde kart ayarları ve limitler kontrol edilmelidir."] },
-      { title: "Turkcell ile alınan dijital kod nasıl değerlendirilir?", paragraphs: ["Satın alınan kullanılmamış kod kişisel hesapta kullanılabilir, Sky Bozum'a uygunluk kontrolü için sunulabilir veya kullanıcı tarafından seçilen başka bir alıcıyla değerlendirilebilir. Sky Bozum, Turkcell bakiyesini doğrudan satın almaz."] },
-      { title: "Turkcell mobil ödeme bozdur ve Paycell nakite çevirme nasıl ele alınır?", paragraphs: ["Sky Bozum hat limitini, Turkcell bakiyesini veya Paycell bakiyesini doğrudan nakde çevirmez. Rehberde açıklanan yöntem; uygun mağazada Razer Gold ya da desteklenen başka bir dijital kod satın almak ve kullanılmamış kodu ayrı bir ürün olarak değerlendirmektir."] },
+      { title: "Turkcell ile alınan dijital kod nasıl kullanılır veya satılır?", paragraphs: ["Turkcell veya Paycell ile satın aldığınız kullanılmamış dijital kodu kendi hesabınıza yükleyebilirsiniz. Kodu satmak isterseniz önce ürün adı, tutar, para birimi ve bölge bilgisini Sky Bozum'a iletin; stok ve uygunluk onayı verildikten sonra kullanılmamış kodu doğrudan Sky Bozum'a satabilirsiniz."] },
+      { title: "Turkcell mobil ödeme bozdur veya Paycell nakite çevirme aramasında ne yapılır?", paragraphs: ["Sky Bozum Turkcell mobil ödeme limitini veya Paycell bakiyesini doğrudan nakde çevirmez. Bu sayfa, Turkcell ya da Paycell ile desteklenen bir mağazadan Razer Gold gibi dijital kodların nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz."] },
     ],
     faq: commonFaq,
   },
@@ -285,7 +285,7 @@ export const services: ServiceItem[] = [
     shortName: "Türk Telekom",
     category: "Mobil Ödeme",
     description: "Türk Telekom mobil ödeme bozdur ve Pokus nakite çevirme aramalarına yönelik bağımsız dijital kod rehberi.",
-    summary: "Sky Bozum Türk Telekom veya Pokus bakiyesini doğrudan satın almaz. Uygun mağazadan Razer Gold ya da desteklenen dijital ürün satın alma ve kullanılmamış kodu değerlendirme adımlarını öğrenin.",
+    summary: "Sky Bozum Türk Telekom mobil ödeme limitini veya Pokus bakiyesini doğrudan nakde çevirmez. Bu rehber, Türk Telekom veya Pokus ile güvenli biçimde Razer Gold ve desteklenen dijital ürünleri satın alma adımlarını açıklar. Aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz.",
     logo: "/brands/turktelekom/turktelekom.svg",
     tone: "blue",
     rate: getRateRange("turk-telekom-mobil-odeme"),
@@ -293,13 +293,13 @@ export const services: ServiceItem[] = [
     steps: [
       { title: "Hizmet durumunu kontrol edin", text: "Mobil ödeme özelliğini ve kullanılabilir limiti kontrol edin." },
       { title: "Razer Gold alın", text: "Uygun mağaza ve ürün için işlem öncesinde bilgi alın." },
-      { title: "Kodu güvenli kullanın", text: "Kodu hesabınızda kullanın veya kullanılmamış kod için bağımsız değerlendirme seçeneklerini inceleyin." },
+      { title: "Kodu kullanın veya satışını yapın", text: "Kodu hesabınıza yükleyebilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz." },
     ],
     sections: [
       { title: "Türk Telekom mobil ödeme nedir?", paragraphs: ["Türk Telekom mobil ödeme, desteklenen dijital hizmet ödemelerinin hat üzerinden yapılmasına imkan sağlayan bir yöntemdir."] },
       { title: "Pokus kart ile Razer Gold nasıl alınır?", paragraphs: ["Pokus kart internet alışverişine açık olduğunda, kartla ödeme kabul eden uygun mağazalarda Razer Gold ürünü satın alınabilir."] },
-      { title: "Türk Telekom ile alınan dijital ürün nasıl değerlendirilir?", paragraphs: ["Satın alınan kullanılmamış Razer Gold kodu kişisel hesapta kullanılabilir, Sky Bozum'a uygunluk kontrolü için sunulabilir veya kullanıcı tarafından seçilen başka bir alıcıyla değerlendirilebilir. Sky Bozum, Türk Telekom bakiyesini doğrudan satın almaz."] },
-      { title: "Türk Telekom mobil ödeme bozdur ve Pokus nakite çevirme nasıl ele alınır?", paragraphs: ["Sky Bozum Türk Telekom hat limitini veya Pokus bakiyesini doğrudan nakde çevirmez. Rehberde anlatılan süreç; uygun mağazadan Razer Gold ya da desteklenen başka bir dijital ürün satın almak ve kullanılmamış kodu ayrı bir ürün olarak değerlendirmektir."] },
+      { title: "Türk Telekom ile alınan dijital kod nasıl kullanılır veya satılır?", paragraphs: ["Türk Telekom veya Pokus ile satın aldığınız kullanılmamış Razer Gold kodunu kendi hesabınıza yükleyebilirsiniz. Kodu satmak isterseniz önce tutar, para birimi ve bölge bilgisini Sky Bozum'a iletin; stok ve uygunluk onayı verildikten sonra kullanılmamış kodu doğrudan Sky Bozum'a satabilirsiniz."] },
+      { title: "Türk Telekom mobil ödeme bozdur veya Pokus nakite çevirme aramasında ne yapılır?", paragraphs: ["Sky Bozum Türk Telekom mobil ödeme limitini veya Pokus bakiyesini doğrudan nakde çevirmez. Bu sayfa, Türk Telekom ya da Pokus ile desteklenen bir mağazadan Razer Gold gibi dijital kodların nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz."] },
     ],
     faq: commonFaq,
   },
@@ -399,7 +399,7 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Paycell nedir?", paragraphs: ["Paycell; kart, uygulama bakiyesi ve desteklenen ödeme seçeneklerini tek uygulamada yönetmeye yardımcı olan bir finansal hizmettir. Paycell hesabındaki bakiye, Paycell kartın harcama limiti ve Turkcell hattına tanımlı mobil ödeme limiti aynı kaynak değildir.", "Bir işlemin telefon faturasına mı, kart bakiyesine mi yoksa uygulama içindeki başka bir ödeme kaynağına mı yansıyacağını ödeme ekranından kontrol etmek gerekir. Yalnız Paycell kullanıcısı olmak, her ödemenin mobil ödeme limitiyle yapılacağı anlamına gelmez."] },
       { title: "Paycell nasıl kullanılır?", paragraphs: ["Uygulama içinde hesap doğrulaması tamamlandıktan sonra kullanılabilir özellikler hesap durumuna göre gösterilir. Kartla alışveriş yapılacaksa kartın internet işlemlerine açık olması, yeterli bakiye veya limit bulunması ve ödeme ekranındaki tutarın kontrol edilmesi gerekir.", "Menü adları, kampanyalar ve limitler zamanla değişebileceği için güncel bilgiler Paycell'in resmi uygulaması ve destek kanallarından doğrulanmalıdır."], bullets: ["Ödeme kaynağını işlem öncesinde kontrol edin.", "Tek kullanımlık doğrulama kodlarını paylaşmayın.", "İşlem tamamlandıktan sonra hareketleri uygulamadan inceleyin."] },
-      { title: "Paycell bakiyesiyle dijital ürün satın alınabilir mi?", paragraphs: ["Paycell bakiyesi ile Turkcell mobil ödeme limiti farklı kaynaklardır. Dijital ürün satın almadan önce hangi ödeme kaynağının kullanılacağını, mağazanın Paycell kartı kabul edip etmediğini ve ürünün bölge koşullarını kontrol etmek gerekir.", "Sky Bozum Paycell bakiyesini doğrudan satın almaz. Bu sayfadaki bilgiler Paycell ile dijital ürün satın alma ve güvenlik kontrollerini açıklayan bağımsız bir rehberdir."] },
+      { title: "Paycell bakiyesiyle dijital ürün satın alınabilir mi?", paragraphs: ["Paycell bakiyesi ile Turkcell mobil ödeme limiti farklı kaynaklardır. Dijital ürün satın almadan önce hangi ödeme kaynağının kullanılacağını, mağazanın Paycell kartı kabul edip etmediğini ve ürünün bölge koşullarını kontrol etmek gerekir.", "Sky Bozum Paycell bakiyesini doğrudan nakde çevirmez. Bu rehber, Paycell kartla Razer Gold gibi dijital kodların güvenli biçimde nasıl alınacağını açıklar. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz."] },
     ],
   },
   {
@@ -443,7 +443,7 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Vodafone mobil ödeme nedir?", paragraphs: ["Vodafone mobil ödeme, desteklenen dijital ürün ve hizmet bedellerinin telefon hattı üzerinden onaylanmasını sağlayan bir ödeme yöntemidir. Faturalı hatlarda tutar faturaya yansıyabilir; faturasız hatlarda ise uygun işlemler mevcut bakiyeden düşebilir.", "Mobil ödemenin açık olması her mağazada ve her tutarda işlem yapılabileceği anlamına gelmez. Hat durumu, kullanılabilir limit, ürün kategorisi ve güvenlik kontrolleri sonucu etkiler."] },
       { title: "Limit ve onay süreci nasıl çalışır?", paragraphs: ["İşlem sırasında operatör hattın mobil ödemeye açık olup olmadığını ve yeterli kullanılabilir limit bulunup bulunmadığını kontrol eder. Ardından hizmet adı ve toplam tutar gösterilerek kullanıcı onayı alınır.", "Onay mesajındaki firma, ürün veya tutar beklediğiniz işlemle uyuşmuyorsa devam etmeyin. Güncel limit ve hizmet durumu Vodafone'un resmi uygulaması veya müşteri hizmetlerinden doğrulanmalıdır."], bullets: ["Kullanılabilir limiti işlemden önce kontrol edin.", "Toplam tutarı ve varsa hizmet bedelini okuyun.", "Doğrulama kodunu yalnız ilgili ödeme ekranında kullanın."] },
-      { title: "Vodafone ile dijital ürün satın alırken nelere dikkat edilmeli?", paragraphs: ["Ürün türü, bölge, para birimi, toplam tutar ve teslimat biçimi satın alma öncesinde kontrol edilmelidir. Onay mesajındaki hizmet adı veya tutar beklediğiniz işlemle uyuşmuyorsa devam etmeyin.", "Sky Bozum Vodafone bakiyesini doğrudan satın almaz. Bu sayfa, desteklenen mağazalarda dijital ürün satın alma adımlarını açıklayan bağımsız bir rehberdir."] },
+      { title: "Vodafone ile dijital ürün satın alırken nelere dikkat edilmeli?", paragraphs: ["Ürün türü, bölge, para birimi, toplam tutar ve teslimat biçimi satın alma öncesinde kontrol edilmelidir. Onay mesajındaki hizmet adı veya tutar beklediğiniz işlemle uyuşmuyorsa devam etmeyin.", "Sky Bozum Vodafone mobil ödeme limitini veya Vodafone Pay bakiyesini doğrudan nakde çevirmez. Bu rehber, Vodafone ile Razer Gold gibi dijital kodların güvenli biçimde nasıl alınacağını açıklar. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz."] },
     ],
   },
   {
@@ -465,7 +465,7 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Turkcell mobil ödeme nasıl çalışır?", paragraphs: ["Turkcell mobil ödeme, desteklenen dijital ürün veya hizmetlerin telefon hattı üzerinden onaylanmasına imkân verir. İşlem sırasında hat durumu, kullanılabilir limit ve ürün kategorisi kontrol edilir; ardından tutar kullanıcı onayıyla faturaya veya uygun bakiyeye yansır.", "Mobil ödeme özelliğinin açık olması, her işlem için yeterli limit bulunduğu anlamına gelmez. Kullanılabilir limit, hat geçmişi ve güvenlik değerlendirmeleri sonucu etkileyebilir."] },
       { title: "Paycell ile Turkcell mobil ödeme aynı mı?", paragraphs: ["Hayır. Paycell kart, Paycell uygulama bakiyesi ve Turkcell hattına tanımlanan mobil ödeme limiti farklı ödeme kaynaklarıdır. Satın alma ekranında hangisinin seçildiğini kontrol etmek gerekir.", "Bir Paycell kart işleminin telefon faturasına yansıyacağı varsayılmamalıdır. İşlem hareketi ve kullanılan kaynak uygulama içindeki güncel kayıtlardan doğrulanmalıdır."] },
-      { title: "Turkcell ile dijital kod satın alırken güvenlik", paragraphs: ["Dijital kod alınacaksa ürünün türü, tutarı, para birimi, bölgesi ve teslimat biçimi satın alma öncesinde kontrol edilmelidir. Onay ekranında mağaza ve toplam tutar açıkça okunmalıdır.", "Şifre, ekran paylaşımı veya cihazınıza uzaktan erişim isteyen kişilerle işlem yapmayın. Sky Bozum Turkcell bakiyesini doğrudan satın almaz; bu içerik bağımsız satın alma rehberidir."] },
+      { title: "Turkcell ile dijital kod satın alırken güvenlik", paragraphs: ["Dijital kod alınacaksa ürünün türü, tutarı, para birimi, bölgesi ve teslimat biçimi satın alma öncesinde kontrol edilmelidir. Onay ekranında mağaza ve toplam tutar açıkça okunmalıdır.", "Sky Bozum Turkcell mobil ödeme limitini veya Paycell bakiyesini doğrudan nakde çevirmez. Bu rehber Turkcell ya da Paycell ile Razer Gold gibi dijital kodların nasıl alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz. Şifre, ekran paylaşımı veya uzaktan erişim isteyen kişilerle işlem yapmayın."] },
     ],
   },
   {
@@ -487,7 +487,7 @@ export const articles: ArticleItem[] = [
     sections: [
       { title: "Türk Telekom mobil ödeme nedir?", paragraphs: ["Türk Telekom mobil ödeme, desteklenen dijital ürün ve hizmet bedellerinin telefon hattı üzerinden onaylanmasını sağlayan bir ödeme yöntemidir. Kullanılabilir seçenekler faturalı veya faturasız hat durumuna, limite ve ürün kategorisine göre değişebilir.", "Güncel aktivasyon ve limit bilgisi yalnız operatörün resmi uygulaması, çevrim içi işlem kanalı veya müşteri hizmetlerinden doğrulanmalıdır."] },
       { title: "Pokus ile mobil ödeme limiti arasındaki fark", paragraphs: ["Pokus kart veya cüzdan bakiyesi, Türk Telekom hattına tanımlanan mobil ödeme limitinden farklı bir ödeme kaynağıdır. Bir işlemde hangi kaynağın kullanıldığını ödeme ekranından kontrol etmek gerekir.", "Pokus hesabında bakiye bulunması mobil ödeme limitinin kullanılabilir olduğu; mobil ödeme limitinin bulunması da Pokus kart bakiyesi olduğu anlamına gelmez."] },
-      { title: "Türk Telekom ile dijital ürün nasıl satın alınır?", paragraphs: ["Dijital ürün alınacaksa ürünün türü, tutarı, bölgesi, mağazası ve teslim yöntemi satın alma öncesinde kontrol edilmelidir. İşlem sırasında onay mesajındaki hizmet adı ve tutar beklediğiniz bilgiyle eşleşmelidir.", "Sky Bozum Türk Telekom bakiyesini doğrudan satın almaz. Bu sayfa bağımsız bir satın alma ve güvenlik rehberidir; beklenmeyen yönlendirme, ekran paylaşımı veya şifre talebi varsa işlemi durdurun."] },
+      { title: "Türk Telekom ile dijital ürün nasıl satın alınır?", paragraphs: ["Dijital ürün alınacaksa ürünün türü, tutarı, bölgesi, mağazası ve teslim yöntemi satın alma öncesinde kontrol edilmelidir. İşlem sırasında onay mesajındaki hizmet adı ve tutar beklediğiniz bilgiyle eşleşmelidir.", "Sky Bozum Türk Telekom mobil ödeme limitini veya Pokus bakiyesini doğrudan nakde çevirmez. Bu rehber Türk Telekom ya da Pokus ile Razer Gold gibi dijital kodların nasıl alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum'a satabilirsiniz. Beklenmeyen yönlendirme, ekran paylaşımı veya şifre talebi varsa işlemi durdurun."] },
     ],
   },
   {
@@ -508,7 +508,7 @@ export const articles: ArticleItem[] = [
     ],
     sections: [
       { title: "Pokus nedir?", paragraphs: ["Pokus, uygun hesaplarda kart ve cüzdan özellikleri sunan bir ödeme hizmetidir. Pokus kart bakiyesi ile Türk Telekom hattına tanımlanan mobil ödeme limiti farklı kaynaklardır ve ödeme ekranında hangisinin kullanıldığı kontrol edilmelidir.", "Kullanılabilir özellikler, doğrulama seviyesi ve güncel hizmet koşullarına göre değişebilir. Kesin limit ve işlem bilgisi resmi uygulama üzerinden görülmelidir."] },
-      { title: "Pokus ile Razer Gold nasıl alınır?", paragraphs: ["Pokus kartın internet alışverişine açık olduğu ve satıcının kartla ödemeyi kabul ettiği durumlarda uygun Razer Gold ürünü satın alınabilir. Ürünün TL veya yabancı para biriminde olması, bölgesi ve kod teslim yöntemi işlem öncesinde kontrol edilmelidir.", "Satın aldığınız kodu kişisel hesabınızda kullanabilir, Sky Bozum'a uygunluk için sunabilir veya başka bir alıcıyla değerlendirebilirsiniz. Sky Bozum Pokus bakiyesini doğrudan satın almaz."], bullets: ["Ödeme kaynağını doğrulayın.", "Ürün bölgesi ve para birimini okuyun.", "Satıcı ve teslimat bilgilerini kontrol edin.", "Onay ekranındaki tutarı ve hizmet adını okuyun."] },
+      { title: "Pokus ile Razer Gold nasıl alınır?", paragraphs: ["Pokus kartın internet alışverişine açık olduğu ve satıcının kartla ödemeyi kabul ettiği durumlarda uygun Razer Gold ürünü satın alınabilir. Ürünün TL veya yabancı para biriminde olması, bölgesi ve kod teslim yöntemi işlem öncesinde kontrol edilmelidir.", "Sky Bozum Pokus bakiyesini doğrudan nakde çevirmez. Satın aldığınız kullanılmamış Razer Gold kodunu kişisel hesabınızda kullanabilir veya kodun bölgesi ve stok durumu onaylandıktan sonra Sky Bozum'a satabilirsiniz."], bullets: ["Ödeme kaynağını doğrulayın.", "Ürün bölgesi ve para birimini okuyun.", "Satıcı ve teslimat bilgilerini kontrol edin.", "Onay ekranındaki tutarı ve hizmet adını okuyun."] },
       { title: "Güvenli kod işlemi için dikkat edilmesi gerekenler", paragraphs: ["Kodun tamamını yalnız işlem için doğruladığınız resmi iletişim kanalında paylaşın. Sosyal medya yorumları veya açık gruplar kod göndermek için güvenli değildir.", "Ödeme tamamlandığında dekont görüntüsünden önce banka hesabınızdaki gerçek hareketi kontrol edin. Hesap şifresi, kart PIN'i veya uzaktan erişim talep eden kişilerle devam etmeyin."] },
     ],
   },

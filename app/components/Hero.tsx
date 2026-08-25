@@ -7,7 +7,6 @@ import { useSiteSettings } from './SiteSettingsProvider';
 import { InlineEditableImage, InlineEditableText } from './admin/SiteInlineEditor';
 import usePublishedRates from './personalization/usePublishedRates';
 import { prefersReducedMotion } from '../lib/motion';
-import { independentPurchaseGuideLabel, isIndependentPurchaseGuide } from '../lib/independentPurchaseGuides';
 import CredibilityBand from './CredibilityBand';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
@@ -246,10 +245,10 @@ export default function Hero() {
           </div>
         </div>
 
-        <aside className="hero-pro-rates" aria-label="Dijital ürün rehberleri ve güncel kod oranları">
+        <aside className="hero-pro-rates" aria-label="Güncel taban oranlar">
           <div className="hero-pro-rates-head">
-            <div><small>REHBERLER VE KOD ORANLARI</small><h2>Doğru işlem yolunu seçin</h2></div>
-            <span>Açık bilgilendirme</span>
+            <div><small>TABAN ORAN ARALIKLARI</small><h2>Hizmetlere göre oranlar</h2></div>
+            <span>İşlem öncesi teyit</span>
           </div>
           <div className="hero-pro-rates-list">
             {featuredRates.map((item) => (
@@ -257,7 +256,7 @@ export default function Hero() {
                 href={`/hizmetler/${item.serviceSlug}`}
                 className="hero-pro-rate"
                 key={item.id}
-                title={isIndependentPurchaseGuide(item.serviceSlug) ? independentPurchaseGuideLabel(item.serviceSlug) : `${item.name} oran ve hizmet detaylarını görüntüle`}
+                title={`${item.name} detaylarını görüntüle`}
               >
                 <span className={`hero-pro-logo hero-pro-logo--${item.id} ${item.id === 'apple' ? 'hero-pro-logo--light' : ''}`}>
                   <Image src={logos[item.id]} alt={`${item.name} logosu`} width={78} height={26} />
@@ -267,13 +266,11 @@ export default function Hero() {
                   <small>{item.category}</small>
                   <span className="hero-pro-rate-detail" aria-hidden="true">Detayları görüntüle <i>→</i></span>
                 </span>
-                <strong className={isIndependentPurchaseGuide(item.serviceSlug) ? 'hero-pro-rate-guide' : undefined}>
-                  {isIndependentPurchaseGuide(item.serviceSlug) ? independentPurchaseGuideLabel(item.serviceSlug) : item.range}
-                </strong>
+                <strong>{item.range}</strong>
               </Link>
             ))}
           </div>
-          <Link href="/hizmetler" className="hero-pro-rates-cta">Tüm rehber ve hizmet detayları <span>→</span></Link>
+          <Link href="/hizmetler" className="hero-pro-rates-cta">Tüm hizmet ve oran detayları <span>→</span></Link>
         </aside>
 
         <div className="hero-pro-credibility">

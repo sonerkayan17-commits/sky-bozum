@@ -38,8 +38,8 @@ export const featuredArticles = [
       { question: 'Mobil bozum işleminde SMS kodu paylaşılır mı?', answer: 'Doğrulama veya onay kodu mesajla bir kişiye gönderilmemelidir. Yalnız sizin başlattığınız, hizmet adı ve tutarı açıkça görünen resmî operatör ya da ödeme ekranında kullanılması gereken kod yine o resmî ekrana girilmelidir. Beklenmeyen onay taleplerinde işlemi durdurun.' },
       { question: 'En yüksek oranı veren siteyi seçmek doğru mu?', answer: 'Tek başına oranla karar vermek risklidir. Oranın hangi ürün, tutar, bölge ve ödeme süresi için geçerli olduğu; net alacağınız tutar ve olası kesintiler işlemden önce yazılı olmalıdır. Gerçekçi görünmeyen teklif yeniden doğrulanmalıdır.' },
       { question: 'Sorun yaşarsam hangi kayıtları saklamalıyım?', answer: 'Alan adı, resmî iletişim bilgisi, tarih, ürün ve tutar, yazılı oran teklifi, sipariş kaydı ve banka hareketi saklanmalıdır. Kodu açık alanda yayımlamadan ilgili işletme, operatör veya ödeme kuruluşunun resmî desteğine başvurun.' },
-      { question: 'Mobil bozum ile mobil ödeme bozdurma aynı şey midir?', answer: 'Arama dilinde çoğu zaman aynı niyetle kullanılır; fakat gerçek işlem modeli farklı olabilir. Sky Bozum operatör veya dijital cüzdan bakiyesini doğrudan satın almaz. Operatör sayfaları dijital ürün satın alma rehberidir; bozum hizmeti yalnız önceden desteklendiği yazılı olarak doğrulanan kullanılmamış dijital kodlar için değerlendirilir.' },
-      { question: 'Turkcell, Vodafone veya Türk Telekom bakiyesi doğrudan bozdurulur mu?', answer: 'Sky Bozum bu operatörlerin bakiyesini doğrudan satın almaz ve markalar adına bozum hizmeti yürütmez. İlgili sayfalar operatörle desteklenen mağazalardan dijital ürün alma, limit ve güvenlik kontrollerini açıklar. Satın alınan kodun ayrıca değerlendirilip değerlendirilemeyeceği işlemden önce sorulmalıdır.' },
+      { question: 'Mobil bozum ile mobil ödeme bozdurma aynı şey midir?', answer: 'Bu ifadeler internette benzer anlamda kullanılsa da Sky Bozum operatör mobil ödeme limitini veya dijital cüzdan bakiyesini doğrudan nakde çevirmez. Operatör sayfaları, bu ödeme yöntemleriyle Razer Gold ve benzeri dijital kodların güvenli biçimde nasıl alınacağını açıklar. Satın alınan kullanılmamış kod, stok ve uygunluk onayından sonra Sky Bozum’a satılabilir.' },
+      { question: 'Turkcell, Vodafone veya Türk Telekom bakiyesi doğrudan bozdurulur mu?', answer: 'Hayır. Sky Bozum bu operatörlerin mobil ödeme limitini veya bakiyesini doğrudan nakde çevirmez. İlgili rehberler, operatörle desteklenen mağazadan dijital kod alırken limit, ürün, bölge ve güvenlik kontrollerini gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya stok ve uygunluk onayından sonra Sky Bozum’a satabilirsiniz.' },
       { question: 'Mobil ödeme bozdurma oranı neden değişir?', answer: 'Değerlendirilecek ürünün türü, nominal tutarı, para birimi, bölgesi, stok talebi ve kontrol koşulları oranı etkileyebilir. Bu nedenle eski bir oran görseli yerine ürün adı ve tutarıyla güncel net ödeme yazılı olarak doğrulanmalıdır.' },
     ],
     sections: [
@@ -59,7 +59,7 @@ export const featuredArticles = [
         title: 'Mobil bozum, mobil ödeme bozdurma ve dijital kod bozum arasındaki fark',
         paragraphs: [
           '“Mobil bozum”, “mobil ödeme bozdurma”, “mobil ödeme bozdur” ve “mobil bozumcu” ifadeleri internette çoğunlukla aynı ihtiyeti anlatmak için aranır: kullanıcı telefon hattındaki ödeme imkânını güvenli ve anlaşılır bir süreçte değerlendirmek ister. Buna rağmen bu kelimeler her sitede aynı işlem modelini ifade etmez. Bazı sayfalar operatör bakiyesini doğrudan satın aldığını söylerken bazıları kullanıcının desteklenen mağazadan aldığı dijital kodu kontrol eder. Karar vermeden önce sitenin gerçekte hangi ürünü kabul ettiğini anlamak gerekir.',
-          'Sky Bozum; Turkcell, Vodafone, Türk Telekom, Paycell, Pokus veya Vodafone Pay bakiyesini doğrudan satın almaz ve bu markalar adına hizmet sunmaz. Operatör ve cüzdan sayfaları, kullanıcının kendi hesabıyla desteklenen mağazalardan dijital ürün satın alma adımlarını açıklayan bağımsız rehberlerdir. Bozum değerlendirmesi ise yalnız ürün türü, bölgesi, tutarı ve kullanılmamış olma durumu işlem öncesinde doğrulanan dijital kodlar için yapılır.',
+          'Sky Bozum; Turkcell, Vodafone, Türk Telekom, Paycell, Pokus veya Vodafone Pay mobil ödeme limitini ve bakiyesini doğrudan nakde çevirmez. Bu sayfalar, söz konusu ödeme yöntemleriyle Razer Gold ve benzeri dijital kodların güvenli biçimde nasıl satın alınacağını adım adım açıklar. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya ürün türü, bölgesi ve stok durumu yazılı olarak onaylandıktan sonra Sky Bozum’a satabilirsiniz.',
           'Bu ayrım kullanıcıyı yanlış beklentiden korur. “Hattımdaki limit doğrudan nakde dönüşecek” varsayımıyla satın alma yapmak yerine önce hangi dijital ürünün desteklendiği, kodun hangi ülke veya para birimine ait olması gerektiği ve tahmini net ödemenin ne olduğu yazılı olarak sorulmalıdır.'
         ],
         bullets: [
@@ -77,7 +77,7 @@ export const featuredArticles = [
         title: 'Mobil ödeme güvenli mi, mobil ödeme yasal mı?',
         paragraphs: [
           'Mobil ödeme, operatörün ve yetkili ödeme hizmeti sağlayıcısının resmî akışında; hizmet adı, satıcı ve toplam tutar kullanıcıya açıkça gösterilerek kullanıldığında mevzuatla düzenlenen bir ödeme yöntemidir. Buna karşılık internette “mobil ödeme bozdur” veya “nakite çevir” şeklinde sunulan her yöntem aynı hukuki ve teknik yapıya sahip değildir. Bir sitenin Google’da görünmesi, reklam vermesi ya da güven rozeti kullanması tek başına yetki veya güven kanıtı sayılmaz.',
-          'Türkiye Cumhuriyet Merkez Bankası, ödeme hizmeti veya elektronik para ihracı sunan kuruluşların faaliyet iznine tabi olduğunu ve izinli kuruluşların güncel listesini yayımlar. Sky Bozum kendisini ödeme ya da elektronik para kuruluşu olarak tanıtmaz; operatör ve cüzdan bakiyesini doğrudan nakde çevirmez. Bu sayfalarda kullanıcıların kendi hesaplarıyla dijital ürün satın alma yolları açıklanır; bozum değerlendirmesi yalnız önceden uygunluğu doğrulanan kullanılmamış dijital kodlar için yapılır.',
+          'Türkiye Cumhuriyet Merkez Bankası, ödeme hizmeti veya elektronik para ihracı sunan kuruluşların faaliyet iznine tabi olduğunu ve izinli kuruluşların güncel listesini yayımlar. Sky Bozum bir ödeme veya elektronik para kuruluşu değildir; operatör mobil ödeme limitini ya da dijital cüzdan bakiyesini doğrudan nakde çevirmez. Bu sayfalar dijital kod satın alma adımlarını açıklar. Satın alınan kullanılmamış kod, ürün ve stok uygunluğu yazılı olarak onaylandıktan sonra Sky Bozum’a satılabilir.',
           'Güvenlik açısından doğru alan adı, yazılı ürün ve net tutar, tek kullanımlık kodların yalnız resmî ödeme ekranında kullanılması ve banka hareketinin kullanıcı tarafından kontrol edilmesi birlikte değerlendirilmelidir. İşlem modeli belirsizse, şifre veya uzaktan erişim isteniyorsa ya da kullanıcı beklenmedik bir kişisel hesaba yönlendiriliyorsa işlem durdurulmalıdır.'
         ],
         relatedLinks: [
@@ -338,7 +338,7 @@ export const featuredArticles = [
         ],
         subsections: [
           { title: 'Vodafone için hızlı kontrol listesi', paragraphs: ['Vodafone Yanımda uygulamasında mobil ödeme durumunu kontrol edin. Kullanılabilir limit ile satın alacağınız ürünün toplam tutarını karşılaştırın. Onay SMS’inde hizmet adı ve tutarı doğrulayın. İşlem planınız Vodafone bakiyesi değerlendirmeye yönelikse, satın almadan önce ilgili Vodafone hizmet sayfasındaki güncel süreci inceleyin.'] },
-          { title: 'Vodafone mobil ödeme bozum ve Vodafone Pay nakite çevirme aramalarında doğru işlem nedir?', paragraphs: ['Sky Bozum Vodafone hattı veya Vodafone Pay bakiyesini doğrudan nakde çevirmez. Bu ifadelerle arama yapan kullanıcılar için doğru yol; önce ödeme kaynağını belirlemek, ardından desteklenen mağazadan alınabilecek dijital ürünü ve bölgesini kontrol etmektir. Kullanılmamış bir kodun Sky Bozum tarafından değerlendirilip değerlendirilemeyeceği satın alma öncesinde yazılı olarak sorulmalıdır.'] }
+          { title: 'Vodafone mobil ödeme bozum veya Vodafone Pay nakite çevirme aramasında ne yapılır?', paragraphs: ['Sky Bozum Vodafone mobil ödeme limitini veya Vodafone Pay bakiyesini doğrudan nakde çevirmez. Bu rehber, Vodafone ile desteklenen bir mağazadan Razer Gold ya da başka bir dijital kodun nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya ürün ve stok uygunluğu yazılı olarak onaylandıktan sonra Sky Bozum’a satabilirsiniz.'] }
         ]
       },
       {
@@ -350,7 +350,7 @@ export const featuredArticles = [
         ],
         subsections: [
           { title: 'Paycell kullanıcıları için önemli ayrım', paragraphs: ['Paycell kart bakiyesi, Turkcell mobil ödeme limiti ve hat faturası birbirinden farklı kaynaklar olabilir. Ödeme ekranında kullanılan kaynağı kontrol edin. Kart bilgilerini, uygulama şifresini ve gelen doğrulama kodlarını üçüncü kişilerle paylaşmayın. İlgili hizmete geçmeden önce Turkcell mobil ödeme sayfasındaki işlem modelini okuyun.'] },
-          { title: 'Turkcell mobil ödeme bozdurma ve Paycell nakite çevirme aramalarında doğru işlem nedir?', paragraphs: ['Sky Bozum Turkcell mobil ödeme limitini veya Paycell bakiyesini doğrudan satın almaz. Rehber, bu kaynaklarla desteklenen mağazadan dijital kod alınırken ürün adı, bölge, para birimi ve toplam tutarın nasıl kontrol edileceğini açıklar. Kod değerlendirme düşünülüyorsa kabul edilen ürün ve güncel net ödeme satın alma tamamlanmadan önce yazılı olarak doğrulanmalıdır.'] }
+          { title: 'Turkcell mobil ödeme bozdurma veya Paycell nakite çevirme aramasında ne yapılır?', paragraphs: ['Sky Bozum Turkcell mobil ödeme limitini veya Paycell bakiyesini doğrudan nakde çevirmez. Bu rehber, Turkcell ya da Paycell ile desteklenen bir mağazadan Razer Gold gibi dijital kodların nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya ürün, bölge ve stok uygunluğu yazılı olarak onaylandıktan sonra Sky Bozum’a satabilirsiniz.'] }
         ]
       },
       {
@@ -362,7 +362,7 @@ export const featuredArticles = [
         ],
         subsections: [
           { title: 'Pokus ile işlem yaparken', paragraphs: ['Pokus kartın internet alışverişine açık olduğundan, bakiyenin yeterli olduğundan ve ürünün dijital teslimat koşullarının uygun olduğundan emin olun. Dijital kod satın alacaksanız bağımsız satın alma rehberindeki mağaza, bölge ve güvenlik kontrollerini inceleyin.'] },
-          { title: 'Türk Telekom mobil ödeme bozdurma ve Pokus nakite çevirme aramalarında doğru işlem nedir?', paragraphs: ['Sky Bozum Türk Telekom hattındaki limiti veya Pokus bakiyesini doğrudan nakde çevirmez. Bu arama niyetindeki kullanıcı için güvenli yol; mobil ödeme limiti ile Pokus kart bakiyesini ayırmak, desteklenen satıcı ve dijital ürünü kontrol etmek ve kullanılmamış kodun uygunluğunu satın alma öncesinde teyit etmektir.'] }
+          { title: 'Türk Telekom mobil ödeme bozdurma veya Pokus nakite çevirme aramasında ne yapılır?', paragraphs: ['Sky Bozum Türk Telekom mobil ödeme limitini veya Pokus bakiyesini doğrudan nakde çevirmez. Bu rehber, Türk Telekom ya da Pokus ile desteklenen bir mağazadan Razer Gold gibi dijital kodların nasıl güvenli biçimde alınacağını gösterir. Satın aldığınız kullanılmamış kodu hesabınızda kullanabilir veya ürün, bölge ve stok uygunluğu yazılı olarak onaylandıktan sonra Sky Bozum’a satabilirsiniz.'] }
         ]
       },
       {
@@ -724,7 +724,7 @@ export const featuredArticles = [
       {
         title: 'Operatör rehberi ile kod bozum hizmetini birbirine karıştırmayın',
         paragraphs: [
-          'Turkcell, Vodafone, Türk Telekom, Paycell ve Pokus bakiyeleri aynı ürün değildir. Sky Bozum bu bakiyeleri doğrudan satın almaz. İlgili sayfalar, kullanıcının desteklenen mağazadan dijital ürün satın alma seçeneklerini ve güvenlik kontrollerini anlamasına yardımcı olan bağımsız rehberlerdir.',
+          'Turkcell, Vodafone ve Türk Telekom mobil ödeme limitleri ile Paycell ve Pokus bakiyeleri birbirinden farklı ödeme kaynaklarıdır. Sky Bozum bu limitleri veya bakiyeleri doğrudan nakde çevirmez. İlgili sayfalar, bu ödeme yöntemleriyle Razer Gold ve benzeri dijital kodların nasıl güvenli biçimde alınacağını açıklar. Satın alınan kullanılmamış kod, stok ve uygunluk onayından sonra Sky Bozum’a satılabilir.',
           'Bozum değerlendirmesi, önceden uygunluğu teyit edilmiş kullanılmamış dijital kod üzerinden yapılır. Bu nedenle operatör limitinizin tamamı ile kod nominal değeri ve net ödeme birbirinden farklı olabilir. Satın alma yapmadan önce ürün, tutar ve bölgeyi teyit etmek yanlış maliyet hesabını önler.',
         ],
       },
