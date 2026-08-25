@@ -5,6 +5,7 @@ import './forum-directory.css';
 import './forum-directory-v2.css';
 import './forum-quality-pass.css';
 import './forum-solutions.css';
+import './forum-category-links.css';
 
 export default function ForumDirectory() {
   const categoryCount = forumSections.reduce((sum, section) => sum + section.categories.length, 0);
@@ -29,8 +30,8 @@ export default function ForumDirectory() {
     <section className="forum-start-desk" aria-label="Topluluk başlangıç rehberleri">
       <div className="forum-start-desk__summary">
         <span>RESMÎ BAŞLANGIÇ MASASI</span>
-        <strong>{forumStarterTopics.length} doğrulanmış başlangıç konusu</strong>
-        <p>Bozum, oran ve güvenlik sorularında önce yönetim tarafından hazırlanan kısa rehberlere bakın; cevap bulamazsanız kendi konunuzu açın.</p>
+        <strong>{forumStarterTopics.length} doğrulanmış yönetim içeriği</strong>
+        <p>Bozum, oran ve güvenlik sorularında önce yönetim tarafından hazırlanan rehberlere bakın; cevap bulamazsanız kendi konunuzu açın.</p>
         <div><b>{forumSections.length} bölüm</b><b>{categoryCount} aktif alan</b><b>Gerçek sayaçlar</b></div>
       </div>
       <div className="forum-start-desk__topics">
@@ -61,7 +62,7 @@ export default function ForumDirectory() {
           <div className="forum-group-main">
             <Link href={forumRoutes.section(section.slug)}><h2>{section.title}</h2></Link>
             <p>{section.description}</p>
-            <div>{section.categories.map((category) => <span key={category}>{category}</span>)}</div>
+            <div>{section.categories.map((category) => <Link key={category} href={forumRoutes.category(section.slug, slugifyForumCategory(category))}>{category}</Link>)}</div>
           </div>
           <aside>
             <small>{section.categories.length} AKTİF ALT KATEGORİ</small>

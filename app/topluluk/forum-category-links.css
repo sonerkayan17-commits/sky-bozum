@@ -1,0 +1,15 @@
+.forum-group-main>div a{
+  border-radius:20px;
+  background:rgba(255,255,255,.045);
+  padding:.27rem .48rem;
+  color:#aeb6c1;
+  font-size:.59rem;
+  transition:background .16s ease,color .16s ease,outline-color .16s ease;
+}
+
+.forum-group-main>div a:hover,
+.forum-group-main>div a:focus-visible{
+  background:rgba(227,41,98,.13);
+  color:#fff;
+  outline:1px solid rgba(243,109,144,.65);
+}
