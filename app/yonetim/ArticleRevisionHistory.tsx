@@ -46,6 +46,7 @@ export default function ArticleRevisionHistory({
           body: String(data.body || ''),
           keywords: Array.isArray(data.keywords) ? data.keywords.map(String) : [],
           serviceSlug: String(data.serviceSlug || ''),
+          reviewDueAt: String(data.reviewDueAt || ''),
           status: (data.status === 'draft' || data.status === 'archived' ? data.status : 'published') as ContentRevision['status'],
           createdBy: String(data.createdBy || ''),
           createdAt: data.createdAt?.toDate?.() ?? null,
@@ -71,6 +72,7 @@ export default function ArticleRevisionHistory({
         body: revision.body,
         keywords: revision.keywords,
         serviceSlug: revision.serviceSlug,
+        reviewDueAt: revision.reviewDueAt,
         status: revision.status,
       });
       setNotice('Seçilen sürüm geri yüklendi. İsterseniz önce önizleyip sonra tekrar kaydedebilirsiniz.');

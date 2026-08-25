@@ -214,6 +214,7 @@ export default function AdminConsole({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [clientReady, setClientReady] = useState(false);
+  const [todayKey] = useState(() => new Date().toISOString().slice(0, 10));
   const auth = firebaseClient.auth;
   const db = firebaseClient.db;
   const visibleContentAudit = useMemo(() => {
@@ -311,6 +312,7 @@ export default function AdminConsole({
               body: String(data.body || ""),
               keywords: Array.isArray(data.keywords) ? data.keywords.map(String) : [],
               serviceSlug: String(data.serviceSlug || ""),
+              reviewDueAt: String(data.reviewDueAt || ""),
               status: ["draft", "published", "archived"].includes(status)
                 ? status
                 : "draft",
@@ -626,6 +628,7 @@ export default function AdminConsole({
                   body: "",
                   keywords: [],
                   serviceSlug: "",
+                  reviewDueAt: "",
                   status: "draft",
                 })
               }
@@ -654,6 +657,7 @@ export default function AdminConsole({
                     </small>
                     <strong>{article.title}</strong>
                     <p>{article.excerpt}</p>
+                    {managedArticles.find((entry) => entry.slug === article.slug)?.reviewDueAt ? <time className={`admin-review-date ${managedArticles.find((entry) => entry.slug === article.slug)!.reviewDueAt! < todayKey ? "is-overdue" : ""}`}>İçerik kontrolü: {new Date(`${managedArticles.find((entry) => entry.slug === article.slug)!.reviewDueAt}T12:00:00`).toLocaleDateString("tr-TR")}</time> : null}
                   </div>
                   <div>
                     <button
@@ -673,6 +677,7 @@ export default function AdminConsole({
                             .join("\n\n"),
                           keywords: article.keywords ? [...article.keywords] : [],
                           serviceSlug: article.serviceSlug || "",
+                          reviewDueAt: managedArticles.find((entry) => entry.slug === article.slug)?.reviewDueAt || "",
                           status: "published",
                         })
                       }
@@ -749,6 +754,7 @@ export default function AdminConsole({
                     </small>
                     <strong>{article.title}</strong>
                     <p>{article.excerpt}</p>
+                    {article.reviewDueAt ? <time className={`admin-review-date ${article.reviewDueAt < todayKey ? "is-overdue" : ""}`}>İçerik kontrolü: {new Date(`${article.reviewDueAt}T12:00:00`).toLocaleDateString("tr-TR")}</time> : <time className="admin-review-date">Kontrol tarihi planlanmadı</time>}
                   </div>
                   <div>
                     <button className="admin-primary compact" onClick={() => setEditingArticle(article)}>
@@ -1144,6 +1150,15 @@ export default function AdminConsole({
                   onChange={(event) => setEditingArticle({ ...editingArticle, serviceSlug: event.target.value })}
                   placeholder="vodafone-mobil-odeme"
                 />
+              </label>
+              <label>
+                Yeniden inceleme tarihi
+                <input
+                  type="date"
+                  value={editingArticle.reviewDueAt || ""}
+                  onChange={(event) => setEditingArticle({ ...editingArticle, reviewDueAt: event.target.value })}
+                />
+                <small>Oran, yasal açıklama, bağlantı ve kaynakların tekrar denetleneceği gün.</small>
               </label>
               <label>
                 Makale metni

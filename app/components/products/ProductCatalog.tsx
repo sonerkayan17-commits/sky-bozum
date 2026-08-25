@@ -27,6 +27,11 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
   const available = selectedCatalog?.active === true && selectedCatalog.stockCount > 0 && selectedCatalog.priceMinor !== null;
 
   useEffect(() => {
+    const storedPack = window.sessionStorage.getItem(`sky-product-selection:${product.slug}`);
+    if (storedPack && product.packs.some((pack) => pack.id === storedPack)) setSelectedId(storedPack);
+  }, [product.packs, product.slug]);
+
+  useEffect(() => {
     let active = true;
     let unsubscribe: () => void = () => {};
     const cancel = deferClientTask(async () => {
@@ -192,7 +197,7 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
           const entry = catalog[pack.id];
           const isSelected = pack.id === selected?.id;
           const inStock = entry?.active === true && entry.stockCount > 0 && entry.priceMinor !== null;
-          return <button key={pack.id} type="button" className={`product-pack ${isSelected ? 'is-selected' : ''}`} onClick={() => { setSelectedId(pack.id); setDelivered(null); setNotice(''); }} aria-pressed={isSelected}>
+          return <button key={pack.id} type="button" className={`product-pack ${isSelected ? 'is-selected' : ''}`} onClick={() => { setSelectedId(pack.id); window.sessionStorage.setItem(`sky-product-selection:${product.slug}`, pack.id); setDelivered(null); setNotice(''); }} aria-pressed={isSelected}>
             <span className="product-pack__media"><ProductCover product={product} compact /><span className="product-pack__amount">{pack.label}</span></span>
             <span className="product-pack__title">{pack.label}</span><span className="product-pack__description">{pack.description}</span>
             <span className={`product-pack__stock ${inStock ? 'is-available' : ''}`}>{loading && !entry ? 'Stok kontrol ediliyor…' : inStock ? `${entry.stockCount} adet stokta` : 'Stok yok'}</span>
@@ -213,7 +218,7 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
           {product.slug === 'razer-gold' ? <Link href="/hesabim/talepler?service=razer-gold-tl" className="product-selection__sell">Elindeki Razer kodunu sat <span aria-hidden="true">→</span></Link> : null}
           <Link href="/iletisim" className="product-selection__support">Destek al <span aria-hidden="true">→</span></Link>
         </div>
-        {notice ? <p className={`product-selection__notice ${delivered ? 'is-success' : ''}`}>{notice}</p> : null}
+        {notice ? <p className={`product-selection__notice ${delivered ? 'is-success' : ''}`}>{notice}{!delivered && selected ? <small> Seçiminiz bu oturum için korundu; stok veya bağlantı yenilendiğinde aynı paketi güvenle yeniden deneyebilirsiniz.</small> : null}</p> : null}
         {delivered ? <div className="product-delivery"><span>TESLİM EDİLEN KOD</span><code>{delivered.code}</code><button type="button" onClick={() => void copyCode()}>{copied ? 'Kopyalandı' : 'Kodu kopyala'}</button><small>Kodu güvenli yerde saklayın; ayrıca Siparişlerim alanından yeniden görüntüleyebilirsiniz.</small></div> : null}
       </aside>
     </div>

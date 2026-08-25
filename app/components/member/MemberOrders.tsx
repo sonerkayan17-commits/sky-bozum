@@ -46,6 +46,10 @@ export default function MemberOrders() {
   if (!loading && !user) return <main className="member-loading"><div><h1>Siparişler için üye girişi gerekli.</h1><p>Teslim edilen kodlar yalnız hesap sahibine gösterilir.</p><Link href="/giris?next=%2Fhesabim%2Fsiparisler">Giriş yap</Link></div></main>;
 
   return <MemberUtilityShell eyebrow="DİJİTAL TESLİMAT" title="Siparişlerim" description="Satın aldığınız kodları, tutarları ve teslim tarihlerini yalnız size açık bu alandan görüntüleyin.">
+    <aside className="member-order-policy" aria-label="Teslimat ve iptal bilgisi">
+      <div><span>TESLİMAT DURUMU</span><strong>Kod teslimi işlem kaydıyla doğrulanır</strong><p>Satın alma, bakiye düşümü ve kod teslimi tek güvenli işlem içinde tamamlanır. İşlem yarıda kalırsa bakiye ve stok birlikte değişmez.</p></div>
+      <div><span>İPTAL / SORUN BİLDİRİMİ</span><strong>Teslim edilmemiş işlem ayrıca incelenir</strong><p>Dijital kod görüntülendikten sonra otomatik iptal yapılamaz. Kod görünmüyorsa, geçersizse veya işlem kaydında tutarsızlık varsa sipariş numaranızla destek isteği açın.</p><Link href="/iletisim">Sipariş sorunu bildir →</Link></div>
+    </aside>
     {loading ? <p className="member-orders-status">Siparişler güvenli biçimde yükleniyor…</p> : error ? <p className="member-orders-status is-error">{error}</p> : orders.length ? <div className="member-orders-list">{orders.map((order) => <article key={order.id}>
       <header><div><small>{order.productName}</small><h2>{order.packLabel}</h2></div><strong>{formatStoreMoney(order.priceMinor)}</strong></header>
       <div className="member-order-code"><code>{order.code}</code><button type="button" onClick={() => void copy(order)}>{copied === order.id ? 'Kopyalandı' : 'Kopyala'}</button></div>

@@ -14,6 +14,7 @@ export type ContentArticleDraft = {
   body?: string;
   keywords?: string[];
   serviceSlug?: string;
+  reviewDueAt?: string;
   status: ContentStatus;
 };
 
@@ -41,6 +42,7 @@ function articleFromSite(article: ArticleItem): ContentArticleDraft {
     body: article.sections.flatMap((section) => section.paragraphs).join('\n\n'),
     keywords: article.keywords ? [...article.keywords] : [],
     serviceSlug: article.serviceSlug || '',
+    reviewDueAt: '',
     status: 'published',
   };
 }
@@ -60,6 +62,7 @@ function cleanArticle(article: ContentArticleDraft): ContentArticleDraft {
     body: article.body?.trim().slice(0, 24000) || '',
     keywords: (article.keywords || []).map((keyword) => keyword.trim().slice(0, 80)).filter(Boolean).slice(0, 20),
     serviceSlug: article.serviceSlug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 80) || '',
+    reviewDueAt: /^\d{4}-\d{2}-\d{2}$/.test(article.reviewDueAt || '') ? article.reviewDueAt : '',
   };
 }
 
@@ -75,6 +78,7 @@ function articleFromStored(value: StoredArticle, fallbackSlug: string): ContentA
     body: String(value.body || ''),
     keywords: Array.isArray(value.keywords) ? value.keywords.map(String) : [],
     serviceSlug: String(value.serviceSlug || ''),
+    reviewDueAt: String(value.reviewDueAt || ''),
     status: value.status === 'draft' || value.status === 'archived' ? value.status : 'published',
   });
 }
@@ -129,6 +133,7 @@ export async function setArticleStatus(db: Firestore, slug: string, status: Cont
       cover: source.cover || '',
       keywords: source.keywords ? [...source.keywords] : [],
       serviceSlug: source.serviceSlug || '',
+      reviewDueAt: '',
     } : {}),
     updatedBy: actorId,
     updatedAt: serverTimestamp(),
