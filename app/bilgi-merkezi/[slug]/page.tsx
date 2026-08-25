@@ -72,6 +72,16 @@ function sectionHeadingId(title: string, index: number) {
   return `bolum-${index + 1}-${headingId(title) || 'icerik'}`;
 }
 
+function communityLinkFor(category: string) {
+  const value = category.toLocaleLowerCase('tr-TR');
+  if (/razer|apple|itunes|steam|hediye|kod/.test(value)) return { href: '/topluluk/forum/dijital-kod-hediye-kartlari', label: 'Dijital kod topluluğunda sor' };
+  if (/paycell|pokus|cuzdan|cüzdan|vodafone pay/.test(value)) return { href: '/topluluk/forum/dijital-cuzdanlar', label: 'Dijital cüzdan topluluğunda sor' };
+  if (/oran|komisyon|odeme suresi|ödeme süresi/.test(value)) return { href: '/topluluk/forum/bozum-oranlar', label: 'Oran ve süreç topluluğunda sor' };
+  if (/guven|güven|dolandir|dolandır|sahte/.test(value)) return { href: '/topluluk/forum/guvenlik-dolandiricilik', label: 'Güvenlik topluluğunda sor' };
+  if (/mobil|turkcell|vodafone|telekom/.test(value)) return { href: '/topluluk/forum/mobil-odeme-operatorler', label: 'Mobil ödeme topluluğunda sor' };
+  return { href: '/topluluk', label: 'Toplulukta soru sor' };
+}
+
 export function generateStaticParams() { return articles.map((article) => ({ slug: article.slug })); }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -119,6 +129,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const related = relatedArticles(article, 2, articlePool);
   const relatedService = serviceForArticle(article);
   const topicHub = getHubForArticle(article);
+  const communityLink = communityLinkFor(article.category);
   const canonicalUrl = articleUrl(article);
   const imageUrl = articleImage(article);
   const published = publishedAt(article);
@@ -225,6 +236,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               <Link href={`/bilgi-merkezi/kategori/${slugifyCategory(article.category)}`} className="focus-ring rounded-md"><span>Kategoriye dön</span><strong>{article.category}</strong><b aria-hidden="true">→</b></Link>
               {topicHub ? <Link href={`/bilgi-merkezi/konu/${topicHub.slug}`} className="focus-ring rounded-md"><span>Konu merkezine dön</span><strong>{topicHub.name}</strong><b aria-hidden="true">→</b></Link> : null}
               {relatedService ? <Link href={`/hizmetler/${relatedService.slug}`} className="focus-ring rounded-md"><span>İlgili hizmet</span><strong>{relatedService.shortName}</strong><b aria-hidden="true">→</b></Link> : null}
+              <Link href={communityLink.href} className="focus-ring rounded-md"><span>Topluluk</span><strong>{communityLink.label}</strong><b aria-hidden="true">→</b></Link>
               {related.slice(0, 1).map((item) => <Link key={item.slug} href={`/bilgi-merkezi/${item.slug}`} className="focus-ring rounded-md"><span>Sıradaki rehber</span><strong>{item.title}</strong><b aria-hidden="true">→</b></Link>)}
               <ArticleSupportLink articleTitle={article.title} articleSlug={article.slug} serviceName={relatedService?.shortName} />
             </div>

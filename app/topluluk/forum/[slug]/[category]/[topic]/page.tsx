@@ -29,7 +29,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
   const section = findForumSection(slug);
   if (!section) notFound();
   const related = forumStarterTopics.filter((entry) => entry.sectionSlug === slug && entry.slug !== item.slug);
-  const guidance = getForumGuidance(item.slug, item.title);
+  const guidance = getForumGuidance(item.slug, item.title, item.sectionSlug);
   const date = new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(`${item.publishedAt}T12:00:00`));
 
   return <main className="forum-topic-page"><article>

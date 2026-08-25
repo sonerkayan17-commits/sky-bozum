@@ -88,8 +88,17 @@ const byTopic: Record<string, GuidanceSeed> = {
   'mobil-odeme-ve-dijital-bakiye-dunyasi-hakkinda-genel-sohbet': community,
 };
 
-export function getForumGuidance(topicSlug: string, topicTitle: string): ForumGuidance {
-  const guidance = byTopic[topicSlug] ?? community;
+const bySection: Record<string, GuidanceSeed> = {
+  'mobil-odeme-operatorler': mobile,
+  'dijital-kod-hediye-kartlari': code,
+  'dijital-cuzdanlar': wallet,
+  'bozum-oranlar': rates,
+  'guvenlik-dolandiricilik': safety,
+  'sky-bozum-destek-topluluk': community,
+};
+
+export function getForumGuidance(topicSlug: string, topicTitle: string, sectionSlug?: string): ForumGuidance {
+  const guidance = byTopic[topicSlug] ?? (sectionSlug ? bySection[sectionSlug] : undefined) ?? community;
   return { title: `${topicTitle} için hızlı kontrol`, ...guidance };
 }
 
