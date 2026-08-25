@@ -2,7 +2,7 @@
 
 import { collection, doc, onSnapshot, serverTimestamp, setDoc, type Firestore } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';
-import { rateItems } from '../lib/rates';
+import { RATE_MAX_AGE_DAYS, isRateDataStale, rateDataAgeDays, rateItems } from '../lib/rates';
 
 type RateOverride = { rate: number; maxRate: number; status: 'draft' | 'published'; updatedAt: Date | null; updatedBy: string };
 
@@ -12,6 +12,7 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
   const [form, setForm] = useState({ rate: '', maxRate: '', status: 'draft' as RateOverride['status'] });
   const [notice, setNotice] = useState('');
   const [saving, setSaving] = useState(false);
+  const [checkedAt, setCheckedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     if (!db) return;
@@ -31,7 +32,18 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
     }, () => setNotice('Oran kayıtları okunamadı.'));
   }, [db]);
 
+  useEffect(() => {
+    setCheckedAt(new Date());
+  }, []);
+
   const rows = useMemo(() => rateItems.map((item) => ({ item, override: overrides[item.id] })), [overrides]);
+  const freshness = useMemo(() => {
+    const published = Object.values(overrides).filter((entry) => entry.status === 'published' && entry.updatedAt);
+    const newest = published.reduce<Date | null>((latest, entry) => !latest || (entry.updatedAt && entry.updatedAt > latest) ? entry.updatedAt : latest, null);
+    const days = newest && checkedAt ? Math.max(0, Math.floor((checkedAt.getTime() - newest.getTime()) / 86_400_000)) : null;
+    const fresh = checkedAt ? (days !== null ? days <= RATE_MAX_AGE_DAYS : !isRateDataStale(checkedAt)) : false;
+    return { published: published.length, newest, days, fresh, loading: !checkedAt };
+  }, [checkedAt, overrides]);
 
   function start(itemId: string) {
     const item = rateItems.find((entry) => entry.id === itemId)!;
@@ -68,6 +80,10 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
 
   return <section className="admin-section">
     <div className="admin-section-head"><div><span>ORAN YÖNETİMİ</span><h2>Güncel oran kayıtları</h2></div><p>Oranları yalnızca bu bölümden değiştirin. “Yayında” seçilen kayıt ana sayfa ve hesaplama araçlarına otomatik yansır.</p></div>
+    <section className={`admin-rate-freshness ${freshness.fresh ? 'is-fresh' : 'is-stale'}`} aria-label="Oran güncellik durumu">
+      <div><span>YAYIN GÜNCELLİĞİ</span><strong>{freshness.loading ? 'Durum hesaplanıyor' : freshness.fresh ? 'Kontrol eşiği içinde' : 'Güncelleme gerekiyor'}</strong><small>{freshness.newest ? `Son yayımlanan oran: ${freshness.newest.toLocaleString('tr-TR')} (${freshness.days} gün önce)` : freshness.loading ? 'Yayın kayıtları kontrol ediliyor.' : `Varsayılan oran seti ${rateDataAgeDays(checkedAt!)} gündür güncellenmedi.`}</small></div>
+      <p><b>{freshness.published}/{rateItems.length}</b> oran yayında. {freshness.loading ? 'Kayıtlar okunuyor.' : freshness.fresh ? `Eşik: ${RATE_MAX_AGE_DAYS} gün.` : 'Değişiklik yapmadan önce kaynak ve net oran teyidini kayda alın.'}</p>
+    </section>
     {notice && <p className="admin-success admin-notice">{notice}</p>}
     <div className="admin-table">
       {rows.map(({ item, override }) => <article key={item.id}>

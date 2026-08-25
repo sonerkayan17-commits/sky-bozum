@@ -10,6 +10,10 @@ const checklist = [
   { id: 'firestoreBackupChecked', title: 'Veri yedek planı doğrulandı', detail: 'Firestore verisinin dışa aktarım/yedek sorumlusu ve geri dönüş planı belirli.' },
   { id: 'supportFlowTested', title: 'Destek kanalı test edildi', detail: 'Canlı destek/WhatsApp bağlantısı ile bir test talebi gönderip yanıt akışını kontrol ettim.' },
   { id: 'productionSmokeTested', title: 'Canlı site temel testi yapıldı', detail: 'Mobil ve masaüstünde ana sayfa, hesap, işlem talebi, forum ve form akışlarını kontrol ettim.' },
+  { id: 'mobileNavigationTested', title: 'Gerçek cihazda mobil menü kontrol edildi', detail: 'Menü, arama, alt sabit menü ve dokunmatik yönlendirmeleri en az bir gerçek telefonda test ettim.' },
+  { id: 'codeMoneyFlowTested', title: 'Kod ve para akışı uçtan uca test edildi', detail: 'Test kaydıyla kod inceleme, ödeme onayı, cüzdan/IBAN kaydı ve işlem geçmişinin birbirini doğru güncellediğini kontrol ettim.' },
+  { id: 'rateFallbackReviewed', title: 'Oran yedeği ve yayın kaydı gözden geçirildi', detail: 'Yayındaki oranların tarihini, kaynak notunu ve statik yedek için kullanıcıya görünen teyit uyarısını kontrol ettim.' },
+  { id: 'appCheckEnforced', title: 'Firebase App Check canlıda doğrulandı', detail: 'Firebase Console içinden App Check sağlayıcısının etkin olduğunu ve ilgili ürünlerde zorlamanın bilinçli olarak yapılandırıldığını kontrol ettim.' },
   { id: 'analyticsAlertsConfigured', title: 'İzleme ve uyarı sorumlusu belirlendi', detail: 'Vercel/Firebase hata ve trafik izleme ekranlarını düzenli kontrol edecek kişi veya bildirim kanalı belirlendi.' },
 ] as const;
 
@@ -23,6 +27,10 @@ const emptyChecks: Checks = {
   firestoreBackupChecked: false,
   supportFlowTested: false,
   productionSmokeTested: false,
+  mobileNavigationTested: false,
+  codeMoneyFlowTested: false,
+  rateFallbackReviewed: false,
+  appCheckEnforced: false,
   analyticsAlertsConfigured: false,
 };
 

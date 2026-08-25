@@ -841,17 +841,25 @@ service cloud.firestore {
         && request.resource.data.checks is map
         && request.resource.data.checks.keys().hasAll([
           "emailFlowTested", "senderDomainAuthenticated", "firestoreBackupChecked",
-          "supportFlowTested", "productionSmokeTested", "analyticsAlertsConfigured"
+          "supportFlowTested", "productionSmokeTested", "mobileNavigationTested",
+          "codeMoneyFlowTested", "rateFallbackReviewed", "appCheckEnforced",
+          "analyticsAlertsConfigured"
         ])
         && request.resource.data.checks.keys().hasOnly([
           "emailFlowTested", "senderDomainAuthenticated", "firestoreBackupChecked",
-          "supportFlowTested", "productionSmokeTested", "analyticsAlertsConfigured"
+          "supportFlowTested", "productionSmokeTested", "mobileNavigationTested",
+          "codeMoneyFlowTested", "rateFallbackReviewed", "appCheckEnforced",
+          "analyticsAlertsConfigured"
         ])
         && request.resource.data.checks.emailFlowTested is bool
         && request.resource.data.checks.senderDomainAuthenticated is bool
         && request.resource.data.checks.firestoreBackupChecked is bool
         && request.resource.data.checks.supportFlowTested is bool
         && request.resource.data.checks.productionSmokeTested is bool
+        && request.resource.data.checks.mobileNavigationTested is bool
+        && request.resource.data.checks.codeMoneyFlowTested is bool
+        && request.resource.data.checks.rateFallbackReviewed is bool
+        && request.resource.data.checks.appCheckEnforced is bool
         && request.resource.data.checks.analyticsAlertsConfigured is bool
         && request.resource.data.notes is string
         && request.resource.data.notes.size() <= 1000
