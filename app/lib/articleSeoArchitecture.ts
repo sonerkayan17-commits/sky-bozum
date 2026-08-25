@@ -9,17 +9,32 @@ const coreLinks = {
   trust: { label: 'Güvenilir mobil bozum siteleri nasıl seçilir?', href: '/bilgi-merkezi/guvenilir-mobil-bozum-sitesi-nasil-secilir' },
   safe: { label: 'Mobil ödeme güvenli mi?', href: '/bilgi-merkezi/mobil-odeme-guvenli-mi' },
   fraud: { label: 'Mobil bozum dolandırıcılığında ne yapılır?', href: '/bilgi-merkezi/mobil-odeme-bozdurma-dolandiriciligi-sonrasi-ne-yapilmali' },
-  vodafone: { label: 'Vodafone mobil ödeme bozdurma ve kod rehberi', href: '/hizmetler/vodafone-mobil-odeme' },
-  turkcell: { label: 'Turkcell mobil ödeme bozdurma ve Paycell rehberi', href: '/hizmetler/turkcell-mobil-odeme' },
-  telekom: { label: 'Türk Telekom mobil ödeme bozdurma ve Pokus rehberi', href: '/hizmetler/turk-telekom-mobil-odeme' },
-  paycell: { label: 'Paycell bozdur ve dijital kod rehberi', href: '/hizmetler/paycell' },
-  pokus: { label: 'Pokus bozdur ve dijital kod rehberi', href: '/hizmetler/pokus' },
+  vodafone: { label: 'Vodafone mobil ödeme bozdurma ve dijital kod rehberi', href: '/bilgi-merkezi/vodafone-mobil-odeme-nedir' },
+  turkcell: { label: 'Turkcell mobil ödeme bozdurma ve Paycell rehberi', href: '/bilgi-merkezi/turkcell-mobil-odeme-nasil-kullanilir' },
+  telekom: { label: 'Türk Telekom mobil ödeme bozdurma ve Pokus rehberi', href: '/bilgi-merkezi/turk-telekom-mobil-odeme-rehberi' },
+  paycell: { label: 'Paycell bozdur ve dijital kod rehberi', href: '/bilgi-merkezi/paycell-nedir-nasil-kullanilir' },
+  pokus: { label: 'Pokus bozdur ve Razer Gold rehberi', href: '/bilgi-merkezi/pokus-nedir-razer-gold-nasil-alinir' },
   razer: { label: 'Razer Gold bozdurma rehberi', href: '/bilgi-merkezi/razer-gold-kodu-nasil-satilir' },
   razerInfo: { label: 'Razer Gold nedir, nasıl kullanılır?', href: '/bilgi-merkezi/razer-gold-nedir' },
-  apple: { label: 'iTunes bozdurma ve Apple Gift Card rehberi', href: '/hizmetler/itunes-apple' },
+  apple: { label: 'iTunes bozdurma ve Apple Gift Card rehberi', href: '/bilgi-merkezi/apple-gift-card-nedir' },
   gift: { label: 'Dijital kod ve hediye kartı rehberi', href: '/bilgi-merkezi/dijital-kod-hediye-karti-rehberi' },
   rates: { label: 'Güncel bozum oranı nasıl öğrenilir?', href: '/bilgi-merkezi/guncel-bozum-orani-nasil-ogrenilir' },
 } satisfies Record<string, ArticleLink>;
+
+const pillarSlugs = new Set([
+  'guvenilir-mobil-bozum-sitesi-nasil-secilir',
+  'mobil-odeme-bozum-nedir',
+  'mobil-odeme-guvenli-mi',
+  'vodafone-mobil-odeme-nedir',
+  'turkcell-mobil-odeme-nasil-kullanilir',
+  'turk-telekom-mobil-odeme-rehberi',
+  'paycell-nedir-nasil-kullanilir',
+  'pokus-nedir-razer-gold-nasil-alinir',
+  'razer-gold-nedir',
+  'razer-gold-kodu-nasil-satilir',
+  'apple-gift-card-nedir',
+  'guncel-bozum-orani-nasil-ogrenilir',
+]);
 
 function normalize(value: string) {
   return value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -82,6 +97,30 @@ function keywordsFor(intent: IntentKey): string[] {
     general: ['mobil ödeme bozdur', 'dijital kod bozdurma', 'güvenilir mobil bozum siteleri'],
   };
   return keywords[intent];
+}
+
+function supplementalSection(article: ArticleItem, intent: IntentKey): ArticleSection {
+  const label: Record<IntentKey, string> = {
+    security: 'güvenlik kontrolü',
+    vodafone: 'Vodafone ve dijital kod kontrolü',
+    turkcell: 'Turkcell, Paycell ve kod kontrolü',
+    telekom: 'Türk Telekom, Pokus ve kod kontrolü',
+    razer: 'Razer Gold kod kontrolü',
+    apple: 'Apple Gift Card kontrolü',
+    mobile: 'mobil ödeme ve kod kontrolü',
+    gift: 'dijital kod kontrolü',
+    finance: 'bakiye ve ürün ayrımı',
+    general: 'işlem öncesi kontrol',
+  };
+
+  return {
+    title: `${article.title}: ${label[intent]} için sonraki adım`,
+    paragraphs: [
+      `Bu sayfa ${article.title.toLocaleLowerCase('tr-TR')} konusunun belirli bir bölümünü açıklar. Karar vermeden önce ürünün tam adı, tutarı, para birimi, bölgesi ve kullanılmamış durumu ayrı ayrı doğrulanmalıdır.`,
+      'Bir sonraki adımda ilgili ana rehberi ve ödeme kaynağınızın sayfasını birlikte okuyun. Böylece yalnız bir başlığa göre hareket etmek yerine ürün, limit, güvenlik ve teslim koşullarını aynı bağlamda değerlendirebilirsiniz.',
+    ],
+    relatedLinks: linksFor(intent),
+  };
 }
 
 function intentSection(intent: IntentKey): ArticleSection {
@@ -209,14 +248,14 @@ function intentSection(intent: IntentKey): ArticleSection {
   return sections[intent];
 }
 
-function conclusionSection(intent: IntentKey): ArticleSection {
+function conclusionSection(article: ArticleItem, intent: IntentKey): ArticleSection {
   const subject: Record<IntentKey, string> = {
     security: 'güvenli işlem kararını', vodafone: 'Vodafone mobil ödeme kararını', turkcell: 'Turkcell ve Paycell kararını', telekom: 'Türk Telekom ve Pokus kararını', razer: 'Razer Gold bozdurma kararını', apple: 'iTunes ve Apple Gift Card kararını', mobile: 'mobil ödeme bozum kararını', gift: 'dijital kod kararını', finance: 'bakiye ve limit kararını', general: 'işlem kararını',
   };
   return {
     title: `Sonuç: ${subject[intent]} yazılı kontrollerle netleştirin`,
     paragraphs: [
-      'Bu rehberdeki bilgiler karar vermek için bir başlangıçtır. Ürünün tam adı, tutarı, para birimi, bölgesi, satın alma kanalı ve kullanılmamış durumu netleşmeden işlem başlatmayın. Güncel koşullar değişebileceği için stok, oran ve tahmini net ödemeyi aynı görüşmede yazılı olarak doğrulayın.',
+      `${article.title} için bu rehber bir başlangıç noktasıdır. Ürünün tam adı, tutarı, para birimi, bölgesi, satın alma kanalı ve kullanılmamış durumu netleşmeden işlem başlatmayın. Güncel koşullar değişebileceği için stok, oran ve tahmini net ödemeyi aynı görüşmede yazılı olarak doğrulayın.`,
       'Şifre, SMS doğrulama kodu, kart PIN’i, e-posta parolası veya uzaktan erişim yetkisi paylaşmayın. Ödeme tamamlandı denildiğinde yalnız dekont görseline değil, hesabınızdaki gerçek harekete bakın; sipariş ve görüşme kayıtlarını işlem sonuçlanana kadar saklayın.',
     ],
     relatedLinks: [...linksFor(intent).slice(0, 3), coreLinks.rates],
@@ -260,18 +299,25 @@ export function enrichArticlesForSeo(source: readonly ArticleItem[]): ArticleIte
   return source.map((article) => {
     const intent = intentFor(article);
     const contextLinks = linksFor(intent);
-    const originalSections = article.sections.map((section, index) => (
-      index === Math.min(1, article.sections.length - 1)
-        ? withContextLinks(section, contextLinks, article.slug)
-        : section
-    ));
+    const originalSections = article.sections.map((section, index) => {
+      if (index === 0) return withContextLinks(section, contextLinks.slice(0, 3), article.slug);
+      if (index === Math.min(1, article.sections.length - 1)) return withContextLinks(section, contextLinks, article.slug);
+      if (index === article.sections.length - 1) return withContextLinks(section, [coreLinks.trust, coreLinks.rates], article.slug);
+      return section;
+    });
     const sections = [...originalSections];
-    const intentCopy = intentSection(intent);
-    if (!hasEquivalentSection(sections, intentCopy)) sections.push(intentCopy);
-    const conclusion = conclusionSection(intent);
+    const baseWords = wordCount(article, originalSections);
+    if (pillarSlugs.has(article.slug)) {
+      const intentCopy = intentSection(intent);
+      if (!hasEquivalentSection(sections, intentCopy)) sections.push(intentCopy);
+    } else if (baseWords < 520) {
+      const supplement = supplementalSection(article, intent);
+      if (!hasEquivalentSection(sections, supplement)) sections.push(supplement);
+    }
+    const conclusion = conclusionSection(article, intent);
     if (!sections.some((section) => normalize(section.title).startsWith('sonuc'))) sections.push(conclusion);
 
-    const links = dedupeLinks([...(article.links ?? []), ...contextLinks, coreLinks.rates], article.slug).slice(0, 8);
+    const links = dedupeLinks([...(article.links ?? []), ...contextLinks, coreLinks.rates], article.slug).slice(0, 10);
     const keywords = [...new Set([...(article.keywords ?? []), ...keywordsFor(intent)])].slice(0, 20);
     const calculatedReadTime = Math.max(4, Math.ceil(wordCount(article, sections) / 180));
     const existingReadTime = Number.parseInt(article.readTime, 10) || 0;
