@@ -61,10 +61,14 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
     };
 
     const handlePointerEnter = () => {
-      if (!usesInViewPlayback) start();
+      if (usesInViewPlayback) return;
+      clearHoldTimer();
+      holdTimer = window.setTimeout(start, 500);
     };
     const handlePointerLeave = () => {
-      if (!usesInViewPlayback) stop();
+      if (usesInViewPlayback) return;
+      clearHoldTimer();
+      stop();
     };
     const clearHoldTimer = () => {
       if (holdTimer !== null) window.clearTimeout(holdTimer);
