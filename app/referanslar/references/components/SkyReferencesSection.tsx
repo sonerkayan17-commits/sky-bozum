@@ -165,9 +165,6 @@ function ReferenceCard({
             <small>WM Aracı · {formatDate(reference.publishedAt)}</small>
           </span>
         </div>
-        <a href={reference.sourceUrl} target="_blank" rel="noopener noreferrer">
-          Kaynağı görüntüle <span aria-hidden="true">↗</span>
-        </a>
       </footer>
       {interactionsEnabled ? (
         <>
@@ -229,9 +226,6 @@ function ArchiveRow({
             onReply={() => onReply({ id: targetId, service: referenceServiceLabels[reference.service], label: reference.authorLabel })}
           />
         ) : null}
-        <a href={reference.sourceUrl} target="_blank" rel="noopener noreferrer" aria-label={`${reference.authorLabel} yorumunun kaynağını görüntüle`}>
-          Kaynak <span aria-hidden="true">↗</span>
-        </a>
       </div>
       {interactionsEnabled ? <ApprovedReplies replies={replies} /> : null}
     </article>
@@ -261,7 +255,7 @@ function MovingReviewCard({ comment, visualIndex, example = false }: { comment: 
   );
 }
 
-function MovingReferenceCard({ reference, visualIndex, decorative = false }: { reference: SkyReference; visualIndex: number; decorative?: boolean }) {
+function MovingReferenceCard({ reference, visualIndex }: { reference: SkyReference; visualIndex: number }) {
   return (
     <article className={styles.movingReviewCard}>
       <div className={styles.movingReviewTopline}>
@@ -272,15 +266,8 @@ function MovingReferenceCard({ reference, visualIndex, decorative = false }: { r
           <strong>{reference.authorLabel}</strong>
           <small className={styles.serviceLine}><span className={`${styles.serviceMark} ${serviceMark(referenceServiceLabels[reference.service]).className}`} aria-hidden="true">{serviceMark(referenceServiceLabels[reference.service]).label}</span>{referenceServiceLabels[reference.service]}</small>
         </span>
-        <span className={styles.movingSourceBadge}>Kaynak doğrulanabilir</span>
-      </div>
-      <div className={styles.movingSourceMeta} aria-label="Açık kaynak forum kaydı; yıldız puanı bulunmuyor">
-        <span aria-hidden="true">↗</span> Açık kaynak kayıt · puan belirtilmemiş
       </div>
       <p>“{reference.excerpt}”</p>
-      <a className={styles.movingReviewSource} href={reference.sourceUrl} target="_blank" rel="noopener noreferrer" tabIndex={decorative ? -1 : undefined}>
-        WM Aracı · {formatDate(reference.publishedAt)} · Kaynağı aç <span aria-hidden="true">↗</span>
-      </a>
     </article>
   );
 }
@@ -681,7 +668,7 @@ export default function SkyReferencesSection({ references }: Props) {
                   ) : (
                     <>
                       {movingReferences.map((reference, index) => (
-                        <MovingReferenceCard key={`moving-b-${reference.id}`} reference={reference} visualIndex={index} decorative />
+                        <MovingReferenceCard key={`moving-b-${reference.id}`} reference={reference} visualIndex={index} />
                       ))}
                       {movingExampleReviews.map((comment, index) => (
                         <MovingReviewCard key={`moving-example-b-${comment.id}`} comment={comment} visualIndex={movingReferences.length + index} example />
