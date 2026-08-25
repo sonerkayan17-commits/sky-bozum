@@ -2,6 +2,7 @@
 
 import { addDoc, collection, doc, onSnapshot, serverTimestamp, setDoc, type Firestore } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';
+import { isFirebaseAppCheckConfigured } from '../lib/firebase';
 import './release-readiness.css';
 import './release-automatic-checks.css';
 
@@ -125,7 +126,7 @@ export default function ReleaseReadinessPanel({ db, actorId, referenceCount, lat
     </section>
     <section className="release-automatic-checks" aria-label="Otomatik yayın gerçekleri">
       <header><div><span>OTOMATİK KONTROLLER</span><h3>Koddan doğrulanan yayın gerçekleri</h3></div><small>Elle işaretlenmez; her yeni sürümde yeniden hesaplanır.</small></header>
-      <div><article><strong>{referenceCount}</strong><span>doğrulanmış referans</span></article><article className={referenceAgeDays !== null && referenceAgeDays > 180 ? 'needs-attention' : ''}><strong>{referenceFreshness}</strong><span>{latestReferenceAt ? `Son kayıt: ${new Date(`${latestReferenceAt}T12:00:00`).toLocaleDateString('tr-TR')}` : 'Yayınlanmış kayıt bulunamadı'}</span></article><article><strong>bozumcu.net</strong><span>E-posta dönüşleri ana alana sabit</span></article></div>
+      <div><article><strong>{referenceCount}</strong><span>doğrulanmış referans</span></article><article className={referenceAgeDays !== null && referenceAgeDays > 180 ? 'needs-attention' : ''}><strong>{referenceFreshness}</strong><span>{latestReferenceAt ? `Son kayıt: ${new Date(`${latestReferenceAt}T12:00:00`).toLocaleDateString('tr-TR')}` : 'Yayınlanmış kayıt bulunamadı'}</span></article><article><strong>bozumcu.net</strong><span>E-posta dönüşleri ana alana sabit</span></article><article className={isFirebaseAppCheckConfigured ? '' : 'needs-attention'}><strong>{isFirebaseAppCheckConfigured ? 'Anahtar hazır' : 'Anahtar eksik'}</strong><span>Firebase App Check istemci yapılandırması</span></article></div>
     </section>
     <label className="release-notes">Yayın notları ve sorumlular<textarea value={draftNotes} maxLength={1000} rows={4} onChange={(event) => setDraftNotes(event.target.value)} placeholder="Örn. E-posta testi 15 Ağustos'ta yapıldı; yedek sorumlusu ..." /><small>{draftNotes.length}/1000 · Son kaydedilen not: {notes ? 'var' : 'yok'}</small></label>
     <button className="admin-primary" type="button" disabled={saving} onClick={() => void save()}>{saving ? 'Kaydediliyor…' : 'Yayın kontrolünü kaydet →'}</button>

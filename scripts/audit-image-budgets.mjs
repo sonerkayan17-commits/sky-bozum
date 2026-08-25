@@ -4,11 +4,11 @@ import { extname, join, relative } from 'node:path';
 const root = process.cwd();
 const publicRoot = join(root, 'public');
 const rasterExtensions = new Set(['.png', '.jpg', '.jpeg', '.webp', '.avif']);
-const maxFileBytes = 250 * 1024;
+const maxFileBytes = 225 * 1024;
 // The whole public library includes route-specific covers that are lazy-loaded
 // only when their own page is visited. Keep a separate deploy-library ceiling
 // rather than treating all of them as the first-page network payload.
-const maxPublicBytes = 18 * 1024 * 1024;
+const maxPublicBytes = 15.5 * 1024 * 1024;
 const findings = [];
 
 async function walk(dir) {

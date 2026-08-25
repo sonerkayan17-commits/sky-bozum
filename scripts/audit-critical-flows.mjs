@@ -24,6 +24,7 @@ const checks = [
   ['Timed bans and capability restrictions exist', admin.includes('bannedUntil') && admin.includes('setMemberRestrictions') && rules.includes('function capabilityAllowed(capability)')],
   ['Admin member view follows persisted member snapshot', adminConsole.includes('members.find((member) => member.id === current.id)')],
   ['Mobile product video selects touched card', productVideo.includes('handlePointerDown') && productVideo.includes('suppressNextClick') && productVideo.includes('centerDistance')],
+  ['Product videos keep a lightweight poster', productVideo.includes('poster={poster}') && productVideo.includes("preload={priority ? 'metadata' : 'none'}")],
   ['No raw password persistence', !/setDoc\([^)]*password/i.test(account)],
 ];
 

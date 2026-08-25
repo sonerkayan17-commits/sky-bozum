@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Bağlantı bekleniyor',
+  alternates: { canonical: '/offline' },
   robots: { index: false, follow: false },
 };
 

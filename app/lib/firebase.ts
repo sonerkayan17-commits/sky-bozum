@@ -12,6 +12,7 @@ const firebaseConfig = {
 };
 
 export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
+export const isFirebaseAppCheckConfigured = Boolean(process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_RECAPTCHA_KEY?.trim());
 const canInitializeFirebase = typeof window !== 'undefined' && isFirebaseConfigured;
 
 function getFirebaseApp() {

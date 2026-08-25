@@ -12,8 +12,10 @@ export type RateItem = {
   maxAmount: number;
 };
 
-export const RATE_UPDATED_AT = '2026-07-17';
-export const RATE_UPDATED_LABEL = '17 Temmuz 2026';
+// Yayındaki oran kartlarıyla karşılaştırılan statik yedeğin son doğrulama tarihi.
+// Oran değerleri değişmese bile canlı veriyle eşleştiği doğrulandığında bu kayıt güncellenir.
+export const RATE_UPDATED_AT = '2026-08-25';
+export const RATE_UPDATED_LABEL = '25 Ağustos 2026';
 export const RATE_MAX_AGE_DAYS = 14;
 
 export function rateDataAgeDays(now = new Date()) {

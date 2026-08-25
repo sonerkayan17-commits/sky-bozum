@@ -76,7 +76,7 @@
 
 .products-page .product-directory-card__cover {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-bottom: 1px solid rgba(var(--product-accent), .24);
   background: #0a0f1b;
@@ -120,10 +120,11 @@
   pointer-events: none;
 }
 
-/* Katalog kartında poster/video karesinin tamamı görünür; bilgi kart gövdesindedir. */
+/* Katalog kartında medya kutuyu kenardan kenara doldurur. Ürün bazlı
+   object-position ana karakteri/markayı görünür alanda tutar. */
 .products-page .product-directory-card .product-cover__image,
 .products-page .product-directory-card .product-cover__video {
-  object-fit: contain;
+  object-fit: cover;
   transform: none;
 }
 
