@@ -37,6 +37,7 @@ const inlineEditor = read('app/components/admin/SiteInlineEditorAdmin.tsx');
 const adminDock = read('app/components/admin/SiteAdminDock.tsx');
 const publishedRates = read('app/components/personalization/usePublishedRates.ts');
 const ratePanel = read('app/yonetim/AdminRatePanel.tsx');
+const managementStyles = read('app/yonetim/yonetim.css');
 if (!hero.includes('data-site-editor-protected="true"')) {
   findings.push('Hero live rate panel must be protected from generic DOM content editing.');
 }
@@ -51,6 +52,14 @@ if (!publishedRates.includes('delay: 1_500') || publishedRates.includes('90_000'
 }
 if (!ratePanel.includes('rate <= 0') || !ratePanel.includes('disabled={saving}')) {
   findings.push('Rate management must reject empty/zero values and prevent duplicate submissions.');
+}
+for (const selector of ['.admin-shell', '.admin-frame', '.admin-nav', '.admin-overview', '.admin-command-strip']) {
+  if (!managementStyles.includes(selector)) {
+    findings.push(`Management center base stylesheet is missing ${selector}.`);
+  }
+}
+if (!managementStyles.includes('@media(max-width:760px)')) {
+  findings.push('Management center stylesheet must retain its mobile layout breakpoint.');
 }
 
 for (const file of walk(join(root, 'app'))) {
