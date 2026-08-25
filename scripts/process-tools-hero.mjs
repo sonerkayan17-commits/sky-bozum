@@ -32,16 +32,18 @@ async function createTransparentMaster() {
 
   await fs.mkdir(outputDir, { recursive: true });
   const transparent = sharp(rgba, { raw: { width, height, channels: 4 } });
-  const master = path.join(outputDir, 'tools-digital-balance-calculator-v1.png');
-  await transparent
-    .resize({ width: 2160, height: 2700, fit: 'contain', kernel: sharp.kernel.lanczos3 })
-    .png({ compressionLevel: 9, adaptiveFiltering: true, palette: true, quality: 100 })
-    .toFile(master);
+  const master = await transparent
+    // The master is an editor/source fallback, not a 4K delivery asset. Keeping
+    // it compact prevents a single decorative image from consuming the mobile
+    // visual budget while the AVIF/WebP variants handle runtime delivery.
+    .resize({ width: 1200, height: 1500, fit: 'contain', kernel: sharp.kernel.lanczos3 })
+    .png({ compressionLevel: 9, adaptiveFiltering: true, palette: true, quality: 88 })
+    .toBuffer();
 
   const variants = [
-    ['tools-digital-balance-calculator-v1-480.webp', 480, 74],
-    ['tools-digital-balance-calculator-v1-768.webp', 768, 76],
-    ['tools-digital-balance-calculator-v1-1200.webp', 1200, 78],
+    ['tools-digital-balance-calculator-v1-480.webp', 480, 68],
+    ['tools-digital-balance-calculator-v1-768.webp', 768, 70],
+    ['tools-digital-balance-calculator-v1-1200.webp', 1200, 72],
   ];
 
   await Promise.all(variants.map(([name, widthValue, quality]) =>
@@ -52,9 +54,9 @@ async function createTransparentMaster() {
   ));
 
   const avifVariants = [
-    ['tools-digital-balance-calculator-v1-480.avif', 480, 46],
-    ['tools-digital-balance-calculator-v1-768.avif', 768, 48],
-    ['tools-digital-balance-calculator-v1-1200.avif', 1200, 50],
+    ['tools-digital-balance-calculator-v1-480.avif', 480, 42],
+    ['tools-digital-balance-calculator-v1-768.avif', 768, 44],
+    ['tools-digital-balance-calculator-v1-1200.avif', 1200, 46],
   ];
 
   await Promise.all(avifVariants.map(([name, widthValue, quality]) =>
@@ -65,7 +67,7 @@ async function createTransparentMaster() {
   ));
 
   const metadata = await sharp(master).metadata();
-  const files = await Promise.all([master, ...variants.map(([name]) => path.join(outputDir, name)), ...avifVariants.map(([name]) => path.join(outputDir, name))].map(async (file) => ({
+  const files = await Promise.all([...variants.map(([name]) => path.join(outputDir, name)), ...avifVariants.map(([name]) => path.join(outputDir, name))].map(async (file) => ({
     file,
     bytes: (await fs.stat(file)).size,
   })));

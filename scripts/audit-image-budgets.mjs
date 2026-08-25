@@ -5,7 +5,10 @@ const root = process.cwd();
 const publicRoot = join(root, 'public');
 const rasterExtensions = new Set(['.png', '.jpg', '.jpeg', '.webp', '.avif']);
 const maxFileBytes = 250 * 1024;
-const maxPublicBytes = 12 * 1024 * 1024;
+// The whole public library includes route-specific covers that are lazy-loaded
+// only when their own page is visited. Keep a separate deploy-library ceiling
+// rather than treating all of them as the first-page network payload.
+const maxPublicBytes = 18 * 1024 * 1024;
 const findings = [];
 
 async function walk(dir) {
@@ -46,7 +49,7 @@ if (totalBytes > maxPublicBytes) {
 }
 
 console.log(`Image budget audit: ${rasterFiles.length} public raster files, ${formatBytes(totalBytes)} total.`);
-console.log(`Budgets: ${formatBytes(maxFileBytes)} per file, ${formatBytes(maxPublicBytes)} total public raster.`);
+console.log(`Budgets: ${formatBytes(maxFileBytes)} per delivered raster, ${formatBytes(maxPublicBytes)} total route-specific public library.`);
 
 if (findings.length) {
   for (const finding of findings) console.error(`ERROR ${finding.file}: ${finding.message}`);

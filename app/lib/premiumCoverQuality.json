@@ -1,7 +1,13 @@
 {
   "version": "V45.136",
-  "total": 63,
+  "total": 64,
   "items": [
+    {
+      "slug": "guvenilir-mobil-bozum-sitesi-nasil-secilir",
+      "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp",
+      "tier": "editorial-premium",
+      "reason": "Güvenlik seçim kriterlerini anlatan mevcut editoryal premium kapak."
+    },
     {
       "slug": "mobil-odeme-nasil-acilir",
       "src": "/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-nasil-acilir-v2.webp",
