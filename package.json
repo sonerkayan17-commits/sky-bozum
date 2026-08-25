@@ -22,6 +22,7 @@
     "audit:rate-freshness": "node scripts/audit-rate-freshness.mjs",
     "audit:pwa": "node scripts/audit-pwa-readiness.mjs",
     "audit:member-control": "node scripts/audit-member-control-center.mjs",
+    "audit:product-comparison": "node scripts/audit-product-comparison.mjs",
     "audit:seo-release": "node scripts/audit-seo-release-readiness.mjs",
     "preflight:release": "node scripts/audit-release-gate.mjs",
     "audit:seo": "node scripts/audit-seo-intents.mjs",

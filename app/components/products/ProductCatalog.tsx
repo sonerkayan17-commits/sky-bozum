@@ -25,6 +25,12 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
   const selected = useMemo(() => product.packs.find((pack) => pack.id === selectedId) ?? product.packs[0], [product.packs, selectedId]);
   const selectedCatalog = selected ? catalog[selected.id] : undefined;
   const available = selectedCatalog?.active === true && selectedCatalog.stockCount > 0 && selectedCatalog.priceMinor !== null;
+  const comparisonPacks = useMemo(() => {
+    if (!selected) return [];
+    const selectedIndex = product.packs.findIndex((pack) => pack.id === selected.id);
+    const start = Math.max(0, Math.min(selectedIndex - 1, product.packs.length - 3));
+    return product.packs.slice(start, start + 3);
+  }, [product.packs, selected]);
 
   useEffect(() => {
     const storedPack = window.sessionStorage.getItem(`sky-product-selection:${product.slug}`);
@@ -206,6 +212,25 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
           </button>;
         })}
       </div>
+      {comparisonPacks.length > 1 ? <section className="product-pack-comparison" aria-labelledby="pack-comparison-title">
+        <div className="product-pack-comparison__heading">
+          <div><span>PAKET KARŞILAŞTIRMA</span><h3 id="pack-comparison-title">Seçiminizi yakın paketlerle kontrol edin</h3></div>
+          <small>Fiyat ve stok verisi canlı katalogdan alınır.</small>
+        </div>
+        <div className="product-pack-comparison__grid">
+          {comparisonPacks.map((pack) => {
+            const entry = catalog[pack.id];
+            const isSelected = pack.id === selected.id;
+            const inStock = entry?.active === true && entry.stockCount > 0 && entry.priceMinor !== null;
+            return <button key={pack.id} type="button" className={isSelected ? 'is-selected' : ''} onClick={() => { setSelectedId(pack.id); window.sessionStorage.setItem(`sky-product-selection:${product.slug}`, pack.id); setDelivered(null); setNotice(''); }} aria-pressed={isSelected}>
+              <span>{pack.label}</span>
+              <strong>{inStock ? formatStoreMoney(entry.priceMinor) : 'Fiyat bekleniyor'}</strong>
+              <small>{inStock ? `${entry.stockCount} adet stokta` : 'Stok yok'}</small>
+              <em>{isSelected ? 'Seçili paket' : 'Bu paketi seç'}</em>
+            </button>;
+          })}
+        </div>
+      </section> : null}
       <aside className="product-selection" aria-live="polite">
         <p className="product-kicker">Seçimin</p><h3>{selected?.label ?? product.shortName}</h3><p>{selected?.description ?? product.description}</p>
         <strong className="product-selection__price">{available ? formatStoreMoney(selectedCatalog?.priceMinor) : 'Fiyat stokla birlikte açılır'}</strong>
