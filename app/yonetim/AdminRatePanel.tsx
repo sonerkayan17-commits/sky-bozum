@@ -11,6 +11,7 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
   const [editing, setEditing] = useState<string | null>(null);
   const [form, setForm] = useState({ rate: '', maxRate: '', status: 'draft' as RateOverride['status'] });
   const [notice, setNotice] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!db) return;
@@ -41,21 +42,32 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
   }
 
   async function save() {
-    if (!db || !editing) return;
-    const rate = Number(form.rate.replace(',', '.'));
-    const maxRate = Number(form.maxRate.replace(',', '.'));
-    if (!Number.isFinite(rate) || !Number.isFinite(maxRate) || rate < 0 || maxRate < rate || maxRate > 100) {
-      setNotice('Oran aralığını doğru girin. Üst oran, alt orandan küçük olamaz.');
+    if (!db || !editing || saving) return;
+    const item = rateItems.find((entry) => entry.id === editing);
+    const rateText = form.rate.trim().replace(',', '.');
+    const maxRateText = form.maxRate.trim().replace(',', '.');
+    const rate = Number(rateText);
+    const maxRate = Number(maxRateText);
+    if (!rateText || !maxRateText || !Number.isFinite(rate) || !Number.isFinite(maxRate) || rate <= 0 || maxRate < rate || maxRate > 100) {
+      setNotice('Geçerli bir alt ve üst oran girin. Oran sıfırdan büyük olmalı; üst oran alt orandan küçük olamaz.');
       return;
     }
-    await setDoc(doc(db, 'rateOverrides', editing), { rate, maxRate, status: form.status, updatedBy: actorId, updatedAt: serverTimestamp() }, { merge: true });
-    await setDoc(doc(collection(db, 'contentAudit')), { action: `rate:${form.status}`, articleSlug: editing, actorId, createdAt: serverTimestamp() });
-    setEditing(null);
-    setNotice('Oran kaydı güncellendi.');
+    setSaving(true);
+    setNotice('');
+    try {
+      await setDoc(doc(db, 'rateOverrides', editing), { rate, maxRate, status: form.status, updatedBy: actorId, updatedAt: serverTimestamp() });
+      await setDoc(doc(collection(db, 'contentAudit')), { action: `rate:${form.status}`, articleSlug: editing, actorId, createdAt: serverTimestamp() });
+      setEditing(null);
+      setNotice(`${item?.name || 'Hizmet'} oranı ${form.status === 'published' ? 'yayına alındı' : 'taslak olarak kaydedildi'}: ${rate === maxRate ? `%${rate}` : `%${rate} – %${maxRate}`}.`);
+    } catch {
+      setNotice('Oran kaydedilemedi. Yönetici yetkisini ve bağlantıyı kontrol edip tekrar deneyin.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   return <section className="admin-section">
-    <div className="admin-section-head"><div><span>ORAN YÖNETİMİ</span><h2>Güncel oran kayıtları</h2></div><p>Oran değişiklikleri taslak olarak hazırlanır; yayına alınan kayıtlar tarih ve yönetici bilgisiyle saklanır.</p></div>
+    <div className="admin-section-head"><div><span>ORAN YÖNETİMİ</span><h2>Güncel oran kayıtları</h2></div><p>Oranları yalnızca bu bölümden değiştirin. “Yayında” seçilen kayıt ana sayfa ve hesaplama araçlarına otomatik yansır.</p></div>
     {notice && <p className="admin-success admin-notice">{notice}</p>}
     <div className="admin-table">
       {rows.map(({ item, override }) => <article key={item.id}>
@@ -73,7 +85,7 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
         <label>Alt oran (%)<input value={form.rate} onChange={(event) => setForm({ ...form, rate: event.target.value })} inputMode="decimal" required /></label>
         <label>Üst oran (%)<input value={form.maxRate} onChange={(event) => setForm({ ...form, maxRate: event.target.value })} inputMode="decimal" required /></label>
         <label>Yayın durumu<select value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value as RateOverride['status'] })}><option value="draft">Taslak</option><option value="published">Yayında</option></select></label>
-        <button className="admin-primary" type="submit">Oranı kaydet →</button>
+        <button className="admin-primary" type="submit" disabled={saving}>{saving ? 'Kaydediliyor…' : 'Oranı kaydet →'}</button>
       </form>
     </section></div>}
   </section>;

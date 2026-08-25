@@ -399,6 +399,8 @@ function editableElement(target: EventTarget | null) {
   const candidate = target.closest('img, h1, h2, h3, h4, p, li, strong, small, button, a');
   if (!(candidate instanceof HTMLElement)) return null;
   if (candidate.closest('.site-admin-dock, .site-inline-editor__dialog, .site-inline-editor__target, .site-inline-editor__image-target')) return null;
+  if (candidate.closest('[data-site-editor-protected="true"]')) return null;
+  if (!(candidate instanceof HTMLImageElement) && candidate.children.length > 0) return null;
   return candidate;
 }
 
@@ -406,12 +408,14 @@ function applyPageContent(item: StoredContent) {
   if (!item.selector || !item.value) return;
   const target = document.querySelector(item.selector);
   if (!(target instanceof HTMLElement)) return;
+  if (target.closest('[data-site-editor-protected="true"]')) return;
   if (item.type === 'dom-image' && target instanceof HTMLImageElement) {
     target.src = item.value;
     if (item.alt) target.alt = item.alt;
     return;
   }
   if (item.type !== 'dom-text') return;
+  if (target.children.length > 0) return;
   target.textContent = item.value;
   Object.assign(target.style, toCss(normalizeStyle(item.style)));
   if (target instanceof HTMLAnchorElement && item.href) target.href = item.href;

@@ -245,7 +245,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <aside className="hero-pro-rates" aria-label="Güncel taban oranlar">
+        <aside className="hero-pro-rates" aria-label="Güncel taban oranlar" data-site-editor-protected="true">
           <div className="hero-pro-rates-head">
             <div><small>TABAN ORAN ARALIKLARI</small><h2>Hizmetlere göre oranlar</h2></div>
             <span>İşlem öncesi teyit</span>

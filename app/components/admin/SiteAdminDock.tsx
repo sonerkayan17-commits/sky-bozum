@@ -40,6 +40,7 @@ export default function SiteAdminDock() {
         <span>{isEditMode ? 'Düzenlenebilir alanlar sayfa üzerinde işaretlenir.' : 'Sayfayı normal görünümde gezebilir veya düzenleme modunu açabilirsiniz.'}</span>
         <div className="site-admin-dock__actions">
           <button type="button" onClick={toggleEditMode}>{isEditMode ? 'Düzenlemeyi kapat' : 'Düzenlemeyi aç'}</button>
+          <Link href="/yonetim?view=rates">Oranları yönet</Link>
           <Link href="/yonetim">Yönetim merkezi</Link>
         </div>
       </div>

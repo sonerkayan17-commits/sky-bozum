@@ -32,6 +32,27 @@ if (!quickCalculator.includes('aria-describedby={amountHelpId}') || !quickCalcul
   findings.push('QuickCalculator amount input must reference helper/error text.');
 }
 
+const hero = read('app/components/Hero.tsx');
+const inlineEditor = read('app/components/admin/SiteInlineEditorAdmin.tsx');
+const adminDock = read('app/components/admin/SiteAdminDock.tsx');
+const publishedRates = read('app/components/personalization/usePublishedRates.ts');
+const ratePanel = read('app/yonetim/AdminRatePanel.tsx');
+if (!hero.includes('data-site-editor-protected="true"')) {
+  findings.push('Hero live rate panel must be protected from generic DOM content editing.');
+}
+if (!inlineEditor.includes("closest('[data-site-editor-protected=\"true\"]')") || !inlineEditor.includes('target.children.length > 0')) {
+  findings.push('Generic inline editor must reject protected and structural container targets.');
+}
+if (!adminDock.includes('/yonetim?view=rates')) {
+  findings.push('Admin dock must provide the dedicated rate-management route.');
+}
+if (!publishedRates.includes('delay: 1_500') || publishedRates.includes('90_000')) {
+  findings.push('Published rate overrides must reach public views without the old 90-second delay.');
+}
+if (!ratePanel.includes('rate <= 0') || !ratePanel.includes('disabled={saving}')) {
+  findings.push('Rate management must reject empty/zero values and prevent duplicate submissions.');
+}
+
 for (const file of walk(join(root, 'app'))) {
   if (!['.tsx', '.ts'].includes(extname(file))) continue;
   const rel = relative(root, file).replaceAll('\\', '/');
