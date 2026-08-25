@@ -48,3 +48,33 @@ export function getFirebaseClient() {
 
   return getFirebaseServices();
 }
+
+let appCheckStarted = false;
+
+/**
+ * Firebase App Check is deliberately started only in the browser and only
+ * when the production reCAPTCHA key has been configured. This keeps local
+ * development and preview deployments usable while allowing Firestore to
+ * receive App Check tokens as soon as enforcement is enabled in Firebase.
+ */
+export async function initializeFirebaseAppCheck() {
+  if (typeof window === 'undefined' || appCheckStarted) return appCheckStarted;
+
+  const siteKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_RECAPTCHA_KEY?.trim();
+  const app = getFirebaseApp();
+  if (!siteKey || !app) return false;
+
+  try {
+    const { initializeAppCheck, ReCaptchaV3Provider } = await import('firebase/app-check');
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(siteKey),
+      isTokenAutoRefreshEnabled: true,
+    });
+    appCheckStarted = true;
+    return true;
+  } catch {
+    // An unavailable App Check provider must not interrupt customer pages.
+    // Firebase enforcement remains the final authority for protected data.
+    return false;
+  }
+}

@@ -20,6 +20,7 @@
     "audit:reference-carousel": "node scripts/audit-reference-carousel.mjs",
     "audit:motion-preview": "node scripts/audit-motion-preview.mjs",
     "audit:rate-freshness": "node scripts/audit-rate-freshness.mjs",
+    "audit:pwa": "node scripts/audit-pwa-readiness.mjs",
     "audit:seo-release": "node scripts/audit-seo-release-readiness.mjs",
     "preflight:release": "node scripts/audit-release-gate.mjs",
     "audit:seo": "node scripts/audit-seo-intents.mjs",
