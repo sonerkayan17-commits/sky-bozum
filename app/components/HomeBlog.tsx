@@ -1,31 +1,24 @@
 import Image from 'next/image';
 import Link from './DeferredLink';
 
-const featuredGuide = {
-  slug: 'guvenilir-mobil-bozum-sitesi-nasil-secilir',
-  eyebrow: '2026 Güvenlik Rehberi',
-  title: 'En güvenilir mobil bozum sitesi nasıl seçilir?',
-  description: 'Alan adı, net ödeme, kod teslimi ve 10 temel güvenlik kontrolü.',
-} as const;
-
 const cards = [
   {
-    slug: 'mobil-odeme-bozdurmada-hiz-ve-guven',
-    eyebrow: 'İşlem Süresi ve Güven',
-    title: 'Mobil bozum ne kadar sürer?',
-    description: 'Ürün uygunluğu, yazılı net tutar, kod kontrolü ve banka aktarımının süreyi nasıl etkilediğini görün.',
-    tags: ['Hız', 'Kod kontrolü', 'Ödeme kaydı'],
-    cover: '/images/bilgi-merkezi/editorial-covers-v46/bozum-talebi-guvenli-akis.webp',
-    coverAlt: 'Mobil bozum işleminde uygunluk, kod kontrolü ve ödeme adımlarını gösteren rehber kapağı',
+    slug: 'mobil-odeme-nasil-acilir',
+    eyebrow: 'Operatör Rehberi',
+    title: 'Mobil Ödeme Rehberi',
+    description: 'Limit, kullanım ve güvenli işlem adımlarını tek rehberde öğrenin.',
+    tags: ['Turkcell', 'Türk Telekom', 'Vodafone'],
+    cover: '/blog-covers/operatorler-premium.svg',
+    coverAlt: 'Turkcell, Türk Telekom ve Vodafone premium marka kompozisyonu',
   },
   {
-    slug: 'mobil-odeme-bozdurma-dolandiriciligi-sonrasi-ne-yapilmali',
-    eyebrow: 'Acil Güvenlik Rehberi',
-    title: 'Dolandırıcılık şüphesinde ne yapılmalı?',
-    description: 'Yeni kaybı durdurun; görüşme, banka ve kod kayıtlarını koruyup doğru resmî başvuru sırasına geçin.',
-    tags: ['Kanıtları koru', 'Hesabı güvene al', 'Resmî bildirim'],
-    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
-    coverAlt: 'Mobil bozum dolandırıcılığı şüphesinde kanıt ve hesap güvenliği kontrolleri',
+    slug: 'dijital-kod-hediye-karti-rehberi',
+    eyebrow: 'Dijital Kod Rehberi',
+    title: 'Dijital Kod Rehberi',
+    description: 'Kod teslimi, kontrol süreci ve ödeme adımlarını güvenle takip edin.',
+    tags: ['iTunes / Apple', 'Razer Gold', 'Steam'],
+    cover: '/blog-covers/dijital-kodlar-premium.svg',
+    coverAlt: 'Apple, Razer Gold ve Steam premium marka kompozisyonu',
   },
 ] as const;
 
@@ -53,19 +46,6 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
             <Link href="/bilgi-merkezi" className="group/all inline-flex shrink-0 items-center gap-2 rounded-full border border-[#f1c43d]/15 bg-[#f1c43d]/[0.055] px-3 py-1.5 text-[10px] font-black text-[#f1c43d] transition hover:border-[#f1c43d]/30 hover:bg-[#f1c43d]/[0.09]">Tüm rehberler <span className="transition group-hover/all:translate-x-0.5">→</span></Link>
           </div>
 
-          <Link
-            href={`/bilgi-merkezi/${featuredGuide.slug}`}
-            className="group/featured mb-3 grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-[15px] border border-rose-400/20 bg-[linear-gradient(105deg,rgba(244,63,114,.12),rgba(245,190,54,.045)_68%,rgba(255,255,255,.025))] px-3.5 py-2.5 transition hover:border-rose-300/35 hover:bg-[linear-gradient(105deg,rgba(244,63,114,.16),rgba(245,190,54,.065)_68%,rgba(255,255,255,.035))]"
-            aria-label={`${featuredGuide.title} rehberini okuyun`}
-          >
-            <span className="min-w-0">
-              <span className="block text-[8px] font-black uppercase tracking-[.17em] text-rose-300/85">{featuredGuide.eyebrow}</span>
-              <strong className="mt-0.5 block truncate text-[12px] font-black text-white sm:text-[13px]">{featuredGuide.title}</strong>
-              <span className="mt-0.5 hidden truncate text-[9px] text-white/48 sm:block">{featuredGuide.description}</span>
-            </span>
-            <span className="inline-flex items-center gap-1 text-[9px] font-black text-[#f1c43d]">Öne çıkan <b className="transition group-hover/featured:translate-x-0.5">→</b></span>
-          </Link>
-
           <div className={`${sidebar ? 'grid min-h-0 flex-1 grid-rows-2 gap-3' : 'grid gap-3 md:grid-cols-2'} home-blog-grid`}>
             {cards.map((card) => (
               <Link
@@ -81,7 +61,7 @@ export default function HomeBlog({ compact = false, sidebar = false }: HomeBlogP
                     alt={card.coverAlt}
                     fill
                     sizes={sidebar ? '(max-width: 639px) 94px, 260px' : '(min-width: 768px) 160px, 100vw'}
-                    className="object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
+                    className="object-contain p-3.5 transition duration-700 ease-out group-hover:scale-[1.018]"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/10" />
                 </div>

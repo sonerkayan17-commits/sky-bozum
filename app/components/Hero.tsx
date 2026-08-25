@@ -6,7 +6,6 @@ import Link from './DeferredLink';
 import { useSiteSettings } from './SiteSettingsProvider';
 import { InlineEditableImage, InlineEditableText } from './admin/SiteInlineEditor';
 import usePublishedRates from './personalization/usePublishedRates';
-import { rateFreshnessNotice } from '../lib/rates';
 import { prefersReducedMotion } from '../lib/motion';
 import { independentPurchaseGuideLabel, isIndependentPurchaseGuide } from '../lib/independentPurchaseGuides';
 import CredibilityBand from './CredibilityBand';
@@ -274,7 +273,6 @@ export default function Hero() {
               </Link>
             ))}
           </div>
-          <p className="hero-pro-disclaimer"><span>i</span> Operatör ve cüzdan satırları bağımsız satın alma rehberidir. {rateFreshnessNotice || 'Kod oranları işlem öncesinde yazılı olarak paylaşılır.'}</p>
           <Link href="/hizmetler" className="hero-pro-rates-cta">Tüm rehber ve hizmet detayları <span>→</span></Link>
         </aside>
 
