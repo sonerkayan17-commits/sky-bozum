@@ -174,9 +174,13 @@ function auditCategory(action: string): Exclude<AuditFilter, 'all'> {
 export default function AdminConsole({
   articleCount,
   rateCount,
+  referenceCount,
+  latestReferenceAt,
 }: {
   articleCount: number;
   rateCount: number;
+  referenceCount: number;
+  latestReferenceAt: string;
 }) {
   const [firebaseClient, setFirebaseClient] = useState(() =>
     getFirebaseClient(),
@@ -774,7 +778,7 @@ export default function AdminConsole({
           </section>
         )}
         {view === "settings" && <SiteSettingsPanel db={db} actorId={user.uid} />}
-        {view === "release" && <ReleaseReadinessPanel db={db} actorId={user.uid} />}
+        {view === "release" && <ReleaseReadinessPanel db={db} actorId={user.uid} referenceCount={referenceCount} latestReferenceAt={latestReferenceAt} />}
         {view === "backup" && <AdminBackupPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}

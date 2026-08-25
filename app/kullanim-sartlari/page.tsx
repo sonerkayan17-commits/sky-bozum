@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { siteConfig } from '../lib/site-config';
 
 export const metadata: Metadata = { title: 'Kullanım Şartları', description: 'Sky Bozum oran, ürün uygunluğu, doğrulama ve güvenli kullanım koşulları.', alternates: { canonical: '/kullanim-sartlari' } };
 const sections = [
@@ -7,5 +8,7 @@ const sections = [
   ['Doğrulama süreci', 'İşlem güvenliği için satın alma kaydı veya ürün kaynağını gösteren bilgi talep edilebilir. Şifre ve tek kullanımlık hesap doğrulama kodu talep edilmez.'],
   ['Ödeme bilgileri', 'Kullanıcı alıcı adı ve IBAN gibi bilgileri doğru iletmekle sorumludur. Yanlış bilgi nedeniyle oluşan gecikmeler yeniden kontrol gerektirebilir.'],
   ['Güvenli kullanım', 'Kodlar üçüncü kişilerle veya birden fazla alıcıyla aynı anda paylaşılmamalıdır. Şüpheli durumda işlem durdurulmalı ve resmi iletişim kanalı doğrulanmalıdır.'],
+  ['Bağımsız hizmet modeli', 'Sky Bozum; operatörlerin veya dijital cüzdan markalarının temsilcisi değildir ve bu markaların bakiyesini doğrudan satın aldığını vaat etmez. İlgili sayfalar, desteklenen mağazalardan dijital ürün edinme ve kullanılmamış kodu değerlendirme adımlarını açıklayan bağımsız rehberlerdir.'],
+  ['İptal, uyuşmazlık ve iletişim', `İşlem tamamlanmadan önce iptal talebi resmî destek kanalından iletilmelidir. Teslim edilmiş veya kullanılmış dijital kodlarda iptal imkânı ürünün doğrulanma durumuna göre değerlendirilir. Yazılı kayıt için ${siteConfig.email} adresini kullanın ve yalnızca ${siteConfig.domain} alanındaki bağlantılara güvenin.`],
 ];
 export default function Page(){return <main className="min-h-screen bg-[#090b10] text-white"><header className="border-b border-white/8 py-14"><div className="content-shell max-w-4xl"><p className="text-xs font-extrabold uppercase tracking-[0.18em] text-rose-400">Yasal bilgilendirme</p><h1 className="mt-4 text-4xl font-black sm:text-6xl">Kullanım Şartları</h1><p className="mt-4 text-sm text-slate-500">Son güncelleme: 13 Ağustos 2026</p></div></header><article className="content-shell max-w-4xl py-12 sm:py-16"><div className="premium-card p-6 sm:p-9"><p className="rounded-xl border border-white/8 bg-white/[.025] p-4 text-sm leading-7 text-slate-300">Bu şartlar, Sky Bozum web sitesindeki bilgi, hesaplama araçları ve iletişim kanallarının kullanım esaslarını açıklar.</p>{sections.map(([title,text],index)=><section key={title} className="mt-8 border-t border-white/8 pt-8"><h2 className="text-xl font-black"><span className="mr-3 text-xs text-rose-400">0{index+1}</span>{title}</h2><p className="mt-3 text-sm leading-8 text-slate-300">{text}</p></section>)}</div></article></main>}

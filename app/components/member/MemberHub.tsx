@@ -12,6 +12,7 @@ import {
   type Auth,
   type User,
 } from 'firebase/auth';
+import { authActionSettings } from '../../lib/auth-actions';
 import {
   collection,
   doc,
@@ -354,7 +355,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
     setAccountAction('verify');
     try {
       user!.auth.languageCode = 'tr';
-      await sendEmailVerification(user!);
+      await sendEmailVerification(user!, authActionSettings('/hesabim'));
       setNotice(
         'Doğrulama e-postası gönderildi. Gelen kutunuzu ve spam klasörünü kontrol edin.',
       );
@@ -372,7 +373,7 @@ export default function MemberHub({ view }: { view: MemberView }) {
     setAccountAction('reset');
     try {
       user.auth.languageCode = 'tr';
-      await sendPasswordResetEmail(user.auth, user.email);
+      await sendPasswordResetEmail(user.auth, user.email, authActionSettings('/hesabim'));
       setNotice('Parola yenileme bağlantısı e-posta adresinize gönderildi.');
     } catch {
       setNotice(

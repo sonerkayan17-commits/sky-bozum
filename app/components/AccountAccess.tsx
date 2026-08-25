@@ -6,6 +6,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import type { User } from 'firebase/auth';
 import { findReferrerId, getReferralCode } from '../lib/referrals';
 import { trackConversion } from '../lib/conversion';
+import { authActionSettings } from '../lib/auth-actions';
 import './account-access.css';
 
 type FirebaseRuntime = {
@@ -108,7 +109,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
         const result = await signInWithEmailAndPassword(auth, email.trim(), password);
         await result.user.reload();
         if (!result.user.emailVerified) {
-          await sendEmailVerification(result.user).catch(() => undefined);
+          await sendEmailVerification(result.user, authActionSettings()).catch(() => undefined);
           await signOut(auth);
           setStatus('E-posta doğrulamanız bekleniyor. Gelen kutunuzu kontrol edin; yeni doğrulama bağlantısı da gönderildi.');
           return;
@@ -127,7 +128,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(result.user, { displayName: name.trim() });
       await saveMember(result.user, name, phone);
-      await sendEmailVerification(result.user);
+      await sendEmailVerification(result.user, authActionSettings());
       await signOut(auth);
       setStatus('Kaydınız alındı. E-posta adresinize doğrulama bağlantısı gönderdik. Bağlantıyı onayladıktan sonra giriş yapabilirsiniz; telefonunuza kod gönderilmez.');
       setName(''); setPhone(''); setEmail(''); setPassword('');
@@ -169,7 +170,7 @@ export default function AccountAccess({ mode }: { mode: 'login' | 'register' }) 
       if (!auth) { setError('Güvenli bağlantı hazırlanamadı.'); return; }
       auth.languageCode = 'tr';
       trackConversion('password_reset_requested', { method: 'email' });
-      await sendPasswordResetEmail(auth, email.trim());
+      await sendPasswordResetEmail(auth, email.trim(), authActionSettings());
       setStatus('Parola yenileme bağlantısı e-posta adresinize gönderildi.');
     }
     catch { setError('Parola yenileme e-postası gönderilemedi. Adresi kontrol edin.'); }

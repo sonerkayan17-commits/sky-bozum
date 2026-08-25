@@ -3,6 +3,7 @@
 import { addDoc, collection, doc, onSnapshot, serverTimestamp, setDoc, type Firestore } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';
 import './release-readiness.css';
+import './release-automatic-checks.css';
 
 const checklist = [
   { id: 'emailFlowTested', title: 'E-posta akışı test edildi', detail: 'Yeni kayıt ve parola yenileme e-postasını gerçek bir adresle, Gelen ve Spam klasörlerinde kontrol ettim.' },
@@ -45,7 +46,7 @@ function readChecks(value: unknown): Checks {
   return checklist.reduce((all, item) => ({ ...all, [item.id]: (value as Record<string, unknown>)[item.id] === true }), { ...emptyChecks });
 }
 
-export default function ReleaseReadinessPanel({ db, actorId }: { db: Firestore | null; actorId: string }) {
+export default function ReleaseReadinessPanel({ db, actorId, referenceCount, latestReferenceAt }: { db: Firestore | null; actorId: string; referenceCount: number; latestReferenceAt: string }) {
   const [checks, setChecks] = useState<Checks>(emptyChecks);
   const [notes, setNotes] = useState('');
   const [draftNotes, setDraftNotes] = useState('');
@@ -56,6 +57,7 @@ export default function ReleaseReadinessPanel({ db, actorId }: { db: Firestore |
   const [draftArticles, setDraftArticles] = useState(0);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState('');
+  const [referenceCheckedAt] = useState(() => Date.now());
 
   useEffect(() => {
     if (!db) return;
@@ -83,6 +85,8 @@ export default function ReleaseReadinessPanel({ db, actorId }: { db: Firestore |
     { id: 'drafts', value: draftArticles, label: 'yayın kararı bekleyen taslak', href: '/yonetim?view=content', tone: draftArticles ? 'attention' : 'neutral' },
   ], [commentPending, draftArticles, memberPending, newOperations, openReports]);
   const completed = checklist.filter((item) => checks[item.id]).length;
+  const referenceAgeDays = latestReferenceAt ? Math.max(0, Math.floor((referenceCheckedAt - new Date(`${latestReferenceAt}T12:00:00+03:00`).getTime()) / 86_400_000)) : null;
+  const referenceFreshness = referenceAgeDays === null ? 'Kayıt yok' : referenceAgeDays <= 180 ? 'Güncel' : 'Yenileme gerekli';
 
   async function save(nextChecks = checks, nextNotes = draftNotes, message = 'Yayın kontrolü kaydedildi.') {
     if (!db) return;
@@ -118,6 +122,10 @@ export default function ReleaseReadinessPanel({ db, actorId }: { db: Firestore |
     <section className="release-manual-checks">
       <header><div><span>DOĞRULAMA LİSTESİ</span><h3>{completed}/{checklist.length} adım tamamlandı</h3></div><p>Buradaki işaretler gerçek testin yerini tutmaz; yaptığınız kontrolün kalıcı kaydıdır.</p></header>
       <div>{checklist.map((item) => <label key={item.id}><input type="checkbox" checked={checks[item.id]} disabled={saving} onChange={() => toggle(item.id)} /><span><b>{item.title}</b><small>{item.detail}</small></span></label>)}</div>
+    </section>
+    <section className="release-automatic-checks" aria-label="Otomatik yayın gerçekleri">
+      <header><div><span>OTOMATİK KONTROLLER</span><h3>Koddan doğrulanan yayın gerçekleri</h3></div><small>Elle işaretlenmez; her yeni sürümde yeniden hesaplanır.</small></header>
+      <div><article><strong>{referenceCount}</strong><span>doğrulanmış referans</span></article><article className={referenceAgeDays !== null && referenceAgeDays > 180 ? 'needs-attention' : ''}><strong>{referenceFreshness}</strong><span>{latestReferenceAt ? `Son kayıt: ${new Date(`${latestReferenceAt}T12:00:00`).toLocaleDateString('tr-TR')}` : 'Yayınlanmış kayıt bulunamadı'}</span></article><article><strong>bozumcu.net</strong><span>E-posta dönüşleri ana alana sabit</span></article></div>
     </section>
     <label className="release-notes">Yayın notları ve sorumlular<textarea value={draftNotes} maxLength={1000} rows={4} onChange={(event) => setDraftNotes(event.target.value)} placeholder="Örn. E-posta testi 15 Ağustos'ta yapıldı; yedek sorumlusu ..." /><small>{draftNotes.length}/1000 · Son kaydedilen not: {notes ? 'var' : 'yok'}</small></label>
     <button className="admin-primary" type="button" disabled={saving} onClick={() => void save()}>{saving ? 'Kaydediliyor…' : 'Yayın kontrolünü kaydet →'}</button>
