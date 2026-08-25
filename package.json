@@ -13,6 +13,7 @@
     "audit:security-readiness": "node scripts/audit-security-readiness.mjs",
     "audit:code-sales": "node scripts/audit-code-sale-flow.mjs",
     "audit:forum-solutions": "node scripts/audit-forum-solutions.mjs",
+    "audit:forum-guidance": "node scripts/audit-forum-guidance.mjs",
     "audit:critical-flows": "node scripts/audit-critical-flows.mjs",
     "audit:ui-resilience": "node scripts/audit-ui-resilience.mjs",
     "audit:external-integrations": "node scripts/audit-external-integrations.mjs",
