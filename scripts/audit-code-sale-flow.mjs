@@ -8,6 +8,7 @@ const files = {
   member: readFileSync('app/components/member/MemberOperations.tsx', 'utf8'),
   wallet: readFileSync('app/components/member/MemberWallet.tsx', 'utf8'),
   inventory: readFileSync('app/yonetim/ProductInventoryPanel.tsx', 'utf8'),
+  catalog: readFileSync('app/components/products/ProductCatalog.tsx', 'utf8'),
 };
 
 const checks = [
@@ -30,6 +31,7 @@ const checks = [
   ['Toplu stok girişi benzersiz kodları önceden ayıklıyor', files.inventory.includes('new Set(codes.split') && files.inventory.includes('preparedCodes.join')],
   ['Toplu stok işlemi parti sınırı uygular', files.inventory.includes('preparedCodes.length > 100')],
   ['Stok güncellemesi yönetim günlüğüne kaydolur', files.inventory.includes("action: 'stock:batch-updated'")],
+  ['Stok bekleyen üyeye site içi bildirim gönderilir', files.inventory.includes("type: 'stock_available'") && files.catalog.includes('requestStockAlert')],
 ];
 
 let failed = 0;

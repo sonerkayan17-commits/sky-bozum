@@ -1,7 +1,7 @@
 'use client';
 
 import type { User } from 'firebase/auth';
-import { collection, doc, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../lib/firebase';
 import { products } from '../lib/products';
@@ -87,7 +87,19 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
         transaction.set(doc(collection(db, 'contentAudit')), { action: 'stock:batch-updated', articleSlug: catalogKey, actorId: user.uid, addedCodes: missing.length, updatedAt: timestamp, createdAt: timestamp });
         return missing.length;
       });
-      setNotice(`${added} yeni kod eklendi${encrypted.length - added ? ` · ${encrypted.length - added} tekrar atlandı` : ''}${duplicateCodeCount ? ` · ${duplicateCodeCount} yinelenen satır yüklenmeden temizlendi` : ''}.`);
+      let notified = 0;
+      if (added > 0) {
+        const alerts = await getDocs(query(collection(db, 'stockAlerts'), where('catalogKey', '==', catalogKey)));
+        const recipients = [...new Set(alerts.docs.map((entry) => String(entry.data().userId || '')).filter(Boolean))];
+        await Promise.all(recipients.map((receiverId) => addDoc(collection(db, 'notifications'), {
+          senderId: user.uid, receiverId, type: 'stock_available',
+          text: `${product.shortName} · ${resolvedPack.label} yeniden stokta.`,
+          href: `/urunler/${productSlug}#paketler`, read: false, createdAt: serverTimestamp(),
+        })));
+        notified = recipients.length;
+        await Promise.all(alerts.docs.map((entry) => deleteDoc(entry.ref)));
+      }
+      setNotice(`${added} yeni kod eklendi${encrypted.length - added ? ` · ${encrypted.length - added} tekrar atlandı` : ''}${duplicateCodeCount ? ` · ${duplicateCodeCount} yinelenen satır yüklenmeden temizlendi` : ''}${notified ? ` · ${notified} üyeye stok bildirimi gönderildi` : ''}.`);
       setCodes('');
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Stok kaydedilemedi.'); }
     finally { setBusy(false); }

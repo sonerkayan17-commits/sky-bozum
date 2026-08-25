@@ -535,6 +535,31 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /stockAlerts/{alertId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if verifiedMember()
+        && request.resource.data.keys().hasOnly(["userId", "catalogKey", "productSlug", "packId", "productName", "packLabel", "createdAt"])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.catalogKey is string
+        && request.resource.data.catalogKey.size() >= 3
+        && request.resource.data.catalogKey.size() <= 180
+        && request.resource.data.productSlug is string
+        && request.resource.data.productSlug.size() >= 2
+        && request.resource.data.productSlug.size() <= 80
+        && request.resource.data.packId is string
+        && request.resource.data.packId.size() >= 1
+        && request.resource.data.packId.size() <= 80
+        && request.resource.data.productName is string
+        && request.resource.data.productName.size() >= 1
+        && request.resource.data.productName.size() <= 140
+        && request.resource.data.packLabel is string
+        && request.resource.data.packLabel.size() >= 1
+        && request.resource.data.packLabel.size() <= 100
+        && request.resource.data.createdAt == request.time;
+      allow update: if false;
+      allow delete: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+    }
+
     match /profileLikes/{likeId} {
       allow read: if true;
       allow create: if verifiedMember() && capabilityAllowed("community") && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.createdAt == request.time;
@@ -621,7 +646,7 @@ service cloud.firestore {
 
     match /notifications/{notificationId} {
       allow read: if signedIn() && resource.data.receiverId == request.auth.uid;
-      allow create: if verifiedMember()
+      allow create: if (isAdmin() || verifiedMember())
         && request.resource.data.senderId == request.auth.uid
         && request.resource.data.receiverId != request.auth.uid
         && request.resource.data.receiverId is string

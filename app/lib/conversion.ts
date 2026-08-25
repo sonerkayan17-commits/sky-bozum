@@ -7,7 +7,8 @@ export type ConversionEvent =
   | 'operation_request_started'
   | 'trust_center_opened'
   | 'checklist_completed'
-  | 'service_to_guide_clicked';
+  | 'service_to_guide_clicked'
+  | 'stock_alert_requested';
 
 const allowedEvents = new Set<ConversionEvent>([
   'calculator_completed',
@@ -19,6 +20,7 @@ const allowedEvents = new Set<ConversionEvent>([
   'trust_center_opened',
   'checklist_completed',
   'service_to_guide_clicked',
+  'stock_alert_requested',
 ]);
 
 function hasAnalyticsConsent() {

@@ -8,6 +8,7 @@ import { formatStoreMoney, storePackKey, type StoreCatalogEntry, type StoreOrder
 import type { ProductItem } from '../../lib/products';
 import ProductCover from './ProductCover';
 import { deferClientTask } from '../../lib/defer-client-task';
+import { trackConversion } from '../../lib/conversion';
 
 export default function ProductCatalog({ product }: { product: ProductItem }) {
   const router = useRouter();
@@ -19,6 +20,8 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
   const [notice, setNotice] = useState('');
   const [delivered, setDelivered] = useState<StoreOrder | null>(null);
   const [copied, setCopied] = useState(false);
+  const [stockAlertActive, setStockAlertActive] = useState(false);
+  const [alertingStock, setAlertingStock] = useState(false);
   const selected = useMemo(() => product.packs.find((pack) => pack.id === selectedId) ?? product.packs[0], [product.packs, selectedId]);
   const selectedCatalog = selected ? catalog[selected.id] : undefined;
   const available = selectedCatalog?.active === true && selectedCatalog.stockCount > 0 && selectedCatalog.priceMinor !== null;
@@ -61,6 +64,52 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
     }, { delay: 1_000, eager: knownSession, intentEvents: true });
     return () => { active = false; cancel(); unsubscribe(); };
   }, []);
+
+  useEffect(() => {
+    if (!selected || !user) { setStockAlertActive(false); return; }
+    let active = true;
+    let unsubscribe = () => {};
+    const cancel = deferClientTask(async () => {
+      const [{ getFirebaseClient }, { doc, onSnapshot }] = await Promise.all([
+        import('../../lib/firebase'),
+        import('firebase/firestore'),
+      ]);
+      if (!active) return;
+      const { db } = getFirebaseClient();
+      if (!db) return;
+      unsubscribe = onSnapshot(doc(db, 'stockAlerts', `${user.uid}_${storePackKey(product.slug, selected.id)}`), (snapshot) => {
+        if (active) setStockAlertActive(snapshot.exists());
+      }, () => active && setStockAlertActive(false));
+    }, { delay: 700, intentEvents: true });
+    return () => { active = false; cancel(); unsubscribe(); };
+  }, [product.slug, selected, user]);
+
+  async function requestStockAlert() {
+    if (!selected || alertingStock) return;
+    if (!user) { router.push(`/giris?next=${encodeURIComponent(`/urunler/${product.slug}`)}`); return; }
+    setAlertingStock(true);
+    setNotice('');
+    try {
+      const [{ getFirebaseClient }, { doc, serverTimestamp, setDoc }] = await Promise.all([
+        import('../../lib/firebase'),
+        import('firebase/firestore'),
+      ]);
+      const { db } = getFirebaseClient();
+      if (!db) throw new Error('Bildirim bağlantısı kurulamadı.');
+      const catalogKey = storePackKey(product.slug, selected.id);
+      await setDoc(doc(db, 'stockAlerts', `${user.uid}_${catalogKey}`), {
+        userId: user.uid, catalogKey, productSlug: product.slug, packId: selected.id,
+        productName: product.shortName, packLabel: selected.label, createdAt: serverTimestamp(),
+      });
+      setStockAlertActive(true);
+      trackConversion('stock_alert_requested', { product: product.slug, pack: selected.id });
+      setNotice('Stok bildirimi kaydedildi. Bu paket yeniden satışa açıldığında bildirim merkezinizde göreceksiniz.');
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Stok bildirimi kaydedilemedi.');
+    } finally {
+      setAlertingStock(false);
+    }
+  }
 
   async function purchase() {
     if (!selected || buying) return;
@@ -159,6 +208,7 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
         <p className="product-selection__help">{available ? 'Satın al dediğinizde ücret bakiyenizden tek seferde düşülür ve kullanılmamış kod yalnız size teslim edilir.' : 'Satın alma şu an kapalıdır. Yönetim stok ve fiyat eklediğinde buton otomatik açılır.'}</p>
         <div className="product-selection__actions">
           <button type="button" className={available ? 'is-enabled' : ''} disabled={!available || buying} onClick={() => void purchase()}>{buying ? 'Güvenli işlem yapılıyor…' : !user && available ? 'Giriş yap ve satın al' : available ? 'Bakiyemden satın al' : 'Satın alma kapalı'}</button>
+          {!available ? <button type="button" className="product-selection__stock-alert" disabled={alertingStock || stockAlertActive} onClick={() => void requestStockAlert()}>{stockAlertActive ? 'Stok bildirimi açık' : alertingStock ? 'Kaydediliyor…' : 'Stok gelince bildir'}</button> : null}
           <Link href="/hesabim/siparisler" className="product-selection__orders">Siparişlerim <span aria-hidden="true">→</span></Link>
           {product.slug === 'razer-gold' ? <Link href="/hesabim/talepler?service=razer-gold-tl" className="product-selection__sell">Elindeki Razer kodunu sat <span aria-hidden="true">→</span></Link> : null}
           <Link href="/iletisim" className="product-selection__support">Destek al <span aria-hidden="true">→</span></Link>
