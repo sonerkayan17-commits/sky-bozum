@@ -13,3 +13,9 @@
   color:#fff;
   outline:1px solid rgba(243,109,144,.65);
 }
+
+.forum-groups article{position:relative;overflow:hidden}
+.forum-group-hitarea{position:absolute;inset:0;z-index:0;border-radius:inherit}
+.forum-groups article>:not(.forum-group-hitarea){position:relative;z-index:1}
+.forum-groups article:hover{border-color:rgba(243,109,144,.42);background:#12151d}
+.forum-group-hitarea:focus-visible{outline:2px solid #f36d90;outline-offset:-3px}

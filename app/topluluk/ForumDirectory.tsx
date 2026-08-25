@@ -58,6 +58,7 @@ export default function ForumDirectory() {
       {forumSections.map((section) => {
         const latestTopic = getForumStarterTopic(section.slug, slugifyForumCategory(section.categories[0]));
         return <article key={section.slug} id={section.slug}>
+          <Link className="forum-group-hitarea" href={forumRoutes.section(section.slug)} aria-label={`${section.title} forumuna git`} />
           <div className="forum-group-icon" aria-hidden="true">{section.icon}</div>
           <div className="forum-group-main">
             <Link href={forumRoutes.section(section.slug)}><h2>{section.title}</h2></Link>
