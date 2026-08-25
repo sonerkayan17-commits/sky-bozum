@@ -19,8 +19,8 @@ function scheduleMobileSelection() {
   mobileSelectionFrame = window.requestAnimationFrame(() => {
     mobileSelectionFrame = 0;
     const selected = [...mobileVideoCandidates.values()]
-      .filter((candidate) => candidate.ratio >= .62)
-      .sort((left, right) => right.ratio - left.ratio || left.centerDistance - right.centerDistance)[0];
+      .filter((candidate) => candidate.ratio >= .24)
+      .sort((left, right) => left.centerDistance - right.centerDistance || right.ratio - left.ratio)[0];
     selected?.activate();
   });
 }
@@ -46,18 +46,14 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
     const mayAutoPlayInView = usesInViewPlayback && !prefersReducedMotion && !connection?.saveData;
     let holdTimer: number | null = null;
     let pointerStart = { x: 0, y: 0 };
-    let pointerMoved = false;
     let suppressNextClick = false;
-    let touchActivated = false;
 
     const start = () => {
       setSourceEnabled(true);
       window.dispatchEvent(new CustomEvent(PRODUCT_VIDEO_ACTIVE_EVENT, { detail: playbackId }));
-      touchActivated = true;
       setActive(true);
     };
     const stop = () => {
-      touchActivated = false;
       setActive(false);
     };
     const stopAfterFocus = (event: FocusEvent) => {
@@ -78,31 +74,23 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
       if (!usesInViewPlayback || event.pointerType === 'mouse') return;
       lastMobileInteractionAt = Date.now();
       pointerStart = { x: event.clientX, y: event.clientY };
-      pointerMoved = false;
       clearHoldTimer();
       holdTimer = window.setTimeout(() => {
         suppressNextClick = true;
         start();
-      }, 1000);
+      }, 500);
     };
     const handlePointerMove = (event: PointerEvent) => {
       if (!usesInViewPlayback || event.pointerType === 'mouse') return;
       if (Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 10) {
-        pointerMoved = true;
         clearHoldTimer();
       }
     };
     const handlePointerUp = (event: PointerEvent) => {
       if (!usesInViewPlayback || event.pointerType === 'mouse') return;
       clearHoldTimer();
-      // Kaydırmada son temas edilen kartı aktif tut. Kısa dokunuşta ilk temas
-      // videoyu oynatır; aynı karta ikinci dokunuş ürün bağlantısını açar.
-      if (pointerMoved) {
-        start();
-      } else if (!touchActivated) {
-        suppressNextClick = true;
-        start();
-      }
+      // Kısa dokunuş ürün bağlantısını açar. Yalnızca yarım saniyelik bilinçli
+      // basılı tutma videoyu seçer ve ardından gelen tıklamayı tüketir.
     };
     const handlePointerCancel = () => clearHoldTimer();
     const handleClickCapture = (event: MouseEvent) => {
@@ -141,7 +129,10 @@ export default function ProductCoverVideo({ src, objectPosition = '50% 50%' }: P
           const bounds = entry.boundingClientRect;
           mobileVideoCandidates.set(playbackId, {
             ratio: entry.isIntersecting ? entry.intersectionRatio : 0,
-            centerDistance: Math.abs(bounds.left + bounds.width / 2 - window.innerWidth / 2),
+          centerDistance: Math.hypot(
+            bounds.left + bounds.width / 2 - window.innerWidth / 2,
+            bounds.top + bounds.height / 2 - window.innerHeight / 2,
+          ),
             activate: start,
           });
           if (!entry.isIntersecting || entry.intersectionRatio < 0.24) stop();

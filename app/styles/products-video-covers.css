@@ -165,7 +165,7 @@
   z-index: 2;
   background: linear-gradient(118deg, transparent 26%, rgba(255, 255, 255, .13) 46%, transparent 64%);
   transform: translateX(-135%);
-  animation: product-brand-sweep 8s ease-in-out infinite;
+  animation: product-brand-sweep 6s ease-in-out infinite;
 }
 
 .products-page .product-cover__brand-plate {
