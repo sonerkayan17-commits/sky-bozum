@@ -27,13 +27,14 @@ const typeStyles: Record<SearchItem['type'], string> = {
   Sayfa: 'border-violet-300/20 bg-violet-300/10 text-violet-200',
 };
 
-function dynamicSearch(items: SearchItem[], query: string, limit = 14) {
+function dynamicSearch(items: SearchItem[], query: string, limit = 14, preferredHrefs: ReadonlySet<string> = new Set()) {
   const normalized = query.trim().toLocaleLowerCase('tr-TR');
   const tokens = normalized.split(/\s+/).filter(Boolean);
   return items.map((item) => {
     const haystack = `${item.title} ${item.description} ${item.keywords.join(' ')}`.toLocaleLowerCase('tr-TR');
     const matches = tokens.filter((token) => haystack.includes(token)).length;
-    const score = (item.title.toLocaleLowerCase('tr-TR').startsWith(normalized) ? 8 : 0) + (haystack.includes(normalized) ? 4 : 0) + matches;
+    const relevance = (item.title.toLocaleLowerCase('tr-TR').startsWith(normalized) ? 8 : 0) + (haystack.includes(normalized) ? 4 : 0) + matches;
+    const score = relevance + (relevance > 0 && preferredHrefs.has(item.href) ? 1.5 : 0);
     return { item, score };
   }).filter((entry) => entry.score > 0).sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title, 'tr')).slice(0, limit).map((entry) => entry.item);
 }
@@ -102,9 +103,10 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
   }, [featuredItems, quickSearchItems, recentItems]);
   const hasQuery = Boolean(query.trim());
   const searchIsLoading = searchDataRequested && !searcher;
+  const preferredHrefs = useMemo(() => new Set(recentItems.map((item) => item.href)), [recentItems]);
   const results = useMemo<SearchItem[]>(
-    () => hasQuery ? (managedArticles ? dynamicSearch(availableItems, query, 14) : searcher?.(query, 14) ?? []) : defaultResults,
-    [availableItems, defaultResults, hasQuery, managedArticles, query, searcher],
+    () => hasQuery ? (managedArticles ? dynamicSearch(availableItems, query, 14, preferredHrefs) : searcher?.(query, 14) ?? []) : defaultResults,
+    [availableItems, defaultResults, hasQuery, managedArticles, preferredHrefs, query, searcher],
   );
   const groups = useMemo<SearchGroup[]>(() => {
     const toGroup = (id: string, label: string, items: SearchItem[]) => ({
@@ -257,7 +259,7 @@ export default function SiteSearch({ mode = 'desktop', onNavigate, autoFocus = f
         >
           <div className="flex items-center justify-between gap-4 px-3 pb-2 pt-1">
             <p className="text-[10px] font-black uppercase tracking-[.18em] text-slate-500">{hasQuery ? `“${query.trim()}” için sonuçlar` : settings.searchQuickAccessTitle}</p>
-            {!hasQuery && <span className="text-[10px] font-bold text-slate-600">{recentItems.length ? 'Bu cihazda kaydedilir' : 'Yazmaya başlayın'}</span>}
+            <span className="text-[10px] font-bold text-slate-600">{hasQuery && preferredHrefs.size ? 'Son ziyaretler yalnız eşit sonuçlarda öne alınır' : recentItems.length ? 'Bu cihazda kaydedilir' : 'Yazmaya başlayın'}</span>
           </div>
 
           {searchIsLoading ? (
