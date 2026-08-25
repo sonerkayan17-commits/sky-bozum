@@ -638,6 +638,55 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Sipariş veya işlem üzerinde açılan kayıt, finansal belgeyi doğrudan
+    // değiştirmez. Üye yalnız kendi kaydına bağlı tekil bir inceleme talebi
+    // oluşturabilir; sonucu yalnız yetkili ekip kapatabilir.
+    match /commerceCases/{caseId} {
+      allow read: if canOperate() || (signedIn() && resource.data.memberId == request.auth.uid);
+      allow create: if verifiedMember()
+        && request.resource.data.memberId == request.auth.uid
+        && caseId == request.auth.uid + "_" + request.resource.data.targetType + "_" + request.resource.data.targetId + "_" + request.resource.data.kind
+        && request.resource.data.keys().hasOnly(["memberId", "targetType", "targetId", "kind", "reason", "status", "resolution", "createdAt", "updatedAt"])
+        && request.resource.data.targetType in ["order", "operation"]
+        && request.resource.data.kind in ["cancellation", "delivery_issue", "invalid_code", "payment_issue"]
+        && request.resource.data.reason is string
+        && request.resource.data.reason.size() >= 10
+        && request.resource.data.reason.size() <= 500
+        && request.resource.data.status == "open"
+        && request.resource.data.resolution == ""
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && (
+          (request.resource.data.targetType == "order"
+            && request.resource.data.kind in ["delivery_issue", "invalid_code"]
+            && exists(/databases/$(database)/documents/productOrders/$(request.resource.data.targetId))
+            && get(/databases/$(database)/documents/productOrders/$(request.resource.data.targetId)).data.userId == request.auth.uid)
+          || (request.resource.data.targetType == "operation"
+            && exists(/databases/$(database)/documents/operations/$(request.resource.data.targetId))
+            && get(/databases/$(database)/documents/operations/$(request.resource.data.targetId)).data.memberId == request.auth.uid
+            && (
+              (request.resource.data.kind == "cancellation"
+                && get(/databases/$(database)/documents/operations/$(request.resource.data.targetId)).data.status in ["new", "awaiting_product"])
+              || (request.resource.data.kind == "payment_issue"
+                && get(/databases/$(database)/documents/operations/$(request.resource.data.targetId)).data.status in ["checking", "awaiting_payment", "completed", "cancelled"])
+            ))
+        );
+      allow update: if canOperate()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "resolution", "updatedBy", "updatedAt"])
+        && request.resource.data.status in ["open", "reviewing", "resolved", "rejected"]
+        && request.resource.data.resolution is string
+        && request.resource.data.resolution.size() <= 500
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.memberId == resource.data.memberId
+        && request.resource.data.targetType == resource.data.targetType
+        && request.resource.data.targetId == resource.data.targetId
+        && request.resource.data.kind == resource.data.kind
+        && request.resource.data.reason == resource.data.reason
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false;
+    }
+
     match /messages/{messageId} {
       allow read: if signedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
       allow create: if verifiedMember() && capabilityAllowed("messaging") && request.resource.data.senderId == request.auth.uid && request.resource.data.receiverId != request.auth.uid && request.resource.data.body is string && request.resource.data.body.size() >= 1 && request.resource.data.body.size() <= 600 && freshCreateTimestamp(request.resource.data.createdAt);

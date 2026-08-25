@@ -11,6 +11,8 @@ import { parseTurkishAmount, rateItems, validateAmount } from '../../lib/rates';
 import './member-operations.css';
 import './member-operation-timeline.css';
 import './member-commerce.css';
+import MemberCommerceCase from './MemberCommerceCase';
+import type { CommerceCase } from '../../lib/commerceCases';
 
 type Status = 'new' | 'awaiting_product' | 'checking' | 'awaiting_payment' | 'completed' | 'cancelled';
 type Operation = {
@@ -39,6 +41,7 @@ export default function MemberOperations() {
   const [db, setDb] = useState<Firestore | null>(null);
   const [operations, setOperations] = useState<Operation[]>([]);
   const [operationEvents, setOperationEvents] = useState<OperationEvent[]>([]);
+  const [cases, setCases] = useState<CommerceCase[]>([]);
   const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
   const [memberName, setMemberName] = useState('');
   const [contact, setContact] = useState('');
@@ -73,9 +76,11 @@ export default function MemberOperations() {
     if (!client.auth || !client.db) { setLoading(false); return; }
     let stopOperations = () => {};
     let stopEvents = () => {};
+    let stopCases = () => {};
     const stopAuth = onAuthStateChanged(client.auth, (nextUser) => {
       stopOperations();
       stopEvents();
+      stopCases();
       setUser(nextUser);
       if (!nextUser) { setOperations([]); setOperationEvents([]); setLoading(false); return; }
       setMemberName(nextUser.displayName || '');
@@ -120,8 +125,11 @@ export default function MemberOperations() {
           } satisfies OperationEvent;
         }).sort((a, b) => (a.createdAt?.getTime() || 0) - (b.createdAt?.getTime() || 0)));
       }, () => setNotice('İşlem zaman çizelgesi şu anda yüklenemedi.'));
+      stopCases = onSnapshot(query(collection(client.db!, 'commerceCases'), where('memberId', '==', nextUser.uid)), (snapshot) => {
+        setCases(snapshot.docs.map((entry) => { const data = entry.data(); return { id: entry.id, memberId: String(data.memberId || ''), targetType: data.targetType === 'order' ? 'order' : 'operation', targetId: String(data.targetId || ''), kind: data.kind, reason: String(data.reason || ''), status: data.status, resolution: String(data.resolution || ''), createdAt: data.createdAt?.toDate?.() ?? null, updatedAt: data.updatedAt?.toDate?.() ?? null } as CommerceCase; }));
+      }, () => setNotice('İptal ve ödeme inceleme kayıtları yüklenemedi.'));
     });
-    return () => { stopAuth(); stopOperations(); stopEvents(); };
+    return () => { stopAuth(); stopOperations(); stopEvents(); stopCases(); };
   }, []);
 
   const active = useMemo(() => operations.filter((item) => !['completed', 'cancelled'].includes(item.status)).length, [operations]);
@@ -204,6 +212,7 @@ export default function MemberOperations() {
             {timeline.map((event) => <li key={event.id} className={`is-${event.type}`}><i aria-hidden="true" /><div><strong>{event.body}</strong><time>{event.createdAt?.toLocaleString('tr-TR') || 'Az önce'}</time></div></li>)}
           </ol>
         </details>
+        {db ? <MemberCommerceCase db={db} memberId={user.uid} targetType="operation" targetId={operation.id} allowedKinds={['new', 'awaiting_product'].includes(operation.status) ? ['cancellation'] : ['payment_issue']} existing={cases} /> : null}
       </article>;
     }) : <div className="member-empty-state"><h2>Henüz kod veya bozum talebiniz yok.</h2><p>Kullanılmamış Razer Gold kodunuzu güvenli forma girerek ilk kontrol kaydını başlatabilirsiniz.</p><button onClick={openCodeSale}>İlk kodu gönder</button></div>}</div>
   </section></div>

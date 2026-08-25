@@ -24,6 +24,7 @@ import ReleaseReadinessPanel from "./ReleaseReadinessPanel";
 import AdminBackupPanel from "./AdminBackupPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 import ProductInventoryPanel from "./ProductInventoryPanel";
+import AdminCommerceCasePanel from "./AdminCommerceCasePanel";
 import type { ArticleItem } from "../lib/site";
 import {
   removeManagedArticle,
@@ -52,10 +53,10 @@ import {
   type MemberRestrictionKey,
 } from "../lib/admin";
 
-type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "inventory" | "settings";
+type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "cases" | "inventory" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 type AuditFilter = 'all' | 'site' | 'content' | 'member' | 'community' | 'operation' | 'system';
-const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "inventory", "settings"];
+const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "cases", "inventory", "settings"];
 const permissions = [
   "Yorum paylaşımı",
   "İçerik taslağı",
@@ -115,6 +116,9 @@ function auditActionLabel(action: string) {
     'forum:inline-unlock': 'Forum konusu yeniden açıldı',
     'operation:created': 'İşlem talebi oluşturuldu',
     'operation:note': 'İşlem notu eklendi',
+    'commerce-case:reviewing': 'Müşteri incelemesi başlatıldı',
+    'commerce-case:resolved': 'Müşteri incelemesi çözüldü',
+    'commerce-case:rejected': 'Müşteri incelemesi uygun bulunmadı',
     'stock:batch-updated': 'Stok partisi güncellendi',
   };
   if (labels[action]) return labels[action];
@@ -167,6 +171,7 @@ function auditCategory(action: string): Exclude<AuditFilter, 'all'> {
   if (action.startsWith('member-')) return 'member';
   if (action.startsWith('comment:') || action.startsWith('forum:')) return 'community';
   if (action.startsWith('operation:')) return 'operation';
+  if (action.startsWith('commerce-case:')) return 'operation';
   if (action.startsWith('rate:') || action.startsWith('release-') || action.startsWith('admin-backup:')) return 'system';
   return 'content';
 }
@@ -524,6 +529,7 @@ export default function AdminConsole({
               ["content", "İçerik"],
               ["rates", "Oranlar"],
               ["operations", "Kod satışları / İşlemler"],
+              ["cases", "İptal / Sorun kayıtları"],
               ["inventory", "Ürün stokları"],
               ["members", "Üyeler"],
               ["moderation", "Yorumlar"],
@@ -782,6 +788,7 @@ export default function AdminConsole({
         {view === "backup" && <AdminBackupPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}
         {view === "operations" && <AdminOperationPanel db={db} actorId={user.uid} />}
+        {view === "cases" && <AdminCommerceCasePanel db={db} actorId={user.uid} />}
         {view === "inventory" && <ProductInventoryPanel user={user} />}
         {view === "members" && (
           <section className="admin-section">

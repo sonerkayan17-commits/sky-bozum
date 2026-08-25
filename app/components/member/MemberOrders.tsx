@@ -2,27 +2,34 @@
 
 import Link from 'next/link';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, type Firestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { formatStoreMoney, type StoreOrder } from '../../lib/store';
 import MemberUtilityShell from './MemberUtilityShell';
+import MemberCommerceCase from './MemberCommerceCase';
+import type { CommerceCase } from '../../lib/commerceCases';
 
 export default function MemberOrders() {
   const [user, setUser] = useState<User | null>(null);
   const [orders, setOrders] = useState<StoreOrder[]>([]);
+  const [cases, setCases] = useState<CommerceCase[]>([]);
+  const [db, setDb] = useState<Firestore | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState('');
 
   useEffect(() => {
     const { auth, db } = getFirebaseClient();
+    setDb(db);
     if (!auth || !db) { setLoading(false); return; }
     let stopOrders = () => {};
+    let stopCases = () => {};
     const stopAuth = onAuthStateChanged(auth, (nextUser) => {
       setUser(nextUser);
       if (!nextUser) { setLoading(false); return; }
       stopOrders();
+      stopCases();
       stopOrders = onSnapshot(query(collection(db, 'productOrders'), where('userId', '==', nextUser.uid)), (snapshot) => {
         const orderIds = snapshot.docs.map((item) => item.id);
         if (!orderIds.length) { setOrders([]); setLoading(false); return; }
@@ -33,8 +40,11 @@ export default function MemberOrders() {
           setOrders((payload.orders || []).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))));
         }).catch((reason) => setError(reason instanceof Error ? reason.message : 'Siparişler alınamadı.')).finally(() => setLoading(false));
       }, () => { setError('Sipariş kayıtları okunamadı.'); setLoading(false); });
+      stopCases = onSnapshot(query(collection(db, 'commerceCases'), where('memberId', '==', nextUser.uid)), (snapshot) => {
+        setCases(snapshot.docs.map((entry) => { const data = entry.data(); return { id: entry.id, memberId: String(data.memberId || ''), targetType: data.targetType === 'operation' ? 'operation' : 'order', targetId: String(data.targetId || ''), kind: data.kind, reason: String(data.reason || ''), status: data.status, resolution: String(data.resolution || ''), createdAt: data.createdAt?.toDate?.() ?? null, updatedAt: data.updatedAt?.toDate?.() ?? null } as CommerceCase; }));
+      }, () => setError('Sipariş inceleme kayıtları okunamadı.'));
     });
-    return () => { stopAuth(); stopOrders(); };
+    return () => { stopAuth(); stopOrders(); stopCases(); };
   }, []);
 
   async function copy(order: StoreOrder) {
@@ -54,6 +64,7 @@ export default function MemberOrders() {
       <header><div><small>{order.productName}</small><h2>{order.packLabel}</h2></div><strong>{formatStoreMoney(order.priceMinor)}</strong></header>
       <div className="member-order-code"><code>{order.code}</code><button type="button" onClick={() => void copy(order)}>{copied === order.id ? 'Kopyalandı' : 'Kopyala'}</button></div>
       <footer><span>Sipariş no: {order.id}</span><time>{order.createdAt ? new Date(order.createdAt).toLocaleString('tr-TR') : 'Teslim edildi'}</time></footer>
+      {db && user ? <MemberCommerceCase db={db} memberId={user.uid} targetType="order" targetId={order.id} allowedKinds={['delivery_issue', 'invalid_code']} existing={cases} /> : null}
     </article>)}</div> : <div className="member-empty-premium"><span aria-hidden="true">◇</span><h2>Henüz dijital ürün siparişiniz yok</h2><p>Stoktaki ürünleri inceleyip bakiyenizle güvenli satın alma yapabilirsiniz.</p><Link href="/urunler">Ürünleri incele →</Link></div>}
   </MemberUtilityShell>;
 }
