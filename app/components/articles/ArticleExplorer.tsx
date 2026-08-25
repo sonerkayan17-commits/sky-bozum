@@ -22,8 +22,8 @@ const featuredArticleSlugs = [
   'guvenilir-mobil-bozum-sitesi-nasil-secilir',
   'mobil-odeme-bozum-nedir',
   'mobil-odeme-guvenli-mi',
-  'mobil-odeme-limiti-nasil-ogrenilir',
-  'dijital-kod-bolge-hatasi-nedir',
+  'razer-gold-nedir',
+  'apple-gift-card-nedir',
 ] as const;
 const sortOptions: { value: SortMode; label: string }[] = [
   { value: 'popular', label: 'En Çok Sorulanlar' },
