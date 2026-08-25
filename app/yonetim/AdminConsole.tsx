@@ -115,6 +115,7 @@ function auditActionLabel(action: string) {
     'forum:inline-unlock': 'Forum konusu yeniden açıldı',
     'operation:created': 'İşlem talebi oluşturuldu',
     'operation:note': 'İşlem notu eklendi',
+    'stock:batch-updated': 'Stok partisi güncellendi',
   };
   if (labels[action]) return labels[action];
   if (action.startsWith('rate:')) return action.endsWith(':published') ? 'Oran yayımlandı' : 'Oran taslak olarak kaydedildi';

@@ -22,6 +22,19 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const preparedCodes = useMemo(() => [...new Set(codes.split(/\r?\n/).map((code) => code.trim()).filter(Boolean))], [codes]);
+  const duplicateCodeCount = Math.max(0, codes.split(/\r?\n/).map((code) => code.trim()).filter(Boolean).length - preparedCodes.length);
+  const inventoryMetrics = useMemo(() => {
+    const delivered = orders.filter((order) => order.status === 'delivered');
+    const todayKey = new Date().toLocaleDateString('tr-TR');
+    const today = delivered.filter((order) => order.createdAt && new Date(order.createdAt).toLocaleDateString('tr-TR') === todayKey);
+    return {
+      availableCodes: entries.filter((entry) => entry.active).reduce((total, entry) => total + entry.stockCount, 0),
+      lowStock: entries.filter((entry) => entry.active && entry.stockCount > 0 && entry.stockCount <= 3).length,
+      todayRevenue: today.reduce((total, order) => total + order.priceMinor, 0),
+      deliveredRevenue: delivered.reduce((total, order) => total + order.priceMinor, 0),
+    };
+  }, [entries, orders]);
 
   useEffect(() => { setPackId(product?.packs[0]?.id || ''); }, [product]);
 
@@ -48,10 +61,11 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
     try {
       const priceMinor = parsePriceMinor(price);
       if (!priceMinor) throw new Error('Sıfırdan büyük geçerli bir TL fiyatı girin.');
+      if (preparedCodes.length > 100) throw new Error('Tek seferde en fazla 100 kod ekleyin. Daha büyük stokları parti parti aktarın.');
       const response = await fetch('/api/admin/store/encrypt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await user.getIdToken()}` },
-        body: JSON.stringify({ productSlug, packId, codes }),
+        body: JSON.stringify({ productSlug, packId, codes: preparedCodes.join('\n') }),
       });
       const payload = await response.json() as { encrypted?: Array<{ id: string; codeEncrypted: string }>; error?: string };
       if (!response.ok) throw new Error(payload.error || 'Stok kaydedilemedi.');
@@ -70,9 +84,10 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
         const timestamp = serverTimestamp();
         missing.forEach((item) => transaction.set(doc(codesCollection, item.id), { codeEncrypted: item.codeEncrypted, status: 'available', createdAt: timestamp, createdBy: user.uid }));
         transaction.set(catalogRef, { productSlug, productName: product.shortName, packId, packLabel: resolvedPack.label, priceMinor, stockCount: Math.max(0, Math.trunc(Number(catalogSnapshot.data()?.stockCount) || 0)) + missing.length, active, updatedAt: timestamp, updatedBy: user.uid }, { merge: true });
+        transaction.set(doc(collection(db, 'contentAudit')), { action: 'stock:batch-updated', articleSlug: catalogKey, actorId: user.uid, addedCodes: missing.length, updatedAt: timestamp, createdAt: timestamp });
         return missing.length;
       });
-      setNotice(`${added} yeni kod eklendi${encrypted.length - added ? ` · ${encrypted.length - added} tekrar atlandı` : ''}.`);
+      setNotice(`${added} yeni kod eklendi${encrypted.length - added ? ` · ${encrypted.length - added} tekrar atlandı` : ''}${duplicateCodeCount ? ` · ${duplicateCodeCount} yinelenen satır yüklenmeden temizlendi` : ''}.`);
       setCodes('');
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Stok kaydedilemedi.'); }
     finally { setBusy(false); }
@@ -80,6 +95,7 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
 
   return <section className="admin-section inventory-panel">
     <div className="admin-section-head"><div><span>DİJİTAL ÜRÜN KASASI</span><h2>Fiyat, stok ve teslimat</h2></div><p>Kodlar şifrelenir; müşteriye yalnız tamamlanan satın alımın tek kodu gösterilir.</p></div>
+    <div className="inventory-metrics" aria-label="Stok ve satış özeti"><article><strong>{inventoryMetrics.availableCodes}</strong><span>satışa açık kod</span></article><article className={inventoryMetrics.lowStock ? 'is-warning' : ''}><strong>{inventoryMetrics.lowStock}</strong><span>azalan stok</span></article><article><strong>{formatStoreMoney(inventoryMetrics.todayRevenue)}</strong><span>bugün teslim edilen</span></article><article><strong>{formatStoreMoney(inventoryMetrics.deliveredRevenue)}</strong><span>toplam teslimat değeri</span></article></div>
     <div className="inventory-layout">
       <form onSubmit={save} className="inventory-form">
         <label>Ürün<select value={productSlug} onChange={(event) => setProductSlug(event.target.value)}>{products.map((item) => <option key={item.slug} value={item.slug}>{item.shortName}</option>)}</select></label>
@@ -87,7 +103,8 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
         <label>Satış fiyatı (TL)<input inputMode="decimal" value={price} onChange={(event) => setPrice(event.target.value)} placeholder="Örn. 129,90" required /></label>
         <label className="inventory-toggle"><input type="checkbox" checked={active} onChange={(event) => setActive(event.target.checked)} /> Paket satışa açık</label>
         <label>Kodlar<textarea value={codes} onChange={(event) => setCodes(event.target.value)} placeholder={'Her satıra bir kullanılmamış kod\nABC-123-XYZ\nDEF-456-QWE'} spellCheck={false} /></label>
-        <small>Kodlar panelde tekrar açık gösterilmez. Aynı ürün/pakette yinelenen kodlar güvenli karma ile atlanır.</small>
+        <small>Kodlar panelde tekrar açık gösterilmez. Aynı ürün/pakette yinelenen kodlar güvenli karma ile atlanır. Tek partide en fazla 100 benzersiz kod yazabilirsiniz.</small>
+        {preparedCodes.length ? <p className="inventory-batch-preview"><b>{preparedCodes.length} benzersiz kod</b>{duplicateCodeCount ? <span> · {duplicateCodeCount} tekrar temizlenecek</span> : null}</p> : null}
         <button className="admin-primary" disabled={busy}>{busy ? 'Güvenli kasaya yazılıyor…' : 'Fiyatı ve stokları kaydet'}</button>
         {error ? <p className="inventory-message is-error">{error}</p> : null}{notice ? <p className="inventory-message is-success">{notice}</p> : null}
       </form>

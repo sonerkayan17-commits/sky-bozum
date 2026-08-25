@@ -7,6 +7,7 @@ const files = {
   admin: readFileSync('app/yonetim/AdminOperationPanel.tsx', 'utf8'),
   member: readFileSync('app/components/member/MemberOperations.tsx', 'utf8'),
   wallet: readFileSync('app/components/member/MemberWallet.tsx', 'utf8'),
+  inventory: readFileSync('app/yonetim/ProductInventoryPanel.tsx', 'utf8'),
 };
 
 const checks = [
@@ -26,6 +27,9 @@ const checks = [
   ['Üye güvenli işlem zaman çizelgesini izliyor', files.member.includes("collection(client.db!, 'operationEvents')") && files.member.includes('member-operation-timeline')],
   ['İşlem hareketleri iç ekip notlarından ayrılıyor', files.rules.includes('match /operationEvents/{eventId}') && files.rules.includes('resource.data.memberId == request.auth.uid') && files.admin.includes("collection(db, 'operationEvents')")],
   ['Cüzdan gerçek zamanlı hesap defterini izliyor', files.wallet.includes("collection(db, 'memberLedger')") && files.wallet.includes('onSnapshot')],
+  ['Toplu stok girişi benzersiz kodları önceden ayıklıyor', files.inventory.includes('new Set(codes.split') && files.inventory.includes('preparedCodes.join')],
+  ['Toplu stok işlemi parti sınırı uygular', files.inventory.includes('preparedCodes.length > 100')],
+  ['Stok güncellemesi yönetim günlüğüne kaydolur', files.inventory.includes("action: 'stock:batch-updated'")],
 ];
 
 let failed = 0;
