@@ -858,13 +858,15 @@ service cloud.firestore {
           "emailFlowTested", "senderDomainAuthenticated", "firestoreBackupChecked",
           "supportFlowTested", "productionSmokeTested", "mobileNavigationTested",
           "codeMoneyFlowTested", "rateFallbackReviewed", "appCheckEnforced",
-          "analyticsAlertsConfigured"
+          "analyticsAlertsConfigured", "legalConsistencyReviewed",
+          "referenceFreshnessReviewed", "emailReputationMonitored"
         ])
         && request.resource.data.checks.keys().hasOnly([
           "emailFlowTested", "senderDomainAuthenticated", "firestoreBackupChecked",
           "supportFlowTested", "productionSmokeTested", "mobileNavigationTested",
           "codeMoneyFlowTested", "rateFallbackReviewed", "appCheckEnforced",
-          "analyticsAlertsConfigured"
+          "analyticsAlertsConfigured", "legalConsistencyReviewed",
+          "referenceFreshnessReviewed", "emailReputationMonitored"
         ])
         && request.resource.data.checks.emailFlowTested is bool
         && request.resource.data.checks.senderDomainAuthenticated is bool
@@ -876,6 +878,9 @@ service cloud.firestore {
         && request.resource.data.checks.rateFallbackReviewed is bool
         && request.resource.data.checks.appCheckEnforced is bool
         && request.resource.data.checks.analyticsAlertsConfigured is bool
+        && request.resource.data.checks.legalConsistencyReviewed is bool
+        && request.resource.data.checks.referenceFreshnessReviewed is bool
+        && request.resource.data.checks.emailReputationMonitored is bool
         && request.resource.data.notes is string
         && request.resource.data.notes.size() <= 1000
         && request.resource.data.updatedBy == request.auth.uid

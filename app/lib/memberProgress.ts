@@ -31,11 +31,11 @@ export function subscribeToMemberActivities(db: Firestore, uid: string, onChange
 }
 
 export const memberLevels = [
-  { name: 'Bronz', min: 0, benefit: 'Standart sabit oran' },
-  { name: 'Gümüş', min: 1500, benefit: 'Bozumlarda %3 ek oran' },
-  { name: 'Altın', min: 5000, benefit: 'Bozumlarda %5 ek oran' },
-  { name: 'Platin', min: 12000, benefit: 'Bozumlarda %7 ek oran' },
-  { name: 'Diamond', min: 30000, benefit: 'Özel ek hediye kartı fırsatları' },
+  { name: 'Bronz', min: 0, benefit: 'Standart üyelik avantajları' },
+  { name: 'Gümüş', min: 1500, benefit: 'Uygun işlemlerde yönetim teyitli %3 ek oran' },
+  { name: 'Altın', min: 5000, benefit: 'Uygun işlemlerde yönetim teyitli %5 ek oran' },
+  { name: 'Platin', min: 12000, benefit: 'Uygun işlemlerde yönetim teyitli %7 ek oran' },
+  { name: 'Diamond', min: 30000, benefit: 'Dönemsel hediye kartı fırsatlarına uygunluk' },
 ] as const;
 
 export function getMemberLevel(points: number) { return [...memberLevels].reverse().find((level) => points >= level.min) || memberLevels[0]; }

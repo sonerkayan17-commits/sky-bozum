@@ -15,6 +15,9 @@ const checklist = [
   { id: 'rateFallbackReviewed', title: 'Oran yedeği ve yayın kaydı gözden geçirildi', detail: 'Yayındaki oranların tarihini, kaynak notunu ve statik yedek için kullanıcıya görünen teyit uyarısını kontrol ettim.' },
   { id: 'appCheckEnforced', title: 'Firebase App Check canlıda doğrulandı', detail: 'Firebase Console içinden App Check sağlayıcısının etkin olduğunu ve ilgili ürünlerde zorlamanın bilinçli olarak yapılandırıldığını kontrol ettim.' },
   { id: 'analyticsAlertsConfigured', title: 'İzleme ve uyarı sorumlusu belirlendi', detail: 'Vercel/Firebase hata ve trafik izleme ekranlarını düzenli kontrol edecek kişi veya bildirim kanalı belirlendi.' },
+  { id: 'legalConsistencyReviewed', title: 'Yasal metin tutarlılığı kontrol edildi', detail: 'Alan adı, marka, iletişim, hizmet modeli ve iade açıklamalarının yasal sayfalarda aynı ve güncel olduğunu doğruladım.' },
+  { id: 'referenceFreshnessReviewed', title: 'Referans güncelliği kontrol edildi', detail: 'Yayındaki referansların erişilebilir, doğru bağlama sahip ve güncel olduğunu; kaldırılması gereken kayıt bulunmadığını kontrol ettim.' },
+  { id: 'emailReputationMonitored', title: 'E-posta teslim itibarı izlendi', detail: 'Doğrulama e-postalarını farklı sağlayıcılarda test ettim; geri dönüş, spam ve teslim hatalarını kontrol edecek sorumlu belirlendi.' },
 ] as const;
 
 type CheckId = (typeof checklist)[number]['id'];
@@ -32,6 +35,9 @@ const emptyChecks: Checks = {
   rateFallbackReviewed: false,
   appCheckEnforced: false,
   analyticsAlertsConfigured: false,
+  legalConsistencyReviewed: false,
+  referenceFreshnessReviewed: false,
+  emailReputationMonitored: false,
 };
 
 function readChecks(value: unknown): Checks {

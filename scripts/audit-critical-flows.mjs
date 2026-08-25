@@ -20,7 +20,7 @@ const checks = [
   ['Messages are owner-scoped', messages.includes('messages') && rules.includes('resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid')],
   ['Request/operation create is guarded', memberOps.includes('operations') && rules.includes('request.resource.data.memberId == request.auth.uid')],
   ['Member approval is enforced in data rules', rules.includes('function approvedMember()') && rules.includes('&& approvedMember()')],
-  ['Member approval persists in live account UI', memberHub.includes("label: 'Onaylı üye'") && memberHub.includes("onSnapshot(doc(db, 'members'"),],
+  ['Member approval persists in live account UI', /label:\s*["']Onaylı üye["']/.test(memberHub) && /onSnapshot\(\s*doc\(db,\s*["']members["']/.test(memberHub)],
   ['Timed bans and capability restrictions exist', admin.includes('bannedUntil') && admin.includes('setMemberRestrictions') && rules.includes('function capabilityAllowed(capability)')],
   ['Admin member view follows persisted member snapshot', adminConsole.includes('members.find((member) => member.id === current.id)')],
   ['Mobile product video selects touched card', productVideo.includes('handlePointerDown') && productVideo.includes('suppressNextClick') && productVideo.includes('centerDistance')],

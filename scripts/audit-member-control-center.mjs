@@ -6,6 +6,10 @@ const files = Object.fromEntries(await Promise.all([
   ['catalog', 'app/components/products/ProductCatalog.tsx'],
   ['content', 'app/lib/contentAdmin.ts'],
   ['admin', 'app/yonetim/AdminConsole.tsx'],
+  ['memberHub', 'app/components/member/MemberHub.tsx'],
+  ['memberProgress', 'app/lib/memberProgress.ts'],
+  ['forum', 'app/yonetim/ForumModerationPanel.tsx'],
+  ['release', 'app/yonetim/ReleaseReadinessPanel.tsx'],
   ['rules', 'firestore.rules'],
 ].map(async ([key, path]) => [key, await readFile(path, 'utf8')])));
 
@@ -17,6 +21,10 @@ const checks = [
   ['Başarısız satın alma sonrası paket seçimi korunuyor', files.catalog.includes('sky-product-selection:') && files.catalog.includes('Seçiminiz bu oturum için korundu')],
   ['İçerik yeniden inceleme tarihi veri modelinde mevcut', files.content.includes('reviewDueAt')],
   ['Yönetim geciken içerik kontrollerini ayırıyor', files.admin.includes('admin-review-date') && files.admin.includes('is-overdue')],
+  ['Üye merkezi eksik profil adımlarını görünür kılıyor', files.memberHub.includes('PROFİL TAMAMLAMA') && files.memberHub.includes('profileCompletion')],
+  ['Seviye avantajları doğrulanmış işlem teyidine bağlı anlatılıyor', files.memberProgress.includes('yönetim teyitli') && files.memberHub.includes('yalnız yönetim defterine işlenen') && files.memberHub.includes('doğrulanmış hareketlerden')],
+  ['Forum onay kuyruğu bekleyen konuları öncelikli açıyor', files.forum.includes('ONAY KUYRUĞU') && /useState<[\s\S]{0,160}>\(["']pending["']\)/.test(files.forum)],
+  ['Yasal metin, referans ve e-posta itibarı yayın kontrolünde', files.release.includes('legalConsistencyReviewed') && files.release.includes('referenceFreshnessReviewed') && files.release.includes('emailReputationMonitored')],
 ];
 
 let failed = 0;

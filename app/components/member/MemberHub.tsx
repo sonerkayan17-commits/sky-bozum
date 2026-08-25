@@ -3,25 +3,78 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile, type Auth, type User } from 'firebase/auth';
-import { collection, doc, getDoc, onSnapshot, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
+import {
+  onAuthStateChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signOut,
+  updateProfile,
+  type Auth,
+  type User,
+} from 'firebase/auth';
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
-import { getMemberLevel, memberLevels, subscribeToMemberActivities, type MemberActivity } from '../../lib/memberProgress';
+import {
+  getMemberLevel,
+  memberLevels,
+  subscribeToMemberActivities,
+  type MemberActivity,
+} from '../../lib/memberProgress';
 import './member-fixes.css';
 
-export type MemberView = 'overview' | 'account' | 'profile' | 'history' | 'tasks';
+export type MemberView =
+  | 'overview'
+  | 'account'
+  | 'profile'
+  | 'history'
+  | 'tasks';
 type MemberData = {
-  displayName: string; phone: string; email: string; status: string; balance: number; points: number; avatar: string;
-  restrictions: string[]; bannedUntil: Date | null;
+  displayName: string;
+  phone: string;
+  email: string;
+  status: string;
+  balance: number;
+  points: number;
+  avatar: string;
+  restrictions: string[];
+  bannedUntil: Date | null;
 };
-type Ledger = { id: string; kind: string; amount: number; note: string; createdAt: Date | null };
+type Ledger = {
+  id: string;
+  kind: string;
+  amount: number;
+  note: string;
+  createdAt: Date | null;
+};
 
-const navigation: Array<[MemberView | 'wallet' | 'requests' | 'orders', string, string]> = [
-  ['overview', 'Profil özeti', '/hesabim'], ['wallet', 'Cüzdanım', '/hesabim/cuzdan'], ['requests', 'Taleplerim', '/hesabim/talepler'], ['orders', 'Siparişlerim', '/hesabim/siparisler'], ['account', 'Hesap işlemleri', '/hesabim/hesap-islemleri'], ['profile', 'Üyelik bilgileri', '/hesabim/uyelik-bilgileri'], ['history', 'İşlem geçmişi', '/hesabim/islem-gecmisi'], ['tasks', 'Görev merkezi', '/hesabim/gorev-merkezi'],
+const navigation: Array<
+  [MemberView | 'wallet' | 'requests' | 'orders', string, string]
+> = [
+  ['overview', 'Profil özeti', '/hesabim'],
+  ['wallet', 'Cüzdanım', '/hesabim/cuzdan'],
+  ['requests', 'Taleplerim', '/hesabim/talepler'],
+  ['orders', 'Siparişlerim', '/hesabim/siparisler'],
+  ['account', 'Hesap işlemleri', '/hesabim/hesap-islemleri'],
+  ['profile', 'Üyelik bilgileri', '/hesabim/uyelik-bilgileri'],
+  ['history', 'İşlem geçmişi', '/hesabim/islem-gecmisi'],
+  ['tasks', 'Görev merkezi', '/hesabim/gorev-merkezi'],
 ];
 
-const presetAvatars = Array.from({ length: 10 }, (_, index) => `/avatars/avatar-${index + 1}.webp`);
+const presetAvatars = Array.from(
+  { length: 10 },
+  (_, index) => `/avatars/avatar-${index + 1}.webp`,
+);
 
 export default function MemberHub({ view }: { view: MemberView }) {
   const router = useRouter();
@@ -30,57 +83,182 @@ export default function MemberHub({ view }: { view: MemberView }) {
   const [activities, setActivities] = useState<MemberActivity[]>([]);
   const [ledger, setLedger] = useState<Ledger[]>([]);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState(''); const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [avatar, setAvatar] = useState('');
   const [notice, setNotice] = useState('');
-  const [accountAction, setAccountAction] = useState<'verify' | 'reset' | 'logout' | null>(null);
+  const [accountAction, setAccountAction] = useState<
+    'verify' | 'reset' | 'logout' | null
+  >(null);
 
   useEffect(() => {
     const { auth, db } = getFirebaseClient();
-    if (!auth || !db) { setLoading(false); return; }
+    if (!auth || !db) {
+      setLoading(false);
+      return;
+    }
     return onAuthStateChanged(auth, (nextUser) => {
-      setUser(nextUser as (User & { auth: Auth }) | null); setLoading(false);
+      setUser(nextUser as (User & { auth: Auth }) | null);
+      setLoading(false);
       if (!nextUser) return;
-      setAvatar(window.localStorage.getItem(`sky-avatar:${nextUser.uid}`) || '');
-      const stopMember = onSnapshot(doc(db, 'members', nextUser.uid), (snapshot) => {
-        const data = snapshot.data(); if (!data) return;
-        const storedStatus = String(data.status || 'pending');
-        const bannedUntil = data.bannedUntil?.toDate?.() ?? null;
-        const effectiveStatus = storedStatus === 'banned' && bannedUntil && bannedUntil.getTime() <= Date.now() ? 'active' : storedStatus;
-        const next = { displayName: String(data.displayName || nextUser.displayName || ''), phone: String(data.phone || ''), email: String(data.email || nextUser.email || ''), status: effectiveStatus, balance: Number(data.balance) || 0, points: Number(data.points) || 0, avatar: String(data.avatar || ''), restrictions: Array.isArray(data.restrictions) ? data.restrictions.map(String) : [], bannedUntil };
-        setMember(next); setName(next.displayName); setPhone(next.phone); if (next.avatar) setAvatar(next.avatar);
-      });
-      const stopActivities = subscribeToMemberActivities(db, nextUser.uid, setActivities);
-      const stopProfile = onSnapshot(doc(db, 'publicProfiles', nextUser.uid), (snapshot) => {
-        const savedAvatar = String(snapshot.data()?.avatar || '');
-        if (savedAvatar) setAvatar(savedAvatar);
-      });
-      const stopLedger = onSnapshot(query(collection(db, 'memberLedger'), where('memberId', '==', nextUser.uid)), (snapshot) => setLedger(snapshot.docs.map((item) => { const data = item.data(); return { id: item.id, kind: String(data.kind || ''), amount: Number(data.amount) || 0, note: String(data.note || ''), createdAt: data.createdAt?.toDate?.() ?? null }; }).sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))));
-      return () => { stopMember(); stopActivities(); stopLedger(); stopProfile(); };
+      setAvatar(
+        window.localStorage.getItem(`sky-avatar:${nextUser.uid}`) || '',
+      );
+      const stopMember = onSnapshot(
+        doc(db, 'members', nextUser.uid),
+        (snapshot) => {
+          const data = snapshot.data();
+          if (!data) return;
+          const storedStatus = String(data.status || 'pending');
+          const bannedUntil = data.bannedUntil?.toDate?.() ?? null;
+          const effectiveStatus =
+            storedStatus === 'banned' &&
+            bannedUntil &&
+            bannedUntil.getTime() <= Date.now()
+              ? 'active'
+              : storedStatus;
+          const next = {
+            displayName: String(data.displayName || nextUser.displayName || ''),
+            phone: String(data.phone || ''),
+            email: String(data.email || nextUser.email || ''),
+            status: effectiveStatus,
+            balance: Number(data.balance) || 0,
+            points: Number(data.points) || 0,
+            avatar: String(data.avatar || ''),
+            restrictions: Array.isArray(data.restrictions)
+              ? data.restrictions.map(String)
+              : [],
+            bannedUntil,
+          };
+          setMember(next);
+          setName(next.displayName);
+          setPhone(next.phone);
+          if (next.avatar) setAvatar(next.avatar);
+        },
+      );
+      const stopActivities = subscribeToMemberActivities(
+        db,
+        nextUser.uid,
+        setActivities,
+      );
+      const stopProfile = onSnapshot(
+        doc(db, 'publicProfiles', nextUser.uid),
+        (snapshot) => {
+          const savedAvatar = String(snapshot.data()?.avatar || '');
+          if (savedAvatar) setAvatar(savedAvatar);
+        },
+      );
+      const stopLedger = onSnapshot(
+        query(
+          collection(db, 'memberLedger'),
+          where('memberId', '==', nextUser.uid),
+        ),
+        (snapshot) =>
+          setLedger(
+            snapshot.docs
+              .map((item) => {
+                const data = item.data();
+                return {
+                  id: item.id,
+                  kind: String(data.kind || ''),
+                  amount: Number(data.amount) || 0,
+                  note: String(data.note || ''),
+                  createdAt: data.createdAt?.toDate?.() ?? null,
+                };
+              })
+              .sort(
+                (a, b) =>
+                  (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0),
+              ),
+          ),
+      );
+      return () => {
+        stopMember();
+        stopActivities();
+        stopLedger();
+        stopProfile();
+      };
     });
   }, []);
 
-  const counts = useMemo(() => ({ like: activities.filter((item) => item.type === 'like').length, comment: activities.filter((item) => item.type === 'comment').length, share: activities.filter((item) => item.type === 'share').length }), [activities]);
+  const counts = useMemo(
+    () => ({
+      like: activities.filter((item) => item.type === 'like').length,
+      comment: activities.filter((item) => item.type === 'comment').length,
+      share: activities.filter((item) => item.type === 'share').length,
+    }),
+    [activities],
+  );
   // Seviye, yalnız yönetim defterine işlenmiş üye puanı üzerinden hesaplanır.
   // Tarayıcıdan oluşan etkileşim kayıtları ilerleme göstergesi olarak kalır;
   // böylece kullanıcılar sahte hedeflerle seviye yükseltemez.
   const totalPoints = member?.points || 0;
   const level = getMemberLevel(totalPoints);
   const nextLevel = memberLevels.find((item) => item.min > totalPoints);
-  const progress = nextLevel ? Math.min(100, Math.round(((totalPoints - level.min) / (nextLevel.min - level.min)) * 100)) : 100;
-  const accountState = member?.status === 'active'
-    ? { label: 'Onaylı üye', tone: 'is-approved' }
-    : member?.status === 'banned'
-      ? { label: member.bannedUntil ? `${member.bannedUntil.toLocaleDateString('tr-TR')} tarihine kadar uzaklaştırıldı` : 'Süresiz uzaklaştırıldı', tone: 'is-banned' }
-      : { label: 'Yönetici onayı bekleniyor', tone: 'is-pending' };
-  const restrictionLabels: Record<string, string> = { community: 'Topluluk işlemleri', messaging: 'Mesajlaşma', code_sale: 'Kod satışı', store_purchase: 'Mağaza alışverişi', wallet: 'Cüzdan işlemleri' };
+  const progress = nextLevel
+    ? Math.min(
+        100,
+        Math.round(
+          ((totalPoints - level.min) / (nextLevel.min - level.min)) * 100,
+        ),
+      )
+    : 100;
+  const profileSteps = [
+    {
+      label: 'Ad soyad',
+      complete: Boolean(member?.displayName.trim()),
+      href: '/hesabim/uyelik-bilgileri',
+    },
+    {
+      label: 'Telefon',
+      complete: Boolean(member?.phone.trim()),
+      href: '/hesabim/uyelik-bilgileri',
+    },
+    {
+      label: 'Profil görseli',
+      complete: Boolean(avatar),
+      href: '/hesabim/uyelik-bilgileri',
+    },
+    {
+      label: 'E-posta doğrulama',
+      complete: user?.emailVerified === true,
+      href: '/hesabim/hesap-islemleri',
+    },
+  ];
+  const completedProfileSteps = profileSteps.filter(
+    (item) => item.complete,
+  ).length;
+  const profileCompletion = Math.round(
+    (completedProfileSteps / profileSteps.length) * 100,
+  );
+  const accountState =
+    member?.status === 'active'
+      ? { label: 'Onaylı üye', tone: 'is-approved' }
+      : member?.status === 'banned'
+        ? {
+            label: member.bannedUntil
+              ? `${member.bannedUntil.toLocaleDateString('tr-TR')} tarihine kadar uzaklaştırıldı`
+              : 'Süresiz uzaklaştırıldı',
+            tone: 'is-banned',
+          }
+        : { label: 'Yönetici onayı bekleniyor', tone: 'is-pending' };
+  const restrictionLabels: Record<string, string> = {
+    community: 'Topluluk işlemleri',
+    messaging: 'Mesajlaşma',
+    code_sale: 'Kod satışı',
+    store_purchase: 'Mağaza alışverişi',
+    wallet: 'Cüzdan işlemleri',
+  };
 
   useEffect(() => {
-    if (user && avatar) window.localStorage.setItem(`sky-avatar:${user.uid}`, avatar);
+    if (user && avatar)
+      window.localStorage.setItem(`sky-avatar:${user.uid}`, avatar);
   }, [avatar, user]);
 
   useEffect(() => {
-    const elements = document.querySelectorAll<HTMLElement>('.member-sidebar .member-avatar, .member-avatar-preview');
+    const elements = document.querySelectorAll<HTMLElement>(
+      '.member-sidebar .member-avatar, .member-avatar-preview',
+    );
     elements.forEach((element) => {
       element.classList.toggle('member-avatar--has-photo', Boolean(avatar));
       element.style.backgroundImage = avatar ? `url(${avatar})` : '';
@@ -96,34 +274,78 @@ export default function MemberHub({ view }: { view: MemberView }) {
     const timer = window.setTimeout(async () => {
       const { db } = getFirebaseClient();
       if (!db) return;
-      const saved = await getDoc(doc(db, 'publicProfiles', user.uid)).catch(() => null);
-      const savedAvatar = String(saved?.data()?.avatar || window.localStorage.getItem(`sky-avatar:${user.uid}`) || '');
+      const saved = await getDoc(doc(db, 'publicProfiles', user.uid)).catch(
+        () => null,
+      );
+      const savedAvatar = String(
+        saved?.data()?.avatar ||
+          window.localStorage.getItem(`sky-avatar:${user.uid}`) ||
+          '',
+      );
       if (savedAvatar) setAvatar(savedAvatar);
     }, 250);
     return () => window.clearTimeout(timer);
   }, [avatar, user]);
 
   async function saveProfile(event: FormEvent) {
-    event.preventDefault(); const { auth, db } = getFirebaseClient(); if (!auth?.currentUser || !db) return;
+    event.preventDefault();
+    const { auth, db } = getFirebaseClient();
+    if (!auth?.currentUser || !db) return;
     try {
       await updateProfile(auth.currentUser, { displayName: name.trim() });
       const memberRef = doc(db, 'members', auth.currentUser.uid);
       const memberSnapshot = await getDoc(memberRef);
       if (memberSnapshot.exists()) {
-        await updateDoc(memberRef, { displayName: name.trim(), phone: phone.trim(), avatar });
+        await updateDoc(memberRef, {
+          displayName: name.trim(),
+          phone: phone.trim(),
+          avatar,
+        });
       } else {
-        const publicSnapshot = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
-        const referralCode = String(publicSnapshot.data()?.referralCode || `SKY-${auth.currentUser.uid.slice(0, 8).toUpperCase()}`);
-        await setDoc(memberRef, { displayName: name.trim(), avatar, phone: phone.trim(), email: auth.currentUser.email || '', role: 'member', status: 'pending', balance: 0, points: 0, permissions: [], referralCode, referredBy: null, createdAt: serverTimestamp() });
+        const publicSnapshot = await getDoc(
+          doc(db, 'publicProfiles', auth.currentUser.uid),
+        );
+        const referralCode = String(
+          publicSnapshot.data()?.referralCode ||
+            `SKY-${auth.currentUser.uid.slice(0, 8).toUpperCase()}`,
+        );
+        await setDoc(memberRef, {
+          displayName: name.trim(),
+          avatar,
+          phone: phone.trim(),
+          email: auth.currentUser.email || '',
+          role: 'member',
+          status: 'pending',
+          balance: 0,
+          points: 0,
+          permissions: [],
+          referralCode,
+          referredBy: null,
+          createdAt: serverTimestamp(),
+        });
       }
-      const currentPublicProfile = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
-      await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), { displayName: name.trim(), avatar, referralCode: String(currentPublicProfile.data()?.referralCode || ''), createdAt: serverTimestamp() });
+      const currentPublicProfile = await getDoc(
+        doc(db, 'publicProfiles', auth.currentUser.uid),
+      );
+      await setDoc(doc(db, 'publicProfiles', auth.currentUser.uid), {
+        displayName: name.trim(),
+        avatar,
+        referralCode: String(currentPublicProfile.data()?.referralCode || ''),
+        createdAt: serverTimestamp(),
+      });
       window.localStorage.setItem(`sky-avatar:${auth.currentUser.uid}`, avatar);
-      const saved = await getDoc(doc(db, 'publicProfiles', auth.currentUser.uid));
-      if (String(saved.data()?.avatar || '') !== avatar) throw new Error('avatar-not-saved');
+      const saved = await getDoc(
+        doc(db, 'publicProfiles', auth.currentUser.uid),
+      );
+      if (String(saved.data()?.avatar || '') !== avatar)
+        throw new Error('avatar-not-saved');
       setNotice('Profil bilgileriniz ve görseliniz kaydedildi.');
     } catch (error) {
-      setNotice(error instanceof Error && error.message === 'avatar-not-saved' ? 'Profil görseli doğrulanamadı. Lütfen tekrar deneyin.' : 'Profil kaydedilemedi. Firebase yetkilerini kontrol edin.');
+      setNotice(
+        error instanceof Error && error.message === 'avatar-not-saved'
+          ? 'Profil görseli doğrulanamadı. Lütfen tekrar deneyin.'
+          : 'Profil kaydedilemedi. Firebase yetkilerini kontrol edin.',
+      );
     }
   }
 
@@ -133,9 +355,13 @@ export default function MemberHub({ view }: { view: MemberView }) {
     try {
       user!.auth.languageCode = 'tr';
       await sendEmailVerification(user!);
-      setNotice('Doğrulama e-postası gönderildi. Gelen kutunuzu ve spam klasörünü kontrol edin.');
+      setNotice(
+        'Doğrulama e-postası gönderildi. Gelen kutunuzu ve spam klasörünü kontrol edin.',
+      );
     } catch {
-      setNotice('Doğrulama e-postası şu anda gönderilemedi. Lütfen kısa süre sonra tekrar deneyin.');
+      setNotice(
+        'Doğrulama e-postası şu anda gönderilemedi. Lütfen kısa süre sonra tekrar deneyin.',
+      );
     } finally {
       setAccountAction(null);
     }
@@ -149,7 +375,9 @@ export default function MemberHub({ view }: { view: MemberView }) {
       await sendPasswordResetEmail(user.auth, user.email);
       setNotice('Parola yenileme bağlantısı e-posta adresinize gönderildi.');
     } catch {
-      setNotice('Parola yenileme bağlantısı şu anda gönderilemedi. Lütfen e-posta adresinizi kontrol edip tekrar deneyin.');
+      setNotice(
+        'Parola yenileme bağlantısı şu anda gönderilemedi. Lütfen e-posta adresinizi kontrol edip tekrar deneyin.',
+      );
     } finally {
       setAccountAction(null);
     }
@@ -167,18 +395,480 @@ export default function MemberHub({ view }: { view: MemberView }) {
     }
   }
 
-  if (loading) return <main className="member-loading">Hesabınız hazırlanıyor…</main>;
-  if (!user) return <main className="member-loading"><div><h1>Üye girişi gerekli</h1><p>Profilinizi görüntülemek için hesabınıza giriş yapın.</p><Link href="/giris">Giriş yap</Link></div></main>;
+  if (loading)
+    return <main className="member-loading">Hesabınız hazırlanıyor…</main>;
+  if (!user)
+    return (
+      <main className="member-loading">
+        <div>
+          <h1>Üye girişi gerekli</h1>
+          <p>Profilinizi görüntülemek için hesabınıza giriş yapın.</p>
+          <Link href="/giris">Giriş yap</Link>
+        </div>
+      </main>
+    );
 
-  return <main className="member-page"><div className="member-shell"><aside className="member-sidebar"><span className="member-sidebar__eyebrow">SKY BOZUM / ÜYE MERKEZİ</span><div className="member-avatar">{(member?.displayName || user.email || 'Ü').charAt(0).toUpperCase()}</div><h1>{member?.displayName || 'Sky Bozum üyesi'}</h1><p>{level.name} üye · {totalPoints} puan</p><div className={`member-sidebar__status ${accountState.tone}`}><i /> {accountState.label}</div><nav aria-label="Hesabım bölümleri">{navigation.map(([id,label,href], index) => <Link key={id} href={href} aria-current={view === id ? 'page' : undefined}><small>{String(index + 1).padStart(2, '0')}</small>{label}<span>›</span></Link>)}</nav></aside><section className="member-content"><div className="member-content__topline"><span>KİŞİSEL KONTROL MERKEZİ</span><b className={accountState.tone}><i /> {accountState.label}</b></div>{view === 'overview' && <><header className="member-head"><span>ÜYE PROFİLİ</span><h2>Hesabınız tek bakışta.</h2><p>Seviyenizi, görevlerinizi ve hesap hareketlerinizi buradan takip edin.</p></header>{member?.status !== 'active' || member.restrictions.length ? <section className={`member-access-notice ${accountState.tone}`}><strong>{accountState.label}</strong><p>{member?.status === 'pending' ? 'Hesabınız yönetici tarafından onaylanana kadar para, kod, mağaza ve topluluk işlemleri kapalıdır.' : member?.status === 'banned' ? 'Uzaklaştırma süresince hesap işlemleri güvenlik amacıyla durdurulmuştur.' : 'Hesabınızdaki bazı özellikler yönetici tarafından sınırlandırılmıştır.'}</p>{member?.restrictions.length ? <small>Kısıtlı özellikler: {member.restrictions.map((item) => restrictionLabels[item] || item).join(', ')}</small> : null}</section> : null}<div className="member-stats"><article><span>Seviye</span><strong>{level.name}</strong><small>{level.benefit}</small></article><article><span>Toplam puan</span><strong>{totalPoints}</strong><small>{nextLevel ? `${nextLevel.min - totalPoints} puan sonra ${nextLevel.name}` : 'En üst seviyedesiniz'}</small></article><article><span>Bakiye</span><strong>{(member?.balance || 0).toLocaleString('tr-TR')} TL</strong><small>Yönetici onaylı bakiye</small></article></div><section className="member-level-card"><div><span>SEVİYE İLERLEMESİ</span><h3>{level.name}{nextLevel ? ` → ${nextLevel.name}` : ''}</h3></div><b>{progress}%</b><div className="member-progress"><i style={{width:`${progress}%`}} /></div></section><div className="member-quick">{navigation.slice(1).map(([id,label,href], index) => <Link key={id} href={href}><small>{String(index + 1).padStart(2, '0')}</small><strong>{label}</strong><span>Alanı aç →</span></Link>)}</div></>}
-    {view === 'account' && <><header className="member-head"><span>HESAP İŞLEMLERİ</span><h2>Güvenlik ve erişim.</h2><p>E-posta doğrulama, parola yenileme ve oturum seçenekleri.</p></header><div className="member-action-list"><article><div><strong>E-posta doğrulama</strong><span>{user.emailVerified ? 'E-posta adresiniz doğrulandı.' : 'Doğrulama bekleniyor.'}</span></div>{!user.emailVerified && <button disabled={Boolean(accountAction)} onClick={() => void resendVerification()}>{accountAction === 'verify' ? 'Gönderiliyor…' : 'Tekrar gönder'}</button>}</article><article><div><strong>Parolayı yenile</strong><span>Yenileme bağlantısı kayıtlı e-postanıza gider.</span></div><button disabled={Boolean(accountAction)} onClick={() => void resetPassword()}>{accountAction === 'reset' ? 'Gönderiliyor…' : 'Bağlantı gönder'}</button></article><article><div><strong>Oturumu kapat</strong><span>Bu cihazdaki üyelik oturumunu güvenle sonlandırın.</span></div><button className="danger" disabled={Boolean(accountAction)} onClick={() => void logout()}>{accountAction === 'logout' ? 'Kapatılıyor…' : 'Çıkış yap'}</button></article></div></>}
-    {view === 'profile' && <><header className="member-head"><span>ÜYELİK BİLGİLERİ</span><h2>Profilinizi güncelleyin.</h2><p>Forumda görünen adınızı, avatarınızı ve iletişim numaranızı yönetin.</p></header><form className="member-form" onSubmit={saveProfile}><fieldset className="member-avatar-field"><legend>Hazır avatar seçin</legend><p>Sky Bozum için hazırlanan 10 özgün karikatür avatardan birini seçebilirsiniz.</p><div className="member-avatar-grid">{presetAvatars.map((source,index)=><button key={source} type="button" className={avatar===source?'selected':''} aria-label={`Avatar ${index+1}`} aria-pressed={avatar===source} onClick={()=>setAvatar(source)}><span style={{backgroundImage:`url(${source})`}} /></button>)}</div></fieldset><label>Kendi profil fotoğrafınızı yükleyin<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(event)=>resizeAvatar(event.target.files?.[0],setAvatar)} /><small>Fotoğraf otomatik olarak kare kırpılır ve 100×100 piksele küçültülür.</small></label>{avatar&&<div className="member-avatar-selection"><div className="member-avatar-preview" style={{backgroundImage:`url(${avatar})`}}/><span>Seçili profil görseli</span></div>}<label>Ad soyad<input value={name} onChange={(e)=>setName(e.target.value)} minLength={2} required /></label><label>Telefon numarası<input value={phone} onChange={(e)=>setPhone(e.target.value)} inputMode="tel" /></label><label>E-posta<input value={member?.email || user.email || ''} disabled /><small>E-posta değişikliği güvenlik nedeniyle destek üzerinden yapılır.</small></label><button>Bilgileri kaydet</button></form></>}
-    {view === 'history' && <><header className="member-head"><span>İŞLEM GEÇMİŞİ</span><h2>Hesap ve puan hareketleriniz.</h2><p>Topluluk etkinlikleri ve yönetimce onaylanan puan hareketleri burada görünür.</p></header><div className="member-history">{activities.map((item)=><article key={item.id}><div><strong>{item.type==='like'?'Bir makaleyi beğendiniz':item.type==='comment'?'Bir gönderiye yorum yaptınız':'Bir içeriği paylaştınız'}</strong><Link href={item.href}>{item.title} →</Link><span>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</span></div><b>Etkinlik kaydı</b></article>)}{ledger.map((item)=><article key={item.id}><div><strong>{item.note || 'Hesap hareketi'}</strong><span>{item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}</span></div><b>{item.amount>0?'+':''}{item.amount.toLocaleString('tr-TR')} {item.kind==='balance'?'TL':'puan'}</b></article>)}{!activities.length&&!ledger.length?<p>Henüz kayıtlı bir hesap hareketiniz bulunmuyor.</p>:null}</div></>}
-    {view === 'tasks' && <><header className="member-head"><span>GÖREV MERKEZİ</span><h2>Katılımınızı takip edin.</h2><p>Görev ilerlemeniz kaydedilir; üyelik puanları yönetim doğrulamasından sonra hesabınıza işlenir.</p></header><div className="member-tasks"><Task title="10 makaleyi beğen" current={counts.like} target={10} points={50} href="/bilgi-merkezi"/><Task title="5 makaleye yorum yap" current={counts.comment} target={5} points={75} href="/bilgi-merkezi"/><Task title="1 makale veya durum paylaş" current={counts.share} target={1} points={100} href="/bilgi-merkezi"/></div><section className="member-levels"><h3>Üyelik seviyeleri</h3>{memberLevels.map((item)=><article key={item.name} className={level.name===item.name?'active':''}><strong>{item.name}</strong><span>{item.min} puan</span><p>{item.benefit}</p></article>)}</section></>}
-    {notice && <p className="member-notice">{notice}</p>}
-  </section></div></main>;
+  return (
+    <main className="member-page">
+      <div className="member-shell">
+        <aside className="member-sidebar">
+          <span className="member-sidebar__eyebrow">
+            SKY BOZUM / ÜYE MERKEZİ
+          </span>
+          <div className="member-avatar">
+            {(member?.displayName || user.email || 'Ü').charAt(0).toUpperCase()}
+          </div>
+          <h1>{member?.displayName || 'Sky Bozum üyesi'}</h1>
+          <p>
+            {level.name} üye · {totalPoints} puan
+          </p>
+          <div className={`member-sidebar__status ${accountState.tone}`}>
+            <i /> {accountState.label}
+          </div>
+          <nav aria-label="Hesabım bölümleri">
+            {navigation.map(([id, label, href], index) => (
+              <Link
+                key={id}
+                href={href}
+                aria-current={view === id ? 'page' : undefined}
+              >
+                <small>{String(index + 1).padStart(2, '0')}</small>
+                {label}
+                <span>›</span>
+              </Link>
+            ))}
+          </nav>
+        </aside>
+        <section className="member-content">
+          <div className="member-content__topline">
+            <span>KİŞİSEL KONTROL MERKEZİ</span>
+            <b className={accountState.tone}>
+              <i /> {accountState.label}
+            </b>
+          </div>
+          {view === 'overview' && (
+            <>
+              <header className="member-head">
+                <span>ÜYE PROFİLİ</span>
+                <h2>Hesabınız tek bakışta.</h2>
+                <p>
+                  Seviyenizi, görevlerinizi ve hesap hareketlerinizi buradan
+                  takip edin.
+                </p>
+              </header>
+              {member?.status !== 'active' || member.restrictions.length ? (
+                <section
+                  className={`member-access-notice ${accountState.tone}`}
+                >
+                  <strong>{accountState.label}</strong>
+                  <p>
+                    {member?.status === 'pending'
+                      ? 'Hesabınız yönetici tarafından onaylanana kadar para, kod, mağaza ve topluluk işlemleri kapalıdır.'
+                      : member?.status === 'banned'
+                        ? 'Uzaklaştırma süresince hesap işlemleri güvenlik amacıyla durdurulmuştur.'
+                        : 'Hesabınızdaki bazı özellikler yönetici tarafından sınırlandırılmıştır.'}
+                  </p>
+                  {member?.restrictions.length ? (
+                    <small>
+                      Kısıtlı özellikler:{' '}
+                      {member.restrictions
+                        .map((item) => restrictionLabels[item] || item)
+                        .join(', ')}
+                    </small>
+                  ) : null}
+                </section>
+              ) : null}
+              {profileCompletion < 100 ? (
+                <section className="member-profile-completion">
+                  <header>
+                    <div>
+                      <span>PROFİL TAMAMLAMA</span>
+                      <strong>
+                        {completedProfileSteps}/{profileSteps.length} adım hazır
+                      </strong>
+                    </div>
+                    <b>{profileCompletion}%</b>
+                  </header>
+                  <div className="member-profile-completion__bar">
+                    <i style={{ width: `${profileCompletion}%` }} />
+                  </div>
+                  <nav aria-label="Eksik profil adımları">
+                    {profileSteps.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className={item.complete ? 'is-complete' : ''}
+                      >
+                        <i>{item.complete ? '✓' : '!'}</i>
+                        {item.label}
+                        <span>{item.complete ? 'Hazır' : 'Tamamla →'}</span>
+                      </Link>
+                    ))}
+                  </nav>
+                </section>
+              ) : null}
+              <div className="member-stats">
+                <article>
+                  <span>Seviye</span>
+                  <strong>{level.name}</strong>
+                  <small>{level.benefit}</small>
+                </article>
+                <article>
+                  <span>Toplam puan</span>
+                  <strong>{totalPoints}</strong>
+                  <small>
+                    {nextLevel
+                      ? `${nextLevel.min - totalPoints} puan sonra ${nextLevel.name}`
+                      : 'En üst seviyedesiniz'}
+                  </small>
+                </article>
+                <article>
+                  <span>Bakiye</span>
+                  <strong>
+                    {(member?.balance || 0).toLocaleString('tr-TR')} TL
+                  </strong>
+                  <small>Yönetici onaylı bakiye</small>
+                </article>
+              </div>
+              <section className="member-level-card">
+                <div>
+                  <span>SEVİYE İLERLEMESİ</span>
+                  <h3>
+                    {level.name}
+                    {nextLevel ? ` → ${nextLevel.name}` : ''}
+                  </h3>
+                </div>
+                <b>{progress}%</b>
+                <div className="member-progress">
+                  <i style={{ width: `${progress}%` }} />
+                </div>
+                <small className="member-level-card__note">
+                  Puan ve seviye avantajları yalnız yönetim defterine işlenen
+                  doğrulanmış hareketlerden hesaplanır. Ek oran, ürün ve işlem
+                  uygunluğu teyit edildiğinde uygulanır.
+                </small>
+              </section>
+              <div className="member-quick">
+                {navigation.slice(1).map(([id, label, href], index) => (
+                  <Link key={id} href={href}>
+                    <small>{String(index + 1).padStart(2, '0')}</small>
+                    <strong>{label}</strong>
+                    <span>Alanı aç →</span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+          {view === 'account' && (
+            <>
+              <header className="member-head">
+                <span>HESAP İŞLEMLERİ</span>
+                <h2>Güvenlik ve erişim.</h2>
+                <p>E-posta doğrulama, parola yenileme ve oturum seçenekleri.</p>
+              </header>
+              <div className="member-action-list">
+                <article>
+                  <div>
+                    <strong>E-posta doğrulama</strong>
+                    <span>
+                      {user.emailVerified
+                        ? 'E-posta adresiniz doğrulandı.'
+                        : 'Doğrulama bekleniyor.'}
+                    </span>
+                  </div>
+                  {!user.emailVerified && (
+                    <button
+                      disabled={Boolean(accountAction)}
+                      onClick={() => void resendVerification()}
+                    >
+                      {accountAction === 'verify'
+                        ? 'Gönderiliyor…'
+                        : 'Tekrar gönder'}
+                    </button>
+                  )}
+                </article>
+                <article>
+                  <div>
+                    <strong>Parolayı yenile</strong>
+                    <span>Yenileme bağlantısı kayıtlı e-postanıza gider.</span>
+                  </div>
+                  <button
+                    disabled={Boolean(accountAction)}
+                    onClick={() => void resetPassword()}
+                  >
+                    {accountAction === 'reset'
+                      ? 'Gönderiliyor…'
+                      : 'Bağlantı gönder'}
+                  </button>
+                </article>
+                <article>
+                  <div>
+                    <strong>Oturumu kapat</strong>
+                    <span>
+                      Bu cihazdaki üyelik oturumunu güvenle sonlandırın.
+                    </span>
+                  </div>
+                  <button
+                    className="danger"
+                    disabled={Boolean(accountAction)}
+                    onClick={() => void logout()}
+                  >
+                    {accountAction === 'logout' ? 'Kapatılıyor…' : 'Çıkış yap'}
+                  </button>
+                </article>
+              </div>
+            </>
+          )}
+          {view === 'profile' && (
+            <>
+              <header className="member-head">
+                <span>ÜYELİK BİLGİLERİ</span>
+                <h2>Profilinizi güncelleyin.</h2>
+                <p>
+                  Forumda görünen adınızı, avatarınızı ve iletişim numaranızı
+                  yönetin.
+                </p>
+              </header>
+              <form className="member-form" onSubmit={saveProfile}>
+                <fieldset className="member-avatar-field">
+                  <legend>Hazır avatar seçin</legend>
+                  <p>
+                    Sky Bozum için hazırlanan 10 özgün karikatür avatardan
+                    birini seçebilirsiniz.
+                  </p>
+                  <div className="member-avatar-grid">
+                    {presetAvatars.map((source, index) => (
+                      <button
+                        key={source}
+                        type="button"
+                        className={avatar === source ? 'selected' : ''}
+                        aria-label={`Avatar ${index + 1}`}
+                        aria-pressed={avatar === source}
+                        onClick={() => setAvatar(source)}
+                      >
+                        <span style={{ backgroundImage: `url(${source})` }} />
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <label>
+                  Kendi profil fotoğrafınızı yükleyin
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={(event) =>
+                      resizeAvatar(event.target.files?.[0], setAvatar)
+                    }
+                  />
+                  <small>
+                    Fotoğraf otomatik olarak kare kırpılır ve 100×100 piksele
+                    küçültülür.
+                  </small>
+                </label>
+                {avatar && (
+                  <div className="member-avatar-selection">
+                    <div
+                      className="member-avatar-preview"
+                      style={{ backgroundImage: `url(${avatar})` }}
+                    />
+                    <span>Seçili profil görseli</span>
+                  </div>
+                )}
+                <label>
+                  Ad soyad
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    minLength={2}
+                    required
+                  />
+                </label>
+                <label>
+                  Telefon numarası
+                  <input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    inputMode="tel"
+                  />
+                </label>
+                <label>
+                  E-posta
+                  <input value={member?.email || user.email || ''} disabled />
+                  <small>
+                    E-posta değişikliği güvenlik nedeniyle destek üzerinden
+                    yapılır.
+                  </small>
+                </label>
+                <button>Bilgileri kaydet</button>
+              </form>
+            </>
+          )}
+          {view === 'history' && (
+            <>
+              <header className="member-head">
+                <span>İŞLEM GEÇMİŞİ</span>
+                <h2>Hesap ve puan hareketleriniz.</h2>
+                <p>
+                  Topluluk etkinlikleri ve yönetimce onaylanan puan hareketleri
+                  burada görünür.
+                </p>
+              </header>
+              <div className="member-history">
+                {activities.map((item) => (
+                  <article key={item.id}>
+                    <div>
+                      <strong>
+                        {item.type === 'like'
+                          ? 'Bir makaleyi beğendiniz'
+                          : item.type === 'comment'
+                            ? 'Bir gönderiye yorum yaptınız'
+                            : 'Bir içeriği paylaştınız'}
+                      </strong>
+                      <Link href={item.href}>{item.title} →</Link>
+                      <span>
+                        {item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}
+                      </span>
+                    </div>
+                    <b>Etkinlik kaydı</b>
+                  </article>
+                ))}
+                {ledger.map((item) => (
+                  <article key={item.id}>
+                    <div>
+                      <strong>{item.note || 'Hesap hareketi'}</strong>
+                      <span>
+                        {item.createdAt?.toLocaleDateString('tr-TR') || 'Yeni'}
+                      </span>
+                    </div>
+                    <b>
+                      {item.amount > 0 ? '+' : ''}
+                      {item.amount.toLocaleString('tr-TR')}{' '}
+                      {item.kind === 'balance' ? 'TL' : 'puan'}
+                    </b>
+                  </article>
+                ))}
+                {!activities.length && !ledger.length ? (
+                  <p>Henüz kayıtlı bir hesap hareketiniz bulunmuyor.</p>
+                ) : null}
+              </div>
+            </>
+          )}
+          {view === 'tasks' && (
+            <>
+              <header className="member-head">
+                <span>GÖREV MERKEZİ</span>
+                <h2>Katılımınızı takip edin.</h2>
+                <p>
+                  Görev ilerlemeniz kaydedilir; üyelik puanları yönetim
+                  doğrulamasından sonra hesabınıza işlenir.
+                </p>
+              </header>
+              <div className="member-tasks">
+                <Task
+                  title="10 makaleyi beğen"
+                  current={counts.like}
+                  target={10}
+                  points={50}
+                  href="/bilgi-merkezi"
+                />
+                <Task
+                  title="5 makaleye yorum yap"
+                  current={counts.comment}
+                  target={5}
+                  points={75}
+                  href="/bilgi-merkezi"
+                />
+                <Task
+                  title="1 makale veya durum paylaş"
+                  current={counts.share}
+                  target={1}
+                  points={100}
+                  href="/bilgi-merkezi"
+                />
+              </div>
+              <section className="member-levels">
+                <h3>Üyelik seviyeleri</h3>
+                {memberLevels.map((item) => (
+                  <article
+                    key={item.name}
+                    className={level.name === item.name ? 'active' : ''}
+                  >
+                    <strong>{item.name}</strong>
+                    <span>{item.min} puan</span>
+                    <p>{item.benefit}</p>
+                  </article>
+                ))}
+              </section>
+            </>
+          )}
+          {notice && <p className="member-notice">{notice}</p>}
+        </section>
+      </div>
+    </main>
+  );
 }
 
-function Task({title,current,target,points,href}:{title:string;current:number;target:number;points:number;href:string}) { const done=current>=target; const percent=Math.min(100,Math.round(current/target*100)); return <article className={done?'done':''}><div><span>{done?'DOĞRULAMAYA HAZIR':'AKTİF GÖREV'}</span><b>+{points} puan</b></div><h3>{title}</h3><p>{Math.min(current,target)} / {target}</p><div><i style={{width:`${percent}%`}} /></div><Link href={href}>{done?'Yönetim doğrulaması bekleniyor':'İçeriklere git →'}</Link></article> }
+function Task({
+  title,
+  current,
+  target,
+  points,
+  href,
+}: {
+  title: string;
+  current: number;
+  target: number;
+  points: number;
+  href: string;
+}) {
+  const done = current >= target;
+  const percent = Math.min(100, Math.round((current / target) * 100));
+  return (
+    <article className={done ? 'done' : ''}>
+      <div>
+        <span>{done ? 'DOĞRULAMAYA HAZIR' : 'AKTİF GÖREV'}</span>
+        <b>+{points} puan</b>
+      </div>
+      <h3>{title}</h3>
+      <p>
+        {Math.min(current, target)} / {target}
+      </p>
+      <div>
+        <i style={{ width: `${percent}%` }} />
+      </div>
+      <Link href={href}>
+        {done ? 'Yönetim doğrulaması bekleniyor' : 'İçeriklere git →'}
+      </Link>
+    </article>
+  );
+}
 
-function resizeAvatar(file: File | undefined, done: (value: string) => void) { if (!file) return; const reader = new FileReader(); reader.onload = () => { const image = new Image(); image.onload = () => { const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64; const context = canvas.getContext('2d'); if (!context) return; const size = Math.min(image.width, image.height); context.drawImage(image, (image.width-size)/2, (image.height-size)/2, size, size, 0, 0, 64, 64); done(canvas.toDataURL('image/webp', .6)); }; image.src = String(reader.result); }; reader.readAsDataURL(file); }
+function resizeAvatar(file: File | undefined, done: (value: string) => void) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const context = canvas.getContext('2d');
+      if (!context) return;
+      const size = Math.min(image.width, image.height);
+      context.drawImage(
+        image,
+        (image.width - size) / 2,
+        (image.height - size) / 2,
+        size,
+        size,
+        0,
+        0,
+        64,
+        64,
+      );
+      done(canvas.toDataURL('image/webp', 0.6));
+    };
+    image.src = String(reader.result);
+  };
+  reader.readAsDataURL(file);
+}
