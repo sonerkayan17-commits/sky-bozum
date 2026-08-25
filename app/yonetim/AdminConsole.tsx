@@ -25,6 +25,7 @@ import AdminBackupPanel from "./AdminBackupPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 import ProductInventoryPanel from "./ProductInventoryPanel";
 import AdminCommerceCasePanel from "./AdminCommerceCasePanel";
+import AdminConversionPanel from "./AdminConversionPanel";
 import type { ArticleItem } from "../lib/site";
 import {
   removeManagedArticle,
@@ -53,10 +54,10 @@ import {
   type MemberRestrictionKey,
 } from "../lib/admin";
 
-type View = "overview" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "cases" | "inventory" | "settings";
+type View = "overview" | "analytics" | "release" | "backup" | "members" | "moderation" | "access" | "content" | "archive" | "audit" | "rates" | "forum" | "operations" | "cases" | "inventory" | "settings";
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 type AuditFilter = 'all' | 'site' | 'content' | 'member' | 'community' | 'operation' | 'system';
-const adminViews: readonly View[] = ["overview", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "cases", "inventory", "settings"];
+const adminViews: readonly View[] = ["overview", "analytics", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "cases", "inventory", "settings"];
 const permissions = [
   "Yorum paylaşımı",
   "İçerik taslağı",
@@ -524,6 +525,7 @@ export default function AdminConsole({
           {(
             [
               ["overview", "Genel bakış"],
+              ["analytics", "Dönüşüm analitiği"],
               ["release", "Yayın kontrolü"],
               ["backup", "Yedek"],
               ["content", "İçerik"],
@@ -784,6 +786,7 @@ export default function AdminConsole({
           </section>
         )}
         {view === "settings" && <SiteSettingsPanel db={db} actorId={user.uid} />}
+        {view === "analytics" && <AdminConversionPanel db={db} />}
         {view === "release" && <ReleaseReadinessPanel db={db} actorId={user.uid} referenceCount={referenceCount} latestReferenceAt={latestReferenceAt} />}
         {view === "backup" && <AdminBackupPanel db={db} actorId={user.uid} />}
         {view === "rates" && <AdminRatePanel db={db} actorId={user.uid} />}

@@ -25,6 +25,7 @@
     "audit:product-comparison": "node scripts/audit-product-comparison.mjs",
     "audit:operational-trust": "node scripts/audit-operational-trust.mjs",
     "audit:commerce-recovery": "node scripts/audit-commerce-recovery.mjs",
+    "audit:conversion-analytics": "node scripts/audit-conversion-analytics.mjs",
     "audit:seo-release": "node scripts/audit-seo-release-readiness.mjs",
     "preflight:release": "node scripts/audit-release-gate.mjs",
     "audit:seo": "node scripts/audit-seo-intents.mjs",
