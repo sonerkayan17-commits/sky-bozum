@@ -83,7 +83,7 @@ export default function FinalCta() {
         {walletGuides.map((guide) => (
           <Link href={guide.href} key={guide.href} className="focus-ring">
             <span className="home-contact-band__guide-cover">
-              <Image src={guide.image} alt={guide.alt} fill loading="lazy" sizes="(max-width: 640px) 100vw, 50vw" />
+              <Image src={guide.image} alt={guide.alt} fill loading="lazy" sizes="(max-width: 640px) 50vw, (max-width: 1180px) 33vw, 360px" />
             </span>
             <span className="home-contact-band__guide-copy">
               <small>{guide.label}</small>
