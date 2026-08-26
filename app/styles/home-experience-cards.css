@@ -47,9 +47,12 @@
 }
 
 .home-page .experience-showcase--compact .experience-artwork {
-  height: 128px !important;
-  margin-top: 0;
-  border-radius: 16px;
+  /* Kapak kartın içinde ikinci bir kutu gibi durmasın: kartın üst alanını
+     kenardan kenara kaplar. Metin bölümü ise kartın kendi güvenli boşluğunda kalır. */
+  width: calc(100% + 38px);
+  height: 154px !important;
+  margin: -19px -19px 0;
+  border-radius: 20px 20px 16px 16px;
 }
 
 .home-page .experience-showcase--compact .experience-artwork-logos {
@@ -186,9 +189,10 @@
   }
 
   .home-page .experience-showcase--compact .experience-artwork {
-    height: 98px !important;
-    margin-top: 0;
-    border-radius: 13px;
+    width: calc(100% + 22px);
+    height: 112px !important;
+    margin: -11px -11px 0;
+    border-radius: 15px 15px 13px 13px;
   }
 
   .home-page .experience-showcase--compact .experience-artwork-logos {
