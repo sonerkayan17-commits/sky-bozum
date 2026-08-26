@@ -2,7 +2,7 @@ import type { ProductItem } from '../../lib/products';
 import Image from 'next/image';
 import ProductCoverVideo from './ProductCoverVideo';
 
-export default function ProductCover({ product, compact = false, priority = false, disableVideo = false }: { product: ProductItem; compact?: boolean; priority?: boolean; disableVideo?: boolean }) {
+export default function ProductCover({ product, compact = false, priority = false, disableVideo = false, sizes }: { product: ProductItem; compact?: boolean; priority?: boolean; disableVideo?: boolean; sizes?: string }) {
   const hasVideo = Boolean(product.coverVideo && !compact && !disableVideo);
   const purposeImage = compact ? product.packImage : disableVideo ? product.heroImage : undefined;
   const imageSrc = purposeImage ?? product.coverImage;
@@ -21,7 +21,7 @@ export default function ProductCover({ product, compact = false, priority = fals
           fill
           priority={priority}
           loading={priority ? undefined : 'lazy'}
-          sizes="(max-width: 560px) 100vw, (max-width: 820px) 50vw, 560px"
+          sizes={sizes ?? '(max-width: 560px) 100vw, (max-width: 820px) 50vw, 560px'}
           className="product-cover__backdrop"
         />
       ) : null}
@@ -31,7 +31,7 @@ export default function ProductCover({ product, compact = false, priority = fals
         fill
         priority={priority}
         loading={priority ? undefined : 'lazy'}
-        sizes={compact ? '(max-width: 560px) 45vw, (max-width: 1120px) 30vw, 230px' : '(max-width: 560px) 100vw, (max-width: 820px) 50vw, 560px'}
+        sizes={sizes ?? (compact ? '(max-width: 560px) 45vw, (max-width: 1120px) 30vw, 230px' : '(max-width: 560px) 100vw, (max-width: 820px) 50vw, 560px')}
         className="product-cover__image"
         style={{ objectPosition: imagePosition }}
       />

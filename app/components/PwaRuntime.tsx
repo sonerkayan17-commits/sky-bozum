@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { initializeFirebaseAppCheck } from '../lib/firebase';
 
 function defer(task: () => void) {
   const idleWindow = window as Window & {
@@ -20,7 +19,9 @@ export default function PwaRuntime() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => undefined);
       }
-      void initializeFirebaseAppCheck();
+      if (process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_RECAPTCHA_KEY?.trim()) {
+        void import('../lib/firebase').then(({ initializeFirebaseAppCheck }) => initializeFirebaseAppCheck());
+      }
     });
   }, []);
 
