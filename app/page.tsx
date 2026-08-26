@@ -9,6 +9,8 @@ import HomeBlog from './components/HomeBlog';
 import HomeTestimonials from './components/HomeTestimonials';
 import FinalCta from './components/FinalCta';
 import DeferredViewportSection from './components/home/DeferredViewportSection';
+import { homeFaqs } from './lib/homeFaqs';
+import { jsonLd } from './lib/seo';
 
 // Keep the complete page in the server HTML for SEO, while splitting interactive
 // below-the-fold islands out of the first client bundle.
@@ -48,8 +50,19 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: homeFaqs.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  };
+
   return (
     <main className="home-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
       <Hero />
       <div className="home-flow">
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--brands" desktopHeight={430} mobileHeight={646}><BrandStrip /></DeferredViewportSection>

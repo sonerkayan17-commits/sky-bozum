@@ -1,5 +1,5 @@
-import Link from './DeferredLink';
 import Image from 'next/image';
+import Link from './DeferredLink';
 
 type ArtworkItem = {
   src: string;
@@ -7,76 +7,101 @@ type ArtworkItem = {
   className?: string;
 };
 
-const highlights = [
+type Highlight = {
+  service: string;
+  tag: string;
+  quote: string;
+  accent: 'rose' | 'gold' | 'slate' | 'violet' | 'blue';
+  href: string;
+  visual: string;
+  artwork?: readonly ArtworkItem[];
+  cover?: string;
+  coverAlt?: string;
+  status: string;
+  footer: string;
+};
+
+const highlights: readonly Highlight[] = [
   {
-    service: 'Razer Gold',
-    tag: 'Kod bozum akışı',
-    quote: 'Kod türü, tutar ve güncel oran işlem başlamadan önce yazılı olarak netleştirilir.',
+    service: 'Razer Gold, Apple & Steam',
+    tag: 'Dijital kod rehberleri',
+    quote: 'Kod bölgesi, para birimi, kullanım ve değerlendirme koşullarını tek merkezde karşılaştırın.',
     accent: 'rose',
-    href: '/hizmetler/razer-gold-tl',
-    visual: 'code',
+    href: '/bilgi-merkezi/dijital-kod-hediye-karti-rehberi',
+    visual: 'codes',
     artwork: [
       { src: '/brands/razer/razer.svg', label: 'Razer Gold', className: 'experience-logo--razer' },
+      { src: '/brands/apple/apple.svg', label: 'Apple', className: 'experience-logo--apple' },
+      { src: '/brands/steam/steam.svg', label: 'Steam', className: 'experience-logo--steam' },
     ],
+    status: '3 KOD GRUBU',
+    footer: 'Kod rehberlerini aç',
   },
   {
-    service: 'Mobil Ödeme',
-    tag: 'Operatör süreci',
-    quote: 'Vodafone, Turkcell ve Türk Telekom için limit, yöntem ve işlem adımları ayrı ayrı açıklanır.',
+    service: 'Turkcell, Vodafone & Türk Telekom',
+    tag: 'Operatör rehberleri',
+    quote: 'Limit, onay, faturalandırma ve dijital ürün satın alma adımlarındaki farkları görün.',
     accent: 'gold',
     href: '/operatorler',
     visual: 'operators',
     artwork: [
-      { src: '/brands/vodafone/vodafone.svg', label: 'Vodafone' },
       { src: '/brands/turkcell/turkcell.svg', label: 'Turkcell' },
+      { src: '/brands/vodafone/vodafone.svg', label: 'Vodafone' },
       { src: '/brands/turktelekom/turktelekom.svg', label: 'Türk Telekom' },
     ],
+    status: '3 OPERATÖR',
+    footer: 'Operatörleri incele',
   },
   {
-    service: 'iTunes / Apple',
-    tag: 'Hediye kartı',
-    quote: 'Apple Gift Card bölgesi ve kod uygunluğu kontrol edilir; kesin oran onaydan önce paylaşılır.',
-    accent: 'slate',
-    href: '/hizmetler/itunes-apple',
-    visual: 'apple',
-    artwork: [
-      { src: '/brands/apple/apple.svg', label: 'Apple', className: 'experience-logo--apple' },
-    ],
-  },
-  {
-    service: 'Paycell & Pokus',
-    tag: 'Dijital cüzdan',
-    quote: 'Cüzdan türüne göre doğru satın alma yöntemi, bakiye kontrolü ve ödeme akışı gösterilir.',
+    service: 'Paycell, Pokus & Vodafone Pay',
+    tag: 'Dijital cüzdan rehberleri',
+    quote: 'Bakiye, limit ve desteklenen mağazalarda dijital ürün satın alma seçeneklerini öğrenin.',
     accent: 'violet',
-    href: '/hizmetler/paycell',
+    href: '/bilgi-merkezi/kategori/dijital-cuzdanlar',
     visual: 'wallets',
     artwork: [
       { src: '/brands/paycell/paycell.svg', label: 'Paycell' },
       { src: '/brands/pokus/pokus.svg', label: 'Pokus' },
+      { src: '/brands/vodafone/vodafone.svg', label: 'Vodafone Pay' },
     ],
+    status: '3 CÜZDAN',
+    footer: 'Cüzdan rehberlerini aç',
   },
   {
-    service: 'Banka / Kredi Kartı',
-    tag: 'Kart çözümleri',
-    quote: 'Kredi kartı ve sanal kart için desteklenen ürün, mağaza ve uygunluk koşulları önceden doğrulanır.',
-    accent: 'blue',
-    href: '/hizmetler/kredi-karti-sanal-kart',
-    visual: 'cards',
-    artwork: [
-      { src: '/brands/visa/visa.svg', label: 'Visa' },
-      { src: '/brands/mastercard/mastercard.svg', label: 'Mastercard' },
-    ],
+    service: 'Turkcell, Vodafone, Türk Telekom Karşılaştırması',
+    tag: '2026 karşılaştırma rehberi',
+    quote: 'Turkcell, Vodafone ve Türk Telekom için limit, onay ve kullanım farklarını yan yana inceleyin.',
+    accent: 'gold',
+    href: '/bilgi-merkezi/turkcell-vodafone-turk-telekom-mobil-bozum-karsilastirmasi-2026',
+    visual: 'editorial',
+    cover: '/blog-covers/operator-karsilastirma.webp',
+    coverAlt: 'Turkcell, Vodafone ve Türk Telekom mobil ödeme karşılaştırma rehberi',
+    status: 'GÜNCEL REHBER',
+    footer: 'Karşılaştırmayı oku',
   },
   {
-    service: 'Steam Cüzdan Kodu',
-    tag: 'Dijital oyun kodu',
-    quote: 'Steam kodunun bölgesi, para birimi ve kullanılmamış olma durumu işlem öncesinde kontrol edilir.',
+    service: 'Güvenilir Mobil Bozum Sitesi Nasıl Seçilir?',
+    tag: '10 güvenlik kontrolü',
+    quote: 'Alan adı, yazılı tutar, resmî iletişim ve kişisel bilgi sınırlarını işlemden önce doğrulayın.',
     accent: 'blue',
-    href: '/hizmetler/steam',
-    visual: 'steam',
-    artwork: [
-      { src: '/brands/steam/steam.svg', label: 'Steam', className: 'experience-logo--steam' },
-    ],
+    href: '/bilgi-merkezi/guvenilir-mobil-bozum-sitesi-nasil-secilir',
+    visual: 'editorial',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-guvenlik-rehberi-v2.webp',
+    coverAlt: 'Güvenilir mobil bozum sitesi seçim rehberi',
+    status: '10 KONTROL',
+    footer: 'Güvenlik rehberini oku',
+  },
+  {
+    service: 'Sahte Mobil Bozum Sitesi Nasıl Anlaşılır?',
+    tag: '7 kırmızı bayrak',
+    quote: 'Taklit alan adı, şifre talebi, acele baskısı ve belirsiz ödeme vaatlerini erken fark edin.',
+    accent: 'rose',
+    href: '/bilgi-merkezi/mobil-bozum-yaparken-dolandirilabilir-miyim',
+    visual: 'editorial',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
+    coverAlt: 'Sahte mobil bozum sitesi ve dolandırıcılık işaretleri',
+    status: '7 UYARI',
+    footer: 'Kırmızı bayrakları gör',
   },
 ] as const;
 
@@ -89,22 +114,25 @@ function ShieldCheck() {
   );
 }
 
-function ServiceArtwork({ items, visual }: { items: readonly ArtworkItem[]; visual: string }) {
+function ServiceArtwork({ artwork, visual, cover, coverAlt, status }: Pick<Highlight, 'artwork' | 'visual' | 'cover' | 'coverAlt' | 'status'>) {
   return (
-    <div className={`experience-artwork experience-artwork--${visual}`} aria-hidden="true">
-      <div className="experience-artwork-grid" />
-      <div className="experience-artwork-glow" />
-      <div className="experience-artwork-orbit experience-artwork-orbit--one" />
-      <div className="experience-artwork-orbit experience-artwork-orbit--two" />
-      <div className="experience-artwork-logos">
-        {items.map((item, index) => (
-          <span key={item.src} className={`experience-logo experience-logo--${index + 1} ${item.className ?? ''}`}>
-            <Image src={item.src} alt="" fill sizes="96px" className="object-contain" />
-          </span>
-        ))}
-      </div>
+    <div className={`experience-artwork experience-artwork--${visual}`}>
+      {cover ? <Image src={cover} alt={coverAlt ?? ''} fill sizes="(max-width: 640px) 45vw, (max-width: 900px) 42vw, 30vw" className="experience-artwork-cover" /> : null}
+      <div className="experience-artwork-grid" aria-hidden="true" />
+      <div className="experience-artwork-glow" aria-hidden="true" />
+      <div className="experience-artwork-orbit experience-artwork-orbit--one" aria-hidden="true" />
+      <div className="experience-artwork-orbit experience-artwork-orbit--two" aria-hidden="true" />
+      {artwork?.length ? (
+        <div className="experience-artwork-logos" aria-hidden="true">
+          {artwork.map((item, index) => (
+            <span key={`${item.src}-${index}`} className={`experience-logo experience-logo--${index + 1} ${item.className ?? ''}`}>
+              <Image src={item.src} alt="" fill sizes="96px" className="object-contain" />
+            </span>
+          ))}
+        </div>
+      ) : null}
       <span className="experience-artwork-status"><i /> DOĞRULANDI</span>
-      <span className="experience-artwork-code">{visual === 'cards' ? 'FAST / 3D SECURE' : visual === 'operators' ? '3 OPERATÖR' : visual === 'wallets' ? 'ANLIK BAKİYE' : visual === 'apple' ? 'GIFT CARD' : visual === 'steam' ? 'STEAM KODU' : 'KOD KONTROL'}</span>
+      <span className="experience-artwork-code">{status}</span>
     </div>
   );
 }
@@ -115,27 +143,27 @@ export default function HomeTestimonials() {
       <div className="content-wide experience-shell">
         <div className="experience-heading">
           <div>
-            <p className="eyebrow">İşlem deneyimi</p>
-            <h2 id="experience-title" className="experience-title">İşlem boyunca sizi ne bekler?</h2>
-            <p className="experience-intro">En sık kullanılan hizmetlerde kontrol, oran teyidi ve ödeme adımlarını baştan görün.</p>
+            <p className="eyebrow">Rehberler ve önemli kontroller</p>
+            <h2 id="experience-title" className="experience-title">İşleminize uygun bilgiye doğrudan ulaşın.</h2>
+            <p className="experience-intro">Hizmetleri üç anlaşılır grupta inceleyin; karşılaştırma ve güvenlik rehberlerinden doğru adımı seçin.</p>
           </div>
-          <Link href="/hizmetler" className="experience-link">Tüm hizmetleri incele <span aria-hidden="true">→</span></Link>
+          <Link href="/bilgi-merkezi" className="experience-link">Tüm rehberleri incele <span aria-hidden="true">→</span></Link>
         </div>
 
         <div className="experience-grid experience-grid--five">
           {highlights.map((item, index) => (
-            <Link key={item.service} href={item.href} className={`experience-card experience-card--${item.accent}`} aria-label={`${item.service} hizmet sayfasını aç`}>
+            <Link key={item.service} href={item.href} className={`experience-card experience-card--${item.accent}`} aria-label={`${item.service} sayfasını aç`}>
               <div className="experience-card-top">
                 <span className="experience-index">0{index + 1}</span>
-                <span className="experience-chip">Hizmet rehberi</span>
+                <span className="experience-chip">{index < 3 ? 'Hizmet grubu' : 'Önemli rehber'}</span>
               </div>
-              <ServiceArtwork items={item.artwork} visual={item.visual} />
+              <ServiceArtwork artwork={item.artwork} visual={item.visual} cover={item.cover} coverAlt={item.coverAlt} status={item.status} />
               <p className="experience-tag">{item.tag}</p>
               <h3>{item.service}</h3>
               <p className="experience-quote">{item.quote}</p>
               <div className="experience-card-footer">
                 <span className="experience-check"><ShieldCheck /></span>
-                <span>Rehberi incele</span><span className="ml-auto" aria-hidden="true">→</span>
+                <span>{item.footer}</span><span className="ml-auto" aria-hidden="true">→</span>
               </div>
             </Link>
           ))}
@@ -143,8 +171,8 @@ export default function HomeTestimonials() {
 
         <div className="experience-trustbar">
           <div className="experience-trust-icon"><ShieldCheck /></div>
-          <div><strong>İşlem öncesinde net bilgi</strong><p>Hizmet yöntemi ve kesin oran, kod veya bakiye paylaşılmadan önce yazılı olarak teyit edilir.</p></div>
-          <Link href="/iletisim">Süreci sorun <span aria-hidden="true">→</span></Link>
+          <div><strong>Satın almadan önce dört kontrol</strong><p>Ürün, tutar, bölge ve teslim koşulunu doğrulayın; şifre veya SMS kodunuzu paylaşmayın.</p></div>
+          <Link href="/bilgi-merkezi/guvenilir-mobil-bozum-sitesi-nasil-secilir">Kontrol listesini aç <span aria-hidden="true">→</span></Link>
         </div>
       </div>
     </section>

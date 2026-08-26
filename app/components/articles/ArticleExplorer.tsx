@@ -148,7 +148,8 @@ function revealAndFocus(target: () => HTMLElement | null, block: ScrollLogicalPo
 
 export function formatDate(value?: string) {
   if (!value) return 'Düzenli güncellenir';
-  const date = new Date(value);
+  const normalized = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T12:00:00` : value;
+  const date = new Date(normalized);
   if (Number.isNaN(date.getTime())) return 'Düzenli güncellenir';
   return new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
 }

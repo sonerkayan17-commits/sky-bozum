@@ -81,5 +81,13 @@
 @media(max-width:760px){.trust-dossier__header{align-items:flex-start;flex-direction:column}.trust-dossier__status b{display:none}.trust-dossier__body{grid-template-columns:1fr}.trust-dossier__registry{border-top:1px solid rgba(255,255,255,.07);border-left:0}.trust-dossier__protocol{grid-template-columns:1fr}.trust-dossier__protocol ol{grid-template-columns:1fr}.trust-dossier__protocol li{border-top:1px solid rgba(255,255,255,.06);border-left:0}.trust-dossier__footer{align-items:flex-start;flex-direction:column}.contact-concierge__copy{padding:1.7rem}.contact-concierge__desk{padding:1rem}.contact-concierge__footer{grid-template-columns:1fr}.contact-concierge__footer>p{min-height:72px;border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}.contact-concierge__agent{grid-template-columns:38px 1fr}.contact-concierge__agent>em{grid-column:2}.contact-concierge__ticket dl>div{grid-template-columns:27px 1fr}.contact-concierge__ticket dl b{grid-column:2}}
 @media(prefers-reduced-motion:reduce){.trust-dossier__actions a,.contact-concierge__copy>a{transition:none}.trust-dossier__actions a:hover,.contact-concierge__copy>a:hover{transform:none}}
 
+/* V45.279 — kapsamlı fakat kompakt ana sayfa SSS */
+.home-page .home-faq-question{min-height:47px}
+.home-page .home-faq-question>span:first-child{font-size:12px;line-height:1.35}
+.home-page .home-faq-toggle{width:27px;height:27px;font-size:15px}
+.home-page .home-faq-answer>p{padding-right:38px;font-size:11.5px;line-height:1.62}
+.home-page .home-faq-item.is-open .home-faq-answer>p{padding-bottom:13px}
+@media(max-width:420px){.home-page .home-faq-question{min-height:48px}.home-page .home-faq-question>span:first-child{font-size:11.5px}}
+
 /* V2 final homepage audit pass — clearer hierarchy, service discovery and responsive polish */
 .home-services{position:relative;padding:88px 0;background:linear-gradient(180deg,#080a0f 0%,#0d1016 55%,#090b10 100%);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}

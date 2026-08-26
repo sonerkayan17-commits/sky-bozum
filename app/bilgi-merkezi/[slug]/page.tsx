@@ -7,6 +7,7 @@ import ArticleVisual from '../../components/articles/ArticleVisual';
 import ArticleSupportLink from '../../components/articles/ArticleSupportLink';
 import ArticleLearningPath from '../../components/articles/ArticleLearningPath';
 import ArticleFeedback from '../../components/articles/ArticleFeedback';
+import ArticleServicesDirectory from '../../components/articles/ArticleServicesDirectory';
 import DeferredContentEngagement from '../../components/community/DeferredContentEngagement';
 import ReadingProgress from '../../components/articles/ReadingProgress';
 import { slugifyCategory } from '../../lib/articleCategories';
@@ -22,6 +23,10 @@ import { serviceForArticle } from '../../lib/contentBridges';
 import { getHubForArticle } from '../../lib/topicHubs';
 import { getManagedContentArticle, getManagedContentArticles, mergeManagedArticles } from '../../lib/managedContent';
 
+function formatArticleDate(value: string) {
+  const normalized = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T12:00:00` : value;
+  return new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(normalized));
+}
 
 function distributeMedia(sectionCount: number, mediaCount: number, reservedSections: number[] = []) {
   if (sectionCount <= 0 || mediaCount <= 0) return new Map<number, number>();
@@ -168,7 +173,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <span className="article-editorial-hero__eyebrow">{editorialLabels.eyebrow} · {article.category}</span>
             <h1 className="article-editorial-hero__title mt-4">{article.title}</h1>
             <p className="article-editorial-hero__excerpt mt-5">{article.excerpt}</p>
-            <div className="article-editorial-hero__meta mt-6 flex flex-wrap items-center gap-3"><span>Okuma süresi: {article.readTime}</span><span>Güncellendi: {new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(modified))}</span><ShareButtons title={article.title} /></div>
+            <div className="article-editorial-hero__meta mt-6 flex flex-wrap items-center gap-3"><span>Okuma süresi: {article.readTime}</span><span>Güncellendi: {formatArticleDate(modified)}</span><ShareButtons title={article.title} /></div>
             <div className="article-hero-cover mt-7"><ArticleCover article={article} priority /></div>
           </div>
         </div>
@@ -208,6 +213,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           {article.faq?.length ? <section className="article-faq"><p>SIK SORULAN SORULAR</p><h2>{article.title} hakkında sık sorulan sorular</h2><div>{article.faq.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div></section> : null}
 
           {article.sources?.length ? <section className="article-resource-links" aria-labelledby="article-sources-title"><p>RESMÎ KAYNAKLAR</p><h2 id="article-sources-title">Kontrollerde kullanılan kaynaklar</h2><div>{article.sources.map((source) => <a key={source.href} href={source.href} target="_blank" rel="noreferrer"><span><strong>{source.publisher}</strong> · {source.label}</span><span aria-hidden="true">↗</span></a>)}</div></section> : null}
+
+          <ArticleServicesDirectory />
 
           <ArticleFeedback slug={article.slug} />
           <DeferredContentEngagement targetId={article.slug} title={article.title} />

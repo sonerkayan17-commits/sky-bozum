@@ -743,5 +743,83 @@ export const featuredArticles = [
         ],
       },
     ],
+  },
+  {
+    slug: 'turkcell-vodafone-turk-telekom-mobil-bozum-karsilastirmasi-2026',
+    title: 'Turkcell, Vodafone, Türk Telekom Mobil Bozum Karşılaştırması (2026 Rehberi)',
+    seoTitle: 'Turkcell, Vodafone, Türk Telekom Mobil Bozum Karşılaştırması 2026',
+    metaDescription: 'Turkcell, Vodafone ve Türk Telekom mobil ödeme yöntemlerini; limit, onay, faturalandırma, dijital ürün satın alma ve güvenlik adımlarıyla karşılaştırın.',
+    excerpt: 'Üç operatörde mobil ödeme aynı temel amaca hizmet etse de limit, onay, ücret, mağaza ve bakiye kaynağı ayrıntıları farklıdır. Satın almadan önce doğru yolu seçin.',
+    category: 'Mobil Ödeme',
+    readTime: '11 dk',
+    publishedAt: '2026-08-26',
+    updatedAt: '2026-08-26',
+    cover: '/blog-covers/operator-karsilastirma.webp',
+    coverAlt: 'Turkcell, Vodafone ve Türk Telekom mobil ödeme yöntemlerinin karşılaştırıldığı 2026 rehberi',
+    keywords: ['turkcell vodafone türk telekom mobil bozum karşılaştırması', 'turkcell mobil ödeme bozdurma', 'vodafone mobil ödeme bozdurma', 'türk telekom mobil ödeme bozdurma', 'mobil ödeme bozum', 'mobil ödeme bozdur', 'operatör mobil ödeme karşılaştırma'],
+    links: [
+      { label: 'Turkcell mobil ödeme ve dijital kod rehberi', href: '/hizmetler/turkcell-mobil-odeme' },
+      { label: 'Vodafone mobil ödeme ve dijital kod rehberi', href: '/hizmetler/vodafone-mobil-odeme' },
+      { label: 'Türk Telekom mobil ödeme ve Pokus rehberi', href: '/hizmetler/turk-telekom-mobil-odeme' },
+      { label: 'Mobil ödeme limitini öğrenme rehberi', href: '/bilgi-merkezi/mobil-odeme-limiti-nasil-ogrenilir' },
+      { label: 'Razer Gold TL kod değerlendirme hizmeti', href: '/hizmetler/razer-gold-tl' },
+      { label: 'Güncel oran ve net ödeme hesabı', href: '/araclar#oran-hesapla' },
+    ],
+    sources: [
+      { label: 'Faturana Yansıt sık sorulan sorular', href: 'https://www.turkcell.com.tr/servisler/turkcellmobilodeme/sikca-sorulan-sorular', publisher: 'Turkcell' },
+      { label: 'Vodafone Pay ticari koşullar ve ücret bilgileri', href: 'https://cms.vodafone.com.tr/static/files/25-02/12/ticari_kosullar_01022025-1.pdf', publisher: 'Vodafone' },
+      { label: 'TT Mobil Ödeme kullanım, ücret ve limit bilgileri', href: 'https://bireysel.turktelekom.com.tr/dijital-servisler/tt-mobil-odeme', publisher: 'Türk Telekom' },
+    ],
+    faq: [
+      { question: 'Hangi operatörün mobil ödeme limiti daha yüksektir?', answer: 'Tek bir operatör için herkese uygulanan sabit bir sonuç yoktur. Hat yaşı, faturalı veya faturasız kullanım, ödeme geçmişi, üye işyeri ve operatörün risk değerlendirmesi kullanılabilir limiti değiştirebilir. Kesin bilgiyi satın alma öncesinde operatörün resmî uygulamasından veya destek kanalından kontrol edin.' },
+      { question: 'Paycell, Vodafone Pay ve Pokus operatör mobil ödemesiyle aynı mıdır?', answer: 'Hayır. Bunlar dijital cüzdan veya kart işlevleri de sunabilen ayrı ürünlerdir. Cüzdan bakiyesi, karta yüklenen tutar ve telefon hattına tanımlanan mobil ödeme limiti aynı kaynak değildir; ödeme ekranında kullanılan kaynağı ayrıca doğrulayın.' },
+      { question: 'Sky Bozum operatör bakiyesini doğrudan nakde çevirir mi?', answer: 'Hayır. Sky Bozum, operatör limitini veya dijital cüzdan bakiyesini doğrudan satın almaz. Rehberler, desteklenen mağazadan uygun dijital ürün alınırken izlenecek adımları açıklar. Kullanılmamış ve şartlara uygun kodlar, stok ve güvenlik onayından sonra ayrıca değerlendirmeye alınabilir.' },
+      { question: 'Satın alma yapmadan önce hangi bilgileri doğrulamalıyım?', answer: 'Hattın mobil ödemeye açık olduğunu, kullanılabilir limiti, ürünün adı ve bölgesini, mağazanın resmî adresini, işlem ücretini ve kodun teslim biçimini doğrulayın. Sky Bozum’a sunmayı düşünüyorsanız ürün ve tutar için önceden yazılı uygunluk alın.' },
+    ],
+    sections: [
+      {
+        title: 'Karşılaştırmanın amacı: en yüksek limiti değil, doğru işlem yolunu bulmak',
+        paragraphs: [
+          'Turkcell, Vodafone ve Türk Telekom’da mobil ödeme; desteklenen bir mağazadaki ürün veya hizmet bedelini telefon faturasına yansıtmak ya da uygun durumda hattın TL bakiyesinden karşılamak için kullanılır. İnternette “Turkcell mobil ödeme bozdurma”, “Vodafone mobil bozum” veya “Türk Telekom mobil ödeme bozdur” biçiminde aranan süreçlerde ise önce bu ödeme kaynağıyla hangi dijital ürünün, hangi mağazada ve hangi koşulla alınabildiği anlaşılmalıdır.',
+          'Sky Bozum operatör limitini ya da operatöre bağlı dijital cüzdan bakiyesini doğrudan nakde çevirmez. Bu rehber, mobil ödeme yöntemiyle desteklenen mağazadan kullanılmamış dijital kod satın alma aşamalarını karşılaştırır. Satın alınan kod kullanıcı tarafından kullanılabilir; desteklenen ürün, bölge ve stok şartlarını karşılıyorsa Sky Bozum’a ayrıca değerlendirme için sunulabilir. Bu ayrım, yanlış ürün alımını ve net ödeme beklentisinin yanlış kurulmasını önler.',
+        ],
+      },
+      {
+        title: 'Turkcell mobil ödeme: Faturana Yansıt ve Paycell ayrımını yapın',
+        paragraphs: [
+          'Turkcell’de hat üzerinden yapılan mobil ödeme “Faturana Yansıt” adıyla sunulur. Faturalı hatta harcama faturaya eklenebilir; faturasız hatta uygun TL bakiyesi kullanılabilir. Kullanılabilir tutar, hat ve üye işyeri koşullarına göre değişebilir. Bu yüzden geçmiş bir ekran görüntüsü veya başka bir kullanıcının limiti yerine, kalan limiti resmî Turkcell ya da Paycell kanalından kontrol etmek gerekir.',
+          'Paycell uygulamasındaki cüzdan, kart veya alışveriş limiti ile telefon hattının mobil ödeme limiti aynı şey değildir. Ödeme ekranında hangi kaynağın seçildiğini görmeden işlemi onaylamayın. Turkcell ile Razer Gold ya da başka bir dijital kod alınacaksa mağaza adresi, kodun TL veya USD olması, teslim yöntemi ve toplam maliyet satın alma öncesinde netleştirilmelidir.',
+        ],
+      },
+      {
+        title: 'Vodafone mobil ödeme: hat limiti ile Vodafone Pay bakiyesini karıştırmayın',
+        paragraphs: [
+          'Vodafone tarafında mobil faturaya yansıtılan ödeme ile Vodafone Pay içindeki kart veya cüzdan bakiyesi farklı kaynaklardır. Bir mağazada Vodafone seçeneğinin görünmesi, her ürünün her hat için aynı limite veya aynı ücretlendirmeye sahip olduğu anlamına gelmez. İşlem özetinde tutarın telefon faturasına mı, hat bakiyesine mi, Vodafone Pay kartına mı yansıyacağını okuyun.',
+          'Vodafone mobil ödeme bozdurma aramasıyla bu sayfaya gelen kullanıcı için güvenli yol, önce hattın mobil ödemeye açıklığını ve kalan limiti resmî kanaldan doğrulamak; ardından yalnız desteklenen mağazada doğru bölgedeki dijital ürünü seçmektir. Onay ekranındaki ürün adı ile teslim edilen kodun adı aynı olmalıdır. Kod değerlendirmesi planlanıyorsa Sky Bozum’dan yazılı uygunluk alınmadan satın alma yapılmamalıdır.',
+        ],
+      },
+      {
+        title: 'Türk Telekom mobil ödeme: limit, üye işyeri ve Pokus ilişkisi',
+        paragraphs: [
+          'Türk Telekom, mobil ödeme kullanımının faturalı hatta faturaya, faturasız hatta ise TL bakiyesine yansıyabildiğini belirtir. Resmî sayfada genel azami sınırlar yayımlansa da kullanıcıya tanımlanan gerçek limit; hat yaşı, ödeme performansı, risk değerlendirmesi ve üye işyerine göre daha düşük olabilir. Bu nedenle alışveriş sepetindeki tutarı yalnız genel üst sınıra bakarak planlamayın.',
+          'Pokus, Türk Telekom mobil ödemesinden yararlanabilen ayrı bir cüzdan ve kart deneyimi sunabilir; ancak Pokus bakiyesi ile hatta tanımlı mobil ödeme limiti eş anlamlı değildir. Playstore veya başka bir desteklenen mağazada dijital kod alınacaksa hesabın bölgesi, kodun nominal değeri ve teslimat yöntemi birlikte kontrol edilmelidir. Türk Telekom mobil ödeme bozdurma ifadesiyle aranan süreçte esas değerlendirme, satın alınan kullanılmamış dijital ürün üzerinden ilerler.',
+        ],
+      },
+      {
+        title: 'Üç operatörde ortak kontrol listesi',
+        paragraphs: [
+          'Operatör değişse de güvenli işlem sırası değişmez: mobil ödemenin açık olduğunu resmî kanaldan kontrol edin, kullanılabilir limiti öğrenin, mağazanın alan adını doğrulayın, ürünün adı ile bölgesini okuyun ve onay ekranındaki toplam maliyeti kaydedin. SMS içeriğinde beklemediğiniz bir ürün veya tutar görürseniz işlemi tamamlamayın. Şifre, kart PIN’i veya ekran paylaşımı isteyen kişilere bilgi vermeyin.',
+          'Dijital kodu başka bir hizmette değerlendirecekseniz kodu satın almadan önce kabul edilen ürün, nominal tutar, para birimi ve bölge için yazılı onay alın. Kod geldikten sonra herkese açık alanda paylaşmayın ve farklı sitelerde aynı anda kontrol ettirmeyin. Sipariş numarası, teslim e-postası ve ödeme kaydı olası uyuşmazlıklarda en önemli kanıtlardır.',
+        ],
+        bullets: ['Mobil ödeme durumu ve kalan limit', 'Resmî mağaza alan adı', 'Ürün adı, nominal tutar ve bölge', 'Toplam ücret ve faturalandırma kaynağı', 'Kod teslim yöntemi ve sipariş kaydı'],
+      },
+      {
+        title: 'Hangi operatör daha avantajlı?',
+        paragraphs: [
+          'Avantaj yalnız görünen limite göre belirlenemez. Kullanıcının mevcut hattı, gerçek kullanılabilir limiti, üye işyeri desteği, ürün fiyatı, işlem ücreti ve teslim süresi birlikte değerlendirilmelidir. Bir operatörde yüksek limit bulunması, aradığınız dijital ürünün doğru bölge ve tutarda satıldığı anlamına gelmez. Benzer şekilde daha düşük görünen limit, daha uygun maliyetli bir ürün seçeneğiyle yeterli olabilir.',
+          'En doğru seçim, yeni hat veya yeni cüzdan açmak değil; mevcut ödeme kaynağınızda resmî olarak kullanılabilir görünen tutarla, önceden uygunluğu doğrulanmış ürünü satın almaktır. Güncel koşullar değişebileceği için bu rehberi sabit oran veya limit vaadi olarak değil, karşılaştırma kontrol listesi olarak kullanın.',
+        ],
+      },
+    ],
   }
 ];
