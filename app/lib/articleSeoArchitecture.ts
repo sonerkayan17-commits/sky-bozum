@@ -1,7 +1,9 @@
 import type { ArticleItem } from './site';
+import { PRIMARY_SITE_DOMAIN } from './siteIdentity';
 
 type ArticleLink = { label: string; href: string };
 type ArticleSection = ArticleItem['sections'][number];
+type ArticleSource = NonNullable<ArticleItem['sources']>[number];
 type IntentKey = 'security' | 'vodafone' | 'turkcell' | 'telekom' | 'razer' | 'apple' | 'mobile' | 'gift' | 'finance' | 'general';
 
 const coreLinks = {
@@ -36,8 +38,81 @@ const pillarSlugs = new Set([
   'guncel-bozum-orani-nasil-ogrenilir',
 ]);
 
+const officialSources = {
+  turkcellMobile: { publisher: 'Turkcell', label: 'Faturana Yansıt sıkça sorulan sorular', href: 'https://www.turkcell.com.tr/servisler/turkcellmobilodeme/sikca-sorulan-sorular' },
+  paycell: { publisher: 'Turkcell', label: 'Paycell sıkça sorulan sorular', href: 'https://www.turkcell.com.tr/servisler/paycell/sikca-sorulan-sorular' },
+  vodafonePay: { publisher: 'Vodafone Pay', label: 'Vodafone Pay resmî ürün ve koşul sayfası', href: 'https://vodafonepay.com.tr/' },
+  telekomMobile: { publisher: 'Türk Telekom', label: 'Mobil ödeme anlaşmalı servisler listesi', href: 'https://bireysel.turktelekom.com.tr/tt-dijital-servisler/Documents/TTMobil-odeme-anlasmali-servisler-listesi.pdf' },
+  pokus: { publisher: 'Pokus', label: 'Pokus resmî ürün ve destek sayfası', href: 'https://www.pokus.com.tr/' },
+  appleRedeem: { publisher: 'Apple Destek', label: 'Apple Gift Card ve App Store kodunu kullanma', href: 'https://support.apple.com/tr-tr/118242' },
+  appleType: { publisher: 'Apple Destek', label: 'Hediye kartının türünü belirleme', href: 'https://support.apple.com/tr-tr/118407' },
+  appleProblem: { publisher: 'Apple Destek', label: 'Hediye kartı kullanılamıyorsa yapılacaklar', href: 'https://support.apple.com/tr-tr/108285' },
+  razer: { publisher: 'Razer Gold', label: 'Razer Gold resmî ürün sayfası', href: 'https://gold.razer.com/' },
+  googleHelpful: { publisher: 'Google Search Central', label: 'Yararlı ve güvenilir içerik oluşturma', href: 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content' },
+  commerce: { publisher: 'T.C. Ticaret Bakanlığı', label: 'Tüketici bilgilendirme merkezi', href: 'https://ticaret.gov.tr/tuketici' },
+} satisfies Record<string, ArticleSource>;
+
+function sourcesFor(intent: IntentKey): ArticleSource[] {
+  const byIntent: Record<IntentKey, ArticleSource[]> = {
+    security: [officialSources.commerce, officialSources.appleProblem],
+    vodafone: [officialSources.vodafonePay, officialSources.commerce],
+    turkcell: [officialSources.turkcellMobile, officialSources.paycell],
+    telekom: [officialSources.telekomMobile, officialSources.pokus],
+    razer: [officialSources.razer, officialSources.commerce],
+    apple: [officialSources.appleRedeem, officialSources.appleType, officialSources.appleProblem],
+    mobile: [officialSources.turkcellMobile, officialSources.telekomMobile, officialSources.vodafonePay],
+    gift: [officialSources.razer, officialSources.appleRedeem, officialSources.commerce],
+    finance: [officialSources.commerce, officialSources.paycell],
+    general: [officialSources.commerce, officialSources.googleHelpful],
+  };
+  return byIntent[intent];
+}
+
+function dedupeSources(sources: readonly ArticleSource[]) {
+  const seen = new Set<string>();
+  return sources.filter((source) => {
+    const href = source.href.replace(/\/$/, '');
+    if (seen.has(href)) return false;
+    seen.add(href);
+    return true;
+  });
+}
+
 function normalize(value: string) {
   return value.toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function currentDomain(value: string) {
+  return value
+    .replace(/(?:www\.)?bozumcu\.net(?!\.tr)/gi, PRIMARY_SITE_DOMAIN)
+    .replace(/sky-bozum\.vercel\.app/gi, PRIMARY_SITE_DOMAIN);
+}
+
+function normalizeArticleIdentity(article: ArticleItem): ArticleItem {
+  return {
+    ...article,
+    title: currentDomain(article.title),
+    excerpt: currentDomain(article.excerpt),
+    seoTitle: article.seoTitle ? currentDomain(article.seoTitle) : undefined,
+    metaDescription: article.metaDescription ? currentDomain(article.metaDescription) : undefined,
+    coverAlt: article.coverAlt ? currentDomain(article.coverAlt) : undefined,
+    keywords: article.keywords?.map(currentDomain),
+    links: article.links?.map((link) => ({ ...link, label: currentDomain(link.label) })),
+    sources: article.sources?.map((source) => ({ ...source, label: currentDomain(source.label), publisher: currentDomain(source.publisher) })),
+    media: article.media?.map((media) => ({ ...media, alt: currentDomain(media.alt), caption: currentDomain(media.caption) })),
+    faq: article.faq?.map((item) => ({ question: currentDomain(item.question), answer: currentDomain(item.answer) })),
+    sections: article.sections.map((section) => ({
+      ...section,
+      title: currentDomain(section.title),
+      paragraphs: section.paragraphs.map(currentDomain),
+      bullets: section.bullets?.map(currentDomain),
+      subsections: section.subsections?.map((subsection) => ({
+        title: currentDomain(subsection.title),
+        paragraphs: subsection.paragraphs.map(currentDomain),
+      })),
+      relatedLinks: section.relatedLinks?.map((link) => ({ ...link, label: currentDomain(link.label) })),
+    })),
+  };
 }
 
 function articleText(article: ArticleItem) {
@@ -296,7 +371,8 @@ function wordCount(article: ArticleItem, sections: ArticleSection[]) {
 }
 
 export function enrichArticlesForSeo(source: readonly ArticleItem[]): ArticleItem[] {
-  return source.map((article) => {
+  return source.map((sourceArticle) => {
+    const article = normalizeArticleIdentity(sourceArticle);
     const intent = intentFor(article);
     const contextLinks = linksFor(intent);
     const originalSections = article.sections.map((section, index) => {
@@ -318,6 +394,7 @@ export function enrichArticlesForSeo(source: readonly ArticleItem[]): ArticleIte
     if (!sections.some((section) => normalize(section.title).startsWith('sonuc'))) sections.push(conclusion);
 
     const links = dedupeLinks([...(article.links ?? []), ...contextLinks, coreLinks.rates], article.slug).slice(0, 10);
+    const sources = dedupeSources([...(article.sources ?? []), ...sourcesFor(intent)]).slice(0, 5);
     const keywords = [...new Set([...(article.keywords ?? []), ...keywordsFor(intent)])].slice(0, 20);
     const calculatedReadTime = Math.max(4, Math.ceil(wordCount(article, sections) / 180));
     const existingReadTime = Number.parseInt(article.readTime, 10) || 0;
@@ -328,6 +405,7 @@ export function enrichArticlesForSeo(source: readonly ArticleItem[]): ArticleIte
       readTime: `${Math.max(existingReadTime, calculatedReadTime)} dk`,
       keywords,
       links,
+      sources,
       sections,
     };
   });

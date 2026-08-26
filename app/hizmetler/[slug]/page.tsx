@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return createMetadata({
     title: isPurchaseGuide ? service.name : `${service.name} | Güncel Oran ve İşlem Rehberi`,
-    description: service.summary,
+    description: `${service.summary} Ürün uygunluğunu, güncel koşulları, güvenlik kontrollerini ve işlem öncesi izlenecek adımları ayrıntılı rehberde inceleyin.`,
     keywords: isPurchaseGuide
       ? [service.name, service.shortName, ...independentPurchaseGuideKeywords(service.slug), `${service.shortName} dijital urun satin alma`, `${service.shortName} mobil odeme limiti`, `${service.shortName} guvenli alisveris`, service.category, 'dijital kod satin alma', 'mobil odeme rehberi']
       : [service.name, service.shortName, `${service.shortName} bozum`, `${service.shortName} bozdurma`, `${service.shortName} oran`, `${service.shortName} islem suresi`, service.category, 'bozum orani', 'net odeme hesaplama', 'islem rehberi'],

@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from 'react';
 import { buildWhatsAppUrl, trackConversion } from '../lib/conversion';
+import { siteConfig } from '../lib/site-config';
 
 const checks = [
   'Hizmetin güncel olarak uygun olduğunu yazılı biçimde doğruladım.',
   'Kesin oranı ve net ödeme tutarını gördüm.',
   'Kullandığım hat, hesap, kart veya kod bana ait.',
   'Şifre, SMS kodu veya uzaktan erişim paylaşmayacağım.',
-  'Görüşmeyi bozumcu.net üzerindeki resmî bağlantıdan başlattım.',
+  `Görüşmeyi ${siteConfig.domain} üzerindeki resmî bağlantıdan başlattım.`,
 ] as const;
 
 export default function TrustChecklist({ context = 'genel işlem' }: { context?: string }) {

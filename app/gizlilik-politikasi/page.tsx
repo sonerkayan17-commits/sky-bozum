@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import PrivacyControls from '../components/personalization/PrivacyControls';
 import { siteConfig } from '../lib/site-config';
+import { createMetadata } from '../lib/seo';
 
-export const metadata: Metadata = { title: 'Gizlilik Politikası', description: 'Sky Bozum gizlilik, veri kullanımı ve güvenlik bilgilendirmesi.', alternates: { canonical: '/gizlilik-politikasi' } };
+export const metadata: Metadata = createMetadata({ title: 'Gizlilik Politikası', description: 'Sky Bozum’da kişisel verilerin kullanım amaçlarını, saklama ilkelerini, güvenlik kontrollerini, çerezleri ve kullanıcı tercihlerini inceleyin.', path: '/gizlilik-politikasi' });
 const sections = [
   ['Toplanan bilgiler', 'İletişim sırasında paylaştığınız ad, iletişim bilgisi, hizmet türü ve işlemle ilgili gerekli kayıtlar talebinizi değerlendirmek amacıyla işlenebilir.'],
   ['Kullanım amacı', 'Bilgiler yalnızca iletişimi yürütmek, işlem uygunluğunu kontrol etmek, güvenliği sağlamak ve yasal yükümlülükleri yerine getirmek amacıyla kullanılır.'],

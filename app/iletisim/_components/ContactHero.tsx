@@ -33,7 +33,7 @@ export default function ContactHero({ whatsappHref, email }: ContactHeroProps) {
 
         <figure className="contact-hero-brandmark" aria-label="Sky Bozum resmî marka işareti">
           <span className="contact-official-logo-crop">
-            <Image src="/brands/sky-bozum/sky-bozum-official-transparent-v1.webp" alt="Sky Bozum bozumcu.net resmî logosu" width={1254} height={1254} priority />
+            <Image src="/brands/sky-bozum/sky-bozum-official-transparent-v1.webp" alt="Sky Bozum resmî logosu" width={1254} height={1254} priority />
           </span>
         </figure>
 

@@ -15,7 +15,7 @@ import { notFound } from 'next/navigation';
 import ShareButtons from '../../components/ShareButtons';
 import { articles } from '../../lib/site';
 import { siteConfig } from '../../lib/site-config';
-import { articleImage, articleUrl, articleWordCount, indexableRobots, jsonLd, publishedAt, updatedAt } from '../../lib/seo';
+import { articleImage, articleUrl, articleWordCount, indexableRobots, jsonLd, publishedAt, seoDescription, seoTitle, updatedAt } from '../../lib/seo';
 import { relatedArticles } from '../../lib/internalLinks';
 import { getArticleEditorialLabels, getArticleEditorialTemplate } from '../../lib/articleEditorialTemplate';
 import { serviceForArticle } from '../../lib/contentBridges';
@@ -89,11 +89,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const managed = await getManagedContentArticle(slug);
   const article = mergeManagedArticles(articles, managed ? [managed] : []).find((item) => item.slug === slug);
   if (!article) return {};
-  const title = article.seoTitle ?? article.title;
-  const description = article.metaDescription ?? article.excerpt;
+  const title = seoTitle(article.seoTitle ?? article.title);
+  const description = seoDescription(article.metaDescription ?? article.excerpt);
   const image = articleImage(article);
   return {
-    title,
+    title: { absolute: title },
     description,
     keywords: article.keywords ? [...article.keywords] : undefined,
     authors: [{ name: siteConfig.name, url: `https://${siteConfig.domain}` }],

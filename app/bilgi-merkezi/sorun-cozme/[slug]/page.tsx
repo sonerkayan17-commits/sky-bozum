@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { articles, getService } from '../../../lib/site';
 import { siteConfig } from '../../../lib/site-config';
-import { absoluteUrl, jsonLd } from '../../../lib/seo';
+import { absoluteUrl, createMetadata, jsonLd } from '../../../lib/seo';
 import { getTroubleshootingGuide, troubleshootingGuides } from '../../../lib/troubleshooting';
 import ContentEngagement from '../../../components/community/ContentEngagement';
 
@@ -15,13 +15,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const guide = getTroubleshootingGuide(slug);
   if (!guide) return {};
-  return {
+  return createMetadata({
     title: guide.title,
-    description: guide.summary,
+    description: `${guide.summary} Belirtileri, olası nedenleri, güvenlik uyarılarını ve uygulanabilir kontrol sırasını tek rehberde inceleyin.`,
+    path: `/bilgi-merkezi/sorun-cozme/${guide.slug}`,
     keywords: guide.keywords,
-    alternates: { canonical: `/bilgi-merkezi/sorun-cozme/${guide.slug}` },
-    openGraph: { title: guide.title, description: guide.summary, url: `/bilgi-merkezi/sorun-cozme/${guide.slug}`, type: 'article' },
-  };
+    type: 'article',
+  });
 }
 
 export default async function TroubleshootingDetailPage({ params }: { params: Promise<{ slug: string }> }) {

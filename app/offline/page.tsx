@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Bağlantı bekleniyor',
+  description: 'İnternet bağlantısı kurulamadığında stok, bakiye ve işlem verilerini koruyan Sky Bozum çevrimdışı durum sayfası.',
   alternates: { canonical: '/offline' },
   robots: { index: false, follow: false },
 };

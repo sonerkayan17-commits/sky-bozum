@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { LEGACY_PATH_REDIRECTS } from './app/lib/legacyRedirects';
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -10,6 +11,9 @@ const nextConfig: NextConfig = {
     imageSizes: [32, 48, 64, 96, 128, 256],
   },
   experimental: { optimizePackageImports: ['firebase'] },
+  async redirects() {
+    return LEGACY_PATH_REDIRECTS.map((redirect) => ({ ...redirect, permanent: true }));
+  },
   async headers() {
     return [
     {

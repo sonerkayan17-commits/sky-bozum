@@ -1,5 +1,5 @@
 export const premiumArticleCovers: Record<string, string> = {
-  'guvenilir-mobil-bozum-sitesi-nasil-secilir': '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
+  'guvenilir-mobil-bozum-sitesi-nasil-secilir': '/images/bilgi-merkezi/editorial-covers-v46/bozum-talebi-guvenli-akis.webp',
   'mobil-odeme-bozum-nedir': '/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-bozum-rehberi-v2.webp',
   'mobil-bozum-yaparken-dolandirilabilir-miyim': '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
   'dijital-kod-bolge-hatasi-nedir': '/images/bilgi-merkezi/editorial-covers-v46/dijital-kod-bolge-hatasi-v2.webp',

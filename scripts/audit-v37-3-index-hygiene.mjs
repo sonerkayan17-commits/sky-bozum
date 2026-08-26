@@ -13,7 +13,8 @@ const checks = [
   ['Konu filtresi indeks koruması', /const hasTopicFilter = params\.konu !== 'Tümü'/],
   ['Sıralama filtresi indeks koruması', /const hasSortFilter = params\.sirala !== 'popular'/],
   ['Filtreli sayfalar noindex', /index: false, follow: true/],
-  ['Canonical ana merkeze bağlı', /canonical: '\/bilgi-merkezi'/],
+  ['Numaralı arşiv sayfası öz canonical kullanıyor', /const canonical = isPaginatedView \? `\/bilgi-merkezi\?sayfa=\$\{params\.sayfa\}` : '\/bilgi-merkezi'/],
+  ['Metadata hesaplanan canonical değeri kullanıyor', /alternates: \{ canonical,/],
   ['Varsayılan görünüm indexlenebilir', /index: true,[\s\S]*follow: true/],
 ];
 

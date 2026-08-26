@@ -1,6 +1,7 @@
 'use client';
 
 import { buildWhatsAppUrl, trackConversion } from '../../lib/conversion';
+import { primaryAbsoluteUrl } from '../../lib/siteIdentity';
 
 type ArticleSupportLinkProps = {
   articleTitle: string;
@@ -18,7 +19,7 @@ export default function ArticleSupportLink({
   const contextLine = serviceName
     ? `${serviceName} hizmetiyle ilgili "${articleTitle}" rehberini inceliyorum.`
     : `"${articleTitle}" rehberini inceliyorum.`;
-  const message = `${contextLine}\nGüncel uygunluk ve net ödeme tutarı hakkında bilgi almak istiyorum.\nRehber: https://bozumcu.net/bilgi-merkezi/${articleSlug}`;
+  const message = `${contextLine}\nGüncel uygunluk ve net ödeme tutarı hakkında bilgi almak istiyorum.\nRehber: ${primaryAbsoluteUrl(`/bilgi-merkezi/${articleSlug}`)}`;
   const href = buildWhatsAppUrl(message);
 
   function handleClick() {

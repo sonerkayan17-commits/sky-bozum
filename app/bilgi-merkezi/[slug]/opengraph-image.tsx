@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { getArticle } from '../../lib/site';
+import { PRIMARY_SITE_DOMAIN } from '../../lib/siteIdentity';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -24,7 +25,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           <span style={{ fontSize: 21, color: '#fda4af', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 3 }}>{category}</span>
           <h1 style={{ fontSize: title.length > 65 ? 54 : 64, lineHeight: 1.08, margin: '20px 0 0', fontWeight: 900, letterSpacing: -2 }}>{title}</h1>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 18 }}><span>Güncel ve anlaşılır rehber</span><span>bozumcu.net</span></div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 18 }}><span>Güncel ve anlaşılır rehber</span><span>{PRIMARY_SITE_DOMAIN}</span></div>
       </div>
     </div>,
     size,

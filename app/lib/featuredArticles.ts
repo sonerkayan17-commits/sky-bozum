@@ -10,7 +10,7 @@ export const featuredArticles = [
     publishedAt: '2026-08-24',
     updatedAt: '2026-08-25',
     serviceSlug: 'sms-mobil-odeme',
-    cover: '/images/bilgi-merkezi/editorial-covers-v46/mobil-bozum-dolandiricilik-kontrolu-v2.webp',
+    cover: '/images/bilgi-merkezi/editorial-covers-v46/bozum-talebi-guvenli-akis.webp',
     coverAlt: 'Mobil bozum sitesi seçerken alan adı, resmî kanal, oran ve ödeme güvenliği kontrollerini gösteren rehber kapağı',
     keywords: ['güvenilir mobil bozum siteleri', 'güvenilir mobil bozum sitesi', 'mobil ödeme güvenli siteler', 'mobil ödeme güvenli mi', 'mobil ödeme yasal mı', 'mobil bozum sitesi', 'mobil bozumcu', 'mobil bozum', 'mobil ödeme bozdurma', 'mobil ödeme bozdur', 'mobil ödeme bozum', 'mobil ödeme bozdurma güvenli mi', 'mobil bozum dolandırıldım', 'mobil bozum dolandırıcılığı'],
     links: [

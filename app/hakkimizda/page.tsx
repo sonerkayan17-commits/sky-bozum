@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { createMetadata } from '../lib/seo';
 
-export const metadata: Metadata = { title: 'Hakkımızda', description: 'Sky Bozum’un hizmet yaklaşımı, işlem ilkeleri ve destek anlayışı.', alternates: { canonical: '/hakkimizda' } };
+export const metadata: Metadata = createMetadata({ title: 'Hakkımızda', description: 'Sky Bozum’un hizmet yaklaşımını, açık oran ve doğrulama ilkelerini, bağımsız rehber modelini ve kullanıcı güvenliği standartlarını tanıyın.', path: '/hakkimizda' });
 
 const principles = [
   ['Açık oran bilgisi', 'Oran ve tahmini ödeme tutarı işlem başlamadan önce paylaşılır.'],

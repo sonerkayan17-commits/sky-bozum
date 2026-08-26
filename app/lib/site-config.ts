@@ -1,6 +1,8 @@
+import { PRIMARY_SITE_DOMAIN } from './siteIdentity';
+
 export const siteConfig = {
   name: "Sky Bozum",
-  domain: "bozumcu.net",
+  domain: PRIMARY_SITE_DOMAIN,
   phone: "0539 208 01 66",
   email: "sonerkayan17@gmail.com",
   whatsapp:

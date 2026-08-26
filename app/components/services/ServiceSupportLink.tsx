@@ -1,6 +1,7 @@
 'use client';
 
 import { buildWhatsAppUrl, trackConversion } from '../../lib/conversion';
+import { primaryAbsoluteUrl } from '../../lib/siteIdentity';
 
 type ServiceSupportLinkProps = {
   serviceName: string;
@@ -26,8 +27,8 @@ export default function ServiceSupportLink({
   purchaseGuide = false,
 }: ServiceSupportLinkProps) {
   const message = purchaseGuide
-    ? `Merhaba, ${serviceName} sayfasını inceliyorum.\nOperatör veya cüzdan bakiyesinin doğrudan satın alınmadığını biliyorum. Uygun mağaza, Razer Gold veya desteklenen dijital ürün, bölge ve kullanılmamış kod uygunluğu hakkında bilgi almak istiyorum.\nRehber: https://bozumcu.net/hizmetler/${serviceSlug}`
-    : `Merhaba, ${serviceName} hizmet sayfasını inceliyorum.\nGüncel uygunluk, oran ve hesabıma geçecek net ödeme tutarı hakkında bilgi almak istiyorum.\nHizmet: https://bozumcu.net/hizmetler/${serviceSlug}`;
+    ? `Merhaba, ${serviceName} sayfasını inceliyorum.\nOperatör veya cüzdan bakiyesinin doğrudan satın alınmadığını biliyorum. Uygun mağaza, Razer Gold veya desteklenen dijital ürün, bölge ve kullanılmamış kod uygunluğu hakkında bilgi almak istiyorum.\nRehber: ${primaryAbsoluteUrl(`/hizmetler/${serviceSlug}`)}`
+    : `Merhaba, ${serviceName} hizmet sayfasını inceliyorum.\nGüncel uygunluk, oran ve hesabıma geçecek net ödeme tutarı hakkında bilgi almak istiyorum.\nHizmet: ${primaryAbsoluteUrl(`/hizmetler/${serviceSlug}`)}`;
   const href = buildWhatsAppUrl(message);
 
   function handleClick() {

@@ -1,8 +1,9 @@
 import ForumDirectory from './ForumDirectory';
 import Link from '../components/DeferredLink';
+import { createMetadata } from '../lib/seo';
 import './community.css';
 
-export const metadata = { title: 'Sky Bozum Toplulugu', alternates: { canonical: '/topluluk' } };
+export const metadata = createMetadata({ title: 'Sky Bozum Topluluğu', description: 'Mobil ödeme, dijital kod, hediye kartı, oran ve işlem güvenliği hakkında 6 bölümdeki doğrulanabilir rehberleri ve topluluk konularını inceleyin.', path: '/topluluk' });
 
 export default function Page() {
   return <main>

@@ -133,7 +133,7 @@ const definitions: Record<ToolId, ToolDefinition> = {
     title: 'SMS Mobil Ödeme Hesaplama',
     shortTitle: 'SMS Hesaplayıcı',
     description: 'SMS mobil ödeme tutarının tahmini net ödeme aralığını hesaplayın.',
-    seoDescription: 'SMS mobil ödeme tutarının tahmini net ödeme aralığını hesaplayın.',
+    seoDescription: 'SMS mobil ödeme tutarının tahmini net ödeme aralığını hesaplayın; operatör, limit, onay mesajı ve güncel oran kontrollerini işlemden önce görün.',
     href: '/araclar/sms-hesaplama',
     keywords: ['sms hesaplama', 'sms bozum', 'mobil ödeme'],
     eyebrow: 'SMS ödeme aracı',

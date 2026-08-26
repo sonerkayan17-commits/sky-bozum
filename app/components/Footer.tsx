@@ -32,7 +32,7 @@ export default function Footer() {
               <Image src="/brand-logo.webp" alt="Sky Bozum Mobil Ödeme" width={52} height={52} className="size-12 rounded-2xl border border-[#e8c27a]/20 object-cover" />
               <span>
                 <strong className="block font-[var(--font-display)] text-lg font-bold tracking-tight">{settings.brandName}</strong>
-                <span className="mt-0.5 block text-xs font-semibold text-slate-500">bozumcu.net</span>
+                <span className="mt-0.5 block text-xs font-semibold text-slate-500">{siteConfig.domain}</span>
               </span>
             </Link>
             <FooterCopy />

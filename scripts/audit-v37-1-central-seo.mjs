@@ -7,13 +7,14 @@ const checks = [];
 const pass = (label, condition) => checks.push({ label, condition });
 
 const seo = read('app/lib/seo.ts');
+const siteIdentity = read('app/lib/siteIdentity.ts');
 const layout = read('app/layout.tsx');
 const services = read('app/hizmetler/[slug]/page.tsx');
 const tools = read('app/lib/tools.ts');
 const sitemap = read('app/sitemap.ts');
 const robots = read('app/robots.ts');
 
-pass('Merkezi SITE_URL tanımlı', seo.includes("export const PRODUCTION_SITE_URL = 'https://bozumcu.net'") && seo.includes('export const SITE_URL = normalizeSiteUrl('));
+pass('Merkezi SITE_URL tanımlı', seo.includes('export const PRODUCTION_SITE_URL = EXPECTED_PRODUCTION_ORIGIN') && seo.includes('export const SITE_URL = PRIMARY_SITE_ORIGIN') && siteIdentity.includes("export const EXPECTED_PRODUCTION_ORIGIN = 'https://bozumcu.net.tr'") && siteIdentity.includes('export const PRIMARY_SITE_ORIGIN'));
 pass('Merkezi metadata builder tanımlı', seo.includes('export function createMetadata'));
 pass('Breadcrumb schema builder tanımlı', seo.includes('export function breadcrumbSchema'));
 pass('Service schema builder tanımlı', seo.includes('export function serviceSchema'));

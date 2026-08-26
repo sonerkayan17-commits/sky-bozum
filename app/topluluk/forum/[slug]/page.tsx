@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { findForumSection, forumSections, getForumStarterTopic, slugifyForumCategory } from '../../../lib/forumTaxonomy';
 import { forumRoutes } from '../../../lib/forumRoutes';
+import { createMetadata } from '../../../lib/seo';
 import ForumBreadcrumbs from '../../ForumBreadcrumbs';
 import './section.css';
 
@@ -13,11 +14,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const section = findForumSection(slug);
-  return section ? {
+  return section ? createMetadata({
     title: `${section.title} Forumu`,
-    description: section.description,
-    alternates: { canonical: forumRoutes.section(slug) },
-  } : {};
+    description: `${section.description} Alt kategorilerdeki doğrulanabilir başlangıç rehberlerini, güncel soruları ve topluluk paylaşımlarını inceleyin.`,
+    path: forumRoutes.section(slug),
+  }) : {};
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

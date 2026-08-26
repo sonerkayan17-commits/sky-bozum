@@ -9,7 +9,7 @@ const servicesSource = siteSource.slice(
   siteSource.indexOf('export const services'),
   siteSource.indexOf('export function getService'),
 );
-const articleSourceInSite = siteSource.slice(siteSource.indexOf('export const articles'));
+const articleSourceInSite = siteSource.slice(siteSource.indexOf('const baseArticles'));
 const articleFiles = [
   'app/lib/featuredArticles.ts',
   'app/lib/hepsipayArticles.ts',

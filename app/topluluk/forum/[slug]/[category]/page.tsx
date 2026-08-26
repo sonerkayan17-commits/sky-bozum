@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import CommunityTopics from '../../../../components/member/CommunityTopics';
 import { findForumCategory, forumSections, getForumStarterTopic, getForumTopics, slugifyForumCategory } from '../../../../lib/forumTaxonomy';
 import { forumRoutes } from '../../../../lib/forumRoutes';
+import { createMetadata } from '../../../../lib/seo';
 import ForumBreadcrumbs from '../../../ForumBreadcrumbs';
 import './category.css';
 
@@ -14,11 +15,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; category: string }> }): Promise<Metadata> {
   const { slug, category } = await params;
   const result = findForumCategory(slug, category);
-  return result ? {
+  return result ? createMetadata({
     title: `${result.title} - ${result.section.title}`,
-    description: `${result.title} hakkında bilgi, soru, deneyim ve topluluk paylaşımları.`,
-    alternates: { canonical: forumRoutes.category(slug, category) },
-  } : {};
+    description: `${result.title} hakkında doğrulanabilir başlangıç rehberlerini, güvenlik kontrollerini, güncel soruları ve topluluk paylaşımlarını inceleyin.`,
+    path: forumRoutes.category(slug, category),
+  }) : {};
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string; category: string }> }) {

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { siteConfig } from '../lib/site-config';
+import { createMetadata } from '../lib/seo';
 
-export const metadata: Metadata = { title: 'Kullanım Şartları', description: 'Sky Bozum oran, ürün uygunluğu, doğrulama ve güvenli kullanım koşulları.', alternates: { canonical: '/kullanim-sartlari' } };
+export const metadata: Metadata = createMetadata({ title: 'Kullanım Şartları', description: 'Sky Bozum oran bilgisi, ürün uygunluğu, kod doğrulama, ödeme kaydı, güvenli kullanım ve bağımsız hizmet modeli koşullarını inceleyin.', path: '/kullanim-sartlari' });
 const sections = [
   ['Bilgilendirme oranları', 'Sitedeki oran ve hesaplama sonuçları yaklaşık bilgi verir. Kesin oran; ürün, tutar, stok ve işlem koşulları kontrol edildikten sonra yazılı olarak teyit edilir.'],
   ['Ürün uygunluğu', 'Kullanıcı ilettiği kodun veya bakiyenin kendisine ait, kullanılmamış ve hukuka uygun olduğunu kabul eder. Uygun olmayan ürünler işleme alınmayabilir.'],

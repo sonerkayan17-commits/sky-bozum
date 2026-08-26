@@ -2,6 +2,7 @@
 
 import Link from './DeferredLink';
 import { useSiteSettings } from './SiteSettingsProvider';
+import { siteConfig } from '../lib/site-config';
 
 const proofPoints = [
   ['10+ yıl', 'yılı aşkın tecrübe'],
@@ -30,7 +31,7 @@ export default function CredibilityBand({ compact = false }: { compact?: boolean
       <div className="credibility-band__stats">{managedProofPoints.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</div>
       <aside className="credibility-band__security" aria-label="Önemli güvenlik uyarısı">
         <span aria-hidden="true">!</span>
-        <p><strong>Önemli güvenlik uyarısı:</strong> Sky Bozum adını veya logomuzu taklit ederek kullanıcıları yanıltmaya çalışan sahte site ve hesaplara dikkat edin. Tek resmî web adresimiz <b>bozumcu.net</b>&apos;tir; farklı platformlardan gelen yönlendirmeleri doğrulamadan işlem yapmayın.</p>
+        <p><strong>Önemli güvenlik uyarısı:</strong> Sky Bozum adını veya logomuzu taklit ederek kullanıcıları yanıltmaya çalışan sahte site ve hesaplara dikkat edin. Tek resmî web adresimiz <b>{siteConfig.domain}</b>&apos;tir; farklı platformlardan gelen yönlendirmeleri doğrulamadan işlem yapmayın.</p>
         <Link href="/iletisim#guvenlik">Resmî bilgileri doğrula →</Link>
       </aside>
     </div>

@@ -1,0 +1,17 @@
+export const LEGACY_PATH_REDIRECTS = [
+  { source: '/mobil-odeme-bozdurma', destination: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
+  { source: '/mobil-odeme-bozum', destination: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
+  { source: '/mobil-bozum', destination: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
+  { source: '/mobil-odeme-bozdur', destination: '/bilgi-merkezi/mobil-odeme-bozum-nedir' },
+  { source: '/turkcell-mobil-odeme-bozdurma', destination: '/hizmetler/turkcell-mobil-odeme' },
+  { source: '/vodafone-mobil-odeme-bozdurma', destination: '/hizmetler/vodafone-mobil-odeme' },
+  { source: '/turk-telekom-mobil-odeme-bozdurma', destination: '/hizmetler/turk-telekom-mobil-odeme' },
+  { source: '/paycell-bozdurma', destination: '/hizmetler/paycell' },
+  { source: '/paycell-bozdur', destination: '/hizmetler/paycell' },
+  { source: '/pokus-bozdurma', destination: '/hizmetler/pokus' },
+  { source: '/pokus-bozdur', destination: '/hizmetler/pokus' },
+  { source: '/razer-gold-bozdurma', destination: '/hizmetler/razer-gold-tl' },
+  { source: '/razer-gold-bozdur', destination: '/hizmetler/razer-gold-tl' },
+  { source: '/itunes-bozdurma', destination: '/hizmetler/itunes-apple' },
+  { source: '/apple-gift-card-bozdurma', destination: '/hizmetler/itunes-apple' },
+] as const;

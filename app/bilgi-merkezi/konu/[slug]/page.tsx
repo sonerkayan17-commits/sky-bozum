@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTopicHub, getTopicHubs, getTopicHubStages } from '../../../lib/topicHubs';
-import { absoluteUrl, jsonLd } from '../../../lib/seo';
+import { absoluteUrl, jsonLd, seoDescription, seoTitle } from '../../../lib/seo';
 import ArticleCover from '../../../components/articles/ArticleCover';
 import ContentEngagement from '../../../components/community/ContentEngagement';
 
@@ -14,12 +14,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const hub = getTopicHub(slug);
   if (!hub) return {};
-  const title = `${hub.name} Bilgi Merkezi`;
+  const title = seoTitle(`${hub.name} rehberleri`);
+  const description = seoDescription(`${hub.name} hakkında başlangıç, kullanım, sorun çözme ve güvenlik rehberlerini doğru okuma sırasıyla inceleyin. ${hub.description}`);
   return {
-    title,
-    description: hub.description,
+    title: { absolute: title },
+    description,
     alternates: { canonical: `/bilgi-merkezi/konu/${hub.slug}` },
-    openGraph: { title, description: hub.description, url: `/bilgi-merkezi/konu/${hub.slug}`, type: 'website' },
+    openGraph: { title, description, url: `/bilgi-merkezi/konu/${hub.slug}`, type: 'website' },
   };
 }
 

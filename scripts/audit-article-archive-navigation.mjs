@@ -4,17 +4,24 @@ import path from 'node:path';
 const root = process.cwd();
 const source = fs.readFileSync(path.join(root, 'app/components/articles/ArticleExplorer.tsx'), 'utf8');
 const checks = [
-  ['const [archiveVisibleCount, setArchiveVisibleCount] = useState(9)', 'Arşiv ilk yüklemede 9 içerikle sınırlı değil.'],
-  ['const visibleGridResults = gridResults.slice(0, archiveVisibleCount)', 'Arşiv sonuçları görünür adet kadar dilimlenmiyor.'],
-  ['const displayedArchiveCount = Math.min(archiveVisibleCount, gridResults.length)', 'Arşiv başlığında gerçek görünür adet hesaplanmıyor.'],
+  ['const archivePageSize = 18', 'Arşiv sayfa boyutu dengeli iki ve üç sütun düzenine göre sabitlenmemiş.'],
+  ['const archivePageCount = Math.max(1, Math.ceil(gridResults.length / archivePageSize))', 'Arşiv toplam sayfa sayısını gerçek sonuç adedinden hesaplamıyor.'],
+  ['const safeArchivePage = Math.min(archivePage, archivePageCount)', 'Arşiv aktif sayfası geçerli aralıkta tutulmuyor.'],
+  ['const archiveStartIndex = (safeArchivePage - 1) * archivePageSize', 'Arşiv başlangıç indisini aktif sayfaya göre hesaplamıyor.'],
+  ['const visibleGridResults = gridResults.slice(archiveStartIndex, archiveStartIndex + archivePageSize)', 'Arşiv sonuçları aktif sayfanın aralığına göre dilimlenmiyor.'],
+  ['const displayedArchiveCount = visibleGridResults.length', 'Arşiv başlığında gerçek görünür adet hesaplanmıyor.'],
   ['{displayedArchiveCount}</strong> gösteriliyor', 'Arşiv başlığı görünür içerik sayısını göstermiyor.'],
   ['toplam <strong className="text-white">{gridResults.length}</strong>', 'Arşiv başlığı toplam içerik sayısını göstermiyor.'],
-  ['md:grid-cols-2 xl:grid-cols-3', 'Arşiv masaüstünde dengeli üç sütunlu 3×3 grid kullanmıyor.'],
+  ['md:grid-cols-2 xl:grid-cols-3', 'Arşiv masaüstünde dengeli üç sütunlu grid kullanmıyor.'],
   ['function ArchiveArticleCard', 'Arşiv özel kompakt kart bileşeni kullanmıyor.'],
   ['businessPriorityScore', 'Mobil bozum odaklı içerik öncelik skoru bulunmuyor.'],
   ["featuredArticleSlugs", 'Öne çıkan rehberler sabit ana makale sırasına bağlanmamış.'],
   ["const popular = discoveryMode ? discoveryRemainder.slice(0, 5) : []", 'Popüler rehber başlangıç sırası dört öne çıkan içerikle uyumlu değil.'],
-  ['9 rehber daha göster', 'Arşivde kademeli daha fazla gösterme eylemi yok.'],
+  ['function goToArchivePage(page: number)', 'Arşiv sayfa değişimini yöneten işlev bulunmuyor.'],
+  ['aria-label="Bilgi Merkezi sayfaları"', 'Arşiv numaralı sayfalaması erişilebilir bir navigasyon adı kullanmıyor.'],
+  ["aria-current={page === safeArchivePage ? 'page' : undefined}", 'Aktif arşiv sayfası ekran okuyucuya bildirilmiyor.'],
+  ['disabled={safeArchivePage === 1}', 'Arşiv önceki düğmesi ilk sayfada devre dışı kalmıyor.'],
+  ['disabled={safeArchivePage === archivePageCount}', 'Arşiv sonraki düğmesi son sayfada devre dışı kalmıyor.'],
   ['showNewestArticles', 'Yeni içerik düğmesi kontrollü yönlendirme işlevini kullanmıyor.'],
   ['aria-controls="article-archive"', 'Yeni içerik düğmesi sonuç arşivini aria-controls ile bildirmiyor.'],
   ['id="article-archive"', 'Makale arşivi için sabit hedef kimliği eksik.'],
@@ -45,8 +52,8 @@ if (archiveCardSource.includes('Rehberi aç') || archiveCardSource.includes('Reh
   console.error('Arşiv kartında tüm kart bağlantısına ek olarak tekrarlı CTA metni bulunuyor.');
   process.exit(1);
 }
-if (!archiveCardSource.includes('text-[17px] font-black') || !archiveCardSource.includes('line-clamp-2')) {
-  console.error('Arşiv kartı tipografisi okunabilir ve kontrollü iki satırlı yapıda değil.');
+if (!archiveCardSource.includes('font-black') || !archiveCardSource.includes('line-clamp-3') || !archiveCardSource.includes('sm:line-clamp-2') || !archiveCardSource.includes('sm:text-[17px]')) {
+  console.error('Arşiv kartı tipografisi mobilde üç, geniş ekranda iki satırlı okunabilir yapıda değil.');
   process.exit(1);
 }
 
@@ -98,7 +105,7 @@ if (!compactLinkSource.includes('aria-labelledby={titleId}') || !compactLinkSour
   process.exit(1);
 }
 
-if (!source.includes('featured.slice(0, 5).map((article, index) => <ArticleCard') || !source.includes('priority={index < 2}')) {
+if (!/featured\.slice\(0, 5\)\.map\(\(article, index\) => <ArticleCard[^>]+priority=\{index < 2\}/.test(source)) {
   console.error('Öne çıkan rehberler Popüler rehberlerle aynı düzende beş dengeli premium kart olarak render edilmiyor.');
   process.exit(1);
 }
@@ -136,4 +143,4 @@ if (source.includes("onClick={() => setSort('newest')}")) {
   console.error('Eski yalnızca sıralama değiştiren yeni içerik düğmesi hâlâ mevcut.');
   process.exit(1);
 }
-console.log('OK: Arşiv yönlendirmesi doğrulandı; 3×3 kart sistemi ince kategori şeritleriyle ayrışıyor, renk gürültüsü azaltılmış ve bağlantı adları erişilebilir.');
+console.log('OK: Arşiv yönlendirmesi doğrulandı; numaralı sayfalama, iki/üç sütunlu kart sistemi, odak yönetimi ve bağlantı adları erişilebilir.');

@@ -13,9 +13,12 @@ for (const file of requiredTemplates) {
   if (!fs.existsSync(full)) failures.push(`Eksik dinamik rota şablonu: ${file}`);
   else {
     const source = fs.readFileSync(full, 'utf8');
-    for (const token of ['generateStaticParams', 'generateMetadata', 'alternates', 'canonical', 'BreadcrumbList']) {
+    for (const token of ['generateStaticParams', 'generateMetadata', 'BreadcrumbList']) {
       if (!source.includes(token)) failures.push(`${file} içinde ${token} eksik`);
     }
+    const usesExplicitCanonical = source.includes('alternates') && source.includes('canonical');
+    const usesCentralMetadata = source.includes('createMetadata({') && source.includes('path:');
+    if (!usesExplicitCanonical && !usesCentralMetadata) failures.push(`${file} içinde merkezi veya açık canonical eksik`);
   }
 }
 

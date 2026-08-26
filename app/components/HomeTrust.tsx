@@ -3,7 +3,7 @@ import { siteConfig } from '../lib/site-config';
 import { InlineEditableText } from './admin/SiteInlineEditor';
 
 const standards = [
-  ['01', 'Resmî kanaldan başlayın', 'Görüşme yalnızca bozumcu.net üzerindeki doğrulanmış bağlantılardan başlar.'],
+  ['01', 'Resmî kanaldan başlayın', `Görüşme yalnızca ${siteConfig.domain} üzerindeki doğrulanmış bağlantılardan başlar.`],
   ['02', 'Tutarı önceden görün', 'Oran, net ödeme ve işlem sırası onay vermeden önce yazılı paylaşılır.'],
   ['03', 'Kontrol sizde kalsın', 'Şifre, SMS kodu, kart şifresi veya ekran erişimi hiçbir aşamada istenmez.'],
 ] as const;

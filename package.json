@@ -28,6 +28,8 @@
     "audit:conversion-analytics": "node scripts/audit-conversion-analytics.mjs",
     "audit:search-personalization": "node scripts/audit-search-personalization.mjs",
     "audit:seo-release": "node scripts/audit-seo-release-readiness.mjs",
+    "audit:seo-output": "node scripts/audit-seo-output.mjs",
+    "audit:redirect-map": "node scripts/audit-redirect-map.mjs",
     "preflight:release": "node scripts/audit-release-gate.mjs",
     "audit:seo": "node scripts/audit-seo-intents.mjs",
     "audit:troubleshooting": "node scripts/audit-troubleshooting.mjs",

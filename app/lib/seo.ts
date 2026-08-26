@@ -1,18 +1,9 @@
 import type { Metadata } from 'next';
 import type { ArticleItem, ServiceItem } from './site';
+import { EXPECTED_PRODUCTION_ORIGIN, PRIMARY_SITE_ORIGIN, primaryAbsoluteUrl } from './siteIdentity';
 
-export const PRODUCTION_SITE_URL = 'https://bozumcu.net';
-function normalizeSiteUrl(value?: string) {
-  try {
-    const parsed = new URL(value || PRODUCTION_SITE_URL);
-    if (parsed.protocol !== 'https:') return PRODUCTION_SITE_URL;
-    return parsed.origin.replace(/\/$/, '');
-  } catch {
-    return PRODUCTION_SITE_URL;
-  }
-}
-
-export const SITE_URL = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+export const PRODUCTION_SITE_URL = EXPECTED_PRODUCTION_ORIGIN;
+export const SITE_URL = PRIMARY_SITE_ORIGIN;
 export const IS_VERCEL_PREVIEW = process.env.VERCEL_ENV === 'preview' || process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
 export const ALLOW_INDEXING = SITE_URL === PRODUCTION_SITE_URL && !IS_VERCEL_PREVIEW;
 export const SITE_NAME = 'Sky Bozum';
@@ -48,9 +39,24 @@ export type SeoMetadataInput = {
   noIndex?: boolean;
 };
 
+function trimAtWord(value: string, maxLength: number) {
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxLength) return normalized;
+  const shortened = normalized.slice(0, maxLength + 1).replace(/\s+\S*$/, '').replace(/[,:;\-–—|]+$/, '').trim();
+  return shortened || normalized.slice(0, maxLength).trim();
+}
+
+export function seoTitle(value: string) {
+  const subject = value.replace(/\s*\|\s*Sky Bozum(?:\s+Bilgi Merkezi)?\s*$/i, '').trim();
+  return `${trimAtWord(subject, 52)} | Sky Bozum`;
+}
+
+export function seoDescription(value: string) {
+  return trimAtWord(value, 158).replace(/[,:;\-–—]+$/, '').trim().replace(/\.?$/, '.');
+}
+
 export function absoluteUrl(path = '/') {
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+  return primaryAbsoluteUrl(path);
 }
 
 export function createMetadata({
@@ -63,17 +69,19 @@ export function createMetadata({
   keywords,
   noIndex = false,
 }: SeoMetadataInput): Metadata {
+  const resolvedTitle = seoTitle(title);
+  const resolvedDescription = seoDescription(description);
   const canonical = absoluteUrl(path);
   const socialImage = absoluteUrl(image);
 
   return {
-    title,
-    description,
+    title: { absolute: resolvedTitle },
+    description: resolvedDescription,
     keywords: keywords ? [...keywords] : undefined,
     alternates: { canonical: path },
     openGraph: {
-      title,
-      description,
+      title: resolvedTitle,
+      description: resolvedDescription,
       url: canonical,
       siteName: SITE_NAME,
       locale: SITE_LOCALE,
@@ -82,8 +90,8 @@ export function createMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title,
-      description,
+      title: resolvedTitle,
+      description: resolvedDescription,
       images: [socialImage],
     },
     robots: indexableRobots(noIndex),
