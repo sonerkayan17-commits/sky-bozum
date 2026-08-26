@@ -1,6 +1,6 @@
 'use client';
 
-import { collection, doc, onSnapshot, serverTimestamp, setDoc, type Firestore } from 'firebase/firestore';
+import { collection, doc, onSnapshot, serverTimestamp, setDoc, writeBatch, type Firestore } from 'firebase/firestore';
 import { useEffect, useMemo, useState } from 'react';
 import { RATE_MAX_AGE_DAYS, isRateDataStale, rateDataAgeDays, rateItems } from '../lib/rates';
 
@@ -12,6 +12,7 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
   const [form, setForm] = useState({ rate: '', maxRate: '', status: 'draft' as RateOverride['status'] });
   const [notice, setNotice] = useState('');
   const [saving, setSaving] = useState(false);
+  const [verifyingAll, setVerifyingAll] = useState(false);
   const [checkedAt, setCheckedAt] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -78,11 +79,39 @@ export default function AdminRatePanel({ db, actorId }: { db: Firestore | null; 
     }
   }
 
+  async function verifyAllPublishedRates() {
+    if (!db || verifyingAll) return;
+    setVerifyingAll(true);
+    setNotice('');
+    try {
+      const batch = writeBatch(db);
+      rateItems.forEach((item) => {
+        const current = overrides[item.id];
+        batch.set(doc(db, 'rateOverrides', item.id), {
+          rate: current?.rate ?? item.rate,
+          maxRate: current?.maxRate ?? item.maxRate,
+          status: 'published',
+          updatedBy: actorId,
+          updatedAt: serverTimestamp(),
+        });
+      });
+      batch.set(doc(collection(db, 'contentAudit')), {
+        action: 'rate:all-verified', articleSlug: rateItems.map((item) => item.id).join(','), actorId, createdAt: serverTimestamp(),
+      });
+      await batch.commit();
+      setNotice(`${rateItems.length} oran kaydı mevcut değerleri korunarak yeniden doğrulandı ve yayın tarihi güncellendi.`);
+    } catch {
+      setNotice('Toplu oran doğrulaması tamamlanamadı. Yönetici yetkisini ve bağlantıyı kontrol edin.');
+    } finally {
+      setVerifyingAll(false);
+    }
+  }
+
   return <section className="admin-section">
     <div className="admin-section-head"><div><span>ORAN YÖNETİMİ</span><h2>Güncel oran kayıtları</h2></div><p>Oranları yalnızca bu bölümden değiştirin. “Yayında” seçilen kayıt ana sayfa ve hesaplama araçlarına otomatik yansır.</p></div>
     <section className={`admin-rate-freshness ${freshness.fresh ? 'is-fresh' : 'is-stale'}`} aria-label="Oran güncellik durumu">
       <div><span>YAYIN GÜNCELLİĞİ</span><strong>{freshness.loading ? 'Durum hesaplanıyor' : freshness.fresh ? 'Kontrol eşiği içinde' : 'Güncelleme gerekiyor'}</strong><small>{freshness.newest ? `Son yayımlanan oran: ${freshness.newest.toLocaleString('tr-TR')} (${freshness.days} gün önce)` : freshness.loading ? 'Yayın kayıtları kontrol ediliyor.' : `Varsayılan oran seti ${rateDataAgeDays(checkedAt!)} gündür güncellenmedi.`}</small></div>
-      <p><b>{freshness.published}/{rateItems.length}</b> oran yayında. {freshness.loading ? 'Kayıtlar okunuyor.' : freshness.fresh ? `Eşik: ${RATE_MAX_AGE_DAYS} gün.` : 'Değişiklik yapmadan önce kaynak ve net oran teyidini kayda alın.'}</p>
+      <p><b>{freshness.published}/{rateItems.length}</b> oran yayında. {freshness.loading ? 'Kayıtlar okunuyor.' : freshness.fresh ? `Eşik: ${RATE_MAX_AGE_DAYS} gün.` : 'Değişiklik yapmadan önce kaynak ve net oran teyidini kayda alın.'}<button type="button" disabled={verifyingAll} onClick={() => void verifyAllPublishedRates()}>{verifyingAll ? 'Doğrulanıyor…' : 'Tüm oranları bugün doğrula'}</button></p>
     </section>
     {notice && <p className="admin-success admin-notice">{notice}</p>}
     <div className="admin-table">
