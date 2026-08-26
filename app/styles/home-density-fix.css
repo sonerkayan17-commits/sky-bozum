@@ -69,24 +69,26 @@
 
 .home-page .home-faq-card,
 .home-page .contact-concierge {
-  min-height: 470px !important;
+  min-height: 0 !important;
 }
 
 .home-page .home-faq-card {
-  padding: 1.4rem !important;
+  height: auto !important;
+  align-self: start !important;
+  padding: 1.15rem 1.25rem !important;
 }
 
 .home-page .home-faq-question {
-  min-height: 51px !important;
+  min-height: 44px !important;
 }
 
 .home-page .home-faq-list {
-  margin-top: 14px !important;
+  margin-top: 10px !important;
 }
 
 .home-page .home-faq-links {
-  margin-top: 12px !important;
-  padding-top: 12px !important;
+  margin-top: 8px !important;
+  padding-top: 9px !important;
 }
 
 .home-page .contact-concierge__topline {

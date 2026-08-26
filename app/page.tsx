@@ -83,7 +83,7 @@ export default function Home() {
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--experience" desktopHeight={1020} mobileHeight={1230}><HomeTestimonials /></DeferredViewportSection>
         <DeferredViewportSection className="render-later home-flow-band home-flow-band--closing" desktopHeight={760} mobileHeight={1242}>
           <section className="home-final-section content-wide rhythm-md">
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid items-start gap-6 lg:grid-cols-2">
               <HomeFaq />
               <FinalCta />
             </div>

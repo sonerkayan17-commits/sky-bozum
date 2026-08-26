@@ -1,10 +1,11 @@
 /* The CTA occupies half of the homepage grid, so its internal layout stays single-column. */
 .home-page .home-contact-band {
   grid-template-columns: minmax(0, 1fr) !important;
-  grid-template-rows: auto auto auto 1fr !important;
-  gap: 1.15rem !important;
-  min-height: 470px !important;
-  padding: 1.7rem !important;
+  grid-template-rows: auto auto auto auto !important;
+  align-self: start !important;
+  gap: .8rem !important;
+  min-height: 0 !important;
+  padding: 1.2rem !important;
 }
 
 .home-page .home-contact-band__copy,
@@ -18,16 +19,17 @@
 
 .home-page .home-contact-band__copy h2 {
   max-width: 440px !important;
-  font-size: clamp(2rem, 2.65vw, 2.8rem) !important;
+  margin-top: .45rem !important;
+  font-size: clamp(1.72rem, 2.2vw, 2.25rem) !important;
   line-height: .98 !important;
   letter-spacing: -.045em !important;
 }
 
 .home-page .home-contact-band__copy > span {
   max-width: 500px !important;
-  margin-top: .75rem !important;
-  font-size: .7rem !important;
-  line-height: 1.6 !important;
+  margin-top: .5rem !important;
+  font-size: .64rem !important;
+  line-height: 1.5 !important;
 }
 
 .home-page .home-contact-band__actions {
@@ -37,11 +39,13 @@
 
 .home-page .home-contact-band__actions > a {
   width: 100% !important;
+  min-height: 44px !important;
 }
 
 .home-page .home-contact-band__facts {
   align-self: end !important;
-  margin-top: auto !important;
+  margin-top: 0 !important;
+  padding-top: .65rem !important;
 }
 
 .home-page .home-contact-band__guides {
@@ -53,15 +57,15 @@
   align-self: end;
   min-width: 0;
   border-top: 1px solid rgba(255,255,255,.065);
-  padding-top: .75rem;
-  row-gap: .72rem;
+  padding-top: .6rem;
+  row-gap: .55rem;
 }
 
 .home-page .home-contact-band__guides > a {
   display: grid;
   min-width: 0;
   grid-template-rows: auto 1fr;
-  gap: .5rem;
+  gap: .36rem;
   padding: 0 .52rem;
   color: #d8dce3;
   transition: color .2s ease;
@@ -70,15 +74,15 @@
 .home-page .home-contact-band__guides > a:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
 .home-page .home-contact-band__guides > a:nth-child(3n) { padding-right: 0; }
 .home-page .home-contact-band__guides > a:not(:nth-child(3n + 1)) { border-left: 1px solid rgba(255,255,255,.055); }
-.home-page .home-contact-band__guides > a:nth-child(n + 4) { border-top: 1px solid rgba(255,255,255,.055); padding-top: .72rem; }
+.home-page .home-contact-band__guides > a:nth-child(n + 4) { border-top: 1px solid rgba(255,255,255,.055); padding-top: .55rem; }
 .home-page .home-contact-band__guides > a:hover { color: #fff; }
-.home-contact-band__guide-cover { position: relative; display: block; width: 100%; aspect-ratio: 16 / 8; overflow: hidden; border-radius: 7px; background: #080b11; }
+.home-contact-band__guide-cover { position: relative; display: block; width: 100%; aspect-ratio: 16 / 7.2; overflow: hidden; border-radius: 7px; background: #080b11; }
 .home-contact-band__guide-cover img { object-fit: cover; transition: transform .3s ease; }
 .home-contact-band__guides > a:hover .home-contact-band__guide-cover img { transform: scale(1.035); }
 .home-contact-band__guide-copy { display: flex; min-width: 0; flex-direction: column; }
 .home-contact-band__guide-copy small { color: #bd5268; font-size: .43rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .home-contact-band__guide-copy strong { margin-top: .26rem; font-size: .55rem; line-height: 1.32; letter-spacing: 0; }
-.home-contact-band__guide-copy > span { display: -webkit-box; margin-top: .32rem; overflow: hidden; color: #8c96a4; font-size: .48rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.home-contact-band__guide-copy > span { display: -webkit-box; margin-top: .25rem; overflow: hidden; color: #8c96a4; font-size: .45rem; line-height: 1.38; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
 .home-contact-band__guide-copy b { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-top: .38rem; color: #747d89; font-size: .43rem; }
 .home-contact-band__guide-copy b i { color: #c84b62; font-style: normal; }
 

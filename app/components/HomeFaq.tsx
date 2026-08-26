@@ -8,7 +8,7 @@ export default function HomeFaq() {
   const [openIndex, setOpenIndex] = useState(-1);
 
   return (
-    <div className="home-faq-card premium-card flex h-full flex-col p-6 sm:p-8" aria-labelledby="home-faq-title">
+    <div className="home-faq-card premium-card flex flex-col p-6 sm:p-8" aria-labelledby="home-faq-title">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="home-faq-kicker">Mobil ödeme rehberi</p>
