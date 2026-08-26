@@ -117,6 +117,7 @@ service cloud.firestore {
         && notBanned()
         && (!signedIn() || isAdmin() || approvedMember())
         && capabilityAllowed("community")
+        && capabilityAllowed("comments")
         && request.resource.data["service"] is string
         && request.resource.data["service"].size() >= 2
         && request.resource.data["service"].size() <= 100
@@ -418,7 +419,7 @@ service cloud.firestore {
     match /memberPosts/{postId} {
       allow read: if canModerate() || validPublicForumPost(resource.data)
         || (signedIn() && resource.data.uid == request.auth.uid);
-      allow create: if verifiedMemberOrAdmin() && (isAdmin() || capabilityAllowed("community"))
+      allow create: if verifiedMemberOrAdmin() && (isAdmin() || (capabilityAllowed("community") && capabilityAllowed("content_sharing")))
         && request.resource.data.uid == request.auth.uid
         && validForumDraft(request.resource.data)
         && (isAdmin() || request.resource.data.status == "pending")
@@ -432,7 +433,7 @@ service cloud.firestore {
         && request.resource.data.body.size() >= 10
         && request.resource.data.body.size() <= 30000
         && request.resource.data.createdAt == request.time;
-      allow update: if canModerate() || (verifiedMember() && capabilityAllowed("community")
+      allow update: if canModerate() || (verifiedMember() && capabilityAllowed("community") && capabilityAllowed("content_sharing")
         && resource.data.uid == request.auth.uid
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.author == resource.data.author
@@ -940,6 +941,21 @@ service cloud.firestore {
     match /contentAudit/{entryId} {
       allow read, create: if isAdmin() || canManageContent() || canModerate();
       allow update, delete: if false;
+    }
+
+    match /auditAnnotations/{annotationId} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(["sourceEventId", "note", "updatedBy", "updatedAt"])
+        && request.resource.data.sourceEventId is string
+        && request.resource.data.sourceEventId.size() >= 1
+        && request.resource.data.sourceEventId.size() <= 180
+        && request.resource.data.note is string
+        && request.resource.data.note.size() >= 1
+        && request.resource.data.note.size() <= 800
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
     }
 
     match /rateOverrides/{rateId} {

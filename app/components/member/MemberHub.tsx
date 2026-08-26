@@ -245,6 +245,8 @@ export default function MemberHub({ view }: { view: MemberView }) {
         : { label: 'Yönetici onayı bekleniyor', tone: 'is-pending' };
   const restrictionLabels: Record<string, string> = {
     community: 'Topluluk işlemleri',
+    comments: 'Yorum paylaşımı',
+    content_sharing: 'Konu paylaşımı',
     messaging: 'Mesajlaşma',
     code_sale: 'Kod satışı',
     store_purchase: 'Mağaza alışverişi',

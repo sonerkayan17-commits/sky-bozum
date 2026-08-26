@@ -14,7 +14,7 @@ import {
 
 export type MemberRole = 'member' | 'editor' | 'publisher' | 'moderator' | 'operator' | 'admin';
 export type MemberStatus = 'pending' | 'active' | 'banned';
-export type MemberRestrictionKey = 'community' | 'messaging' | 'code_sale' | 'store_purchase' | 'wallet';
+export type MemberRestrictionKey = 'community' | 'comments' | 'content_sharing' | 'messaging' | 'code_sale' | 'store_purchase' | 'wallet';
 
 export type AdminMember = {
   id: string;
@@ -231,7 +231,7 @@ export async function setMemberRestrictions(
   restrictions: MemberRestrictionKey[],
   actorId: string,
 ) {
-  const allowed: MemberRestrictionKey[] = ['community', 'messaging', 'code_sale', 'store_purchase', 'wallet'];
+  const allowed: MemberRestrictionKey[] = ['community', 'comments', 'content_sharing', 'messaging', 'code_sale', 'store_purchase', 'wallet'];
   const normalized = [...new Set(restrictions)].filter((item): item is MemberRestrictionKey => allowed.includes(item));
   await updateDoc(doc(firestore, 'members', memberId), {
     restrictions: normalized,

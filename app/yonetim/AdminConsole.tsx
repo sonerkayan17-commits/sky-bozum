@@ -26,6 +26,8 @@ import SiteSettingsPanel from "./SiteSettingsPanel";
 import ProductInventoryPanel from "./ProductInventoryPanel";
 import AdminCommerceCasePanel from "./AdminCommerceCasePanel";
 import AdminConversionPanel from "./AdminConversionPanel";
+import AdminBusinessDashboard from "./AdminBusinessDashboard";
+import AdminAuditAnnotations from "./AdminAuditAnnotations";
 import type { ArticleItem } from "../lib/site";
 import {
   removeManagedArticle,
@@ -58,6 +60,12 @@ type View = "overview" | "analytics" | "release" | "backup" | "members" | "moder
 type ManagedArticleRecord = ContentArticleDraft & { id: string };
 type AuditFilter = 'all' | 'site' | 'content' | 'member' | 'community' | 'operation' | 'system';
 const adminViews: readonly View[] = ["overview", "analytics", "release", "backup", "members", "moderation", "access", "content", "archive", "audit", "rates", "forum", "operations", "cases", "inventory", "settings"];
+const adminNavigation: ReadonlyArray<{ label: string; items: ReadonlyArray<readonly [View, string]> }> = [
+  { label: "İşletme", items: [["overview", "Kontrol paneli"], ["analytics", "Dönüşüm analitiği"], ["inventory", "Ürün ve stok"], ["operations", "Kod satışları"], ["cases", "İptal ve sorunlar"]] },
+  { label: "Üyeler", items: [["members", "Üye işlemleri"], ["access", "Rol ve yetkiler"], ["audit", "Log ve işlem defteri"]] },
+  { label: "İçerik", items: [["content", "Sayfa ve makaleler"], ["moderation", "Yorumlar"], ["forum", "Forum konuları"], ["archive", "Forum arşivi"]] },
+  { label: "Sistem", items: [["rates", "Oranlar"], ["settings", "Site ayarları"], ["release", "Yayın kontrolü"], ["backup", "Yedekleme"]] },
+];
 const permissions = [
   "Yorum paylaşımı",
   "İçerik taslağı",
@@ -65,7 +73,9 @@ const permissions = [
   "Özel kampanyalar",
 ];
 const restrictionOptions: Array<{ key: MemberRestrictionKey; label: string; detail: string }> = [
-  { key: "community", label: "Topluluk etkileşimi", detail: "Konu, yorum, beğeni ve puan gönderimini kapatır." },
+  { key: "community", label: "Tüm topluluk etkileşimi", detail: "Konu, yorum, beğeni ve puan gönderimini birlikte kapatır." },
+  { key: "comments", label: "Yorum engeli", detail: "Makale ve hizmetlerde yeni yorum paylaşımını kapatır." },
+  { key: "content_sharing", label: "Konu paylaşım engeli", detail: "Forumda yeni konu açma ve kendi konusunu güncelleme yetkisini kapatır." },
   { key: "messaging", label: "Özel mesaj", detail: "Diğer üyelere mesaj göndermeyi kapatır." },
   { key: "code_sale", label: "Kod satışı", detail: "Şifreli kod satış talebi oluşturmayı kapatır." },
   { key: "store_purchase", label: "Ürün satın alma", detail: "Stoktan kod satın alma ve teslim alma akışını kapatır." },
@@ -121,6 +131,10 @@ function auditActionLabel(action: string) {
     'commerce-case:resolved': 'Müşteri incelemesi çözüldü',
     'commerce-case:rejected': 'Müşteri incelemesi uygun bulunmadı',
     'stock:batch-updated': 'Stok partisi güncellendi',
+    'stock:sale-enabled': 'Ürün satışı açıldı',
+    'stock:sale-disabled': 'Ürün satışı durduruldu',
+    'audit-note:added': 'Denetim kaydına açıklama eklendi',
+    'audit-note:corrected': 'Denetim kaydı açıklaması düzeltildi',
   };
   if (labels[action]) return labels[action];
   if (action.startsWith('rate:')) return action.endsWith(':published') ? 'Oran yayımlandı' : 'Oran taslak olarak kaydedildi';
@@ -173,13 +187,12 @@ function auditCategory(action: string): Exclude<AuditFilter, 'all'> {
   if (action.startsWith('comment:') || action.startsWith('forum:')) return 'community';
   if (action.startsWith('operation:')) return 'operation';
   if (action.startsWith('commerce-case:')) return 'operation';
-  if (action.startsWith('rate:') || action.startsWith('release-') || action.startsWith('admin-backup:')) return 'system';
+  if (action.startsWith('stock:')) return 'operation';
+  if (action.startsWith('rate:') || action.startsWith('release-') || action.startsWith('admin-backup:') || action.startsWith('audit-note:')) return 'system';
   return 'content';
 }
 
 export default function AdminConsole({
-  articleCount,
-  rateCount,
   referenceCount,
   latestReferenceAt,
 }: {
@@ -349,10 +362,6 @@ export default function AdminConsole({
     () => comments.filter((comment) => comment.status === "pending"),
     [comments],
   );
-  const activeMembers = useMemo(
-    () => members.filter((member) => member.status === "active"),
-    [members],
-  );
   const filteredMembers = useMemo(() => {
     const query = memberQuery.trim().toLocaleLowerCase("tr-TR");
     return members.filter((member) => {
@@ -364,8 +373,6 @@ export default function AdminConsole({
     () => comments.filter((comment) => commentStatusFilter === "all" || comment.status === commentStatusFilter),
     [commentStatusFilter, comments],
   );
-  const publishedContentCount = useMemo(() => managedArticles.filter((article) => article.status === "published").length, [managedArticles]);
-  const draftContentCount = useMemo(() => managedArticles.filter((article) => article.status === "draft").length, [managedArticles]);
   const customArticles = useMemo(
     () =>
       managedArticles.filter(
@@ -521,34 +528,10 @@ export default function AdminConsole({
           </div>
         </header>
         <nav className="admin-nav" aria-label="Yönetim bölümleri">
-          <button className={view === "settings" ? "is-active" : ""} onClick={() => setView("settings")}>Site ayarları</button>
-          {(
-            [
-              ["overview", "Genel bakış"],
-              ["analytics", "Dönüşüm analitiği"],
-              ["release", "Yayın kontrolü"],
-              ["backup", "Yedek"],
-              ["content", "İçerik"],
-              ["rates", "Oranlar"],
-              ["operations", "Kod satışları / İşlemler"],
-              ["cases", "İptal / Sorun kayıtları"],
-              ["inventory", "Ürün stokları"],
-              ["members", "Üyeler"],
-              ["moderation", "Yorumlar"],
-              ["forum", "Forum"],
-              ["access", "Yetkiler"],
-              ["archive", "Forum arşivi"],
-              ["audit", "İşlem geçmişi"],
-            ] as const
-          ).map(([id, label]) => (
-            <button
-              key={id}
-              className={view === id ? "is-active" : ""}
-              onClick={() => setView(id)}
-            >
-              {label}
-            </button>
-          ))}
+          {adminNavigation.map((group) => <section className="admin-nav-group" key={group.label} aria-label={group.label}>
+            <span className="admin-nav-label">{group.label}</span>
+            <div>{group.items.map(([id, label]) => <button key={id} className={view === id ? "is-active" : ""} onClick={() => setView(id)}>{label}</button>)}</div>
+          </section>)}
         </nav>
         {(error || message) && (
           <p
@@ -560,59 +543,14 @@ export default function AdminConsole({
           </p>
         )}
         {view === "overview" && (
-          <section className="admin-overview">
-            <div className="admin-intro">
-              <span>CANLI OPERASYON ÖZETİ</span>
-              <h2>
-                Net kararlar,
-                <br />
-                iz bırakacak işlemler.
-              </h2>
-              <p>
-                Kullanıcı durumu, bakiye hareketi ve moderasyon kararları tek
-                kayıt hattında takip edilir.
-              </p>
-            </div>
-            <div className="admin-metrics">
-              <article>
-                <strong>{activeMembers.length}</strong>
-                <span>aktif üye</span>
-              </article>
-              <article>
-                <strong>{pendingComments.length}</strong>
-                <span>bekleyen yorum</span>
-              </article>
-              <article>
-                <strong>{rateCount}</strong>
-                <span>oran kaydı</span>
-              </article>
-              <article>
-                <strong>{articleCount}</strong>
-                <span>rehber içeriği</span>
-              </article>
-            </div>
-            <div className="admin-command-strip">
-              <button onClick={() => setView("content")}><b>{publishedContentCount}</b><span>yönetilen yayın</span></button>
-              <button onClick={() => setView("content")}><b>{draftContentCount}</b><span>hazırlanan taslak</span></button>
-              <button onClick={() => setView("members")}><b>{members.filter((member) => member.status === "pending").length}</b><span>üyelik onayı</span></button>
-              <button onClick={() => setView("audit")}><b>{contentAudit.length + memberLedger.length}</b><span>denetim kaydı</span></button>
-            </div>
-            <div className="admin-checklist">
-              <h3>Bugünün kontrolü</h3>
-              <p>
-                <b>{pendingComments.length}</b> yorum moderasyon bekliyor.
-              </p>
-              <p>Üye bakiyesi yalnız işlem defteri üzerinden değiştirilir.</p>
-              <button onClick={() => setView("moderation")}>
-                Yorumları incele →
-              </button>
-            </div>
-            <section className="admin-activity" aria-label="İçerik işlem geçmişi">
-              <div><span>İÇERİK HAREKETLERİ</span><h3>Son yayın kararları</h3></div>
-              {contentAudit.length === 0 ? <p>Henüz içerik işlemi kaydı yok.</p> : <ol>{contentAudit.map((event) => <li key={event.id}><b>{auditTargetLabel(event, managedArticles, baseArticles, members)}</b><span>{auditActionLabel(event.action)}</span><small>{formatDate(event.createdAt)}</small></li>)}</ol>}
-              <button onClick={() => setView("content")}>İçerik merkezine git →</button>
-            </section>
-          </section>
+          <AdminBusinessDashboard
+            db={db}
+            members={members}
+            memberLedger={memberLedger}
+            contentAudit={contentAudit}
+            pendingComments={pendingComments.length}
+            onNavigate={setView}
+          />
         )}
         {view === "content" && (
           <section className="admin-section">
@@ -1032,6 +970,7 @@ export default function AdminConsole({
                 </div>
               </section>
             </div>
+            <AdminAuditAnnotations db={db} actorId={user.uid} events={contentAudit} />
           </section>
         )}
       </div>
@@ -1332,6 +1271,10 @@ export default function AdminConsole({
             <div className="admin-permission-list admin-restriction-list">
               <h3>Hesap özelliklerini kısıtla</h3>
               <p>Seçilen özellik güvenlik kurallarında da engellenir; yalnızca düğme gizlenmez.</p>
+              <div className="admin-restriction-actions">
+                <button type="button" disabled={actionBusy} onClick={() => void run(() => setMemberRestrictions(db!, selectedMember.id, restrictionOptions.map((item) => item.key), user.uid), "Hesabın işlem özellikleri donduruldu.")}>Tüm işlemleri dondur</button>
+                <button type="button" disabled={actionBusy || selectedMember.restrictions.length === 0} onClick={() => void run(() => setMemberRestrictions(db!, selectedMember.id, [], user.uid), "Hesabın işlem kısıtları kaldırıldı.")}>Tüm kısıtları kaldır</button>
+              </div>
               {restrictionOptions.map((restriction) => (
                 <label key={restriction.key}>
                   <input

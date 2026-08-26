@@ -1,7 +1,7 @@
 'use client';
 
 import type { User } from 'firebase/auth';
-import { addDoc, collection, deleteDoc, doc, getDocs, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../lib/firebase';
 import { products } from '../lib/products';
@@ -9,6 +9,7 @@ import { formatStoreMoney, parsePriceMinor, storePackKey, type StoreCatalogEntry
 import './inventory.css';
 
 type AdminOrder = { id: string; userEmail: string; productName: string; packLabel: string; priceMinor: number; status: string; createdAt: string | null };
+type StockCodeRecord = { id: string; status: string; orderId: string; createdAt: string | null };
 
 export default function ProductInventoryPanel({ user }: { user: User }) {
   const [productSlug, setProductSlug] = useState(products[0]?.slug || '');
@@ -19,6 +20,7 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
   const [active, setActive] = useState(true);
   const [entries, setEntries] = useState<StoreCatalogEntry[]>([]);
   const [orders, setOrders] = useState<AdminOrder[]>([]);
+  const [stockCodes, setStockCodes] = useState<StockCodeRecord[]>([]);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -55,6 +57,38 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
     setPrice(current?.priceMinor ? String(current.priceMinor / 100).replace('.', ',') : '');
     setActive(current?.active !== false);
   }, [entries, packId, productSlug]);
+
+  useEffect(() => {
+    const { db } = getFirebaseClient();
+    if (!db || !productSlug || !packId) return;
+    const catalogKey = storePackKey(productSlug, packId);
+    return onSnapshot(collection(db, 'productCatalog', catalogKey, 'codes'), (snapshot) => setStockCodes(snapshot.docs.map((item) => {
+      const data = item.data();
+      return { id: item.id, status: String(data.status || 'available'), orderId: String(data.orderId || ''), createdAt: data.createdAt?.toDate?.().toISOString() || null };
+    })), (reason) => setError(reason.message));
+  }, [packId, productSlug]);
+
+  async function toggleSale(entry: StoreCatalogEntry) {
+    if (busy) return;
+    setBusy(true); setError(''); setNotice('');
+    try {
+      const { db } = getFirebaseClient();
+      if (!db) throw new Error('Firebase bağlantısı kurulamadı.');
+      const nextActive = !entry.active;
+      await updateDoc(doc(db, 'productCatalog', entry.key), { active: nextActive, updatedAt: serverTimestamp(), updatedBy: user.uid });
+      await addDoc(collection(db, 'contentAudit'), { action: nextActive ? 'stock:sale-enabled' : 'stock:sale-disabled', articleSlug: entry.key, actorId: user.uid, createdAt: serverTimestamp() });
+      setNotice(`${entry.productName} · ${entry.packLabel} satışı ${nextActive ? 'açıldı' : 'durduruldu'}.`);
+    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Satış durumu güncellenemedi.'); }
+    finally { setBusy(false); }
+  }
+
+  function selectEntry(entry: StoreCatalogEntry) {
+    setProductSlug(entry.productSlug);
+    setPackId(entry.packId);
+    setPrice(entry.priceMinor ? String(entry.priceMinor / 100).replace('.', ',') : '');
+    setActive(entry.active);
+    document.querySelector('.inventory-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   async function save(event: FormEvent) {
     event.preventDefault(); setBusy(true); setError(''); setNotice('');
@@ -106,7 +140,7 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
   }
 
   return <section className="admin-section inventory-panel">
-    <div className="admin-section-head"><div><span>DİJİTAL ÜRÜN KASASI</span><h2>Fiyat, stok ve teslimat</h2></div><p>Kodlar şifrelenir; müşteriye yalnız tamamlanan satın alımın tek kodu gösterilir.</p></div>
+    <div className="admin-section-head"><div><span>DİJİTAL ÜRÜN KASASI</span><h2>Ürün, fiyat, stok ve teslimat</h2></div><p>Desteklenen ürünü yayına alma, fiyat güncelleme, stok tazeleme ve satış durdurma tek merkezden yapılır. Kodlar şifreli kalır.</p></div>
     <div className="inventory-metrics" aria-label="Stok ve satış özeti"><article><strong>{inventoryMetrics.availableCodes}</strong><span>satışa açık kod</span></article><article className={inventoryMetrics.lowStock ? 'is-warning' : ''}><strong>{inventoryMetrics.lowStock}</strong><span>azalan stok</span></article><article><strong>{formatStoreMoney(inventoryMetrics.todayRevenue)}</strong><span>bugün teslim edilen</span></article><article><strong>{formatStoreMoney(inventoryMetrics.deliveredRevenue)}</strong><span>toplam teslimat değeri</span></article></div>
     <div className="inventory-layout">
       <form onSubmit={save} className="inventory-form">
@@ -120,8 +154,9 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
         <button className="admin-primary" disabled={busy}>{busy ? 'Güvenli kasaya yazılıyor…' : 'Fiyatı ve stokları kaydet'}</button>
         {error ? <p className="inventory-message is-error">{error}</p> : null}{notice ? <p className="inventory-message is-success">{notice}</p> : null}
       </form>
-      <div className="inventory-summary"><h3>Canlı paket durumu</h3><div>{entries.map((entry) => <article key={entry.key}><div><strong>{entry.productName}</strong><span>{entry.packLabel}</span></div><b>{entry.stockCount} kod</b><span>{entry.priceMinor ? formatStoreMoney(entry.priceMinor) : 'Fiyat yok'}</span><em className={entry.active ? 'is-live' : ''}>{entry.active ? 'Açık' : 'Kapalı'}</em></article>)}</div></div>
+      <div className="inventory-summary"><h3>Canlı paket durumu</h3><div>{entries.map((entry) => <article key={entry.key}><div><strong>{entry.productName}</strong><span>{entry.packLabel}</span></div><b>{entry.stockCount} kod</b><span>{entry.priceMinor ? formatStoreMoney(entry.priceMinor) : 'Fiyat yok'}</span><em className={entry.active ? 'is-live' : ''}>{entry.active ? 'Açık' : 'Kapalı'}</em><div className="inventory-row-actions"><button type="button" onClick={() => selectEntry(entry)}>Düzenle</button><button type="button" className={entry.active ? 'is-stop' : ''} disabled={busy} onClick={() => void toggleSale(entry)}>{entry.active ? 'Satışı durdur' : 'Satışı aç'}</button></div></article>)}</div></div>
     </div>
+    <section className="inventory-code-register"><header><div><span>ŞİFRELİ STOK DEFTERİ</span><h3>Seçili paketin kod hareketleri</h3></div><b>{stockCodes.filter((item) => item.status === 'available').length} kullanılabilir · {stockCodes.filter((item) => item.status === 'delivered').length} satıldı</b></header><p>Kod içeriği güvenlik nedeniyle toplu biçimde açılmaz. Kimlik, durum, sipariş bağı ve kayıt zamanı denetlenebilir.</p><div>{stockCodes.length ? stockCodes.slice(0, 100).map((item) => <article key={item.id}><code>{item.id.slice(0, 12)}…</code><strong className={item.status === 'available' ? 'is-available' : ''}>{item.status === 'available' ? 'Stokta' : item.status === 'delivered' ? 'Teslim edildi' : item.status}</strong><span>{item.orderId ? `Sipariş: ${item.orderId.slice(0, 10)}…` : 'Siparişe bağlanmadı'}</span><time>{item.createdAt ? new Date(item.createdAt).toLocaleString('tr-TR') : '—'}</time></article>) : <p className="admin-empty">Seçili pakette henüz kod kaydı yok.</p>}</div></section>
     <section className="inventory-orders"><header><h3>Son teslimatlar</h3><span>{orders.length} kayıt</span></header>{orders.length ? orders.map((order) => <article key={order.id}><div><strong>{order.productName} · {order.packLabel}</strong><span>{order.userEmail}</span></div><b>{formatStoreMoney(order.priceMinor)}</b><em>{order.status === 'delivered' ? 'Teslim edildi' : order.status}</em><time>{order.createdAt ? new Date(order.createdAt).toLocaleString('tr-TR') : '—'}</time></article>) : <p className="admin-empty">Henüz tamamlanan ürün siparişi yok.</p>}</section>
   </section>;
 }
