@@ -3,9 +3,9 @@
   grid-template-columns: minmax(0, 1fr) !important;
   grid-template-rows: auto auto auto auto !important;
   align-self: start !important;
-  gap: .8rem !important;
+  gap: .65rem !important;
   min-height: 0 !important;
-  padding: 1.2rem !important;
+  padding: 1.05rem 1.15rem !important;
 }
 
 .home-page .home-contact-band__copy,
@@ -57,8 +57,8 @@
   align-self: end;
   min-width: 0;
   border-top: 1px solid rgba(255,255,255,.065);
-  padding-top: .6rem;
-  row-gap: .55rem;
+  padding-top: .48rem;
+  row-gap: .42rem;
 }
 
 .home-page .home-contact-band__guides > a {
@@ -74,15 +74,15 @@
 .home-page .home-contact-band__guides > a:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
 .home-page .home-contact-band__guides > a:nth-child(3n) { padding-right: 0; }
 .home-page .home-contact-band__guides > a:not(:nth-child(3n + 1)) { border-left: 1px solid rgba(255,255,255,.055); }
-.home-page .home-contact-band__guides > a:nth-child(n + 4) { border-top: 1px solid rgba(255,255,255,.055); padding-top: .55rem; }
+.home-page .home-contact-band__guides > a:nth-child(n + 4) { border-top: 1px solid rgba(255,255,255,.055); padding-top: .42rem; }
 .home-page .home-contact-band__guides > a:hover { color: #fff; }
-.home-contact-band__guide-cover { position: relative; display: block; width: 100%; aspect-ratio: 16 / 7.2; overflow: hidden; border-radius: 7px; background: #080b11; }
+.home-contact-band__guide-cover { position: relative; display: block; width: 100%; aspect-ratio: 16 / 6; overflow: hidden; border-radius: 7px; background: #080b11; }
 .home-contact-band__guide-cover img { object-fit: cover; transition: transform .3s ease; }
 .home-contact-band__guides > a:hover .home-contact-band__guide-cover img { transform: scale(1.035); }
 .home-contact-band__guide-copy { display: flex; min-width: 0; flex-direction: column; }
 .home-contact-band__guide-copy small { color: #bd5268; font-size: .43rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .home-contact-band__guide-copy strong { margin-top: .26rem; font-size: .55rem; line-height: 1.32; letter-spacing: 0; }
-.home-contact-band__guide-copy > span { display: -webkit-box; margin-top: .25rem; overflow: hidden; color: #8c96a4; font-size: .45rem; line-height: 1.38; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+.home-contact-band__guide-copy > span { display: none; }
 .home-contact-band__guide-copy b { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-top: .38rem; color: #747d89; font-size: .43rem; }
 .home-contact-band__guide-copy b i { color: #c84b62; font-style: normal; }
 
