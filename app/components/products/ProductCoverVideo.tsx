@@ -4,7 +4,6 @@ import { useEffect, useId, useRef, useState } from 'react';
 
 type ProductCoverVideoProps = {
   src: string;
-  poster?: string;
   objectPosition?: string;
   priority?: boolean;
 };
@@ -26,7 +25,7 @@ function scheduleMobileSelection() {
   });
 }
 
-export default function ProductCoverVideo({ src, poster, objectPosition = '50% 50%', priority = false }: ProductCoverVideoProps) {
+export default function ProductCoverVideo({ src, objectPosition = '50% 50%', priority = false }: ProductCoverVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playbackId = useId();
   const [sourceEnabled, setSourceEnabled] = useState(false);
@@ -185,7 +184,6 @@ export default function ProductCoverVideo({ src, poster, objectPosition = '50% 5
       muted
       loop
       playsInline
-      poster={poster}
       preload={priority ? 'metadata' : 'none'}
       disablePictureInPicture
       controlsList="nodownload noplaybackrate nofullscreen"

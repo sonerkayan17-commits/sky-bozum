@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { reportClientError } from './lib/client-error-reporting';
 
 export default function GlobalError({
   error,
@@ -14,6 +15,7 @@ export default function GlobalError({
     if (process.env.NODE_ENV !== 'production') {
       console.error(error);
     }
+    reportClientError({ kind: 'global-boundary', digest: error.digest });
   }, [error]);
 
   return (

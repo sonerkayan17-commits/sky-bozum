@@ -37,6 +37,8 @@
   -webkit-line-clamp: 2;
 }
 .products-page .product-directory-card__stock {
+  min-height: 25px;
+  white-space: nowrap;
   grid-column: 1;
   align-self: center;
   margin-top: 8px;

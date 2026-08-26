@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { reportClientError } from './lib/client-error-reporting';
 
 export default function ErrorPage({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production') console.error(error);
+    reportClientError({ kind: 'page-boundary', digest: error.digest });
   }, [error]);
   return (
     <main className="experience-state">
