@@ -28,6 +28,30 @@ const walletGuides = [
     title: 'iTunes bozdurmadan önce Apple Gift Card bölgesi nasıl kontrol edilir?',
     summary: 'TR ve USD kod farkını, mağaza bölgesini ve kullanımdan önceki temel kontrolleri inceleyin.',
   },
+  {
+    href: '/bilgi-merkezi/mobil-odemede-guvenli-site-nasil-anlasilir',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-guvenlik-kontrol-listesi.webp',
+    alt: 'Mobil ödemede güvenli siteyi doğrulama, dolandırıcılıkta izlenecek yol ve başvuru kanallarını anlatan görsel rehber',
+    label: 'Güvenlik rehberi',
+    title: 'Mobil ödemede güvenli site nasıl anlaşılır?',
+    summary: 'Resmî alan adı, bilgi paylaşımı, şüpheli işlem ve başvuru adımlarını birlikte kontrol edin.',
+  },
+  {
+    href: '/bilgi-merkezi/razer-gold-bozdurma-kontrol-listesi',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/razer-gold-bozdurma-kontrol-listesi.webp',
+    alt: 'Razer Gold kodunda bölge, para birimi, kullanım ve kayıt kontrollerini anlatan görsel rehber',
+    label: 'Razer Gold rehberi',
+    title: 'Razer Gold bozdurma: Kod kontrol listesi',
+    summary: 'TL ve USD farkı, kullanılmamış kod, bölge uyumu ve satış kaydını işlem öncesi değerlendirin.',
+  },
+  {
+    href: '/bilgi-merkezi/itunes-bozdurma-apple-gift-card-bolge-kontrolu',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/itunes-apple-gift-card-bolge-kontrolu.webp',
+    alt: 'Apple Gift Card için mağaza bölgesi, para birimi, kod ve teslim kontrolünü anlatan görsel rehber',
+    label: 'Apple / iTunes rehberi',
+    title: 'iTunes bozdurma: Apple Gift Card bölge kontrolü',
+    summary: 'TR ve USD farkını, mağaza bölgesini, kod durumunu ve teslim kaydını satın alma öncesi kontrol edin.',
+  },
 ] as const;
 
 export default function FinalCta() {
@@ -59,7 +83,7 @@ export default function FinalCta() {
         {walletGuides.map((guide) => (
           <Link href={guide.href} key={guide.href} className="focus-ring">
             <span className="home-contact-band__guide-cover">
-              <Image src={guide.image} alt={guide.alt} fill loading="lazy" sizes="(max-width: 640px) 112px, 190px" />
+              <Image src={guide.image} alt={guide.alt} fill loading="lazy" sizes="(max-width: 640px) 100vw, 50vw" />
             </span>
             <span className="home-contact-band__guide-copy">
               <small>{guide.label}</small>
