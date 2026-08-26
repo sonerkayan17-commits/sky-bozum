@@ -76,6 +76,7 @@
 .home-contact-band__guide-copy { display: flex; min-width: 0; flex-direction: column; }
 .home-contact-band__guide-copy small { color: #bd5268; font-size: .43rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .home-contact-band__guide-copy strong { margin-top: .3rem; font-size: .57rem; line-height: 1.35; letter-spacing: 0; }
+.home-contact-band__guide-copy > span { display: -webkit-box; margin-top: .32rem; overflow: hidden; color: #8c96a4; font-size: .48rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .home-contact-band__guide-copy b { display: flex; align-items: center; justify-content: space-between; gap: .4rem; margin-top: .45rem; color: #747d89; font-size: .43rem; }
 .home-contact-band__guide-copy b i { color: #c84b62; font-style: normal; }
 
@@ -100,6 +101,7 @@
   .home-page .home-contact-band__guides > a + a { border-top: 1px solid rgba(255,255,255,.055); border-left: 0; }
   .home-contact-band__guide-cover { aspect-ratio: 16 / 10; }
   .home-contact-band__guide-copy strong { font-size: .68rem; }
+  .home-contact-band__guide-copy > span { font-size: .58rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

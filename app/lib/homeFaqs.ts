@@ -20,14 +20,6 @@ export const homeFaqs = [
     answer: 'Limit artırımı yalnız operatör tarafından yapılabilir. Hat yaşı, ödeme geçmişi, tarife ve güvenlik değerlendirmesi etkili olabilir. Limit artıracağını söyleyerek şifre veya SMS kodu isteyen kişilere bilgi verilmemelidir.',
   },
   {
-    question: 'Turkcell, Vodafone ve Türk Telekom arasında fark var mı?',
-    answer: 'Evet. Limit, desteklenen mağaza, onay ekranı, faturalandırma ve iptal koşulları operatöre göre değişebilir. Bu nedenle satın alma adımları her operatör için kendi rehberinden kontrol edilmelidir.',
-  },
-  {
-    question: 'SMS ile mobil ödeme onayı nasıl çalışır?',
-    answer: 'Bazı satın almalarda işlem, operatörün gönderdiği onay mesajı veya resmî ödeme ekranı üzerinden tamamlanır. Mesajdaki ürün, tutar ve satıcı bilgisi okunmadan onay verilmemeli; SMS kodu başka kişiye gönderilmemelidir.',
-  },
-  {
     question: 'Mobil ödeme işlemi ne kadar sürer?',
     answer: 'Dijital ürün satın alma süresi mağazaya ve operatör onayına bağlıdır. Kullanılmamış bir kod Sky Bozum’a sunulursa stok, bölge, tutar ve kullanılabilirlik kontrolü ayrıca yapılır; kesin süre kontrol tamamlanmadan vaat edilmez.',
   },

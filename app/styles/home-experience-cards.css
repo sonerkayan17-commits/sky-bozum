@@ -370,6 +370,24 @@
   background: linear-gradient(180deg,rgba(5,7,12,.05) 20%,rgba(5,7,12,.24) 58%,rgba(5,7,12,.9));
 }
 
+.home-page .experience-showcase--compact .experience-artwork--editorial:before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(108deg, transparent 38%, rgba(255,255,255,.26) 49%, transparent 60%);
+  transform: translateX(-120%);
+  animation: sky-editorial-light-sweep 8s ease-in-out infinite;
+}
+
+@keyframes sky-editorial-light-sweep {
+  0%, 66% { opacity: 0; transform: translateX(-120%); }
+  72% { opacity: .8; }
+  86%, 100% { opacity: 0; transform: translateX(120%); }
+}
+
 .home-page .experience-showcase--compact .experience-card:hover .experience-artwork-cover {
   transform: scale(1.025);
   filter: saturate(1) contrast(1.04) brightness(.82);
@@ -386,4 +404,8 @@
   .home-page .experience-showcase--compact .experience-artwork--wallets .experience-logo img {
     padding: 5px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .experience-showcase--compact .experience-artwork--editorial:before { animation: none; }
 }

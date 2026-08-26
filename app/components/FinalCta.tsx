@@ -5,25 +5,28 @@ import { InlineEditableText } from './admin/SiteInlineEditor';
 
 const walletGuides = [
   {
-    href: '/bilgi-merkezi/paycell-nedir-nasil-kullanilir',
-    image: '/images/bilgi-merkezi/editorial-covers-v46/dijital-cuzdan-konu-merkezi.webp',
-    alt: 'Paycell bakiye ve kullanım rehberi kapağı',
-    label: 'Paycell',
-    title: 'Bakiye ve kullanım nasıl çalışır?',
+    href: '/bilgi-merkezi/mobil-odeme-nasil-acilir',
+    image: '/images/bilgi-merkezi/editorial-covers-v46/mobil-odeme-nasil-acilir-v2.webp',
+    alt: 'Turkcell Vodafone ve Türk Telekom mobil ödeme rehberi kapağı',
+    label: 'Operatör rehberi',
+    title: 'Turkcell, Vodafone ve Türk Telekom mobil ödeme nasıl kullanılır?',
+    summary: 'Üç operatörde mobil ödeme, limit ve resmî onay adımlarını aynı rehberde görün.',
   },
   {
     href: '/bilgi-merkezi/razer-gold-kodu-nasil-satilir',
     image: '/images/bilgi-merkezi/editorial-covers-v46/razer-gold-kodu-satis-v2.webp',
-    alt: 'Razer Gold kodunu doğrudan satma rehberi kapağı',
+    alt: 'Razer Gold kodu satmadan önce kontrol rehberi kapağı',
     label: 'Razer Gold',
-    title: '14 haneli kodu nasıl satılır?',
+    title: 'Razer Gold kodu satmadan önce hangi kontroller yapılır?',
+    summary: 'Kodun bölgesi, para birimi ve kullanılmamış olması neden önemlidir, öğrenin.',
   },
   {
     href: '/bilgi-merkezi/apple-gift-card-nedir',
     image: '/images/bilgi-merkezi/editorial-covers-v46/apple-gift-card-bolge-bozum.webp',
-    alt: 'Apple ve iTunes 500 TL kod satışı rehberi kapağı',
+    alt: 'Apple ve iTunes hediye kartı bölge kontrol rehberi kapağı',
     label: 'Apple / iTunes',
-    title: 'Apple hediye kartında bölge kontrolü',
+    title: 'iTunes bozdurmadan önce Apple Gift Card bölgesi nasıl kontrol edilir?',
+    summary: 'TR ve USD kod farkını, mağaza bölgesini ve kullanımdan önceki temel kontrolleri inceleyin.',
   },
 ] as const;
 
@@ -61,6 +64,7 @@ export default function FinalCta() {
             <span className="home-contact-band__guide-copy">
               <small>{guide.label}</small>
               <strong>{guide.title}</strong>
+              <span>{guide.summary}</span>
               <b>Rehberi okuyun <i aria-hidden="true">→</i></b>
             </span>
           </Link>
