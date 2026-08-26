@@ -46,23 +46,9 @@
   box-shadow: 0 22px 54px rgba(0, 0, 0, .3), 0 0 0 1px rgba(var(--accent), .08), inset 0 1px rgba(255, 255, 255, .06);
 }
 
-.home-page .experience-showcase--compact .experience-card-top {
-  min-height: 25px;
-}
-
-.home-page .experience-showcase--compact .experience-index {
-  font-size: .64rem;
-}
-
-.home-page .experience-showcase--compact .experience-chip {
-  min-height: 24px;
-  padding-inline: 9px;
-  font-size: .55rem;
-}
-
 .home-page .experience-showcase--compact .experience-artwork {
-  height: 116px !important;
-  margin-top: 12px;
+  height: 128px !important;
+  margin-top: 0;
   border-radius: 16px;
 }
 
@@ -199,24 +185,9 @@
     border-radius: 16px !important;
   }
 
-  .home-page .experience-showcase--compact .experience-card-top {
-    min-height: 19px;
-  }
-
-  .home-page .experience-showcase--compact .experience-index {
-    font-size: .52rem;
-  }
-
-  .home-page .experience-showcase--compact .experience-chip {
-    min-height: 19px;
-    padding-inline: 6px;
-    font-size: .43rem;
-    letter-spacing: .06em;
-  }
-
   .home-page .experience-showcase--compact .experience-artwork {
-    height: 91px !important;
-    margin-top: 9px;
+    height: 98px !important;
+    margin-top: 0;
     border-radius: 13px;
   }
 
@@ -255,20 +226,6 @@
   .home-page .experience-showcase--compact .experience-artwork--cards .experience-logo {
     width: 51px;
     height: 39px;
-  }
-
-  .home-page .experience-showcase--compact .experience-artwork-status {
-    left: 7px;
-    bottom: 7px;
-    gap: 3px;
-    font-size: 4.8px;
-  }
-
-  .home-page .experience-showcase--compact .experience-artwork-code {
-    right: 6px;
-    bottom: 6px;
-    padding: 3px 4px;
-    font-size: 4.5px;
   }
 
   .home-page .experience-showcase--compact .experience-tag {
@@ -362,12 +319,12 @@
 .home-page .experience-showcase--compact .experience-artwork-cover {
   object-fit: cover;
   object-position: center;
-  filter: saturate(.92) contrast(1.04) brightness(.72);
+  filter: saturate(.98) contrast(1.04) brightness(.88);
   transition: filter .3s ease, transform .45s cubic-bezier(.2,.8,.2,1);
 }
 
 .home-page .experience-showcase--compact .experience-artwork--editorial:after {
-  background: linear-gradient(180deg,rgba(5,7,12,.05) 20%,rgba(5,7,12,.24) 58%,rgba(5,7,12,.9));
+  background: linear-gradient(180deg, rgba(5,7,12,.03) 12%, rgba(5,7,12,.1) 62%, rgba(5,7,12,.32));
 }
 
 .home-page .experience-showcase--compact .experience-artwork--editorial:before {
@@ -390,7 +347,7 @@
 
 .home-page .experience-showcase--compact .experience-card:hover .experience-artwork-cover {
   transform: scale(1.025);
-  filter: saturate(1) contrast(1.04) brightness(.82);
+  filter: saturate(1.06) contrast(1.04) brightness(.96);
 }
 
 @media (max-width: 640px) {

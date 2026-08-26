@@ -17,7 +17,6 @@ type Highlight = {
   artwork?: readonly ArtworkItem[];
   cover?: string;
   coverAlt?: string;
-  status: string;
   footer: string;
 };
 
@@ -34,7 +33,6 @@ const highlights: readonly Highlight[] = [
       { src: '/brands/apple/apple.svg', label: 'Apple', className: 'experience-logo--apple' },
       { src: '/brands/steam/steam.svg', label: 'Steam', className: 'experience-logo--steam' },
     ],
-    status: '3 KOD GRUBU',
     footer: 'Kod rehberlerini aç',
   },
   {
@@ -49,7 +47,6 @@ const highlights: readonly Highlight[] = [
       { src: '/brands/vodafone/vodafone.svg', label: 'Vodafone' },
       { src: '/brands/turktelekom/turktelekom.svg', label: 'Türk Telekom' },
     ],
-    status: '3 OPERATÖR',
     footer: 'Operatörleri incele',
   },
   {
@@ -64,7 +61,6 @@ const highlights: readonly Highlight[] = [
       { src: '/brands/pokus/pokus.svg', label: 'Pokus' },
       { src: '/brands/vodafone/vodafone.svg', label: 'Vodafone Pay' },
     ],
-    status: '3 CÜZDAN',
     footer: 'Cüzdan rehberlerini aç',
   },
   {
@@ -74,9 +70,8 @@ const highlights: readonly Highlight[] = [
     accent: 'gold',
     href: '/bilgi-merkezi/turkcell-vodafone-turk-telekom-mobil-bozum-karsilastirmasi-2026',
     visual: 'editorial',
-    cover: '/images/home/editorial/sky-operator-mobile-payment-guide-v1.webp',
+    cover: '/images/home/editorial/sky-operator-mobile-payment-guide-v2.webp',
     coverAlt: 'Turkcell, Vodafone ve Türk Telekom mobil ödeme ve dijital kod rehberi için üç kanallı güvenli işlem görseli',
-    status: '3 OPERATÖR',
     footer: 'Rehberi aç',
   },
   {
@@ -86,9 +81,8 @@ const highlights: readonly Highlight[] = [
     accent: 'blue',
     href: '/bilgi-merkezi/guvenilir-mobil-bozum-sitesi-nasil-secilir',
     visual: 'editorial',
-    cover: '/images/home/editorial/sky-trusted-mobile-site-guide-v1.webp',
+    cover: '/images/home/editorial/sky-trusted-mobile-site-guide-v2.webp',
     coverAlt: 'Güvenilir mobil bozum sitesi seçiminde kalkan, doğrulama ve güvenli bağlantı görseli',
-    status: '10 KONTROL',
     footer: 'Güvenlik rehberini oku',
   },
   {
@@ -98,9 +92,8 @@ const highlights: readonly Highlight[] = [
     accent: 'rose',
     href: '/bilgi-merkezi/mobil-bozum-yaparken-dolandirilabilir-miyim',
     visual: 'editorial',
-    cover: '/images/home/editorial/sky-fake-mobile-site-warning-v1.webp',
+    cover: '/images/home/editorial/sky-fake-mobile-site-warning-v2.webp',
     coverAlt: 'Sahte mobil bozum sitesi belirtileri için gerçek ve taklit portal ayrım görseli',
-    status: '7 UYARI',
     footer: 'Kırmızı bayrakları gör',
   },
 ] as const;
@@ -114,7 +107,7 @@ function ShieldCheck() {
   );
 }
 
-function ServiceArtwork({ artwork, visual, cover, coverAlt, status }: Pick<Highlight, 'artwork' | 'visual' | 'cover' | 'coverAlt' | 'status'>) {
+function ServiceArtwork({ artwork, visual, cover, coverAlt }: Pick<Highlight, 'artwork' | 'visual' | 'cover' | 'coverAlt'>) {
   return (
     <div className={`experience-artwork experience-artwork--${visual}`}>
       {cover ? <Image src={cover} alt={coverAlt ?? ''} fill sizes="(max-width: 640px) 45vw, (max-width: 900px) 42vw, 30vw" className="experience-artwork-cover" /> : null}
@@ -131,8 +124,6 @@ function ServiceArtwork({ artwork, visual, cover, coverAlt, status }: Pick<Highl
           ))}
         </div>
       ) : null}
-      <span className="experience-artwork-status"><i /> DOĞRULANDI</span>
-      <span className="experience-artwork-code">{status}</span>
     </div>
   );
 }
@@ -151,13 +142,9 @@ export default function HomeTestimonials() {
         </div>
 
         <div className="experience-grid experience-grid--five">
-          {highlights.map((item, index) => (
+          {highlights.map((item) => (
             <Link key={item.service} href={item.href} className={`experience-card experience-card--${item.accent}`} aria-label={`${item.service} sayfasını aç`}>
-              <div className="experience-card-top">
-                <span className="experience-index">0{index + 1}</span>
-                <span className="experience-chip">{index < 3 ? 'Hizmet grubu' : 'Önemli rehber'}</span>
-              </div>
-              <ServiceArtwork artwork={item.artwork} visual={item.visual} cover={item.cover} coverAlt={item.coverAlt} status={item.status} />
+              <ServiceArtwork artwork={item.artwork} visual={item.visual} cover={item.cover} coverAlt={item.coverAlt} />
               <p className="experience-tag">{item.tag}</p>
               <h3>{item.service}</h3>
               <p className="experience-quote">{item.quote}</p>
