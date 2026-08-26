@@ -73,8 +73,8 @@
 }
 
 .home-page .home-faq-card {
-  height: auto !important;
-  align-self: start !important;
+  height: 100% !important;
+  align-self: stretch !important;
   padding: 1.15rem 1.25rem !important;
 }
 
