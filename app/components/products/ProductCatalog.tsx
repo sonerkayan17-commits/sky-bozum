@@ -1,6 +1,7 @@
 'use client';
 
 import type { User } from 'firebase/auth';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import Link from '../DeferredLink';
@@ -9,6 +10,24 @@ import type { ProductItem } from '../../lib/products';
 import ProductCover from './ProductCover';
 import { deferClientTask } from '../../lib/defer-client-task';
 import { trackConversion } from '../../lib/conversion';
+
+function RazerPackArtwork({ label }: { label: string }) {
+  const [amount, currency = 'TL'] = label.trim().split(/\s+/);
+  const isLongAmount = amount.replace(/\D/g, '').length >= 4;
+
+  return (
+    <span className={`razer-pack-art razer-pack-art--${currency.toLowerCase()}${isLongAmount ? ' razer-pack-art--long' : ''}`} aria-hidden="true">
+      <span className="razer-pack-art__flare" />
+      <span className="razer-pack-art__denomination">
+        <span className="razer-pack-art__value">{amount}</span>
+        <span className="razer-pack-art__currency">{currency}</span>
+      </span>
+      <span className="razer-pack-art__brand">
+        <Image src="/brands/razer/razer.svg" alt="" width={154} height={74} sizes="154px" />
+      </span>
+    </span>
+  );
+}
 
 export default function ProductCatalog({ product }: { product: ProductItem }) {
   const router = useRouter();
@@ -207,7 +226,9 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
           const isSelected = pack.id === selected?.id;
           const inStock = entry?.active === true && entry.stockCount > 0 && entry.priceMinor !== null;
           return <button key={pack.id} type="button" className={`product-pack ${isSelected ? 'is-selected' : ''}`} onClick={() => { setSelectedId(pack.id); window.sessionStorage.setItem(`sky-product-selection:${product.slug}`, pack.id); setDelivered(null); setNotice(''); }} aria-pressed={isSelected}>
-            <span className="product-pack__media"><ProductCover product={product} compact /><span className="product-pack__amount">{pack.label}</span></span>
+            <span className={`product-pack__media ${product.slug === 'razer-gold' ? 'product-pack__media--razer' : ''}`}>
+              {product.slug === 'razer-gold' ? <RazerPackArtwork label={pack.label} /> : <><ProductCover product={product} compact /><span className="product-pack__amount">{pack.label}</span></>}
+            </span>
             <span className="product-pack__title">{pack.label}</span><span className="product-pack__description">{pack.description}</span>
             <span className={`product-pack__stock ${inStock ? 'is-available' : ''}`}>{loading && !entry ? 'Stok kontrol ediliyor…' : inStock ? `${entry.stockCount} adet stokta` : 'Stok yok'}</span>
             <strong className="product-pack__price">{inStock ? formatStoreMoney(entry.priceMinor) : '—'}</strong>

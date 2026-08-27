@@ -11,14 +11,14 @@ import CredibilityBand from './CredibilityBand';
 
 const featuredIds = ['vodafone', 'turkcell', 'turk-telekom', 'paycell', 'pokus', 'apple', 'razer-tl', 'steam'];
 const logos: Record<string, string> = {
-  vodafone: '/brands/hero/vodafone.webp',
-  turkcell: '/brands/hero/turkcell.webp',
-  'turk-telekom': '/brands/hero/turk-telekom.webp',
-  paycell: '/brands/hero/paycell.webp',
-  pokus: '/brands/hero/pokus.webp',
+  vodafone: '/brands/vodafone/vodafone.svg',
+  turkcell: '/brands/turkcell/turkcell.svg',
+  'turk-telekom': '/brands/turktelekom/turktelekom.svg',
+  paycell: '/brands/paycell/paycell.svg',
+  pokus: '/brands/pokus/pokus.svg',
   apple: '/brands/apple/apple.svg',
-  'razer-tl': '/brands/hero/razer.webp',
-  steam: '/brands/hero/steam.webp',
+  'razer-tl': '/brands/razer/razer.svg',
+  steam: '/brands/steam/steam.svg',
 };
 
 const referenceAssetNames = Array.from({ length: 15 }, (_, index) => {

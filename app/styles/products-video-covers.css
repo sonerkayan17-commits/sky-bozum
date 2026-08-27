@@ -127,6 +127,14 @@
   aspect-ratio: 1221 / 1600;
 }
 
+/* Dikey marka kartları hareketli oyun kapaklarıyla aynı görsel yüksekliğini
+   kullanır. Böylece Razer, Steam ve Apple kartları yarım kapak gibi kalmaz. */
+.products-page .product-directory-card[data-product="razer-gold"] .product-directory-card__cover,
+.products-page .product-directory-card[data-product="steam-cuzdan-kodu"] .product-directory-card__cover,
+.products-page .product-directory-card[data-product="itunes-apple-gift-card"] .product-directory-card__cover {
+  aspect-ratio: 1221 / 1600;
+}
+
 .products-page .product-directory-card .product-cover {
   height: 100%;
   min-height: 0;
