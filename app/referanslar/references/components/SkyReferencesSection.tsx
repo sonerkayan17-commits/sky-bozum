@@ -71,6 +71,15 @@ function reviewMeta() {
   return 'Site üzerinden gönderildi';
 }
 
+function readableCommentService(value: string) {
+  const normalized = value.trim();
+  if (!normalized) return 'Site yorumu';
+  if (/^topic:/i.test(normalized)) return 'Topluluk konusu';
+  if (/^profile:/i.test(normalized)) return 'Üye profili';
+  if (/^article:/i.test(normalized)) return 'Bilgi Merkezi yazısı';
+  return normalized.length > 54 ? 'Sky Bozum deneyimi' : normalized;
+}
+
 function avatarTone(value: string) {
   const total = Array.from(value).reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return styles[`avatarTone${(total % 6) + 1}`];
@@ -242,7 +251,7 @@ function MovingReviewCard({ comment, visualIndex, example = false }: { comment: 
         </span>
         <span className={styles.movingReviewIdentity}>
           <strong>{maskedAuthor(comment.author)}</strong>
-          <small className={styles.serviceLine}><span className={`${styles.serviceMark} ${serviceMark(comment.service).className}`} aria-hidden="true">{serviceMark(comment.service).label}</span>{comment.service}</small>
+          <small className={styles.serviceLine}><span className={`${styles.serviceMark} ${serviceMark(comment.service).className}`} aria-hidden="true">{serviceMark(comment.service).label}</span>{readableCommentService(comment.service)}</small>
         </span>
         {!example && <span className={styles.movingVerified}>✓ Site yorumu</span>}
       </div>
@@ -294,7 +303,7 @@ function ApprovedCommentCard({
     <article className={styles.communityCard}>
       <div className={styles.communityMeta}>
         <span className={`${styles.avatar} ${avatarTone(comment.author)}`}>{initials(comment.author)}</span>
-        <div><strong>{maskedAuthor(comment.author)}</strong><small>{comment.service}</small></div>
+        <div><strong>{maskedAuthor(comment.author)}</strong><small>{readableCommentService(comment.service)}</small></div>
         {comment.rating ? <span className={styles.rating}>{'★'.repeat(comment.rating)}</span> : null}
       </div>
       <p>{comment.message}</p>

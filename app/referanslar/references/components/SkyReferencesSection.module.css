@@ -1531,3 +1531,591 @@
     flex: 0 0 auto;
   }
 }
+
+/* V45.279 — Sky Bozum ana paleti: kömür taban, bordo ışık, pembe/turuncu ve altın vurgu. */
+.section {
+  --sky-ref-bg: #08090e;
+  --sky-ref-surface: #0f1016;
+  --sky-ref-surface-raised: #131117;
+  --sky-ref-border: rgba(255, 255, 255, .09);
+  --sky-ref-border-accent: rgba(239, 53, 105, .26);
+  --sky-ref-text: #f7f3f5;
+  --sky-ref-muted: #b8adb4;
+  --sky-ref-muted-soft: #93878f;
+  --sky-ref-pink: #ef3569;
+  --sky-ref-orange: #ff8b3d;
+  --sky-ref-gold: #f2c078;
+  color: var(--sky-ref-text);
+  background:
+    radial-gradient(920px 520px at 5% -2%, rgba(139, 20, 54, .17), transparent 67%),
+    radial-gradient(680px 440px at 100% 16%, rgba(166, 58, 33, .075), transparent 72%),
+    linear-gradient(180deg, #08090e 0%, #0a0a10 54%, #08090e 100%);
+}
+
+.heroAside,
+.referenceSummary > div,
+.card,
+.movingReviewsSection,
+.movingReviewCard,
+.exampleShowcase,
+.trustLayer,
+.trustLayerGrid article,
+.archivePanel,
+.reviewPanel,
+.communitySection,
+.communityCard,
+.systemReadyNotice,
+.archiveRow,
+.reply,
+.replyForm,
+.form input,
+.form select,
+.form textarea {
+  border-color: var(--sky-ref-border);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(239, 53, 105, .05), transparent 43%),
+    linear-gradient(180deg, rgba(18, 18, 25, .98), rgba(10, 11, 16, .99));
+  color: var(--sky-ref-text);
+}
+
+.movingReviewsViewport::before {
+  background: linear-gradient(90deg, var(--sky-ref-bg) 0%, rgba(8, 9, 14, .94) 35%, transparent 100%);
+}
+
+.movingReviewsViewport::after {
+  background: linear-gradient(270deg, var(--sky-ref-bg) 0%, rgba(8, 9, 14, .94) 35%, transparent 100%);
+}
+
+.heroAside::before,
+.movingReviewsSection::before,
+.exampleShowcase::before,
+.trustLayer::before,
+.archivePanel::before,
+.reviewPanel::before {
+  background: linear-gradient(90deg, var(--sky-ref-pink), var(--sky-ref-orange));
+  opacity: .72;
+}
+
+.hero h1,
+.hero h2,
+.panelHeading h2,
+.movingReviewsHeading h2,
+.exampleShowcaseHeading h2,
+.trustLayerHeading h2,
+.communityHeading h3,
+.card h3,
+.archiveAuthor strong,
+.movingReviewIdentity strong,
+.communityMeta strong {
+  color: var(--sky-ref-text);
+}
+
+.hero p,
+.reviewIntro,
+.archiveNote,
+.viewCount,
+.movingReviewsNote,
+.movingReviewMeta,
+.referenceSummary span,
+.exampleShowcaseFooter p,
+.trustLayerHeading p,
+.trustLayerGrid p,
+.communityNote,
+.communityVerification,
+.authorGroup small,
+.archiveAuthor small,
+.communityMeta small,
+.privacyLine,
+.paginationMeta,
+.paginationStatus {
+  color: var(--sky-ref-muted);
+}
+
+.eyebrow,
+.cardTopline,
+.exampleShowcaseCount,
+.replyBadge,
+.movingVerified {
+  color: #ff6f8f;
+}
+
+.movingStars,
+.rating,
+.cardNumber {
+  color: var(--sky-ref-gold);
+}
+
+.exampleFilterBar,
+.archiveFilterBar,
+.movingReviewsControls,
+.interactionBar,
+.formFooter,
+.cardFooter,
+.pagination {
+  border-color: var(--sky-ref-border);
+}
+
+.exampleFilterBar button,
+.archiveFilterBar button,
+.exampleShowcaseFooter button,
+.centerAction button,
+.movingReviewsToggle,
+.archiveActions button,
+.replyCancel,
+.pagination button,
+.form button {
+  border-color: rgba(255, 255, 255, .11);
+  background: #101117;
+  color: #e8e1e5;
+}
+
+.exampleFilterBar button:hover,
+.archiveFilterBar button:hover,
+.exampleShowcaseFooter button:hover,
+.centerAction button:hover,
+.movingReviewsToggle:hover,
+.archiveActions button:hover,
+.replyCancel:hover,
+.pagination button:hover {
+  border-color: var(--sky-ref-border-accent);
+  color: #fff;
+}
+
+.exampleFilterActive,
+.archiveFilterActive,
+.pageActive,
+.form button[type='submit'] {
+  border-color: rgba(255, 111, 143, .44) !important;
+  background: linear-gradient(135deg, var(--sky-ref-pink), var(--sky-ref-orange)) !important;
+  color: #fff !important;
+}
+
+.form input::placeholder,
+.form textarea::placeholder,
+.replyForm input::placeholder {
+  color: var(--sky-ref-muted-soft);
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus,
+.replyForm input:focus {
+  border-color: rgba(255, 111, 143, .46);
+  box-shadow: 0 0 0 3px rgba(239, 53, 105, .1);
+  outline: none;
+}
+
+.communityCard,
+.movingReviewCard,
+.archiveRow {
+  box-shadow: none;
+}
+
+.communityCard:hover,
+.movingReviewCard:hover,
+.archiveRow:hover {
+  border-color: var(--sky-ref-border-accent);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(239, 53, 105, .075), transparent 44%),
+    linear-gradient(180deg, rgba(20, 18, 25, .99), rgba(11, 11, 17, .99));
+}
+
+/* Tek yorum olduğunda kartın bütün ekran boyunca anlamsız biçimde uzamasını önler. */
+.communityGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 620px));
+  justify-content: start;
+}
+
+@media (min-width: 721px) {
+  .communityCard {
+    width: min(100%, 620px);
+  }
+}
+
+.movingReviewsViewport::before {
+  background: linear-gradient(90deg, #08090e, transparent);
+}
+
+.movingReviewsViewport::after {
+  background: linear-gradient(270deg, #08090e, transparent);
+}
+
+@media (max-width: 720px) {
+  .communityGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .communityCard {
+    width: 100%;
+  }
+}
+
+/* V45.278 — Referanslar sayfasını ana sitenin sıcak koyu görsel diline bağlar. */
+.section {
+  min-height: 0;
+  padding: clamp(30px, 4vw, 52px) 0 36px;
+  background:
+    radial-gradient(920px 540px at 4% 0%, rgba(190, 27, 73, .17), transparent 68%),
+    radial-gradient(760px 500px at 98% 12%, rgba(239, 128, 63, .09), transparent 70%),
+    linear-gradient(180deg, #090a0f 0%, #0b0c12 54%, #090a0f 100%);
+}
+
+.section::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, .014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .014) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.container {
+  width: min(1480px, calc(100% - 48px));
+}
+
+.heroAside,
+.referenceSummary > div,
+.card,
+.movingReviewsSection,
+.movingReviewCard,
+.exampleShowcase,
+.trustLayer,
+.trustLayerGrid article,
+.archivePanel,
+.reviewPanel,
+.communitySection,
+.communityCard,
+.systemReadyNotice {
+  border-color: rgba(255, 255, 255, .09);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(229, 43, 91, .065), transparent 42%),
+    linear-gradient(180deg, rgba(18, 18, 25, .96), rgba(11, 12, 18, .98));
+}
+
+.card:hover,
+.movingReviewCard:hover,
+.communityCard:hover {
+  border-color: rgba(241, 71, 112, .34);
+}
+
+.archiveNote,
+.viewCount,
+.hero p,
+.communityNote,
+.trustLayerHeading p,
+.trustLayerGrid p,
+.authorGroup small,
+.communityMeta small,
+.archiveAuthor small,
+.movingReviewMeta,
+.communityVerification {
+  color: #a89ea6;
+}
+
+.referenceSummary span,
+.exampleShowcaseFooter p {
+  color: #938890;
+}
+
+.exampleFilterBar button,
+.archiveFilterBar button,
+.exampleShowcaseFooter button,
+.centerAction button {
+  border-color: rgba(255, 255, 255, .11);
+  background: rgba(11, 11, 17, .86);
+  color: #dcd4d9;
+}
+
+.trustLayerGrid article > span,
+.serviceMark {
+  border-color: rgba(255, 255, 255, .11);
+}
+
+.communitySection {
+  margin-top: 22px;
+  padding: clamp(18px, 2.2vw, 28px);
+  border-top-color: rgba(241, 71, 112, .36);
+  border-radius: 20px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .2);
+}
+
+.communityHeading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 560px);
+  align-items: end;
+  gap: 7px 32px;
+  margin-bottom: 16px;
+}
+
+.communityHeading .eyebrow {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #ff6f8f;
+}
+
+.communityHeading h3 {
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.14;
+}
+
+.communityNote {
+  max-width: none;
+  margin: 0;
+  text-align: right;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.communityGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: 12px;
+}
+
+.communityCard {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  padding: 18px;
+  border-radius: 15px;
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.communityCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, .18);
+}
+
+.communityMeta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.communityMeta > div {
+  min-width: 0;
+}
+
+.communityMeta small {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.rating {
+  justify-self: end;
+  margin-left: 0;
+  padding: 6px 8px;
+  border: 1px solid rgba(247, 184, 75, .18);
+  border-radius: 999px;
+  background: rgba(247, 184, 75, .065);
+  color: #f7b84b;
+  font-size: 10px;
+  letter-spacing: .08em;
+  line-height: 1;
+}
+
+.communityCard p {
+  margin: 14px 0 8px;
+  color: #e8e1e5;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.communityVerification {
+  margin: 0 0 10px;
+}
+
+@media (max-width: 900px) {
+  .container {
+    width: min(100% - 32px, 1480px);
+  }
+
+  .communityHeading {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .communityHeading .eyebrow {
+    grid-column: auto;
+  }
+
+  .communityNote {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 26px 0 42px;
+  }
+
+  .container {
+    width: min(100% - 24px, 1480px);
+  }
+
+  .communitySection {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .communityCard {
+    padding: 15px;
+  }
+
+  .communityMeta {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .rating {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* V45.280 — Son katman: Referanslar ekranını ana sayfanın gerçek Sky Bozum paletinde sabitler. */
+.section {
+  color: #f7f3f5;
+  background:
+    radial-gradient(920px 520px at 5% -2%, rgba(139, 20, 54, .17), transparent 67%),
+    radial-gradient(680px 440px at 100% 16%, rgba(166, 58, 33, .075), transparent 72%),
+    linear-gradient(180deg, #08090e 0%, #0a0a10 54%, #08090e 100%);
+}
+
+.heroAside,
+.referenceSummary > div,
+.card,
+.movingReviewsSection,
+.movingReviewCard,
+.exampleShowcase,
+.trustLayer,
+.trustLayerGrid article,
+.archivePanel,
+.reviewPanel,
+.communitySection,
+.communityCard,
+.systemReadyNotice,
+.archiveRow,
+.reply,
+.replyForm,
+.form input,
+.form select,
+.form textarea {
+  border-color: rgba(255, 255, 255, .09);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(239, 53, 105, .05), transparent 43%),
+    linear-gradient(180deg, rgba(18, 18, 25, .98), rgba(10, 11, 16, .99));
+  color: #f7f3f5;
+}
+
+.movingReviewsViewport::before {
+  background: linear-gradient(90deg, #08090e 0%, rgba(8, 9, 14, .94) 35%, transparent 100%);
+}
+
+.movingReviewsViewport::after {
+  background: linear-gradient(270deg, #08090e 0%, rgba(8, 9, 14, .94) 35%, transparent 100%);
+}
+
+.hero h1,
+.hero h2,
+.panelHeading h2,
+.movingReviewsHeading h2,
+.exampleShowcaseHeading h2,
+.trustLayerHeading h2,
+.communityHeading h3,
+.card h3,
+.archiveAuthor strong,
+.movingReviewIdentity strong,
+.communityMeta strong {
+  color: #f7f3f5;
+}
+
+.hero p,
+.reviewIntro,
+.archiveNote,
+.viewCount,
+.movingReviewsNote,
+.movingReviewMeta,
+.referenceSummary span,
+.exampleShowcaseFooter p,
+.trustLayerHeading p,
+.trustLayerGrid p,
+.communityNote,
+.communityVerification,
+.authorGroup small,
+.archiveAuthor small,
+.communityMeta small,
+.privacyLine,
+.paginationMeta,
+.paginationStatus {
+  color: #b8adb4;
+}
+
+.eyebrow,
+.cardTopline,
+.exampleShowcaseCount,
+.replyBadge,
+.movingVerified {
+  color: #ff6f8f;
+}
+
+.movingStars,
+.rating,
+.cardNumber {
+  color: #f2c078;
+}
+
+.exampleFilterBar button,
+.archiveFilterBar button,
+.exampleShowcaseFooter button,
+.centerAction button,
+.movingReviewsToggle,
+.archiveActions button,
+.replyCancel,
+.pagination button,
+.form button {
+  border-color: rgba(255, 255, 255, .11);
+  background: #101117;
+  color: #e8e1e5;
+}
+
+.exampleFilterBar button:hover,
+.archiveFilterBar button:hover,
+.exampleShowcaseFooter button:hover,
+.centerAction button:hover,
+.movingReviewsToggle:hover,
+.archiveActions button:hover,
+.replyCancel:hover,
+.pagination button:hover {
+  border-color: rgba(239, 53, 105, .26);
+  color: #fff;
+}
+
+.exampleFilterActive,
+.archiveFilterActive,
+.pageActive,
+.form button[type='submit'] {
+  border-color: rgba(255, 111, 143, .44) !important;
+  background: linear-gradient(135deg, #ef3569, #ff8b3d) !important;
+  color: #fff !important;
+}
+
+.communityCard:hover,
+.movingReviewCard:hover,
+.archiveRow:hover {
+  border-color: rgba(239, 53, 105, .26);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(239, 53, 105, .075), transparent 44%),
+    linear-gradient(180deg, rgba(20, 18, 25, .99), rgba(11, 11, 17, .99));
+}
+
+/* Tek yorum olduğunda kartın bütün ekran boyunca anlamsız biçimde uzamasını önler. */
+.communityGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 620px));
+  justify-content: start;
+}
+
+@media (max-width: 720px) {
+  .communityGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
