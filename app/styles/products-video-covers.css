@@ -133,6 +133,16 @@
   transform: none;
 }
 
+/* Hareketli katalog kapaklarını çok az geri al. Böylece karakter ve logo
+   kenarlara taşmış görünmez; alttaki bulanık poster katmanı boşluk bırakmadan
+   çerçeveyi doldurmaya devam eder. */
+.products-page .product-directory-card .product-cover--has-video .product-cover__image,
+.products-page .product-directory-card .product-cover--has-video .product-cover__video,
+.products-page .product-directory-card:hover .product-cover--has-video .product-cover__image,
+.products-page .product-directory-card:hover .product-cover--has-video .product-cover__video {
+  transform: scale(.94);
+}
+
 .products-page .product-directory-card .product-cover__content {
   display: none;
 }
