@@ -2,14 +2,14 @@ import Image from 'next/image';
 import Link from './DeferredLink';
 
 const brands = [
-  { name: 'Vodafone', sub: 'Dijital ürün alım rehberi', action: 'Satın alma rehberi', logo: '/brands/vodafone/vodafone.svg', href: '/hizmetler/vodafone-mobil-odeme', tone: 'brand-vodafone' },
-  { name: 'Turkcell', sub: 'Dijital kod satın alma', action: 'Satın alma rehberi', logo: '/brands/turkcell/turkcell.svg', href: '/hizmetler/turkcell-mobil-odeme', tone: 'brand-turkcell' },
-  { name: 'Türk Telekom', sub: 'Dijital ürün alım rehberi', action: 'Satın alma rehberi', logo: '/brands/turktelekom/turktelekom.svg', href: '/hizmetler/turk-telekom-mobil-odeme', tone: 'brand-telekom' },
-  { name: 'Paycell', sub: 'Dijital ürün satın alma', action: 'Kart kullanım rehberi', logo: '/brands/paycell/paycell.svg', href: '/hizmetler/paycell', tone: 'brand-paycell' },
-  { name: 'Pokus', sub: 'Dijital ürün satın alma', action: 'Kart kullanım rehberi', logo: '/brands/pokus/pokus.svg', href: '/hizmetler/pokus', tone: 'brand-pokus' },
-  { name: 'Razer Gold', sub: 'TL ve USD kod bozum', action: 'Bozum detayları', logo: '/brands/razer/razer.svg', href: '/hizmetler/razer-gold-tl', tone: 'brand-razer' },
+  { name: 'Vodafone', sub: 'Dijital ürün alım rehberi', action: 'Satın alma rehberi', logo: '/brands/hero/vodafone.webp', href: '/hizmetler/vodafone-mobil-odeme', tone: 'brand-vodafone' },
+  { name: 'Turkcell', sub: 'Dijital kod satın alma', action: 'Satın alma rehberi', logo: '/brands/hero/turkcell.webp', href: '/hizmetler/turkcell-mobil-odeme', tone: 'brand-turkcell' },
+  { name: 'Türk Telekom', sub: 'Dijital ürün alım rehberi', action: 'Satın alma rehberi', logo: '/brands/hero/turk-telekom.webp', href: '/hizmetler/turk-telekom-mobil-odeme', tone: 'brand-telekom' },
+  { name: 'Paycell', sub: 'Dijital ürün satın alma', action: 'Kart kullanım rehberi', logo: '/brands/hero/paycell.webp', href: '/hizmetler/paycell', tone: 'brand-paycell' },
+  { name: 'Pokus', sub: 'Dijital ürün satın alma', action: 'Kart kullanım rehberi', logo: '/brands/hero/pokus.webp', href: '/hizmetler/pokus', tone: 'brand-pokus' },
+  { name: 'Razer Gold', sub: 'TL ve USD kod bozum', action: 'Bozum detayları', logo: '/brands/hero/razer.webp', href: '/hizmetler/razer-gold-tl', tone: 'brand-razer' },
   { name: 'Apple', sub: 'Hediye kartı bozum', action: 'Bozum detayları', logo: '/brands/apple/apple.svg', href: '/hizmetler/itunes-apple', tone: 'brand-apple' },
-  { name: 'Steam', sub: 'Cüzdan kodu bozum', action: 'Bozum detayları', logo: '/brands/steam/steam.svg', href: '/hizmetler/steam', tone: 'brand-steam' },
+  { name: 'Steam', sub: 'Cüzdan kodu bozum', action: 'Bozum detayları', logo: '/brands/hero/steam.webp', href: '/hizmetler/steam', tone: 'brand-steam' },
 ] as const;
 
 export default function BrandStrip() {

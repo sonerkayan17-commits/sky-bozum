@@ -182,10 +182,10 @@ export default function ProductCoverVideo({ src, poster, objectPosition = '50% 5
       ref={videoRef}
       className={`product-cover__video ${ready ? 'is-ready' : ''} ${active ? 'is-active' : ''}`}
       style={{ objectPosition }}
+      poster={poster}
       muted
       loop
       playsInline
-      poster={poster}
       preload={priority ? 'metadata' : 'none'}
       disablePictureInPicture
       controlsList="nodownload noplaybackrate nofullscreen"

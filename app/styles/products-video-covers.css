@@ -120,6 +120,22 @@
   pointer-events: none;
 }
 
+/* Hareketli katalog medyaları 1221x1600 oranında hazırlanıyor. Çerçeveyi
+   kaynağın oranına uydurarak görüntüyü büyütmeden, kırpmadan ve yapay bir
+   bulanık dolgu üretmeden eksiksiz göster. */
+.products-page .product-directory-card:has(.product-cover--has-video) .product-directory-card__cover {
+  aspect-ratio: 1221 / 1600;
+}
+
+.products-page .product-directory-card .product-cover {
+  height: 100%;
+  min-height: 0;
+}
+
+.products-page .product-directory-card .product-cover--has-video .product-cover__backdrop {
+  display: none;
+}
+
 /* Katalog kartında medya kutuyu kenardan kenara doldurur. Ürün bazlı
    object-position ana karakteri/markayı görünür alanda tutar. */
 .products-page .product-directory-card .product-cover__image,
@@ -133,14 +149,14 @@
   transform: none;
 }
 
-/* Hareketli katalog kapaklarını çok az geri al. Böylece karakter ve logo
-   kenarlara taşmış görünmez; alttaki bulanık poster katmanı boşluk bırakmadan
-   çerçeveyi doldurmaya devam eder. */
+/* Çerçeve kaynakla aynı oranda olduğu için medya sıfır boşlukla doldurur. */
 .products-page .product-directory-card .product-cover--has-video .product-cover__image,
 .products-page .product-directory-card .product-cover--has-video .product-cover__video,
 .products-page .product-directory-card:hover .product-cover--has-video .product-cover__image,
 .products-page .product-directory-card:hover .product-cover--has-video .product-cover__video {
-  transform: scale(.94);
+  object-fit: cover;
+  object-position: center;
+  transform: none;
 }
 
 .products-page .product-directory-card .product-cover__content {
@@ -334,5 +350,9 @@
 
   .products-page .product-detail-hero__cover {
     aspect-ratio: 3 / 2;
+  }
+
+  .products-page .product-directory-card:has(.product-cover--has-video) .product-directory-card__cover {
+    aspect-ratio: 1221 / 1600;
   }
 }

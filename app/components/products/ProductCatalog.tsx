@@ -55,7 +55,10 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
         });
         setCatalog(Object.fromEntries(entries.map((entry) => [entry.packId, entry]))); setLoading(false);
       }, () => setLoading(false));
-    }, { delay: 1_200, intentEvents: false });
+    // The catalog renders a safe, closed fallback from the server. Connect the
+    // live inventory on the first user intent, or after the critical render
+    // window, so Firebase never blocks the product page's first paint.
+    }, { delay: 12_000, intentEvents: true });
     return () => { active = false; cancel(); unsubscribe(); };
   }, [product.slug]);
 
@@ -72,7 +75,7 @@ export default function ProductCatalog({ product }: { product: ProductItem }) {
       const { auth } = getFirebaseClient();
       if (!auth) return;
       unsubscribe = onAuthStateChanged(auth, setUser);
-    }, { delay: 1_000, eager: knownSession, intentEvents: true });
+    }, { delay: 12_000, eager: knownSession, intentEvents: true });
     return () => { active = false; cancel(); unsubscribe(); };
   }, []);
 

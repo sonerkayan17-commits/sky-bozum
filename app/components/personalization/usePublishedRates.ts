@@ -17,26 +17,46 @@ export default function usePublishedRates() {
 
   useEffect(() => {
     let active = true;
-    let unsubscribe: () => void = () => undefined;
-    const cancel = deferClientTask(async () => {
-      const [{ getFirebaseClient }, { collection, onSnapshot, query, where }] = await Promise.all([
-        import('../../lib/firebase'),
-        import('firebase/firestore'),
-      ]);
-      if (!active) return;
-      const { db } = getFirebaseClient();
-      if (!db) return;
-      unsubscribe = onSnapshot(query(collection(db, 'rateOverrides'), where('status', '==', 'published')), (snapshot) => {
-        const next: Record<string, PublishedOverride> = {};
-        snapshot.docs.forEach((entry) => {
-          const data = entry.data();
-          const rate = Number(data.rate); const maxRate = Number(data.maxRate);
-          if (Number.isFinite(rate) && Number.isFinite(maxRate) && rate >= 0 && maxRate >= rate && maxRate <= 100) next[entry.id] = { rate, maxRate };
+    const controller = new AbortController();
+
+    async function refreshRates() {
+      try {
+        const response = await fetch('/api/public-rates', {
+          headers: { Accept: 'application/json' },
+          signal: controller.signal,
         });
+        if (!response.ok || !active) return;
+        const payload = await response.json() as { rates?: Record<string, PublishedOverride> };
+        const next = payload.rates ?? {};
         setOverrides((current) => JSON.stringify(current) === JSON.stringify(next) ? current : next);
-      }, () => setOverrides({}));
-    }, { delay: 1_500, eager: false, intentEvents: true });
-    return () => { active = false; cancel(); unsubscribe(); };
+      } catch {
+        // Ağ kesintisinde kod içindeki doğrulanmış oran yedeği korunur.
+      }
+    }
+
+    // İlk görünüm statik ve doğrulanmış oran yedeğiyle anında çizilir. Küçük
+    // JSON yanıtı hemen ardından alınır; ana sayfa Firebase istemci paketini
+    // indirmeden yönetimde yayımlanan oranları gösterir.
+    const cancel = deferClientTask(() => refreshRates(), {
+      delay: 1_500,
+      eager: false,
+      intentEvents: false,
+    });
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') void refreshRates();
+    };
+    window.addEventListener('focus', refreshWhenVisible);
+    window.addEventListener('online', refreshWhenVisible);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+
+    return () => {
+      active = false;
+      cancel();
+      controller.abort();
+      window.removeEventListener('focus', refreshWhenVisible);
+      window.removeEventListener('online', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+    };
   }, [pathname]);
 
   return useMemo(() => rateItems.map((item): RateItem => {

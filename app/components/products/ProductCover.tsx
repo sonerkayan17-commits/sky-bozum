@@ -8,6 +8,10 @@ export default function ProductCover({ product, compact = false, priority = fals
   const imageSrc = purposeImage ?? product.coverImage;
   const imagePosition = purposeImage ? '50% 50%' : product.coverPosition ?? '50% 50%';
   const showBackdrop = hasVideo || (disableVideo && !purposeImage);
+  // Next'in varsayilan gorsel kalite listesi 75'i kabul eder. Desteklenmeyen
+  // kalite degeri video posterlerinde 400 urettigi icin optimize posterleri
+  // izin verilen kaliteyle iste.
+  const videoPoster = `/_next/image?url=${encodeURIComponent(imageSrc)}&w=640&q=75`;
 
   return (
     <div
@@ -35,7 +39,7 @@ export default function ProductCover({ product, compact = false, priority = fals
         className="product-cover__image"
         style={{ objectPosition: imagePosition }}
       />
-      {hasVideo && product.coverVideo ? <ProductCoverVideo src={product.coverVideo} poster={imageSrc} objectPosition={product.coverPosition} priority={priority} /> : null}
+      {hasVideo && product.coverVideo ? <ProductCoverVideo src={product.coverVideo} poster={videoPoster} objectPosition={product.coverPosition} priority={priority} /> : null}
       {product.brandLogo && !product.brandIntegrated ? <span className="product-cover__brand-plate"><Image src={product.brandLogo} alt="" width={280} height={100} className="product-cover__brand-mark" /></span> : null}
       <span className="product-cover__glow" />
       <span className="product-cover__orb product-cover__orb--one" />
