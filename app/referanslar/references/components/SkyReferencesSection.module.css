@@ -2119,3 +2119,82 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* V45.281 — Eski, kompakt kayan referans şeridini geri getirir. */
+.section .movingReviewsSection {
+  min-height: 0;
+  margin: 20px 0 16px;
+  padding: 16px 0 4px;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.section .movingReviewsSection::before {
+  display: none;
+}
+
+.section .movingReviewsHeading {
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section .movingReviewsHeading h3 {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.section .movingReviewsViewport {
+  min-height: 0;
+  padding: 2px 0 10px;
+}
+
+.section .movingReviewCard {
+  width: 276px;
+  min-height: 142px;
+  flex-basis: 276px;
+  padding: 13px 14px;
+  border-color: rgba(255, 255, 255, .1);
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(239, 53, 105, .07), transparent 36%),
+    linear-gradient(180deg, #111118, #0a0b10);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
+}
+
+.movingArchiveBadge {
+  flex: 0 0 auto;
+  padding: 5px 7px;
+  border: 1px solid rgba(242, 192, 120, .2);
+  border-radius: 999px;
+  background: rgba(242, 192, 120, .07);
+  color: #f2c078;
+  font-size: 7px;
+  font-weight: 850;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .section .movingReviewsSection {
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+
+  .section .movingReviewsHeading h3 {
+    font-size: 18px;
+  }
+
+  .section .movingReviewCard {
+    width: 244px;
+    min-height: 138px;
+    flex-basis: 244px;
+    padding: 12px;
+  }
+
+  .movingArchiveBadge {
+    display: none;
+  }
+}

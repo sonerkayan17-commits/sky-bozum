@@ -275,6 +275,7 @@ function MovingReferenceCard({ reference, visualIndex }: { reference: SkyReferen
           <strong>{reference.authorLabel}</strong>
           <small className={styles.serviceLine}><span className={`${styles.serviceMark} ${serviceMark(referenceServiceLabels[reference.service]).className}`} aria-hidden="true">{serviceMark(referenceServiceLabels[reference.service]).label}</span>{referenceServiceLabels[reference.service]}</small>
         </span>
+        <span className={styles.movingArchiveBadge}>Doğrulanabilir kayıt</span>
       </div>
       <p>“{reference.excerpt}”</p>
     </article>
@@ -383,12 +384,11 @@ export default function SkyReferencesSection({ references }: Props) {
   const rootComments = useMemo(() => approvedComments.filter((comment) => !comment.parentId), [approvedComments]);
   const visibleCommunityComments = useMemo(() => rootComments.slice(0, 9), [rootComments]);
   const movingReferences = useMemo(
-    () => remainingReferences.slice(0, 9),
-    [remainingReferences],
+    () => remainingReferences.slice(0, Math.max(0, 9 - visibleCommunityComments.length)),
+    [remainingReferences, visibleCommunityComments.length],
   );
-  // Keep the duplicated marquee layer comfortably below common GPU texture limits.
-  const movingExampleReviews = useMemo(() => exampleSiteReviews.slice(0, 6), []);
   const movingUsesSiteComments = visibleCommunityComments.length > 0;
+  const movingHasContent = visibleCommunityComments.length > 0 || movingReferences.length > 0;
   const exampleServiceFilters = useMemo(() => {
     const preferredOrder = ['Vodafone Mobil Ödeme', 'Mobil Ödeme', 'Razer Gold', 'Paycell', 'Apple / iTunes', 'Turkcell Mobil Ödeme', 'Türk Telekom Mobil Ödeme', 'Pokus', 'Steam'];
     const counts = exampleSiteReviews.reduce<Record<string, number>>((groups, review) => {
@@ -624,7 +624,7 @@ export default function SkyReferencesSection({ references }: Props) {
           <div><strong>2</strong><span>ayrı ve açıkça etiketlenmiş içerik türü</span></div>
         </div>
 
-        {(movingUsesSiteComments || movingReferences.length > 0) ? (
+        {movingHasContent ? (
           <section className={styles.movingReviewsSection} aria-labelledby="moving-reviews-title">
             <div className={styles.movingReviewsHeading}>
               <div>
@@ -632,7 +632,7 @@ export default function SkyReferencesSection({ references }: Props) {
                 <h3 id="moving-reviews-title">Kullanıcı deneyimleri ekrandan akıyor.</h3>
               </div>
               <div className={styles.movingReviewsControls}>
-                <p>{movingUsesSiteComments ? "Moderasyondan geçen site yorumları bu akışta yayınlanır." : "Doğrulanabilir forum kayıtları ve açıkça işaretlenmiş site yorumu örnekleri birlikte gösterilir."}</p>
+                <p>{movingUsesSiteComments ? "Moderasyondan geçen site yorumları ve doğrulanabilir eski kayıtlar birlikte akar." : "Doğrulanabilir eski kullanıcı kayıtları bu akışta yayınlanır."}</p>
                 <button
                   type="button"
                   className={styles.movingReviewsToggle}
@@ -654,41 +654,25 @@ export default function SkyReferencesSection({ references }: Props) {
             >
               <div id="moving-reviews-track" className={styles.movingReviewsTrack}>
                 <div className={styles.movingReviewsGroup}>
-                  {movingUsesSiteComments ? (
-                    visibleCommunityComments.map((comment, index) => (
-                      <MovingReviewCard key={`moving-a-${comment.id}`} comment={comment} visualIndex={index} />
-                    ))
-                  ) : (
-                    <>
-                      {movingReferences.map((reference, index) => (
-                        <MovingReferenceCard key={`moving-a-${reference.id}`} reference={reference} visualIndex={index} />
-                      ))}
-                      {movingExampleReviews.map((comment, index) => (
-                        <MovingReviewCard key={`moving-example-a-${comment.id}`} comment={comment} visualIndex={movingReferences.length + index} example />
-                      ))}
-                    </>
-                  )}
+                  {visibleCommunityComments.map((comment, index) => (
+                    <MovingReviewCard key={`moving-a-${comment.id}`} comment={comment} visualIndex={index} />
+                  ))}
+                  {movingReferences.map((reference, index) => (
+                    <MovingReferenceCard key={`moving-a-${reference.id}`} reference={reference} visualIndex={visibleCommunityComments.length + index} />
+                  ))}
                 </div>
                 <div className={styles.movingReviewsGroup} aria-hidden="true">
-                  {movingUsesSiteComments ? (
-                    visibleCommunityComments.map((comment, index) => (
-                      <MovingReviewCard key={`moving-b-${comment.id}`} comment={comment} visualIndex={index} />
-                    ))
-                  ) : (
-                    <>
-                      {movingReferences.map((reference, index) => (
-                        <MovingReferenceCard key={`moving-b-${reference.id}`} reference={reference} visualIndex={index} />
-                      ))}
-                      {movingExampleReviews.map((comment, index) => (
-                        <MovingReviewCard key={`moving-example-b-${comment.id}`} comment={comment} visualIndex={movingReferences.length + index} example />
-                      ))}
-                    </>
-                  )}
+                  {visibleCommunityComments.map((comment, index) => (
+                    <MovingReviewCard key={`moving-b-${comment.id}`} comment={comment} visualIndex={index} />
+                  ))}
+                  {movingReferences.map((reference, index) => (
+                    <MovingReferenceCard key={`moving-b-${reference.id}`} reference={reference} visualIndex={visibleCommunityComments.length + index} />
+                  ))}
                 </div>
               </div>
             </div>
             <p className={styles.movingReviewsNote} aria-live="polite">
-              {movingReviewsPaused ? 'Yorum akışı duraklatıldı.' : movingUsesSiteComments ? 'Site üzerinden gönderilen yorumlar moderasyon sonrasında yayınlanır.' : 'Akışta doğrulanabilir WM Aracı kayıtları ile gerçek yorum olmayan, açıkça işaretlenmiş tasarım örnekleri birlikte gösterilir.'}
+              {movingReviewsPaused ? 'Yorum akışı duraklatıldı.' : movingUsesSiteComments ? 'Site yorumları moderasyon sonrasında; eski kayıtlar ise doğrulanabilir arşiv kaynağıyla yayınlanır.' : 'Akışta yalnızca doğrulanabilir eski kullanıcı kayıtları gösterilir.'}
             </p>
           </section>
         ) : null}
