@@ -35,7 +35,7 @@ export default function ProductCover({ product, compact = false, priority = fals
         className="product-cover__image"
         style={{ objectPosition: imagePosition }}
       />
-      {hasVideo && product.coverVideo ? <ProductCoverVideo src={product.coverVideo} objectPosition={product.coverPosition} priority={priority} /> : null}
+      {hasVideo && product.coverVideo ? <ProductCoverVideo src={product.coverVideo} poster={imageSrc} objectPosition={product.coverPosition} priority={priority} /> : null}
       {product.brandLogo && !product.brandIntegrated ? <span className="product-cover__brand-plate"><Image src={product.brandLogo} alt="" width={280} height={100} className="product-cover__brand-mark" /></span> : null}
       <span className="product-cover__glow" />
       <span className="product-cover__orb product-cover__orb--one" />

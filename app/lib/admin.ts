@@ -6,8 +6,7 @@ import {
   query,
   runTransaction,
   serverTimestamp,
-  updateDoc,
-  addDoc,
+  writeBatch,
   type Firestore,
   type Timestamp,
 } from 'firebase/firestore';
@@ -181,17 +180,18 @@ export function subscribeToMemberLedger(
   }, onError);
 }
 
-async function writeAdminAudit(firestore: Firestore, action: string, entityId: string, actorId: string) {
-  await addDoc(collection(firestore, 'contentAudit'), {
+function adminAuditEntry(action: string, entityId: string, actorId: string) {
+  return {
     action,
     articleSlug: `${entityId}`,
     actorId,
     createdAt: serverTimestamp(),
-  });
+  };
 }
 
 export async function setMemberStatus(firestore: Firestore, memberId: string, status: MemberStatus, actorId: string) {
-  await updateDoc(doc(firestore, 'members', memberId), {
+  const batch = writeBatch(firestore);
+  batch.update(doc(firestore, 'members', memberId), {
     status,
     banReason: status === 'banned' ? 'Yönetici kararıyla erişim engellendi.' : '',
     bannedBy: status === 'banned' ? actorId : '',
@@ -201,7 +201,8 @@ export async function setMemberStatus(firestore: Firestore, memberId: string, st
     approvedAt: status === 'active' ? serverTimestamp() : null,
     updatedAt: serverTimestamp(),
   });
-  await writeAdminAudit(firestore, `member-status:${status}`, memberId, actorId);
+  batch.set(doc(collection(firestore, 'contentAudit')), adminAuditEntry(`member-status:${status}`, memberId, actorId));
+  await batch.commit();
 }
 
 export async function banMember(
@@ -214,7 +215,8 @@ export async function banMember(
   if (durationHours !== null && (!Number.isInteger(durationHours) || durationHours < 1 || durationHours > 24 * 365)) {
     throw new Error('Uzaklaştırma süresi geçersiz.');
   }
-  await updateDoc(doc(firestore, 'members', memberId), {
+  const batch = writeBatch(firestore);
+  batch.update(doc(firestore, 'members', memberId), {
     status: 'banned',
     banReason: reason.trim().slice(0, 240) || 'Yönetici kararıyla erişim engellendi.',
     bannedBy: actorId,
@@ -222,7 +224,9 @@ export async function banMember(
     bannedUntil: durationHours === null ? null : new Date(Date.now() + durationHours * 60 * 60 * 1000),
     updatedAt: serverTimestamp(),
   });
-  await writeAdminAudit(firestore, durationHours === null ? 'member-status:banned' : `member-status:suspended-${durationHours}h`, memberId, actorId);
+  const action = durationHours === null ? 'member-status:banned' : `member-status:suspended-${durationHours}h`;
+  batch.set(doc(collection(firestore, 'contentAudit')), adminAuditEntry(action, memberId, actorId));
+  await batch.commit();
 }
 
 export async function setMemberRestrictions(
@@ -233,13 +237,18 @@ export async function setMemberRestrictions(
 ) {
   const allowed: MemberRestrictionKey[] = ['community', 'comments', 'content_sharing', 'messaging', 'code_sale', 'store_purchase', 'wallet'];
   const normalized = [...new Set(restrictions)].filter((item): item is MemberRestrictionKey => allowed.includes(item));
-  await updateDoc(doc(firestore, 'members', memberId), {
+  const batch = writeBatch(firestore);
+  batch.update(doc(firestore, 'members', memberId), {
     restrictions: normalized,
     restrictionsUpdatedBy: actorId,
     restrictionsUpdatedAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
-  await writeAdminAudit(firestore, `member-restrictions:${normalized.join(',') || 'none'}`, memberId, actorId);
+  batch.set(
+    doc(collection(firestore, 'contentAudit')),
+    adminAuditEntry(`member-restrictions:${normalized.join(',') || 'none'}`, memberId, actorId),
+  );
+  await batch.commit();
 }
 
 export async function setMemberAccess(
@@ -249,12 +258,14 @@ export async function setMemberAccess(
   permissions: string[],
   actorId: string,
 ) {
-  await updateDoc(doc(firestore, 'members', memberId), {
+  const batch = writeBatch(firestore);
+  batch.update(doc(firestore, 'members', memberId), {
     role,
     permissions,
     updatedAt: serverTimestamp(),
   });
-  await writeAdminAudit(firestore, `member-access:${role}`, memberId, actorId);
+  batch.set(doc(collection(firestore, 'contentAudit')), adminAuditEntry(`member-access:${role}`, memberId, actorId));
+  await batch.commit();
 }
 
 export async function changeMemberValue(
@@ -269,6 +280,7 @@ export async function changeMemberValue(
   if (kind === 'points' && !Number.isInteger(amount)) throw new Error('Puan işlemleri yalnızca tam sayı olabilir.');
   const memberRef = doc(firestore, 'members', member.id);
   const ledgerRef = doc(collection(firestore, 'memberLedger'));
+  const auditRef = doc(collection(firestore, 'contentAudit'));
 
   await runTransaction(firestore, async (transaction) => {
     const current = await transaction.get(memberRef);
@@ -294,8 +306,11 @@ export async function changeMemberValue(
       performedBy: adminId,
       createdAt: serverTimestamp(),
     });
+    transaction.set(
+      auditRef,
+      adminAuditEntry(`member-${kind}:${persistedApplied >= 0 ? 'credit' : 'debit'}`, member.id, adminId),
+    );
   });
-  await writeAdminAudit(firestore, `member-${kind}:${amount >= 0 ? 'credit' : 'debit'}`, member.id, adminId);
 }
 
 export async function moderateComment(
@@ -304,16 +319,19 @@ export async function moderateComment(
   status: 'approved' | 'rejected',
   adminId: string,
 ) {
-  await updateDoc(doc(firestore, 'comments', commentId), {
+  const batch = writeBatch(firestore);
+  batch.update(doc(firestore, 'comments', commentId), {
     status,
     moderatedBy: adminId,
     moderatedAt: serverTimestamp(),
   });
-  await writeAdminAudit(firestore, `comment:${status}`, commentId, adminId);
+  batch.set(doc(collection(firestore, 'contentAudit')), adminAuditEntry(`comment:${status}`, commentId, adminId));
+  await batch.commit();
 }
 
 export async function removeComment(firestore: Firestore, commentId: string, adminId: string) {
-  const { deleteDoc } = await import('firebase/firestore');
-  await deleteDoc(doc(firestore, 'comments', commentId));
-  await writeAdminAudit(firestore, 'comment:deleted', commentId, adminId);
+  const batch = writeBatch(firestore);
+  batch.delete(doc(firestore, 'comments', commentId));
+  batch.set(doc(collection(firestore, 'contentAudit')), adminAuditEntry('comment:deleted', commentId, adminId));
+  await batch.commit();
 }

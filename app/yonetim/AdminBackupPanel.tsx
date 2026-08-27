@@ -1,6 +1,6 @@
 'use client';
 
-import { addDoc, collection, getDocs, serverTimestamp, type Firestore } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, serverTimestamp, Timestamp, writeBatch, type Firestore } from 'firebase/firestore';
 import { type ChangeEvent, useState } from 'react';
 import './backup-panel.css';
 
@@ -34,6 +34,12 @@ type EncryptedBackupDocument = {
   salt: string;
   iv: string;
   payload: string;
+};
+
+type VerifiedBackup = {
+  fileName: string;
+  document: BackupDocument;
+  recordCount: number;
 };
 
 const disasterCollections = [
@@ -77,11 +83,36 @@ function serialize(value: unknown): unknown {
   return value;
 }
 
+function revive(value: unknown): unknown {
+  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : Timestamp.fromDate(date);
+  }
+  if (Array.isArray(value)) return value.map(revive);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, item]) => [key, revive(item)]));
+  return value;
+}
+
+function isSafeConfigBackup(document: BackupDocument) {
+  const allowed = new Set<string>(backupCollections.map((item) => item.id));
+  const entries = Object.entries(document.collections);
+  if (
+    document.scope !== 'site-configuration-and-content'
+    || !entries.length
+    || entries.some(([id, items]) => !allowed.has(id) || !Array.isArray(items))
+  ) return false;
+  const records = entries.flatMap(([, items]) => items);
+  return records.length <= 2_000 && records.every((item) => item && typeof item.id === 'string' && /^[A-Za-z0-9_-]{1,180}$/.test(item.id) && item.data && typeof item.data === 'object' && !Array.isArray(item.data));
+}
+
 export default function AdminBackupPanel({ db, actorId }: { db: Firestore | null; actorId: string }) {
   const [selected, setSelected] = useState<BackupCollection[]>(backupCollections.map((item) => item.id));
   const [exporting, setExporting] = useState(false);
   const [notice, setNotice] = useState('');
   const [verification, setVerification] = useState('');
+  const [verifiedBackup, setVerifiedBackup] = useState<VerifiedBackup | null>(null);
+  const [restoreConfirmation, setRestoreConfirmation] = useState('');
+  const [restoring, setRestoring] = useState(false);
   const [passphrase, setPassphrase] = useState('');
   const [secureExporting, setSecureExporting] = useState(false);
 
@@ -128,6 +159,8 @@ export default function AdminBackupPanel({ db, actorId }: { db: Firestore | null
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
+    setVerifiedBackup(null);
+    setRestoreConfirmation('');
     setVerification('Yedek doğrulanıyor…');
     try {
       if (file.size > 100 * 1024 * 1024) throw new Error('too-large');
@@ -141,17 +174,57 @@ export default function AdminBackupPanel({ db, actorId }: { db: Firestore | null
         const { checksum, ...unsigned } = inner;
         if (checksum !== await sha256(JSON.stringify(unsigned))) throw new Error('checksum');
         const total = Object.values(inner.collections).reduce((sum, entries) => sum + entries.length, 0);
-        setVerification(`Şifreli kurtarma yedeği sağlam: ${Object.keys(inner.collections).length} bölüm ve ${total} kayıt doğrulandı. Dosya siteye yüklenmedi.`);
+        setVerification(`Şifreli kurtarma yedeği sağlam: ${Object.keys(inner.collections).length} bölüm ve ${total} kayıt doğrulandı. Para, kod ve sipariş kayıtları güvenlik nedeniyle tarayıcıdan geri yüklenmez.`);
         return;
       }
       if (parsed.format !== 'sky-bozum-admin-backup' || parsed.version !== 2 || !parsed.checksum || !parsed.collections) throw new Error('invalid');
       const { checksum, ...unsigned } = parsed;
       const expected = await sha256(JSON.stringify(unsigned));
       if (checksum !== expected) throw new Error('checksum');
+      if (!isSafeConfigBackup(parsed)) throw new Error('unsafe-scope');
       const total = Object.values(parsed.collections).reduce((sum, entries) => sum + entries.length, 0);
-      setVerification(`Yedek sağlam: ${Object.keys(parsed.collections).length} bölüm ve ${total} kayıt doğrulandı. Dosya siteye yüklenmedi.`);
+      setVerifiedBackup({ fileName: file.name, document: parsed, recordCount: total });
+      setVerification(`Yedek sağlam: ${Object.keys(parsed.collections).length} bölüm ve ${total} kayıt doğrulandı. Geri yükleme için aşağıdaki açık onay gerekir.`);
     } catch {
       setVerification('Bu dosya geçerli bir Sky Bozum yönetim yedeği değil veya sonradan değiştirilmiş.');
+    }
+  }
+
+  async function restoreVerifiedBackup() {
+    if (!db || !verifiedBackup || restoreConfirmation.trim().toLocaleUpperCase('tr-TR') !== 'GERİ YÜKLE' || restoring) return;
+    setRestoring(true);
+    setNotice('');
+    try {
+      const records = Object.entries(verifiedBackup.document.collections).flatMap(([collectionId, entries]) => entries.map((entry) => ({ collectionId, ...entry })));
+      let restored = 0;
+      for (let offset = 0; offset < records.length; offset += 350) {
+        const chunk = records.slice(offset, offset + 350);
+        const batch = writeBatch(db);
+        for (const entry of chunk) {
+          const data = revive(entry.data) as Record<string, unknown>;
+          data.updatedBy = actorId;
+          data.updatedAt = serverTimestamp();
+          batch.set(doc(db, entry.collectionId, entry.id), data);
+        }
+        batch.set(doc(collection(db, 'contentAudit')), {
+          action: 'admin-backup:restored',
+          articleSlug: `${verifiedBackup.fileName}:${offset + 1}-${offset + chunk.length}`.slice(0, 300),
+          actorId,
+          restoredCollections: [...new Set(chunk.map((entry) => entry.collectionId))],
+          restoredCount: chunk.length,
+          createdAt: serverTimestamp(),
+        });
+        await batch.commit();
+        restored += chunk.length;
+      }
+      setNotice(`${restored} yönetim kaydı doğrulanmış yedekten geri yüklendi ve denetim günlüğüne işlendi.`);
+      setVerification('');
+      setVerifiedBackup(null);
+      setRestoreConfirmation('');
+    } catch {
+      setNotice('Geri yükleme tamamlanamadı. Hiçbir para veya ürün kodu kaydı değiştirilmedi; yönetici yetkisini ve dosya kapsamını kontrol edin.');
+    } finally {
+      setRestoring(false);
     }
   }
 
@@ -217,6 +290,11 @@ export default function AdminBackupPanel({ db, actorId }: { db: Firestore | null
       <label className="admin-secondary">Yedek dosyasını doğrula<input type="file" accept="application/json,.json" onChange={(event) => void verifyBackup(event)} hidden /></label>
     </div>
     {verification && <p className="admin-notice" role="status">{verification}</p>}
+    {verifiedBackup ? <section className="admin-backup-restore">
+      <div><span>DOĞRULANMIŞ GERİ YÜKLEME</span><h3>{verifiedBackup.fileName}</h3><p>Yalnız site ayarları, sayfa içerikleri, makaleler, oran ayarları ve yayın kontrol kayıtları geri yüklenir. Üye bakiyesi, sipariş, stok kodu ve finans kayıtlarına dokunulmaz.</p></div>
+      <label>Onay metni<input value={restoreConfirmation} onChange={(event) => setRestoreConfirmation(event.target.value)} placeholder="GERİ YÜKLE" autoComplete="off" /></label>
+      <button className="admin-primary" type="button" disabled={restoring || restoreConfirmation.trim().toLocaleUpperCase('tr-TR') !== 'GERİ YÜKLE'} onClick={() => void restoreVerifiedBackup()}>{restoring ? 'Geri yükleniyor…' : `${verifiedBackup.recordCount} kaydı geri yükle →`}</button>
+    </section> : null}
     <section className="admin-disaster-backup">
       <div><span>ŞİFRELİ FELAKET KURTARMA</span><h3>Para, sipariş, stok ve üye kayıtlarını koru</h3><p>Hassas kayıtlar tarayıcıda AES-256 ile şifrelenir. Açık veri sunucuya veya başka bir hizmete gönderilmez; parola olmadan dosya okunamaz.</p></div>
       <label>Yedek parolası<input type="password" autoComplete="new-password" minLength={12} value={passphrase} onChange={(event) => setPassphrase(event.target.value)} placeholder="En az 12 karakter" /></label>

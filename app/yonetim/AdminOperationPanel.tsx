@@ -284,6 +284,7 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setPaymentSavingId(operation.id);
     try {
       const operationRef = doc(db, 'operations', operation.id);
+      const auditRef = doc(collection(db, 'contentAudit'));
       await runTransaction(db, async (transaction) => {
         const snapshot = await transaction.get(operationRef);
         if (!snapshot.exists()) throw new Error('İşlem kaydı bulunamadı.');
@@ -294,7 +295,9 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
         if (approvedCount < 1) throw new Error('Ödeme için geçerli kod bulunamadı.');
         const currentAcceptedFaceValue = (Number(current.codeValue) || 0) * approvedCount;
         if (current.currency === 'TRY' && payout > currentAcceptedFaceValue) throw new Error('Ödeme, kabul edilen kodların toplam değerini aşamaz.');
-        transaction.update(operationRef, { payout, status: 'awaiting_payment', payoutState: 'approved', updatedBy: actorId, updatedAt: serverTimestamp() });
+        const timestamp = serverTimestamp();
+        transaction.update(operationRef, { payout, status: 'awaiting_payment', payoutState: 'approved', updatedBy: actorId, updatedAt: timestamp });
+        transaction.set(auditRef, { action: 'code-sale:payout-approved', articleSlug: operation.id, actorId, payout, approvedCodeCount: approvedCount, createdAt: timestamp });
       });
       await addTimelineEntry(
         operation.id,
@@ -315,6 +318,7 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     const operationRef = doc(db, 'operations', operation.id);
     const memberRef = doc(db, 'members', operation.memberId);
     const ledgerRef = doc(db, 'memberLedger', `code-sale-${operation.id}`);
+    const auditRef = doc(collection(db, 'contentAudit'));
     setPaymentSavingId(operation.id);
     try {
       await runTransaction(db, async (transaction) => {
@@ -334,6 +338,7 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
         transaction.update(memberRef, { balance: nextBalance, updatedAt: timestamp });
         transaction.update(operationRef, { payout, status: 'completed', payoutState: 'paid', payoutReference: reference, paidAt: timestamp, updatedBy: actorId, updatedAt: timestamp });
         transaction.set(ledgerRef, { memberId: operation.memberId, kind: 'balance', amount: payout, balanceAfter: nextBalance, note: `Razer Gold kod satışı ödemesi · ${operation.id.slice(0, 10).toUpperCase()}`, operationId: operation.id, performedBy: actorId, createdAt: timestamp });
+        transaction.set(auditRef, { action: 'code-sale:balance-paid', articleSlug: operation.id, actorId, memberId: operation.memberId, payout, payoutReference: reference, createdAt: timestamp });
       });
       await addTimelineEntry(
         operation.id,
@@ -356,6 +361,7 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setPaymentSavingId(operation.id);
     try {
       const operationRef = doc(db, 'operations', operation.id);
+      const auditRef = doc(collection(db, 'contentAudit'));
       await runTransaction(db, async (transaction) => {
         const snapshot = await transaction.get(operationRef);
         if (!snapshot.exists()) throw new Error('İşlem kaydı bulunamadı.');
@@ -363,7 +369,9 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
         if (current.status === 'completed' || current.payoutState === 'paid') throw new Error('Bu ödeme daha önce tamamlanmış.');
         if (current.status !== 'awaiting_payment' || current.payoutState !== 'approved' || current.payoutMethod !== 'iban') throw new Error('Ödeme henüz IBAN aktarımına hazır değil.');
         if ((Number(current.payout) || 0) <= 0) throw new Error('Onaylanmış ödeme tutarı bulunamadı.');
-        transaction.update(operationRef, { status: 'completed', payoutState: 'paid', payoutReference: reference.slice(0, 120), paidAt: serverTimestamp(), updatedBy: actorId, updatedAt: serverTimestamp() });
+        const timestamp = serverTimestamp();
+        transaction.update(operationRef, { status: 'completed', payoutState: 'paid', payoutReference: reference.slice(0, 120), paidAt: timestamp, updatedBy: actorId, updatedAt: timestamp });
+        transaction.set(auditRef, { action: 'code-sale:iban-paid', articleSlug: operation.id, actorId, memberId: operation.memberId, payout: Number(current.payout) || 0, payoutReference: reference.slice(0, 120), createdAt: timestamp });
       });
       await addTimelineEntry(
         operation.id,
@@ -392,6 +400,7 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
     setPaymentSavingId(operation.id);
     try {
       const operationRef = doc(db, 'operations', operation.id);
+      const auditRef = doc(collection(db, 'contentAudit'));
       let approvedCodeCount = 0;
       let rejectedCodeCount = 0;
       let reviewState: Operation['reviewState'] = 'in_progress';
@@ -407,7 +416,9 @@ export default function AdminOperationPanel({ db, actorId }: { db: Firestore | n
         approvedCodeCount = codeReviews.filter((item) => item.status === 'approved').length;
         rejectedCodeCount = codeReviews.filter((item) => item.status === 'rejected').length;
         reviewState = codeReviews.length === current.codeCount ? 'complete' : 'in_progress';
-        transaction.update(operationRef, { codeReviews, approvedCodeCount, rejectedCodeCount, reviewState, status: 'checking', updatedBy: actorId, updatedAt: serverTimestamp() });
+        const timestamp = serverTimestamp();
+        transaction.update(operationRef, { codeReviews, approvedCodeCount, rejectedCodeCount, reviewState, status: 'checking', updatedBy: actorId, updatedAt: timestamp });
+        transaction.set(auditRef, { action: `code-sale:code-${status}`, articleSlug: operation.id, actorId, codeHash, codeIndex: index, reason, createdAt: timestamp });
       });
       if (reviewState === 'complete') {
         await addTimelineEntry(

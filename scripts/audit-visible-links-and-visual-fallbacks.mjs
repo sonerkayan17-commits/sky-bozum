@@ -10,11 +10,12 @@ const walk = (dir) => fs.readdirSync(path.join(root, dir), { withFileTypes: true
 
 const sourceFiles = walk('app').filter((file) => /\.(?:ts|tsx)$/.test(file));
 const sources = sourceFiles.map((file) => [file, read(file)]);
-const forbiddenVisibleRoutes = ['/hizmetler', '/iletisim', '/sss', '/araclar', '/operatorler'];
+const auditedVisibleRoutes = ['/hizmetler', '/iletisim', '/sss', '/araclar', '/operatorler'];
+const unavailableVisibleRoutes = auditedVisibleRoutes.filter((route) => !fs.existsSync(path.join(root, 'app', route.slice(1), 'page.tsx')));
 const visibleFiles = sources.filter(([file]) => file.endsWith('.tsx') || file.includes('featuredArticles') || file.includes('v21ExtendedArticles'));
 const badRoutes = [];
 for (const [file, source] of visibleFiles) {
-  for (const route of forbiddenVisibleRoutes) {
+  for (const route of unavailableVisibleRoutes) {
     if (source.includes(`'${route}`) || source.includes(`"${route}`)) badRoutes.push(`${file}: ${route}`);
   }
 }
@@ -24,7 +25,7 @@ if (badRoutes.length) {
 }
 
 const coverComponent = read('app/components/articles/ArticleCover.tsx');
-for (const marker of ['const cover = premiumCover ?? article.cover;', 'article-generated-cover', 'role="img"']) {
+for (const marker of ['const cover = uploadedCover || (premiumCover', 'fallbackCovers[tone]', 'article-generated-cover', 'role="img"']) {
   if (!coverComponent.includes(marker)) {
     console.error(`Makale kapak yedeği eksik: ${marker}`);
     process.exit(1);

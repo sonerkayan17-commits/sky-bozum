@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 const read = (path) => readFileSync(path, 'utf8');
 const env = read('.env.example');
 const firebase = read('app/lib/firebase.ts');
+const firebaseApp = read('app/lib/firebase-app.ts');
 const siteConfig = read('app/lib/site-config.ts');
 const conversion = read('app/lib/conversion.ts');
 const account = read('app/components/AccountAccess.tsx');
@@ -20,7 +21,7 @@ const firebaseEnvKeys = [
 
 const checks = [
   ['Firebase public env placeholders exist without invented values', firebaseEnvKeys.every((key) => env.includes(key)) && !/NEXT_PUBLIC_FIREBASE_API_KEY=AIza/i.test(env)],
-  ['Firebase client is env-only and safely disabled when incomplete', firebase.includes('process.env.NEXT_PUBLIC_FIREBASE_API_KEY') && firebase.includes('isFirebaseConfigured') && firebase.includes('return { auth: null, db: null }')],
+  ['Firebase client is env-only and safely disabled when incomplete', firebaseApp.includes('process.env.NEXT_PUBLIC_FIREBASE_API_KEY') && firebaseApp.includes('isFirebaseConfigured') && firebaseApp.includes('return null') && firebase.includes('return { auth: null, db: null }')],
   ['Firebase initialization failures do not crash public pages', firebase.includes('try') && firebase.includes('catch') && firebase.includes('getFirebaseClient')],
   ['Firestore admin-only settings constrain WhatsApp to wa.me', rules.includes('data.whatsapp.matches("^https://wa[.]me/[0-9]{8,15}([?].*)?$")')],
   ['Default WhatsApp URLs use HTTPS wa.me', /https:\/\/wa\.me\/90\d{10}/.test(siteConfig) && /https:\/\/wa\.me\/90\d{10}/.test(conversion)],

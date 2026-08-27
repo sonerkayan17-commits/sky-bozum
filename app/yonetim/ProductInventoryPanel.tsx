@@ -1,7 +1,7 @@
 'use client';
 
 import type { User } from 'firebase/auth';
-import { addDoc, collection, deleteDoc, doc, getDocs, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, where, writeBatch } from 'firebase/firestore';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../lib/firebase';
 import { products } from '../lib/products';
@@ -24,8 +24,15 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [reconciling, setReconciling] = useState(false);
   const preparedCodes = useMemo(() => [...new Set(codes.split(/\r?\n/).map((code) => code.trim()).filter(Boolean))], [codes]);
   const duplicateCodeCount = Math.max(0, codes.split(/\r?\n/).map((code) => code.trim()).filter(Boolean).length - preparedCodes.length);
+  const selectedEntry = useMemo(
+    () => entries.find((item) => item.productSlug === productSlug && item.packId === packId) || null,
+    [entries, packId, productSlug],
+  );
+  const selectedAvailableCount = stockCodes.filter((item) => item.status === 'available').length;
+  const selectedStockMismatch = selectedEntry ? selectedEntry.stockCount - selectedAvailableCount : 0;
   const inventoryMetrics = useMemo(() => {
     const delivered = orders.filter((order) => order.status === 'delivered');
     const todayKey = new Date().toLocaleDateString('tr-TR');
@@ -75,11 +82,59 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
       const { db } = getFirebaseClient();
       if (!db) throw new Error('Firebase bağlantısı kurulamadı.');
       const nextActive = !entry.active;
-      await updateDoc(doc(db, 'productCatalog', entry.key), { active: nextActive, updatedAt: serverTimestamp(), updatedBy: user.uid });
-      await addDoc(collection(db, 'contentAudit'), { action: nextActive ? 'stock:sale-enabled' : 'stock:sale-disabled', articleSlug: entry.key, actorId: user.uid, createdAt: serverTimestamp() });
+      const batch = writeBatch(db);
+      batch.update(doc(db, 'productCatalog', entry.key), { active: nextActive, updatedAt: serverTimestamp(), updatedBy: user.uid });
+      batch.set(doc(collection(db, 'contentAudit')), { action: nextActive ? 'stock:sale-enabled' : 'stock:sale-disabled', articleSlug: entry.key, actorId: user.uid, createdAt: serverTimestamp() });
+      await batch.commit();
       setNotice(`${entry.productName} · ${entry.packLabel} satışı ${nextActive ? 'açıldı' : 'durduruldu'}.`);
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Satış durumu güncellenemedi.'); }
     finally { setBusy(false); }
+  }
+
+  async function reconcileInventory(targets = entries) {
+    if (reconciling || !targets.length) return;
+    setReconciling(true); setError(''); setNotice('');
+    try {
+      const { db } = getFirebaseClient();
+      if (!db) throw new Error('Firebase bağlantısı kurulamadı.');
+      let corrected = 0;
+      let inspected = 0;
+      for (let offset = 0; offset < targets.length; offset += 350) {
+        const chunk = targets.slice(offset, offset + 350);
+        const counts = await Promise.all(chunk.map(async (entry) => {
+          const snapshot = await getDocs(collection(db, 'productCatalog', entry.key, 'codes'));
+          return snapshot.docs.filter((code) => code.data().status === 'available').length;
+        }));
+        const mismatches = chunk.flatMap((entry, index) => entry.stockCount === counts[index] ? [] : [{ entry, available: counts[index] }]);
+        inspected += chunk.length;
+        if (!mismatches.length) continue;
+        const batch = writeBatch(db);
+        const timestamp = serverTimestamp();
+        mismatches.forEach(({ entry, available }) => {
+          batch.update(doc(db, 'productCatalog', entry.key), {
+            stockCount: available,
+            reconciledAt: timestamp,
+            reconciledBy: user.uid,
+            updatedAt: timestamp,
+            updatedBy: user.uid,
+          });
+        });
+        batch.set(doc(collection(db, 'contentAudit')), {
+          action: 'stock:reconciled',
+          articleSlug: mismatches.map(({ entry }) => entry.key).join(',').slice(0, 1000),
+          actorId: user.uid,
+          correctedCount: mismatches.length,
+          createdAt: timestamp,
+        });
+        await batch.commit();
+        corrected += mismatches.length;
+      }
+      setNotice(`${inspected} paket denetlendi; ${corrected ? `${corrected} stok sayacı gerçek kod kayıtlarıyla eşitlendi` : 'stok sayaçlarının tamamı doğru'}.`);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : 'Stok mutabakatı tamamlanamadı.');
+    } finally {
+      setReconciling(false);
+    }
   }
 
   function selectEntry(entry: StoreCatalogEntry) {
@@ -142,6 +197,11 @@ export default function ProductInventoryPanel({ user }: { user: User }) {
   return <section className="admin-section inventory-panel">
     <div className="admin-section-head"><div><span>DİJİTAL ÜRÜN KASASI</span><h2>Ürün, fiyat, stok ve teslimat</h2></div><p>Desteklenen ürünü yayına alma, fiyat güncelleme, stok tazeleme ve satış durdurma tek merkezden yapılır. Kodlar şifreli kalır.</p></div>
     <div className="inventory-metrics" aria-label="Stok ve satış özeti"><article><strong>{inventoryMetrics.availableCodes}</strong><span>satışa açık kod</span></article><article className={inventoryMetrics.lowStock ? 'is-warning' : ''}><strong>{inventoryMetrics.lowStock}</strong><span>azalan stok</span></article><article><strong>{formatStoreMoney(inventoryMetrics.todayRevenue)}</strong><span>bugün teslim edilen</span></article><article><strong>{formatStoreMoney(inventoryMetrics.deliveredRevenue)}</strong><span>toplam teslimat değeri</span></article></div>
+    <div className="inventory-reconciliation" role="status">
+      <div><strong>Stok mutabakatı</strong><span>{selectedEntry ? selectedStockMismatch === 0 ? 'Seçili paketin sayacı gerçek kod kayıtlarıyla uyumlu.' : `Seçili pakette ${Math.abs(selectedStockMismatch)} kodluk sayaç farkı bulundu.` : 'Denetlemek için kayıtlı bir paket seçin.'}</span></div>
+      <button type="button" className="admin-secondary compact" disabled={reconciling || !selectedEntry} onClick={() => void reconcileInventory(selectedEntry ? [selectedEntry] : [])}>Seçili paketi denetle</button>
+      <button type="button" className="admin-primary compact" disabled={reconciling || !entries.length} onClick={() => void reconcileInventory()}>{reconciling ? 'Kod kayıtları sayılıyor…' : 'Tüm stokları eşitle'}</button>
+    </div>
     <div className="inventory-layout">
       <form onSubmit={save} className="inventory-form">
         <label>Ürün<select value={productSlug} onChange={(event) => setProductSlug(event.target.value)}>{products.map((item) => <option key={item.slug} value={item.slug}>{item.shortName}</option>)}</select></label>
