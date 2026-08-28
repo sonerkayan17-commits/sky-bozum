@@ -259,12 +259,16 @@ service cloud.firestore {
         && request.resource.data.visitorId is string
         && request.resource.data.visitorId.size() >= 8
         && request.resource.data.visitorId.size() <= 80
-        && freshCreateTimestamp(request.resource.data.createdAt);
-      allow update: if request.resource.data.visitorId == resource.data.visitorId
-        && request.resource.data.type == resource.data.type
-        && request.resource.data.targetId == resource.data.targetId
-        && request.resource.data.keys().hasOnly(["type", "targetId", "visitorId", "createdAt"])
-        && request.resource.data.createdAt == request.time;
+        && freshCreateTimestamp(request.resource.data.createdAt)
+        && (
+          request.resource.data.type == "view"
+          || (
+            request.resource.data.type == "like"
+            && signedIn()
+            && request.resource.data.visitorId == request.auth.uid
+          )
+        );
+      allow update: if false;
       allow delete: if false;
     }
 

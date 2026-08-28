@@ -61,10 +61,8 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
   useEffect(() => {
     if (!db) return;
     const visitorId = getOrCreateVisitorId();
-    // Beğeni kaydı sunucuda ziyaretçi kimliğiyle tekilleşir; arayüz de aynı
-    // anahtarı kullanmalı ki giriş sonrası ikinci kez kabul edilmiş görünmesin.
-    const likeIdentity = visitorId;
-    setLiked(localStorage.getItem(`sky-liked:${service}:${likeIdentity}`) === '1');
+    const likeIdentity = user?.uid;
+    setLiked(Boolean(likeIdentity && localStorage.getItem(`sky-liked:${service}:${likeIdentity}`) === '1'));
     if (user) {
       isBookmarked(db, user.uid, service).then(setBookmarked).catch(() => setBookmarked(false));
       isFollowingContent(db, user.uid, service).then(setFollowed).catch(() => setFollowed(false));
@@ -93,11 +91,16 @@ export default function ContentEngagement({ targetId, title, kind = 'article' }:
 
   async function likeAndBump() {
     if (!db || liked) return;
+    if (!user) {
+      setNotice('Beğenmek ve konuyu öne çıkarmak için üye girişi yapmalısınız.');
+      router.push('/giris');
+      return;
+    }
     setBusy(true);
     try {
-      await registerEngagement(db, getOrCreateVisitorId(), 'like', service);
-      if (user) await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
-      localStorage.setItem(`sky-liked:${service}:${getOrCreateVisitorId()}`, '1');
+      await registerEngagement(db, user.uid, 'like', service);
+      await recordMemberActivity(db, user.uid, 'like', service, title, window.location.pathname).catch(() => undefined);
+      localStorage.setItem(`sky-liked:${service}:${user.uid}`, '1');
       setLiked(true);
       setNotice('Beğeniniz kaydedildi; konu topluluk sıralamasında öne çıktı.');
     } catch { setNotice('Beğeni kaydedilemedi. Lütfen tekrar deneyin.'); }

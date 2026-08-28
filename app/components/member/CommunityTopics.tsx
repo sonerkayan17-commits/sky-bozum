@@ -7,6 +7,7 @@ import { addDoc, collection, doc, onSnapshot, query, serverTimestamp, updateDoc,
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { getFirebaseClient } from '../../lib/firebase';
 import { forumSections, publicForumKeys, slugifyForumCategory } from '../../lib/forumTaxonomy';
+import { forumRoutes } from '../../lib/forumRoutes';
 import { hasReportedContent, reportContent } from '../../lib/reports';
 import RichArticleEditor, { sanitizeArticleHtml } from '../../yonetim/RichArticleEditor';
 import '../../yonetim/content.css';
@@ -295,6 +296,18 @@ export default function CommunityTopics({ compose = false, sectionSlug: scopedSe
   if (!visiblePosts.length) return null;
   return <section className="community-page community-page--scoped" aria-label="Üye konuları">
     <header><p>TOPLULUK PAYLAŞIMLARI</p><h2>Yeni konular</h2><Link href={user ? '/hesabim/yeni-konu' : '/giris'}>{user ? '+ Yeni konu aç' : 'Üye girişi yap'}</Link></header>
-    <div>{visiblePosts.map((post) => <article key={post.id} className={post.resolutionStatus === 'resolved' ? 'is-resolved' : 'is-open'}><div className="community-post-path"><span>{post.category} › {post.subCategory}</span><b>{post.resolutionStatus === 'resolved' ? '✓ Çözüldü' : 'Yanıt bekliyor'}</b></div><h3>{post.title}</h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{post.resolutionStatus === 'open' && user && (post.uid === user.uid || isAdmin) ? <button type="button" className="community-resolve" onClick={() => void markResolved(post)}>✓ Çözüldü olarak işaretle</button> : null}{isAdmin ? <><button type="button" onClick={() => edit(post)}>Düzenle</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></> : user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
+    <div>{visiblePosts.map((post) => <article
+      key={post.id}
+      className={post.resolutionStatus === 'resolved' ? 'is-resolved community-post-card' : 'is-open community-post-card'}
+      role="link"
+      tabIndex={0}
+      onClick={(event) => {
+        if ((event.target as HTMLElement).closest('a,button')) return;
+        router.push(forumRoutes.memberTopic(post.id));
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') router.push(forumRoutes.memberTopic(post.id));
+      }}
+    ><div className="community-post-path"><span>{post.category} › {post.subCategory}</span><b>{post.resolutionStatus === 'resolved' ? '✓ Çözüldü' : 'Yanıt bekliyor'}</b></div><h3><Link href={forumRoutes.memberTopic(post.id)}>{post.title}</Link></h3><div className="community-post-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body) }} /><footer><Link href={`/uyeler/${post.uid}`}>{post.author}</Link><time>{post.updatedAt ? 'Güncellendi: ' : ''}{(post.updatedAt || post.createdAt)?.toLocaleDateString('tr-TR') || 'Yeni'}</time>{post.resolutionStatus === 'open' && user && (post.uid === user.uid || isAdmin) ? <button type="button" className="community-resolve" onClick={() => void markResolved(post)}>✓ Çözüldü olarak işaretle</button> : null}{isAdmin ? <><button type="button" onClick={() => edit(post)}>Düzenle</button><button type="button" onClick={() => void moderatePost(post, post.status === 'published' ? 'archive' : 'publish')}>{post.status === 'published' ? 'Arşivle' : 'Yayınla'}</button></> : user && user.uid !== post.uid && <button type="button" onClick={() => void reportPost(post)} disabled={reportedIds.includes(post.id)}>{reportedIds.includes(post.id) ? 'Bildirildi' : 'Bildir'}</button>}</footer></article>)}</div>
   </section>;
 }

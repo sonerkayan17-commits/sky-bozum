@@ -5,3 +5,8 @@
 .community-page .community-resolve { border-color: rgba(76, 214, 153, .3); color: #8de0b8; }
 .community-page .community-resolve:hover { background: rgba(76, 214, 153, .09); color: #b3f0d0; }
 @media (max-width: 620px) { .community-post-path { align-items: flex-start; flex-direction: column; } }
+.community-post-card{cursor:pointer;transition:border-color .18s ease,background .18s ease,transform .18s ease}
+.community-post-card:hover{border-color:rgba(243,109,144,.38);background:rgba(243,109,144,.035);transform:translateY(-1px)}
+.community-post-card:focus-visible{outline:2px solid #f36d90;outline-offset:3px}
+.community-post-card h3 a{color:inherit}
+@media(prefers-reduced-motion:reduce){.community-post-card{transition:none}.community-post-card:hover{transform:none}}

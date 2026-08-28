@@ -1,11 +1,14 @@
 import Link from '../components/DeferredLink';
-import { forumSections, forumStarterTopics, getForumStarterTopic, slugifyForumCategory } from '../lib/forumTaxonomy';
+import { forumSections, forumStarterTopics, getForumStarterTopic, publicForumKeys, slugifyForumCategory } from '../lib/forumTaxonomy';
 import { forumRoutes } from '../lib/forumRoutes';
+import ForumLiveGroups, { type ForumLiveSection } from './ForumLiveGroups';
+import ForumSearch, { type ForumSearchItem } from './ForumSearch';
 import './forum-directory.css';
 import './forum-directory-v2.css';
 import './forum-quality-pass.css';
 import './forum-solutions.css';
 import './forum-category-links.css';
+import './forum-live.css';
 
 export default function ForumDirectory() {
   const categoryCount = forumSections.reduce((sum, section) => sum + section.categories.length, 0);
@@ -14,6 +17,29 @@ export default function ForumDirectory() {
     forumStarterTopics.find((topic) => topic.slug === 'sahte-bozum-sitelerini-anlamanin-temel-yollari'),
     forumStarterTopics.find((topic) => topic.slug === '1000-tl-bakiyeden-elime-ne-kadar-gecer'),
   ].filter((topic): topic is (typeof forumStarterTopics)[number] => Boolean(topic));
+  const liveSections: ForumLiveSection[] = forumSections.map((section) => {
+    const fallback = getForumStarterTopic(section.slug, slugifyForumCategory(section.categories[0]));
+    return {
+      slug: section.slug,
+      title: section.title,
+      icon: section.icon,
+      description: section.description,
+      starterCount: forumStarterTopics.filter((topic) => topic.sectionSlug === section.slug).length,
+      categories: section.categories.map((title) => {
+        const slug = slugifyForumCategory(title);
+        return { title, slug, href: forumRoutes.category(section.slug, slug) };
+      }),
+      fallbackLatest: fallback ? { title: fallback.title, href: forumRoutes.topic(fallback.sectionSlug, fallback.categorySlug, fallback.slug) } : null,
+    };
+  });
+  const searchItems: ForumSearchItem[] = forumStarterTopics.map((topic) => ({
+    id: topic.slug,
+    title: topic.title,
+    summary: topic.summary,
+    category: topic.category,
+    href: forumRoutes.topic(topic.sectionSlug, topic.categorySlug, topic.slug),
+    source: 'Yönetim rehberi',
+  }));
 
   return <section className="forum-directory">
     <header>
@@ -27,6 +53,7 @@ export default function ForumDirectory() {
     <nav className="forum-jump" aria-label="Topluluk bölümlerine hızlı geçiş">
       {forumSections.map((section) => <a key={section.slug} href={`#${section.slug}`}>{section.icon} {section.title}</a>)}
     </nav>
+    <ForumSearch staticItems={searchItems} publicKeys={publicForumKeys} />
     <section className="forum-start-desk" aria-label="Topluluk başlangıç rehberleri">
       <div className="forum-start-desk__summary">
         <span>RESMÎ BAŞLANGIÇ MASASI</span>
@@ -54,24 +81,6 @@ export default function ForumDirectory() {
         <Link href="/hesabim/yeni-konu"><b>Çözülmedi mi?</b><span>Doğru kategoride konu aç</span></Link>
       </nav>
     </section>
-    <div className="forum-groups">
-      {forumSections.map((section) => {
-        const latestTopic = getForumStarterTopic(section.slug, slugifyForumCategory(section.categories[0]));
-        return <article key={section.slug} id={section.slug}>
-          <Link className="forum-group-hitarea" href={forumRoutes.section(section.slug)} aria-label={`${section.title} forumuna git`} />
-          <div className="forum-group-icon" aria-hidden="true">{section.icon}</div>
-          <div className="forum-group-main">
-            <Link href={forumRoutes.section(section.slug)}><h2>{section.title}</h2></Link>
-            <p>{section.description}</p>
-            <div>{section.categories.map((category) => <Link key={category} href={forumRoutes.category(section.slug, slugifyForumCategory(category))}>{category}</Link>)}</div>
-          </div>
-          <aside>
-            <small>{section.categories.length} AKTİF ALT KATEGORİ</small>
-            {latestTopic && <Link href={forumRoutes.topic(section.slug, latestTopic.categorySlug, latestTopic.slug)}>{latestTopic.title}</Link>}
-            <span>Başlangıç içeriği · Sky Bozum Yönetim</span>
-          </aside>
-        </article>;
-      })}
-    </div>
+    <ForumLiveGroups sections={liveSections} publicKeys={publicForumKeys} />
   </section>;
 }

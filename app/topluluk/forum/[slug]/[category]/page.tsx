@@ -33,7 +33,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
     <ForumBreadcrumbs section={{ slug: result.section.slug, title: result.section.title }} category={{ slug: result.slug, title: result.title }} />
     <header><small>{result.section.title}</small><h1>{result.title}</h1><p>Bu alan, {result.title.toLocaleLowerCase('tr-TR')} hakkında doğrulanabilir bilgi, deneyim, soru ve uyarıların düzenli biçimde paylaşılması için ayrılmıştır.</p><div><Link href="/hesabim/yeni-konu">+ Yeni konu aç</Link><Link href={forumRoutes.section(result.section.slug)}>Tüm alt kategoriler</Link></div></header>
     {starter && <article className="forum-starter-topic">
-      <span>BAŞLANGIÇ KONUSU</span><h2><Link href={forumRoutes.topic(result.section.slug, result.slug, starter.slug)}>{starter.title}</Link></h2><p>{starter.summary}</p>
+      <Link className="forum-starter-topic__hitarea" href={forumRoutes.topic(result.section.slug, result.slug, starter.slug)} aria-label={`${starter.title} konusunu aç`} />
+      <span>BAŞLANGIÇ KONUSU</span><h2>{starter.title}</h2><p>{starter.summary}</p>
       <footer><b>{starter.author}</b><time>{new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(`${starter.publishedAt}T12:00:00`))}</time></footer>
     </article>}
     {editorialTopics.length > 1 && <section className="forum-category-editorial" aria-labelledby="forum-category-editorial-title"><span>YÖNETİM REHBERLERİ</span><h2 id="forum-category-editorial-title">Bu alanda önce bu konulara bakın</h2><div>{editorialTopics.slice(1).map((item) => <Link key={item.slug} href={forumRoutes.topic(item.sectionSlug, item.categorySlug, item.slug)}><small>DETAYLI REHBER</small><strong>{item.title}</strong><p>{item.summary}</p><b aria-hidden="true">→</b></Link>)}</div></section>}

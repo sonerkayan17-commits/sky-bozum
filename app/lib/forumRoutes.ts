@@ -1,1 +1,7 @@
-export const forumRoutes={home:'/topluluk',section:(section:string)=>`/topluluk/forum/${section}`,category:(section:string,category:string)=>`/topluluk/forum/${section}/${category}`,topic:(section:string,category:string,topic:string)=>`/topluluk/forum/${section}/${category}/${topic}`};
+export const forumRoutes={
+  home:'/topluluk',
+  section:(section:string)=>`/topluluk/forum/${section}`,
+  category:(section:string,category:string)=>`/topluluk/forum/${section}/${category}`,
+  topic:(section:string,category:string,topic:string)=>`/topluluk/forum/${section}/${category}/${topic}`,
+  memberTopic:(id:string)=>`/topluluk/konu/${id}`,
+};

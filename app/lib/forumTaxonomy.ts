@@ -215,7 +215,7 @@ const forumSecondTopicSeeds:SecondTopicSeed[]=[
 export const forumSecondTopics=forumSecondTopicSeeds.map(secondTopic);
 export const forumStarterTopics:ForumStarterTopic[]=[...forumInitialTopics,...forumSecondTopics];
 
-export const publicForumKeys=forumStarterTopics.map(topic=>`${topic.sectionSlug}/${topic.categorySlug}`);
+export const publicForumKeys=Array.from(new Set(forumStarterTopics.map(topic=>`${topic.sectionSlug}/${topic.categorySlug}`)));
 export const getForumStarterTopic=(sectionSlug:string,categorySlug:string,topicSlug?:string)=>forumStarterTopics.find(topic=>topic.sectionSlug===sectionSlug&&topic.categorySlug===categorySlug&&(!topicSlug||topic.slug===topicSlug));
 export const getForumTopics=(sectionSlug:string,categorySlug:string)=>forumStarterTopics.filter(topic=>topic.sectionSlug===sectionSlug&&topic.categorySlug===categorySlug);
 export const findForumSection=(slug:string)=>forumSections.find(section=>section.slug===slug);

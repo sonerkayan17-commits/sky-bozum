@@ -30,7 +30,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
   if (!item) notFound();
   const section = findForumSection(slug);
   if (!section) notFound();
-  const related = forumStarterTopics.filter((entry) => entry.sectionSlug === slug && entry.slug !== item.slug);
+  const categoryTopics = forumStarterTopics.filter((entry) => entry.sectionSlug === slug && entry.categorySlug === category);
+  const currentIndex = categoryTopics.findIndex((entry) => entry.slug === item.slug);
+  const previousTopic = currentIndex > 0 ? categoryTopics[currentIndex - 1] : null;
+  const nextTopic = currentIndex >= 0 && currentIndex < categoryTopics.length - 1 ? categoryTopics[currentIndex + 1] : null;
+  const related = categoryTopics.filter((entry) => entry.slug !== item.slug).slice(0, 4);
   const guidance = getForumGuidance(item.slug, item.title, item.sectionSlug);
   const date = new Intl.DateTimeFormat('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(`${item.publishedAt}T12:00:00`));
   const canonical = absoluteUrl(forumRoutes.topic(slug, category, topic));
@@ -76,7 +80,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
       <nav aria-label={`${item.title} sonrası devam bağlantıları`}><strong>Konuyla ilgili güvenli devam adımları</strong><div>{guidance.links.slice(0, 3).map((link) => <Link key={`conclusion-${link.href}`} href={link.href}>{link.label}<span aria-hidden="true">→</span></Link>)}</div></nav>
     </section>
     <ContentEngagement targetId={`forum-${item.sectionSlug}-${item.categorySlug}-${item.slug}`} title={item.title} kind="topic" />
+    {(previousTopic || nextTopic) && <nav className="forum-topic-pager" aria-label="Önceki ve sonraki konu">
+      {previousTopic
+        ? <Link href={forumRoutes.topic(previousTopic.sectionSlug, previousTopic.categorySlug, previousTopic.slug)}><small>ÖNCEKİ KONU</small><strong>← {previousTopic.title}</strong></Link>
+        : <span aria-hidden="true" />}
+      {nextTopic
+        ? <Link href={forumRoutes.topic(nextTopic.sectionSlug, nextTopic.categorySlug, nextTopic.slug)}><small>SONRAKİ KONU</small><strong>{nextTopic.title} →</strong></Link>
+        : <span aria-hidden="true" />}
+    </nav>}
     <footer><Link href={forumRoutes.category(slug, category)}>← {item.category} kategorisine dön</Link></footer>
-    {related.length > 0 && <aside><h2>Aynı bölümden başlangıç konuları</h2><div>{related.map((entry) => <Link key={entry.slug} href={forumRoutes.topic(entry.sectionSlug, entry.categorySlug, entry.slug)}>{entry.title}</Link>)}</div></aside>}
+    {related.length > 0 && <aside><h2>Aynı kategoriden konular</h2><div>{related.map((entry) => <Link key={entry.slug} href={forumRoutes.topic(entry.sectionSlug, entry.categorySlug, entry.slug)}>{entry.title}</Link>)}</div></aside>}
   </article></main>;
 }

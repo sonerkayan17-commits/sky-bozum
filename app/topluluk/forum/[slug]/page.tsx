@@ -38,6 +38,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         const categorySlug = slugifyForumCategory(category);
         const starter = getForumStarterTopic(section.slug, categorySlug);
         return <article key={category}>
+          <Link className="forum-category-hitarea" href={forumRoutes.category(section.slug, categorySlug)} aria-label={`${category} kategorisine git`} />
           <b>{String(index + 1).padStart(2, '0')}</b>
           <div><Link href={forumRoutes.category(section.slug, categorySlug)}><h3>{category}</h3></Link><p>{starter?.summary}</p></div>
           <aside>{starter && <Link href={forumRoutes.topic(section.slug, categorySlug, starter.slug)}>{starter.title}</Link>}<span>Sky Bozum Yönetim</span></aside>
