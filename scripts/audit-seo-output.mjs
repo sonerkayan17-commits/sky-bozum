@@ -4,11 +4,11 @@ import path from 'node:path';
 const root = process.cwd();
 const appDir = path.join(root, '.next', 'server', 'app');
 const fallbackOrigin = 'https://sky-bozum.vercel.app';
-const redirectsEnabled = process.env.PRIMARY_DOMAIN_REDIRECTS_ENABLED === 'true';
+const customDomainCanonicalEnabled = process.env.PRIMARY_DOMAIN_CANONICAL_ENABLED === 'true';
 const vercelProductionOrigin = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : fallbackOrigin;
-const expectedOrigin = (redirectsEnabled
+const expectedOrigin = (customDomainCanonicalEnabled
   ? process.env.NEXT_PUBLIC_SITE_URL || fallbackOrigin
   : vercelProductionOrigin).replace(/\/$/, '');
 const expectedHostname = new URL(expectedOrigin).hostname.replace(/^www\./, '');

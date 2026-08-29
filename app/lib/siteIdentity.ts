@@ -1,5 +1,5 @@
 const FALLBACK_PRODUCTION_ORIGIN = 'https://sky-bozum.vercel.app';
-const customDomainRedirectsEnabled = process.env.PRIMARY_DOMAIN_REDIRECTS_ENABLED === 'true';
+const customDomainCanonicalEnabled = process.env.PRIMARY_DOMAIN_CANONICAL_ENABLED === 'true';
 
 function normalizeHttpsOrigin(value: string | undefined, fallback: string) {
   try {
@@ -16,7 +16,7 @@ function vercelProductionOrigin() {
   return hostname ? normalizeHttpsOrigin(`https://${hostname}`, FALLBACK_PRODUCTION_ORIGIN) : FALLBACK_PRODUCTION_ORIGIN;
 }
 
-export const EXPECTED_PRODUCTION_ORIGIN = customDomainRedirectsEnabled
+export const EXPECTED_PRODUCTION_ORIGIN = customDomainCanonicalEnabled
   ? normalizeHttpsOrigin(process.env.NEXT_PUBLIC_SITE_URL, FALLBACK_PRODUCTION_ORIGIN)
   : vercelProductionOrigin();
 
