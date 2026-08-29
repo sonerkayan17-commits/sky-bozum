@@ -93,19 +93,18 @@ export default function Page() {
           <section className="tc2-trust-notice" aria-labelledby="tc2-trust-notice-title">
             <div className="tc2-trust-notice__main">
               <p className="tc2-trust-notice__eyebrow">İŞLEMDEN ÖNCE / GÜVENLİK UYARISI</p>
-              <h2 id="tc2-trust-notice-title">Orandan önce güvenlik ve ödemenin kesinleşmesi gelir.</h2>
-              <p>En yüksek oran, ödeme güvenli biçimde hesabınıza geçmediyse avantaj değildir. Kodun kaynağını, kullanılmamış olduğunu, bölge ve para birimini ve karşı tarafın resmî iletişim kanalını doğrulayın. Ödeme hesabınızda kesinleşmeden kodu paylaşmayın.</p>
-              <ul aria-label="Güvenli dijital kod işlemi kontrolleri">
-                <li>Net tutar ve kabul koşulları yazılı olsun.</li>
-                <li>Ödeme kesinleşmeden kod gönderilmesin.</li>
-                <li>Fatura, dekont ve görüşme kayıtları saklansın.</li>
-              </ul>
+              <h2 id="tc2-trust-notice-title">Önce güvenlik, sonra oran.</h2>
+              <p>Yüksek oran, ödeme hesabınıza kesin olarak geçmediyse avantaj değildir. Kaynağı ve karşı tarafı doğrulayın; ödeme gelmeden kodu paylaşmayın.</p>
             </div>
+            <ul aria-label="Güvenli dijital kod işlemi kontrolleri">
+              <li>Koşullar yazılı olsun.</li>
+              <li>Ödeme kesinleşsin.</li>
+              <li>Fatura ve dekont saklansın.</li>
+            </ul>
             <div className="tc2-trust-notice__legal">
               <span>MEVZUAT NOTU</span>
-              <h3>Mobil ödeme bozumu ile dijital kod devri aynı işlem değildir.</h3>
-              <p><strong>“Mobil ödeme bozum”</strong> mevzuatta bu adla tanımlanmış bağımsız bir ödeme hizmeti değildir. 6493 sayılı Kanun kapsamındaki ödeme hizmetlerini veya elektronik para faaliyetini sunmak TCMB iznine tabidir. Yetkili kanaldan ve faturalı edinilen <strong>Razer Gold, Apple/iTunes ve Steam</strong> gibi belirli dijital ürün kodlarının marka koşullarına uygun devri ise hattaki bakiyeyi doğrudan nakde çevirme hizmetinden farklıdır.</p>
-              <p className="tc2-trust-notice__disclaimer">Bu ayrım her işlemi kendiliğinden risksiz veya hukuka uygun yapmaz; kodun kaynağı, marka koşulları, vergi ve tüketici yükümlülükleri ayrıca değerlendirilmelidir. Bu içerik genel bilgilendirmedir, hukuki danışmanlık değildir.</p>
+              <h3>Dijital kod devri farklı bir işlemdir.</h3>
+              <p><strong>“Mobil ödeme bozum”</strong> bu adla tanımlı bağımsız bir ödeme hizmeti değildir; 6493 kapsamındaki ödeme ve elektronik para faaliyetleri TCMB iznine tabidir. Yetkili ve faturalı <strong>Razer Gold, Apple/iTunes veya Steam</strong> kodlarının koşullarına uygun devri, hattaki bakiyeyi nakde çevirme hizmetinden farklıdır. Kaynak ve marka koşulları ayrıca doğrulanmalıdır; bu metin hukuki danışmanlık değildir.</p>
               <div className="tc2-trust-notice__links">
                 <a className="focus-ring" href="https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB%20TR/Main%20Menu/Temel%20Faaliyetler/Odeme%20Hizmetleri" target="_blank" rel="noopener noreferrer">TCMB ödeme hizmetleri ↗</a>
                 <a className="focus-ring" href="https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB%20TR/Main%20Menu/Temel%20Faaliyetler/Odeme%20Hizmetleri/Odeme%20Kuruluslari" target="_blank" rel="noopener noreferrer">Yetkili kuruluşlar ↗</a>
