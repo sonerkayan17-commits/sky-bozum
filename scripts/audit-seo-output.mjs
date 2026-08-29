@@ -3,7 +3,20 @@ import path from 'node:path';
 
 const root = process.cwd();
 const appDir = path.join(root, '.next', 'server', 'app');
-const expectedOrigin = (process.env.NEXT_PUBLIC_SITE_URL || 'https://bozumcu.net.tr').replace(/\/$/, '');
+const fallbackOrigin = 'https://sky-bozum.vercel.app';
+const redirectsEnabled = process.env.PRIMARY_DOMAIN_REDIRECTS_ENABLED === 'true';
+const vercelProductionOrigin = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : fallbackOrigin;
+const expectedOrigin = (redirectsEnabled
+  ? process.env.NEXT_PUBLIC_SITE_URL || fallbackOrigin
+  : vercelProductionOrigin).replace(/\/$/, '');
+const expectedHostname = new URL(expectedOrigin).hostname.replace(/^www\./, '');
+const inactiveHostnames = ['bozumcu.net', 'bozumcu.net.tr', 'sky-bozum.vercel.app']
+  .filter((hostname) => hostname !== expectedHostname);
+const inactiveHostPattern = inactiveHostnames.length
+  ? new RegExp(`https?:\\/\\/(?:www\\.)?(?:${inactiveHostnames.map((hostname) => hostname.replaceAll('.', '\\.')).join('|')})(?:\\/|[\"'<])`, 'i')
+  : null;
 const privateRoots = ['/admin', '/yonetim', '/hesabim', '/giris', '/kayit'];
 
 function walk(directory) {
@@ -52,7 +65,7 @@ for (const page of publicPages) {
   if (!description) failures.push(`${page.route}: description yok`);
   else if (description.length < 80 || description.length > 180) warnings.push(`${page.route}: description uzunluğu ${description.length}`);
   if (!canonical?.startsWith(`${expectedOrigin}/`) && canonical !== expectedOrigin) failures.push(`${page.route}: canonical ana alan adıyla eşleşmiyor (${canonical || 'yok'})`);
-  if (/https?:\/\/(?:www\.)?bozumcu\.net(?:\/|["'<])/i.test(page.html) || /sky-bozum\.vercel\.app/i.test(page.html)) failures.push(`${page.route}: eski veya geçici alan adı görünür çıktıya sızıyor`);
+  if (inactiveHostPattern?.test(page.html)) failures.push(`${page.route}: etkin olmayan alan adı görünür çıktıya sızıyor`);
   if (indexedRoutes.has(page.route) && h1Count !== 1) failures.push(`${page.route}: indekslenen sayfada tam bir H1 bekleniyor, bulunan ${h1Count}`);
 
   if (title) {

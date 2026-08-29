@@ -1,21 +1,33 @@
-export const EXPECTED_PRODUCTION_ORIGIN = 'https://bozumcu.net.tr';
+const FALLBACK_PRODUCTION_ORIGIN = 'https://sky-bozum.vercel.app';
+const customDomainRedirectsEnabled = process.env.PRIMARY_DOMAIN_REDIRECTS_ENABLED === 'true';
 
-function normalizeHttpsOrigin(value?: string) {
+function normalizeHttpsOrigin(value: string | undefined, fallback: string) {
   try {
-    const parsed = new URL(value || EXPECTED_PRODUCTION_ORIGIN);
-    if (parsed.protocol !== 'https:') return EXPECTED_PRODUCTION_ORIGIN;
+    const parsed = new URL(value || fallback);
+    if (parsed.protocol !== 'https:') return fallback;
     return parsed.origin.replace(/\/$/, '');
   } catch {
-    return EXPECTED_PRODUCTION_ORIGIN;
+    return fallback;
   }
 }
 
-export const PRIMARY_SITE_ORIGIN = normalizeHttpsOrigin(process.env.NEXT_PUBLIC_SITE_URL);
+function vercelProductionOrigin() {
+  const hostname = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  return hostname ? normalizeHttpsOrigin(`https://${hostname}`, FALLBACK_PRODUCTION_ORIGIN) : FALLBACK_PRODUCTION_ORIGIN;
+}
+
+export const EXPECTED_PRODUCTION_ORIGIN = customDomainRedirectsEnabled
+  ? normalizeHttpsOrigin(process.env.NEXT_PUBLIC_SITE_URL, FALLBACK_PRODUCTION_ORIGIN)
+  : vercelProductionOrigin();
+
+export const PRIMARY_SITE_ORIGIN = EXPECTED_PRODUCTION_ORIGIN;
 export const PRIMARY_SITE_DOMAIN = new URL(PRIMARY_SITE_ORIGIN).hostname.replace(/^www\./, '');
 
 export const ALTERNATE_SITE_HOSTS = [
   'sky-bozum.vercel.app',
   'www.sky-bozum.vercel.app',
+  'bozumcu.net.tr',
+  'www.bozumcu.net.tr',
   'bozumcu.net',
   'www.bozumcu.net',
 ].filter((host) => host !== PRIMARY_SITE_DOMAIN && host !== `www.${PRIMARY_SITE_DOMAIN}`);

@@ -6,7 +6,6 @@ type ProductCoverVideoProps = {
   src: string;
   poster: string;
   objectPosition?: string;
-  priority?: boolean;
 };
 
 const PRODUCT_VIDEO_ACTIVE_EVENT = 'sky-product-video-active';
@@ -26,7 +25,7 @@ function scheduleMobileSelection() {
   });
 }
 
-export default function ProductCoverVideo({ src, poster, objectPosition = '50% 50%', priority = false }: ProductCoverVideoProps) {
+export default function ProductCoverVideo({ src, poster, objectPosition = '50% 50%' }: ProductCoverVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playbackId = useId();
   const [sourceEnabled, setSourceEnabled] = useState(false);
@@ -186,7 +185,7 @@ export default function ProductCoverVideo({ src, poster, objectPosition = '50% 5
       muted
       loop
       playsInline
-      preload={priority ? 'metadata' : 'none'}
+      preload="none"
       disablePictureInPicture
       controlsList="nodownload noplaybackrate nofullscreen"
       draggable={false}

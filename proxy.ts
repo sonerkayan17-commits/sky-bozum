@@ -6,6 +6,7 @@ const redirectsEnabled = process.env.PRIMARY_DOMAIN_REDIRECTS_ENABLED === 'true'
 export function proxy(request: NextRequest) {
   const host = (request.headers.get('host') || '').split(':')[0].toLowerCase();
   const isAlternateHost = ALTERNATE_SITE_HOSTS.includes(host);
+  const isPreviewDeployment = process.env.VERCEL_ENV === 'preview';
 
   if (isAlternateHost && redirectsEnabled) {
     const destination = request.nextUrl.clone();
@@ -15,7 +16,9 @@ export function proxy(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  if (isAlternateHost) response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  if (isPreviewDeployment) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
   return response;
 }
 

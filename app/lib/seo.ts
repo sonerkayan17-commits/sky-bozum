@@ -5,7 +5,7 @@ import { EXPECTED_PRODUCTION_ORIGIN, PRIMARY_SITE_ORIGIN, primaryAbsoluteUrl } f
 export const PRODUCTION_SITE_URL = EXPECTED_PRODUCTION_ORIGIN;
 export const SITE_URL = PRIMARY_SITE_ORIGIN;
 export const IS_VERCEL_PREVIEW = process.env.VERCEL_ENV === 'preview' || process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview';
-export const ALLOW_INDEXING = SITE_URL === PRODUCTION_SITE_URL && !IS_VERCEL_PREVIEW;
+export const ALLOW_INDEXING = !IS_VERCEL_PREVIEW;
 export const SITE_NAME = 'Sky Bozum';
 export const SITE_LOCALE = 'tr_TR';
 export const SITE_LANGUAGE = 'tr-TR';

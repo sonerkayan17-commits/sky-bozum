@@ -172,8 +172,8 @@ function ReferenceCarousel({ whatsapp }: { whatsapp: string }) {
                 src={slide.src}
                 alt={slide.alt}
                 fill
-                priority={index === 0}
-                loading={index === 0 ? 'eager' : 'lazy'}
+                loading="lazy"
+                fetchPriority="low"
                 sizes="(max-width: 430px) 176px, (max-width: 800px) 208px, 226px"
               />
             </div>
