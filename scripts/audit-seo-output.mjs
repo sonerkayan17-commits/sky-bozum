@@ -5,12 +5,9 @@ const root = process.cwd();
 const appDir = path.join(root, '.next', 'server', 'app');
 const fallbackOrigin = 'https://sky-bozum.vercel.app';
 const customDomainCanonicalEnabled = process.env.PRIMARY_DOMAIN_CANONICAL_ENABLED === 'true';
-const vercelProductionOrigin = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : fallbackOrigin;
 const expectedOrigin = (customDomainCanonicalEnabled
   ? process.env.NEXT_PUBLIC_SITE_URL || fallbackOrigin
-  : vercelProductionOrigin).replace(/\/$/, '');
+  : fallbackOrigin).replace(/\/$/, '');
 const expectedHostname = new URL(expectedOrigin).hostname.replace(/^www\./, '');
 const inactiveHostnames = ['bozumcu.net', 'bozumcu.net.tr', 'sky-bozum.vercel.app']
   .filter((hostname) => hostname !== expectedHostname);

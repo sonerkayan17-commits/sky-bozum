@@ -11,14 +11,9 @@ function normalizeHttpsOrigin(value: string | undefined, fallback: string) {
   }
 }
 
-function vercelProductionOrigin() {
-  const hostname = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  return hostname ? normalizeHttpsOrigin(`https://${hostname}`, FALLBACK_PRODUCTION_ORIGIN) : FALLBACK_PRODUCTION_ORIGIN;
-}
-
 export const EXPECTED_PRODUCTION_ORIGIN = customDomainCanonicalEnabled
   ? normalizeHttpsOrigin(process.env.NEXT_PUBLIC_SITE_URL, FALLBACK_PRODUCTION_ORIGIN)
-  : vercelProductionOrigin();
+  : FALLBACK_PRODUCTION_ORIGIN;
 
 export const PRIMARY_SITE_ORIGIN = EXPECTED_PRODUCTION_ORIGIN;
 export const PRIMARY_SITE_DOMAIN = new URL(PRIMARY_SITE_ORIGIN).hostname.replace(/^www\./, '');
