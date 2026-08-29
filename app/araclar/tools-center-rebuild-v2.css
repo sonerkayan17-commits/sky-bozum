@@ -12,12 +12,12 @@
 .tc2-quick-picks span { grid-row: 1 / span 2; color: #f47783; font-size: 10px; font-weight: 900; }
 .tc2-quick-picks b { font-size: 12px; }
 .tc2-quick-picks small { color: #7f8994; font-size: 10px; }
-.tc2-hero-art { position: relative; display: grid; aspect-ratio: 4 / 5; place-items: center; margin: 14px auto 0; overflow: clip; isolation: isolate; }
-.tc2-hero-art--contained { width: min(71%, 232px); }
+.tc2-hero-art { position: relative; display: grid; aspect-ratio: 845 / 1011; place-items: center; margin: 14px auto 0; overflow: clip; isolation: isolate; }
+.tc2-hero-art--contained { width: min(100%, 330px); }
 .tc2-hero-art::before { content: ''; position: absolute; inset: 13% 2% 4%; z-index: -1; border-radius: 50%; background: radial-gradient(circle at 25% 42%, rgba(82,247,194,.22), transparent 36%), radial-gradient(circle at 74% 42%, rgba(247,69,131,.24), transparent 40%), radial-gradient(circle at 55% 74%, rgba(255,154,54,.17), transparent 42%); filter: blur(20px); animation: tc2-energy-pulse 4.8s ease-in-out infinite; }
-.tc2-hero-art::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(112deg, transparent 35%, rgba(255,255,255,.08) 43%, rgba(255,255,255,.75) 49%, rgba(255,255,255,.12) 55%, transparent 63%); mix-blend-mode: screen; -webkit-mask: url('/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-480.webp') center / contain no-repeat; mask: url('/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-480.webp') center / contain no-repeat; transform: translateX(-145%); animation: tc2-light-sweep 6.8s cubic-bezier(.55,.1,.3,1) infinite; }
+.tc2-hero-art::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(112deg, transparent 35%, rgba(255,255,255,.08) 43%, rgba(255,255,255,.75) 49%, rgba(255,255,255,.12) 55%, transparent 63%); mix-blend-mode: screen; -webkit-mask: url('/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-480.webp') center / cover no-repeat; mask: url('/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-480.webp') center / cover no-repeat; transform: translateX(-145%); animation: tc2-light-sweep 6.8s cubic-bezier(.55,.1,.3,1) infinite; }
 .tc2-hero-art picture { position: relative; z-index: 2; display: block; width: 100%; height: 100%; min-height: 0; }
-.tc2-hero-art img { width: 100%; height: 100%; padding: 6px; object-fit: contain; filter: drop-shadow(0 18px 28px rgba(0,0,0,.42)); animation: tc2-art-float 5.6s ease-in-out infinite; }
+.tc2-hero-art img { width: 100%; height: 100%; padding: 0; object-fit: cover; filter: drop-shadow(0 18px 28px rgba(0,0,0,.42)); animation: tc2-art-float 5.6s ease-in-out infinite; }
 .tc2-hero-lightning { position: absolute; inset: 4%; z-index: 1; width: 92%; height: 92%; overflow: visible; pointer-events: none; filter: drop-shadow(0 0 7px rgba(247,69,131,.55)); }
 .tc2-hero-lightning path { fill: none; stroke: url('#tc2-electric-gradient'); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 8 17; opacity: 0; animation: tc2-lightning 4.2s linear infinite; }
 .tc2-hero-lightning path:nth-of-type(2) { animation-delay: .7s; }
@@ -109,5 +109,5 @@
 @media (max-width: 560px) { .tc2-calc-next > div { grid-template-columns: 1fr; } }
 @media (max-width: 700px) { .tc2-shell { width: min(calc(100% - 24px), 1220px); } .tc2-hero { padding-top: 32px; } .tc2-hero-grid { grid-template-columns: 1fr; gap: 24px; } .tc2-featured-grid { grid-template-columns: 1fr 1fr; gap: 10px; } .tc2-card-footer { min-height: 76px; padding: 11px; } .tc2-card-footer h3 { font-size: 13px; } .tc2-section-heading { align-items: start; flex-direction: column; gap: 8px; } }
 @media (max-width: 460px) { .tc2-featured-grid { grid-template-columns: 1fr; } .tc2-seo-list { grid-template-columns: 1fr; } .tc2-seo-list a, .tc2-seo-list a:nth-child(even), .tc2-seo-list a:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid #2a3038; } .tc2-seo-list a:last-child { border-bottom: 0; } }
-@media (max-width: 700px) { .tc2-hero-art { width: min(62vw, 270px); aspect-ratio: 4 / 5; flex: none; align-self: center; margin-top: 12px; margin-bottom: -8px; } }
+@media (max-width: 700px) { .tc2-hero-art { width: min(82vw, 330px); aspect-ratio: 845 / 1011; flex: none; align-self: center; margin-top: 12px; margin-bottom: -8px; } }
 @media (prefers-reduced-motion: reduce) { .tc2-hero-art::before, .tc2-hero-art::after, .tc2-hero-art img, .tc2-hero-lightning path { animation: none !important; } .tc2-hero-art::after, .tc2-hero-lightning { display: none; } }

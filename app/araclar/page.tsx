@@ -81,9 +81,9 @@ export default function Page() {
               <path d="m267 351 35-42-2 36 55-28-29 59" />
             </svg>
             <picture>
-              <source type="image/avif" srcSet="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-480.avif 480w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-768.avif 768w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-1200.avif 1200w" sizes="(max-width: 700px) 62vw, 330px" />
-              <source type="image/webp" srcSet="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-480.webp 480w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-768.webp 768w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-1200.webp 1200w" sizes="(max-width: 700px) 62vw, 330px" />
-              <Image src="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v1-1200.webp" alt="Razer Gold, Apple, Steam, Google Play, mobil ödeme ve TL hesaplama kompozisyonu" width={1200} height={1500} sizes="(max-width: 700px) 62vw, 330px" priority />
+              <source type="image/avif" srcSet="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-480.avif 480w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-960.avif 960w" sizes="(max-width: 700px) 82vw, 330px" />
+              <source type="image/webp" srcSet="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-480.webp 480w, /images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-960.webp 960w" sizes="(max-width: 700px) 82vw, 330px" />
+              <Image src="/images/araclar/digital-balance-hero/tools-digital-balance-calculator-v2-transparent-960.webp" alt="Razer Gold, Apple, Steam, Google Play, mobil ödeme ve TL hesaplama kompozisyonu" width={845} height={1011} sizes="(max-width: 700px) 82vw, 330px" priority />
             </picture>
           </figure>
         </div>
